@@ -22,32 +22,32 @@
 dojo.provide("phpr.MinutesItem.Form");
 
 dojo.declare("phpr.MinutesItem.Form", phpr.Default.SubModule.Form, {
-    initData:function() {
-        this._itemsUrl = phpr.webpath + 'index.php/MinutesItem/index/jsonListItemSortOrder/minutesId/'
-            + this.main.parentId;
+    initData: function() {
+        this._itemsUrl = phpr.webpath + 'index.php/MinutesItem/index/jsonListItemSortOrder/minutesId/' +
+            this.main.parentId;
         this._initData.push({'url': this._itemsUrl});
     },
 
-    addBasicFields:function() {
+    addBasicFields: function() {
         var data  = phpr.DataStore.getData({url: this._url});
         var range = phpr.DataStore.getData({url: this._itemsUrl});
         var label = phpr.nls.get('Sort after', this.main.module);
         var id    = this.main.module + 'parentOrder';
-        var value = (data[0]['sortOrder'] - 1 >= 0) ? data[0]['sortOrder'] - 1 : 0;
+        var value = (data[0].sortOrder - 1 >= 0) ? data[0].sortOrder - 1 : 0;
 
         this.formdata[this._tabNumber].push(this.fieldTemplate.selectRender(range, label, id, value, false, false));
     },
 
-    postRenderForm:function() {
+    postRenderForm: function() {
         this.inherited(arguments);
         // Have the appropriate input fields appear for each type
         var data = phpr.DataStore.getData({url: this._url});
-        this._switchItemFormFields(data[0]['topicType']); // defaults
+        this._switchItemFormFields(data[0].topicType); // defaults
         dojo.connect(dijit.byId(this.main.module + 'topicType'), 'onChange',
             dojo.hitch(this, this._switchItemFormFields));
     },
 
-    _switchItemFormFields:function(typeValue) {
+    _switchItemFormFields: function(typeValue) {
         // Summary:
         //    Toggle visibility of detail form fields
         // Description:
@@ -57,7 +57,7 @@ dojo.declare("phpr.MinutesItem.Form", phpr.Default.SubModule.Form, {
         var display = (dojo.isIE) ? 'block' : 'table-row';
         var trDate  = dojo.byId(this.main.module + 'topicDate').parentNode.parentNode.parentNode.parentNode;
         var trUser  = dojo.byId(this.main.module + 'userId').parentNode.parentNode.parentNode.parentNode;
-        switch(parseInt(typeValue)) {
+        switch (parseInt(typeValue)) {
             case 3:
                 dojo.style(trUser, "display", display);
                 dojo.style(trDate, "display", display);
@@ -94,7 +94,7 @@ dojo.declare("phpr.MinutesItem.Form", phpr.Default.SubModule.Form, {
         }
     },
 
-    updateData:function() {
+    updateData: function() {
         this.inherited(arguments);
         phpr.DataStore.deleteData({url: this._itemsUrl});
     }

@@ -95,37 +95,51 @@ dojo.declare("phpr.Default.SubModule", phpr.Default.System.Component, {
         return url;
     },
 
-    fillTab: function(nodeId) {
+    createTab: function(main) {
         // Summary:
         //    Create the sub module tab
         // Description:
         //    Create the divs for contain the grid and the form
-        var content = new dijit.layout.ContentPane({
-            region: 'center'
-        }, document.createElement('div'));
 
-        var borderContainer = new dijit.layout.BorderContainer({
-            design: 'sidebar'
-        }, document.createElement('div'));
+        var container = new phpr.Default.System.TemplateWrapper({
+            templateName: "phpr.Default.template.form.singleTableRow.html"
+        });
 
+        // we need a fixed height here because the form rendering flow is still inherently broken
+        // subforms cannot determine it's height because their rendering is triggered after the outer form
+        // is build.
+        this.borderContainer = new dijit.layout.BorderContainer({
+            design: 'sidebar',
+            style: 'height: 400px; width: 100%;'
+        });
+
+        this._buildForm();
+        this._renderSubModule();
+
+        container.containerNode.appendChild(this.borderContainer.domNode);
+
+        return main.addTab(
+            [container],
+            'tab' + this.module,
+            phpr.nls.get(this.module, this.module),
+            this.module + 'FormTab'
+        );
+    },
+
+    _buildForm: function() {
         this.overviewBox = new dijit.layout.ContentPane({
             region: 'center'
         }, document.createElement('div'));
 
         this.detailsBox = new dijit.layout.ContentPane({
             region: 'right',
-            style:  'width: 50%; height: 100%;'
+            style:  'width: 50%;'
         }, document.createElement('div'));
 
-        borderContainer.addChild(this.overviewBox);
-        borderContainer.addChild(this.detailsBox);
-        content.set("content", borderContainer.domNode);
+        this.borderContainer.addChild(this.overviewBox);
+        this.borderContainer.addChild(this.detailsBox);
 
-        dijit.byId(nodeId).set('content', content);
-
-        dojo.connect(dijit.byId(nodeId), "onShow", dojo.hitch(this, function() {
-            this._renderSubModule();
-        }));
+        dojo.addClass(this.borderContainer.domNode, 'subModuleDiv');
     },
 
     _renderSubModule: function() {
@@ -155,6 +169,7 @@ dojo.declare("phpr.Default.SubModule", phpr.Default.System.Component, {
         }
         this._renderSubModule();
     },
+
     destroySubForm: function() {
         if (this.subForm && dojo.isFunction(this.subForm.destroy)) {
             this.subForm.destroy();
@@ -318,6 +333,7 @@ dojo.declare("phpr.Default.SubModule.Form", phpr.Default.Form, {
                 phpr.confirmDialog(dojo.hitch(this, "deleteForm"), phpr.nls.get('Are you sure you want to delete?'));
             }));
         }
+
         dojo.connect(dijit.byId("subModuleNewButton"), 'onClick', dojo.hitch(this, function() {
             this.main.destroySubForm();
             this.main.subForm = new this.main.formWidget(this.main, 0, phpr.module, {}, this.main.detailsBox);

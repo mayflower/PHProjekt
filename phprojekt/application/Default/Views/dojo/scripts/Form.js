@@ -838,16 +838,10 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         for (var index in subModules) {
             var subModuleName = subModules[index].name;
             def = def.then(dojo.hitch(this, function(name) {
-                return this.addTab([], 'tab' + subModuleName, phpr.nls.get(subModuleName, subModuleName),
-                    subModuleName + 'FormTab');
-            }, subModuleName));
-
-            def = def.then(dojo.hitch(this, function(name) {
                 if (this._destroyed) {
                     return;
                 }
-                dojo.addClass('tab' + subModuleName, 'subModuleDiv');
-                subModules[index]['class'].fillTab('tab' + subModuleName);
+                return subModules[index]['class'].createTab(this);
             }, subModuleName));
         }
         this.form.resize();
