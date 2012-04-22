@@ -46,7 +46,7 @@ dojo.declare("phpr.MetadataStore", null, {
             }).then(
                 dojo.hitch(this, function (data) {
                     this._cache[module][projectId].data = data;
-                    this._cache[module][projectId].deferred = undefined;
+                    delete this._cache[module][projectId].deferred;
                     return data;
                 }),
                 function(err) {
