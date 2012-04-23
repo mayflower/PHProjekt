@@ -1315,6 +1315,16 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
     private function _generateUid()
     {
         // UID generation method taken from rfc 5545
-        $this->uid = rand() . '-' . time() . '-' . getMyPid() . '@' . php_uname('n');
+        $this->uid = self::generateUniqueIdentifier();
+    }
+
+    /**
+     * Generates a unique identifier, usable for example as a uri or uid.
+     *
+     * @return string
+     */
+    public static function generateUniqueIdentifier()
+    {
+        return rand() . '-' . time() . '-' . getMyPid() . '@' . php_uname('n');
     }
 }
