@@ -1020,9 +1020,11 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
     /**
      * Returns a Sabre_Vobject_Component representing this object.
      *
+     * @param subevents All events with the uid of this one. If not given, these will be fetched from the database.
+     *
      * @return Sabre_VObject_Component representing $this.
      */
-    public function asVObject()
+    public function asVObject($subevents = null)
     {
         $vobject = new Sabre_VObject_Component('vevent');
         if ($this->summary) {
@@ -1051,15 +1053,17 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
                 // occurrence as excluded in the original event. In caldav, the exclusion takes precedence over the
                 // extracted event, which means that events that have been changed will not show up in caldav clients.
                 // To go around this, we filter these dates out of the excluded dates.
-                $subEvents = $this->fetchByUid($this->uid);
-                $subEventDates = array();
-                foreach ($subEvents as $e) {
+                if (is_null($subevents)) {
+                    $subevents = $this->fetchByUid($this->uid);
+                }
+                $subeventDates = array();
+                foreach ($subevents as $e) {
                     if ($e->recurrenceId) {
                         $dt = new Datetime($e->recurrenceId);
-                        $subEventDates[] = $dt->format('Ymd\THis\Z');
+                        $subeventDates[] = $dt->format('Ymd\THis\Z');
                     }
                 }
-                $exdates = array_diff($exdates, $subEventDates);
+                $exdates = array_diff($exdates, $subeventDates);
                 $vobject->add('exdate', implode(',', $exdates));
             }
         }
