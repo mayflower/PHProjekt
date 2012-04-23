@@ -281,8 +281,12 @@ class Calendar2_Migration extends Phprojekt_Migration_Abstract
             }
         }
 
-        if (!empty($deleted)) $this->_deletedOccurrences($parent, $deleted);
-        if (!empty($added))   $this->_addedOccurrences($parent, $added, $addedEventsParticipants);
+        if (!empty($deleted)) {
+            $this->_deletedOccurrences($parent, $deleted);
+        }
+        if (!empty($added)) {
+            $this->_addedOccurrences($parent, $added, $addedEventsParticipants);
+        }
     }
 
     /** negative if $dt < $event, 0 on ==, positive if $dt > $event */
