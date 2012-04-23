@@ -148,8 +148,7 @@
 }
 
 .phprojekt .navigationContainer {
-    border-bottom: 14px solid #294064;
-    border-left: 10px solid #294064;
+    padding-left: 10px;
     background: #294064 !important;
     overflow-y: hidden;
 }

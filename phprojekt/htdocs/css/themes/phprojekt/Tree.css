@@ -1,5 +1,9 @@
 /* Tree */
 
+.phprojekt .dijitTreeContainer {
+    background: #FAFAFA;
+}
+
 .phprojekt .dijitTreeNode {
     background : url('images/treeI.gif') no-repeat;
     background-position : top left;
