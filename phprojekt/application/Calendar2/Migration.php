@@ -126,7 +126,7 @@ class Calendar2_Migration extends Phprojekt_Migration_Abstract
         $db->query(
             'INSERT INTO calendar2 SELECT id, project_id, title AS summary, notes AS description, place AS
             location, "" AS comments, start_datetime AS start, NULL AS last_end, end_datetime AS end,
-            owner_id, rrule, NULL AS recurrence_id, visibility, NULL AS uid, NOW() AS last_modified, NULL AS
+            owner_id, rrule, NULL AS recurrence_id, visibility, id AS uid, NOW() AS last_modified, id AS
             uri FROM calendar WHERE parent_id = 0 OR parent_id = id OR rrule != ""'
         );
 
