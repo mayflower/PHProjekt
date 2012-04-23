@@ -517,21 +517,16 @@ h1,h2,h3,h4,h5,h6 {
 
 .phprojekt .breadCrumb,
 .phprojekt .breadCrumb a {
-    font-family: Verdana;
-    font-size: 10px;
-    font-weight: 600;
     color: #CBCBCB;
     margin-left: 1%;
-    margin-top: 10px;
+    margin-top: 9px;
 }
 
 .dj_ie .phprojekt .breadCrumb,
 .dj_ie .phprojekt .breadCrumb a {
-    margin-top: 9px;
 }
 
 .phprojekt .breadCrumb a {
-    margin-left: 0;
     text-decoration: none;
 }
 
