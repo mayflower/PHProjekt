@@ -253,6 +253,7 @@ class Calendar2_Migration extends Phprojekt_Migration_Abstract
                 );
             } else if (!in_array($e['start_datetime'], $regularTimes)) {
                 // This event doesn't really belong here. We just create a new one for the user independent of $parent.
+                $uid = Calendar2_Models_Calendar2::generateUniqueIdentifier();
                 $this->_db->insert(
                     'calendar2',
                     array(
@@ -266,7 +267,10 @@ class Calendar2_Migration extends Phprojekt_Migration_Abstract
                         'end' => $e['end_datetime'],
                         'owner_id' => $e['participant_id'],
                         'rrule' => '',
-                        'visibility' => $e['visibility'] + 1
+                        'visibility' => $e['visibility'] + 1,
+                        'uri' => $uid,
+                        'uid' => $uid
+
                     )
                 );
                 $newCalendarId = $this->_db->lastInsertId();
