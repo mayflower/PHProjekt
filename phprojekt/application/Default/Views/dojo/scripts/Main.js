@@ -209,7 +209,6 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         dojo.subscribe(module + ".hideSuggest", this, "hideSuggest");
         dojo.subscribe(module + ".setSuggest", this, "setSuggest");
         dojo.subscribe(module + ".showSearchResults", this, "showSearchResults");
-        dojo.subscribe(module + ".drawTagsBox", this, "drawTagsBox");
         dojo.subscribe(module + ".showTagsResults", this, "showTagsResults");
         dojo.subscribe(module + ".clickResult", this, "clickResult");
         dojo.subscribe(module + ".updateCacheData", this, "updateCacheData");
@@ -396,9 +395,6 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
 
                 translatedText = phpr.nls.get("Disable Frontend Messages");
                 view.disableFrontendMessage.set('label', translatedText);
-
-                translatedText = phpr.nls.get("Tags");
-                view.tagsbox.titleNode.innerHTML = translatedText;
 
                 phpr.tree.loadTree();
                 this.addLogoTooltip();
@@ -1090,68 +1086,6 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
 
     setSuggest: function(html) {
         phpr.viewManager.getView().searchsuggest.innerHTML = html;
-    },
-
-    drawTagsBox: function(/*Array*/data) {
-        var value   = '';
-        var newline = false;
-        var size    = '';
-        for (var i = 0; i < data.length; i++) {
-            if (((i % 3) === 0) && i !== 0) {
-                newline = true;
-            } else {
-                newline = false;
-            }
-            if (data[i].count < 5) {
-                size = 10;
-            } else if (data[i].count < 10) {
-                size = 12;
-            } else if (data[i].count < 15) {
-                size = 14;
-            } else if (data[i].count < 20) {
-                size = 16;
-            } else if (data[i].count < 25) {
-                size = 18;
-            } else if (data[i].count < 30) {
-                size = 20;
-            } else if (data[i].count < 35) {
-                size = 22;
-            } else if (data[i].count < 40) {
-                size = 24;
-            } else if (data[i].count < 45) {
-                size = 26;
-            } else if (data[i].count < 50) {
-                size = 28;
-            } else if (data[i].count < 55) {
-                size = 30;
-            } else if (data[i].count < 60) {
-                size = 32;
-            } else if (data[i].count < 65) {
-                size = 33;
-            } else if (data[i].count < 70) {
-                size = 34;
-            } else if (data[i].count < 75) {
-                size = 36;
-            } else if (data[i].count < 80) {
-                size = 38;
-            } else if (data[i].count < 85) {
-                size = 40;
-            } else if (data[i].count < 90) {
-                size = 42;
-            } else {
-                size = 48;
-            }
-            value += this.render(["phpr.Default.template", "tag.html"], null, {
-                moduleName: phpr.module,
-                size: size,
-                newline: newline,
-                tag: data[i].string
-            });
-        }
-        if (value === '') {
-            value += phpr.drawEmptyMessage('There are no Tags');
-        }
-        phpr.viewManager.getView().tagsbox.set('content', value);
     },
 
     showTagsResults: function(/*String*/tag) {
