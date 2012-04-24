@@ -28,7 +28,7 @@
 }
 
 .phprojekt .header {
-    background: #294064 url("images/headerbg.png");
+    background: #294064 url("images/bg.png") repeat-x;
     background-repeat: repeat-x;
     width: 100%;
 }
@@ -107,11 +107,9 @@
 .phprojekt .subheader {
     width: 100%;
     height: 26px;
-    background: white;
 }
 
 .phprojekt .subheader .navigationContainerTitle {
-    background: #294064;
     height: 26px;
     line-height: 24px;
     color: #ffffff;
@@ -149,13 +147,13 @@
 
 .phprojekt .navigationContainer {
     padding-left: 10px;
-    background: #294064 !important;
     overflow-y: hidden;
 }
 
 .phprojekt .treeNavigation {
     margin: 0;
     height: 100%;
+    background: #084e6a url('images/treebg.png') repeat-x;
     overflow: none;
 }
 
@@ -345,7 +343,6 @@ h1,h2,h3,h4,h5,h6 {
 
 /* Results */
 .phprojekt .results {
-    font-family: "Verdana";
     font-size: 11px;
     font-weight: 400;
     font-style: normal;
@@ -383,7 +380,6 @@ h1,h2,h3,h4,h5,h6 {
     padding-left: 10px;
     vertical-align: center;
     color: #CBCBCB;
-    font-family: "Verdana";
     font-size: 20px;
     font-weight: 400;
     font-style: normal;
@@ -421,7 +417,6 @@ h1,h2,h3,h4,h5,h6 {
     padding-left: 10px;
     vertical-align: center;
     color: #fff;
-    font-family: "Verdana";
     font-size: 12px;
     font-weight: 600;
     font-style: normal;
