@@ -72,4 +72,13 @@ interface Phprojekt_Model_Interface extends Iterator
      * @return boolean True on sucessful save.
      */
     public function save();
+
+    /**
+     * Checks if the model has a specified field.
+     *
+     * @param string $field Name of the field.
+     *
+     * @return boolean Whether is exists.
+     */
+    public function hasField($field);
 }
