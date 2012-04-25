@@ -61,7 +61,6 @@ dojo.declare("phpr.Default.System.Tree", phpr.Default.System.Component, {
                 treeNode.set('content', this.tree.domNode);
                 this.tree.startup();
                 dojo.connect(this.tree, "onClick", dojo.hitch(this, "onItemClick"));
-                phpr.viewManager.getView().navigationContainerTitle.set('content', phpr.nls.get('Projects'));
                 this.finishDraw();
             }, tree)
         });

@@ -105,20 +105,9 @@
 }
 
 .phprojekt .subheader {
+    background: none;
     width: 100%;
     height: 26px;
-}
-
-.phprojekt .subheader .navigationContainerTitle {
-    height: 26px;
-    line-height: 24px;
-    color: #ffffff;
-    font-weight: 700;
-    padding-left: 8px;
-}
-
-.phprojekt .subheader .navigationContainerTitle p {
-    margin-left: 15px;
 }
 
 .phprojekt .subheader .tab {
