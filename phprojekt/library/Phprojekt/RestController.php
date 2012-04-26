@@ -53,13 +53,13 @@ abstract class Phprojekt_RestController extends Zend_Rest_Controller
 
     public function indexAction()
     {
-        $projectId = (int) $this->getRequest()->getParam('projectId', null);
+        $projectId = (int) $this->getRequest()->getParam('projectId', 0);
         $range     = $this->getRequest()->getHeader('range');
         sscanf($range, 'items=%d-%d', $start, $end);
         $count     = $end - $start + 1;
         $sort      = $this->getRequest()->getParam('sort', null);
         $recursive = $this->getRequest()->getParam('recursive', 'false');
-        $recursive = $recursive === 'true' ? true : false;
+        $recursive = $recursive === 'true';
         $model     = $this->newModelObject();
         $moduleId  = Phprojekt_Module::getId($this->getRequest()->getModuleName());
         $isGlobal  = Phprojekt_Module::saveTypeIsGlobal($moduleId);
@@ -166,7 +166,7 @@ abstract class Phprojekt_RestController extends Zend_Rest_Controller
     {
         $filters = $this->getRequest()->getParam('filters', "[]");
 
-        $filters = json_decode($filters);
+        $filters = Zend_Json_Decoder::decode($filters);
 
         if (!empty($filters)) {
             $filterClass = new Phprojekt_Filter($this->getModelObject(), $where);
