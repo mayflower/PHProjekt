@@ -186,7 +186,7 @@ class Calendar2_CalDAV_CalendarBackend extends Sabre_CalDAV_Backend_Abstract
         $calendarData->add('prodid', 'Phprojekt ' . Phprojekt::getVersion());
         $lastModified = $events[0]->lastModified;
         foreach ($events as $e) {
-            $calendarData->add($e->asVObject());
+            $calendarData->add($e->asVObject($events));
             $lastModified = max($lastModified, $e->lastModified);
         }
         $lastModified = new Datetime($lastModified);
