@@ -1207,7 +1207,7 @@ class IndexController extends Zend_Controller_Action
      *
      * @return void
      */
-    private function _fileRenderView($itemId, $field, $value)
+    private function _fileRenderView($itemId, $field, $files)
     {
         $this->getResponse()->clearHeaders();
         $this->getResponse()->clearBody();
@@ -1236,31 +1236,36 @@ class IndexController extends Zend_Controller_Action
         $this->view->itemId         = $itemId;
         $this->view->field          = $field;
         $this->view->fieldId        = $fieldId;
-        $this->view->value          = $value;
         $this->view->csrfToken      = $csrfNamespace->token;
         $this->view->maxUploadSize  = (isset($config->maxUploadSize)) ? (int) $config->maxUploadSize :
             Phprojekt::DEFAULT_MAX_UPLOAD_SIZE;
 
-        $filesForView = array();
+        $model = $this->getModelObject();
+        $model->find($itemId);
+
+        $filesForView         = array();
+        $hasDownloadRight     = $model->hasRight(Phprojekt_Auth_Proxy::getEffectiveUserId(), Phprojekt_Acl::DOWNLOAD);
+        $hasWriteRight        = $model->hasRight(Phprojekt_Auth_Proxy::getEffectiveUserId(), Phprojekt_Acl::WRITE);
+        $this->view->disabled = !$hasWriteRight;
 
         // Is there any file?
-        if (!empty($value)) {
-            $files = explode('||', $value);
-            $model = $this->getModelObject();
-            $model->find($itemId);
-            $i      = 0;
-            foreach ($files as $file) {
-                $fileName = strstr($file, '|');
-                $fileData = 'id/' . $itemId . '/field/' . $field . '/order/'
-                    . (string) ($i + 1) . '/csrfToken/' . $csrfNamespace->token;
+        if (!empty($files)) {
+            $i = 0;
 
-                $filesForView[$i] = array('fileName' => substr($fileName, 1));
-                if ($model->hasRight(Phprojekt_Auth_Proxy::getEffectiveUserId(), Phprojekt_Acl::DOWNLOAD)) {
+            foreach ($files as $file) {
+                $fileName = $file['name'];
+                $fileHash = $file['md5'];
+                $fileData = 'id/' . $itemId . '/field/' . $field . '/hash/' . $fileHash . '/csrfToken/' . $csrfNamespace->token;
+
+                $filesForView[$i] = array(
+                    'fileName' => $fileName,
+                    'hash' => $fileHash
+                );
+
+                if ($hasDownloadRight) {
                     $filesForView[$i]['downloadLink'] = $linkBegin . 'fileDownload/' . $linkData . $fileData;
                 }
-                if ($model->hasRight(Phprojekt_Auth_Proxy::getEffectiveUserId(), Phprojekt_Acl::WRITE)) {
-                    $filesForView[$i]['deleteLink'] = $linkBegin . 'fileDelete/' . $linkData . $fileData;
-                }
+
                 $i++;
             }
         }

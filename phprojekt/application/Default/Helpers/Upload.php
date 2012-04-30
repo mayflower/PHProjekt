@@ -46,7 +46,7 @@ final class Default_Helpers_Upload
      * @param string                    $field  Name of the field in the module.
      * @param integer                   $itemId Id of the current item.
      *
-     * @return string Md5 string of all the files separated by ||.
+     * @return array of all the files.
      */
     static public function initValue($model, $field, $itemId)
     {
@@ -57,9 +57,10 @@ final class Default_Helpers_Upload
             $model->find($itemId);
             $value = $model->$field;
         }
-        $_SESSION['uploadedFiles_' . $field] = $value;
 
-        return $value;
+        $files = self::parseModelValues($value);
+        self::_setSessionFiles($files, $field);
+        return $files;
     }
 
     /**
@@ -68,13 +69,13 @@ final class Default_Helpers_Upload
      * @param Phprojekt_Model_Interface $model  Current module.
      * @param string                    $field  Name of the field in the module.
      *
-     * @return string Md5 string of all the files separated by ||.
+     * @return array list of files.
      */
     static public function getFiles($model, $field)
     {
         self::_checkParamField($model, $field);
 
-        return $_SESSION['uploadedFiles_' . $field];
+        return self::_getSessionFiles($field);
     }
 
     /**
@@ -95,9 +96,9 @@ final class Default_Helpers_Upload
         self::_checkParamField($model, $field);
         self::_checkWritePermission($model, $itemId);
 
-        $addedValue = '';
         $config     = Phprojekt::getInstance()->getConfig();
-        $value      = $_SESSION['uploadedFiles_' . $field];
+
+        $files = self::_getSessionFiles($field);
 
         // Remove all the upload files that are not "uploadedFile"
         foreach (array_keys($_FILES) as $key) {
@@ -105,10 +106,14 @@ final class Default_Helpers_Upload
                 unset($_FILES[$key]);
             }
         }
+
         // Fix name for save it as md5
         if (is_array($_FILES) && !empty($_FILES) && isset($_FILES['uploadedFile'])) {
             $md5name                        = md5(mt_rand() . time());
-            $addedValue                     = $md5name . '|' . $_FILES['uploadedFile']['name'];
+            $addedFile                     = array(
+                'md5' => $md5name,
+                'name' => $_FILES['uploadedFile']['name']
+            );
             $_FILES['uploadedFile']['name'] = $md5name;
         }
 
@@ -128,14 +133,11 @@ final class Default_Helpers_Upload
             }
             throw new Exception(implode("\n", $messages));
         } else {
-            if (!empty($value)) {
-                $value .= '||';
-            }
-            $value .= $addedValue;
+            $files[] = $addedFile;
         }
-        $_SESSION['uploadedFiles_' . $field] = $value;
 
-        return $value;
+        self::_setSessionFiles($files, $field);
+        return $files;
     }
 
     /**
