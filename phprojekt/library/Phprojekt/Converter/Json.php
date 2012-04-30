@@ -294,6 +294,6 @@ class Phprojekt_Converter_Json
      */
     private static function _makeJsonString($data)
     {
-        return '{}&&(' . Zend_Json_Encoder::encode($data) . ')';
+        return '{}&&(' . Zend_Json::encode($data) . ')';
     }
 }
