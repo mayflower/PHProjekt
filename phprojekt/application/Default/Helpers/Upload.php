@@ -464,4 +464,41 @@ final class Default_Helpers_Upload
     {
         return Phprojekt::getInstance()->getConfig()->uploadPath . $hash;
     }
+    /**
+     * Retrieves a list of file hashes that are without association for longer than
+     * 2 hours.
+     */
+    static private function _getOldFileHashes() {
+        $db = Phprojekt::getInstance()->getDb();
+
+        $select = $db->select()->from('uploaded_unused_files', array('hash', 'created'))
+            ->where('created < ?', new Zend_Db_Expr('DATE_SUB(NOW(), INTERVAL 2 HOUR)'));
+        $stmt = $select->query();
+
+        $rows = $stmt->fetchAll();
+        $hashes = array();
+
+        foreach ($rows as $row) {
+            $hashes[] = $row['hash'];
+        }
+
+        return $hashes;
+    }
+
+    /**
+     * Deletes all files in the "unused_upload" table older than 2 hours.
+     *
+     * @return  void
+     */
+    static public function cleanUnusedFiles() {
+
+        $files = array();
+        $hashes = self::_getOldFileHashes();
+        foreach ($hashes as $hash) {
+            $files[] = array('md5' => $hash);
+        }
+
+        self::removeFilesFromUnusedFileList($files);
+        self::deleteFiles($files);
+    }
 }
