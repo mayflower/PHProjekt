@@ -126,7 +126,7 @@ class Calendar2_Migration extends Phprojekt_Migration_Abstract
         $db->query(
             'INSERT INTO calendar2 SELECT id, project_id, title AS summary, notes AS description, place AS
             location, "" AS comments, start_datetime AS start, NULL AS last_end, end_datetime AS end,
-            owner_id, rrule, NULL AS recurrence_id, visibility, NULL AS uid, NOW() AS last_modified, NULL AS
+            owner_id, rrule, NULL AS recurrence_id, visibility, id AS uid, NOW() AS last_modified, id AS
             uri FROM calendar WHERE parent_id = 0 OR parent_id = id OR rrule != ""'
         );
 
@@ -253,6 +253,7 @@ class Calendar2_Migration extends Phprojekt_Migration_Abstract
                 );
             } else if (!in_array($e['start_datetime'], $regularTimes)) {
                 // This event doesn't really belong here. We just create a new one for the user independent of $parent.
+                $uid = Calendar2_Models_Calendar2::generateUniqueIdentifier();
                 $this->_db->insert(
                     'calendar2',
                     array(
@@ -266,7 +267,10 @@ class Calendar2_Migration extends Phprojekt_Migration_Abstract
                         'end' => $e['end_datetime'],
                         'owner_id' => $e['participant_id'],
                         'rrule' => '',
-                        'visibility' => $e['visibility'] + 1
+                        'visibility' => $e['visibility'] + 1,
+                        'uri' => $uid,
+                        'uid' => $uid
+
                     )
                 );
                 $newCalendarId = $this->_db->lastInsertId();
@@ -281,8 +285,12 @@ class Calendar2_Migration extends Phprojekt_Migration_Abstract
             }
         }
 
-        if (!empty($deleted)) $this->_deletedOccurrences($parent, $deleted);
-        if (!empty($added))   $this->_addedOccurrences($parent, $added, $addedEventsParticipants);
+        if (!empty($deleted)) {
+            $this->_deletedOccurrences($parent, $deleted);
+        }
+        if (!empty($added)) {
+            $this->_addedOccurrences($parent, $added, $addedEventsParticipants);
+        }
     }
 
     /** negative if $dt < $event, 0 on ==, positive if $dt > $event */
