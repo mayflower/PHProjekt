@@ -134,6 +134,7 @@ final class Default_Helpers_Upload
             throw new Exception(implode("\n", $messages));
         } else {
             $files[] = $addedFile;
+            self::addFilesToUnusedFileList(array($addedFile));
         }
 
         self::_setSessionFiles($files, $field);
@@ -200,51 +201,81 @@ final class Default_Helpers_Upload
     }
 
     /**
-     * Delete a file and return the new value.
+     * Delete a files.
      *
-     * If the field parameter is wrong, the function die().
-     * If the order parameter is wrong, the function die().
-     *
-     * @param Phprojekt_Model_Interface $model  Current module.
-     * @param string                    $field  Name of the field in the module.
-     * @param integer                   $itemId Id of the current item.
-     * @param integer                   $order  Position of the file in the value string.
+     * @param array $files list of files.
      *
      * @throws Exception On no write access.
      *
-     * @return string Md5 string of all the files separated by ||.
+     * @return void.
      */
-    static public function deleteFile($model, $field, $itemId, $order)
+    static public function deleteFiles($files)
     {
-        self::_checkParamField($model, $field);
-        self::_checkWritePermission($model, $itemId);
-
-        $files = explode('||', $_SESSION['uploadedFiles_' . $field]);
-        self::_checkParamOrder($order, count($files), $model);
-
-        // Delete the file name and md5 from the string
-        $value = '';
-        $i     = 1;
         foreach ($files as $file) {
-            if ($i != $order) {
-                if ($value != '') {
-                    $value .= '||';
-                }
-                $value .= $file;
-            } else {
-                // Delete the file from the server
-                $md5Name          = substr($file, 0, strpos($file, '|'));
-                $fileAbsolutePath = Phprojekt::getInstance()->getConfig()->uploadPath . $md5Name;
-                if (preg_match("/^[A-Fa-f0-9]{32,32}$/", $md5Name) && file_exists($fileAbsolutePath)) {
-                    unlink($fileAbsolutePath);
-                }
+            $hash = $file['md5'];
+            $fileAbsolutePath = self::_absoluteFilePathFromHash($hash);
+
+            if (self::_isValidFileHash($hash) && file_exists($fileAbsolutePath)) {
+                unlink($fileAbsolutePath);
             }
-            $i++;
+        }
+    }
+
+    /**
+     * Add files to the List of unused files.
+     *
+     * @param array $hashes array of file hashes.
+     *
+     * @return void.
+     */
+    static public function addFilesToUnusedFileList($files)
+    {
+        if (count($files) === 0) {
+            return;
         }
 
-        $_SESSION['uploadedFiles_' . $field] = $value;
+        $db = Phprojekt::getInstance()->getDb();
+        $table = new Zend_Db_Table(array(
+            'db' => $db,
+            'name' => 'uploaded_unused_files'
+        ));
 
-        return $value;
+        $rows = array();
+
+        foreach ($files as $file) {
+            $rows[] = array(
+                "created" => new Zend_Db_Expr('NOW()'),
+                "hash" => $file['md5']
+            );
+        }
+
+        foreach ($rows as $row) {
+            $table->insert($row);
+        }
+    }
+
+    /**
+     * Removes files from the List of unused files.
+     *
+     * @param array $hashes array of file hashes.
+     *
+     * @return void.
+     */
+    static public function removeFilesFromUnusedFileList($files)
+    {
+        if (count($files) === 0) {
+            return;
+        }
+
+        $db = Phprojekt::getInstance()->getDb();
+
+        $hashes = array();
+        foreach ($files as $file) {
+            $hashes[] = $file['md5'];
+        }
+
+        $where = $db->quoteInto("hash IN (?)", $hashes);
+        $db->delete('uploaded_unused_files', $where);
     }
 
     /**
