@@ -150,7 +150,7 @@ class Calendar2_IndexController extends IndexController
             Phprojekt_Auth_Proxy::switchToUserById($userId);
         }
 
-        $timezone = $this->_getUserTimezone();
+        $timezone = Phprojekt_User_User::getUserDateTimeZone();
         $start = new Datetime($dateStart, $timezone);
         $start->setTime(0, 0, 0);
         $end = new Datetime($dateEnd, $timezone);
@@ -223,7 +223,7 @@ class Calendar2_IndexController extends IndexController
             $users[$index] = (int) $user;
         }
 
-        $start = new Datetime($date, $this->_getUserTimezone());
+        $start = new Datetime($date, Phprojekt_User_User::getUserDateTimeZone());
         $start->setTime(0, 0, 0);
         $end = clone $start;
         $end->setTime(23, 59, 59);
@@ -621,8 +621,8 @@ class Calendar2_IndexController extends IndexController
         if (!self::_validateTimestamp($end)) {
             throw new Zend_Controller_Action_Exception("Invalid end timestamp '$start'", 400);
         }
-        $start = new Datetime($start, $this->_getUserTimezone());
-        $end   = new Datetime($end, $this->_getUserTimezone());
+        $start = new Datetime($start, Phprojekt_User_User::getUserDateTimeZone());
+        $end   = new Datetime($end, Phprojekt_User_User::getUserDateTimeZone());
 
         $model  = new Calendar2_Models_Calendar2();
         $events = $model->fetchAllForPeriod($start, $end, $user);
@@ -674,8 +674,8 @@ class Calendar2_IndexController extends IndexController
         if (!self::_validateTimestamp($end)) {
             throw new Zend_Controller_Action_Exception("Invalid end timestamp '$start'", 400);
         }
-        $start = new Datetime($start, $this->_getUserTimezone());
-        $end   = new Datetime($end, $this->_getUserTimezone());
+        $start = new Datetime($start, Phprojekt_User_User::getUserDateTimeZone());
+        $end   = new Datetime($end, Phprojekt_User_User::getUserDateTimeZone());
 
         $model  = new Calendar2_Models_Calendar2();
         $events = $model->fetchAllForPeriod($start, $end);
@@ -832,29 +832,6 @@ class Calendar2_IndexController extends IndexController
         }
 
         return $model->id;
-    }
-
-    /**
-     * This function wraps around the phprojekt setting for the user timezone
-     * to return a DateTimeZone object.
-     *
-     * @return DateTimeZone The timezone of the user.
-     */
-    private function _getUserTimezone()
-    {
-        $tz = Phprojekt_User_User::getSetting('timezone', '0');
-        $tz = explode('_', $tz);
-        $hours = (int) $tz[0];
-        if ($hours >= 0) {
-            $hours = '+' . $hours;
-        }
-        $minutes = '00';
-        if (array_key_exists(1, $tz)) {
-            // We don't need the minus sign
-            $minutes = abs($tz[1]);
-        }
-        $datetime = new Datetime($hours . ':' . $minutes);
-        return $datetime->getTimezone();
     }
 
     /**
