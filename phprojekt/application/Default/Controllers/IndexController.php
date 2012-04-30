@@ -1216,6 +1216,7 @@ class IndexController extends Zend_Controller_Action
         $csrfNamespace = new Zend_Session_Namespace($sessionName);
         $config        = Phprojekt::getInstance()->getConfig();
         $linkBegin     = $config->webpath . 'index.php/' . $this->getModuleName() . '/index/';
+        $fieldId       = $this->getRequest()->getParam('fieldId', '');
 
         // Add all the extra parameters that have the original URL
         $linkData      = '';
@@ -1234,6 +1235,7 @@ class IndexController extends Zend_Controller_Action
         $this->view->fileName       = null;
         $this->view->itemId         = $itemId;
         $this->view->field          = $field;
+        $this->view->fieldId        = $fieldId;
         $this->view->value          = $value;
         $this->view->csrfToken      = $csrfNamespace->token;
         $this->view->maxUploadSize  = (isset($config->maxUploadSize)) ? (int) $config->maxUploadSize :

@@ -121,6 +121,8 @@ dojo.declare("phpr.Default.Field", phpr.Default.System.Component, {
     uploadFieldRender: function(itemlabel, itemid, itemvalue, itemrequired, itemdisabled, iFramePath, itemhint) {
         phpr.destroyWidget(itemid);
         phpr.destroyWidget(itemid + "_disabled");
+
+        var fieldId = Math.floor(Math.random() * 100000);
         var widget = new phpr.Default.System.TemplateWrapper({
             templateName: "phpr.Default.template.form.upload.html",
             templateData: {
@@ -130,7 +132,7 @@ dojo.declare("phpr.Default.Field", phpr.Default.System.Component, {
                 value:      itemvalue,
                 required:   itemrequired,
                 disabled:   (itemdisabled) ? "disabled" : '',
-                iFramePath: iFramePath,
+                iFramePath: iFramePath + "/fieldId/" + fieldId,
                 tooltip:    this.getTooltip(itemhint)
             }
         });
