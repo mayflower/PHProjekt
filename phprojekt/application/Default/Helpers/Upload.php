@@ -309,28 +309,6 @@ final class Default_Helpers_Upload
     }
 
     /**
-     * Checks that the 'order' parameter for download and delete file actions is valid.
-     * If not, terminates script execution printing an error.
-     *
-     * @param integer                   $order  Position of the file (Can be many uploaded files in the same field).
-     * @param integer                   $amount Number of uploaded files for the field.
-     * @param Phprojekt_Model_Interface $model  Current module.
-     *
-     * @return void
-     */
-    static private function _checkParamOrder($order, $amount, $model)
-    {
-        if ($order < 1 || $order > $amount) {
-            $error  = Phprojekt::getInstance()->translate('Error in received parameter, consult the admin. Parameter:');
-            $error .= " order";
-
-            self::_logError("Error: wrong 'order' parameter trying to Download or Delete a file.",
-                array(get_class($model), $order));
-            die($error);
-        }
-    }
-
-    /**
      * Checks that the user has permission for modifying the item, in this case for uploading or deleting files.
      *
      * @param Phprojekt_Model_Interface $model  Current module.
