@@ -337,4 +337,100 @@ final class Default_Helpers_Upload
         Phprojekt::getInstance()->getLog()->err($message . " User Id: " . Phprojekt_Auth::getUserId()
             . " - Values: ". implode("," , $values));
     }
+
+    /**
+     * Gets the files from the session for the provided field.
+     */
+    static private function _getSessionFiles($field)
+    {
+        try {
+            $files = unserialize($_SESSION['uploadedFiles_' . $field]);
+        } catch (Exception $e) {
+            $files = array();
+        }
+
+        if (!is_array($files)) {
+            $files = array();
+        }
+
+        return $files;
+    }
+
+    /**
+     * Saves the given files into the session for the provided field.
+     */
+    static private function _setSessionFiles($files, $field)
+    {
+        $value = serialize($files);
+        $_SESSION['uploadedFiles_' . $field] = $value;
+        return $value;
+    }
+
+    /**
+     * Parses the file lists in the model into a usable format.
+     *
+     * This has to be done to not break backwards compatibility.
+     */
+    static public function parseModelValues($value)
+    {
+        $fileFields = explode('||', $value);
+        $files = array();
+
+        if ($fileFields[0] !== "") {
+            foreach ($fileFields as $fileField) {
+                list($md5Name, $fileName) = explode("|", $fileField, 2);
+                $files[] = array(
+                    'md5' => $md5Name,
+                    'name' => $fileName
+                );
+            }
+        }
+
+        return $files;
+    }
+
+    /**
+     * Returns a file from the session by hash and field.
+     *
+     * @param string    $hash   Hash of the file.
+     * @param string    $field  Name of the field in the module.
+     *
+     * @return array    The file and hash.
+     */
+    static public function getSessionFileFromHash($hash, $field)
+    {
+        $files = self::_getSessionFiles($field);
+
+        foreach ($files as $file) {
+            if ($file['md5'] == $hash) {
+                return $file;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns true if the passed hash is a valid filename hash.
+     *
+     * @param string    $hash   Hash of the file.
+     *
+     * @return boolean  Correct hash or not.
+     */
+    static private function _isValidFileHash($hash)
+    {
+        return preg_match("/^[A-Fa-f0-9]{32,32}$/", $hash);
+    }
+
+    /**
+     * Returns the absolute path of a file by hash.
+     *
+     * @param string    $hash   Hash of the file.
+     *
+     * @return string   The absolute path.
+     */
+    static private function _absoluteFilePathFromHash($hash)
+    {
+        return Phprojekt::getInstance()->getConfig()->uploadPath . $hash;
+    }
 }
