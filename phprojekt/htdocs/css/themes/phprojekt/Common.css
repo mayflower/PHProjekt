@@ -502,7 +502,7 @@ h1,h2,h3,h4,h5,h6 {
 .phprojekt .breadCrumb,
 .phprojekt .breadCrumb a {
     color: #CBCBCB;
-    margin-left: 1%;
+    padding-left: 1ex;
     margin-top: 9px;
 }
 
