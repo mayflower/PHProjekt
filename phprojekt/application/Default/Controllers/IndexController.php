@@ -1237,6 +1237,11 @@ class IndexController extends Zend_Controller_Action
                     $filesForView[$i]['downloadLink'] = $linkBegin . 'fileDownload/' . $linkData . $fileData;
                 }
 
+                $fileinfo = Default_Helpers_Upload::getInfosFromFile($file);
+
+                $filesForView[$i]['size'] = $fileinfo['size'];
+                $filesForView[$i]['ctime'] = $fileinfo['ctime'];
+
                 $i++;
             }
         }

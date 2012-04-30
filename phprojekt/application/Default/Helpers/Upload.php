@@ -464,6 +464,27 @@ final class Default_Helpers_Upload
     {
         return Phprojekt::getInstance()->getConfig()->uploadPath . $hash;
     }
+
+    /**
+     * Returns size and creation time of the given file.
+     *
+     * @param array     $file   The file.
+     *
+     * @return mixed    size and ctime of the file if file is valid, null else;
+     */
+    static public function getInfosFromFile($file) {
+        if (self::_isValidFileHash($file['md5'])) {
+            $stat = lstat(self::_absoluteFilePathFromHash($file['md5']));
+
+            return array(
+                "size" => $stat['size'],
+                "ctime" => $stat['ctime']
+            );
+        }
+
+        return null;
+    }
+
     /**
      * Retrieves a list of file hashes that are without association for longer than
      * 2 hours.
