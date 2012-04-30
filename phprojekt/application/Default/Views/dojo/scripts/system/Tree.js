@@ -40,6 +40,7 @@ dojo.declare("phpr.Default.System.Tree", phpr.Default.System.Component, {
     constructor: function() {
         this.setUrl();
         this.setId(null);
+        dojo.subscribe("phpr.activeModuleChanged", this, "drawBreadCrumb");
     },
 
     loadTree: function() {
