@@ -151,52 +151,50 @@ final class Default_Helpers_Upload
      * @param Phprojekt_Model_Interface $model  Current module.
      * @param string                    $field  Name of the field in the module.
      * @param integer                   $itemId Id of the current item.
-     * @param integer                   $order  Position of the file in the value string.
+     * @param string                    $hash  Hash of the file.
      *
      * @return string Md5 string of all the files separated by ||.
      */
-    static public function downloadFile($model, $field, $itemId, $order)
+    static public function downloadFile($model, $field, $itemId, $hash)
     {
         self::_checkParamField($model, $field);
+        $files = self::_getSessionFiles($field);
+        $file = self::getSessionFileFromHash($hash, $field);
 
+        $permitted = false;
         if ($itemId > 0) {
             $model->find($itemId);
             // The user has download permission?
 
-            if (!$model->hasRight(Phprojekt_Auth_Proxy::getEffectiveUserId(), Phprojekt_Acl::DOWNLOAD)) {
-                $error = Phprojekt::getInstance()->translate('You don\'t have permission for downloading on this '
-                    . 'item.');
-                die($error);
+            if ($model->hasRight(Phprojekt_Auth_Proxy::getEffectiveUserId(), Phprojekt_Acl::DOWNLOAD)) {
+                $permitted = true;
             }
+        } else if (!is_null($file)) {
+            $permitted = true;
         }
 
-        $files = explode('||', $_SESSION['uploadedFiles_' . $field]);
-        self::_checkParamOrder($order, count($files), $model);
+        $md5Name  = $file['md5'];
+        $fileName = $file['name'];
 
-        $md5Name  = '';
-        $fileName = '';
-        if (isset($files[$order - 1])) {
-            list($md5Name, $fileName) = explode("|", $files[$order - 1], 2);
+        if (!$permitted || !self::_isValidFileHash($md5Name) || empty($fileName)) {
+            $error = Phprojekt::getInstance()->translate('You don\'t have permission for downloading on this item.');
+            die($error);
         }
 
-        if (!empty($fileName) && preg_match("/^[A-Fa-f0-9]{32,32}$/", $md5Name)) {
-            $md5Name = Phprojekt::getInstance()->getConfig()->uploadPath . $md5Name;
-            if (file_exists($md5Name)) {
-                header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
-                header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
-                header("Cache-Control: no-store, no-cache, must-revalidate");
-                header("Cache-Control: post-check=0, pre-check=0", false);
-                header("Pragma: no-cache");
-                header('Content-Length: ' . filesize($md5Name));
-                header("Content-Disposition: attachment; filename=\"" . (string) $fileName . "\"");
-                header('Content-Type: download');
-                $fh = fopen($md5Name, 'r');
-                fpassthru($fh);
-            } else {
-                die('The file does not exists');
-            }
+        $md5Name = self::_absoluteFilePathFromHash($md5Name);
+        if (file_exists($md5Name)) {
+            header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
+            header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+            header("Cache-Control: no-store, no-cache, must-revalidate");
+            header("Cache-Control: post-check=0, pre-check=0", false);
+            header("Pragma: no-cache");
+            header('Content-Length: ' . filesize($md5Name));
+            header("Content-Disposition: attachment; filename=\"" . (string) $fileName . "\"");
+            header('Content-Type: download');
+            $fh = fopen($md5Name, 'r');
+            fpassthru($fh);
         } else {
-            die('Wrong file');
+            die('The file does not exists');
         }
     }
 

@@ -1144,40 +1144,11 @@ class IndexController extends Zend_Controller_Action
      */
     public function fileDownloadAction()
     {
-        $order = (int) $this->getRequest()->getParam('order', null);
+        $hash = (int) $this->getRequest()->getParam('hash', null);
 
         list($model, $field, $itemId) = $this->_getFileParameters();
 
-        Default_Helpers_Upload::downloadFile($model, $field, $itemId, $order);
-    }
-
-    /**
-     * Deletes a file and call the render for draw the upload field.
-     *
-     * OPTIONAL request parameters:
-     * <pre>
-     *  - integer <b>id</b>    Id of the current item.
-     *  - string  <b>field</b> Name of the field in the module.
-     *  - integer <b>order</b> Position of the file (Can be many uploaded files in the same field).
-     * </pre>
-     *
-     * @return void
-     */
-    public function fileDeleteAction()
-    {
-        $order = (int) $this->getRequest()->getParam('order', 0);
-
-        list($model, $field, $itemId) = $this->_getFileParameters();
-
-        try {
-            $value = Default_Helpers_Upload::deleteFile($model, $field, $itemId, $order);
-        } catch (Exception $error) {
-            // Show error to user
-            $this->view->errorMessage = $error->getMessage();
-            $value                    = Default_Helpers_Upload::getFiles($model, $field);
-        }
-
-        $this->_fileRenderView($itemId, $field, $value);
+        Default_Helpers_Upload::downloadFile($model, $field, $itemId, $hash);
     }
 
     /**
