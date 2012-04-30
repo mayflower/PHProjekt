@@ -23,80 +23,33 @@
         ?>
     <script type="text/javascript">
         var par   = window.parent.document;
-        var input = par.getElementById("<?php echo $this->field; ?>");
-        if (input) {
-            input.value = "<?php echo $this->value; ?>";
-        }
     </script>
 </head>
 <body class="phprojekt">
+<?php if (!$this->disabled) { ?>
     <form method="post" id="upload" action="<?php echo $this->formPath; ?>" enctype="multipart/form-data" style="display:inline;">
         <div style="display:inline;">
             <input type="hidden" name="field" id="field" value="<?php echo $this->field; ?>" />
             <input type="hidden" name="id" id="id" value="<?php echo $this->itemId; ?>" />
+            <input type="hidden" name="fieldId" id="fieldId" value="<?php echo $this->fieldId; ?>" />
             <input type="hidden" name="csrfToken" id="csrfToken" value="<?php echo $this->csrfToken; ?>" />
             <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo $this->maxUploadSize; ?>" />
             <input type="file" name="uploadedFile" id="uploadedFile" onChange="dojo.byId('upload').submit();" />
         </div>
     </form>
     <br />
-    <?php
-    $iframeSize = 23;
-    if (isset($this->errorMessage) && !empty($this->errorMessage)) {
-        echo '
-        <div style="padding: 1px 0 1px 5px; font-weight: bold;">
-            '. $this->errorMessage .'
-        </div>
-        ';
-    }
-    if (is_array($this->files)) {
-        echo '
-        <div id="filesList" style="display:inline;">
-            <table cellspacing="0" cellpadding="0">
-        ';
-        $iframeSize += count($this->files)*20;
-        foreach ($this->files as $file) {
-            if (isset($file['fileName'])) {
-                echo '
-            <tr>
-                <td style="padding: 0 0 0 5px; vertical-align: middle;">';
-                if (isset($file['downloadLink'])) {
-                    echo '
-                    <a href="#" onClick="window.location.href=\''. $file['downloadLink'] . '\'; return false;" target="_blank">'
-                    . $file['fileName'] . '</a>';
-                } else {
-                    echo $file['fileName'];
-                }
-                echo '
-                </td>
-                <td style="padding: 0 0 0 5px; width:5px">
-                    &nbsp;
-                </td>';
-                if (isset($file['deleteLink'])) {
-                    echo '
-                <td style="padding: 0 0 0 5px;">
-                    <button dojoType="dijit.form.Button" showLabel="false" iconClass="close" class="closeButton"
-                    onClick="window.location.href=\''. $file['deleteLink'] . '\';">
-                    </button>
-                </td>';
-                }
-                echo '
-            </tr>
-                ';
-            }
-        }
-        echo '
-            </table>
-        </div>
-        ';
-    }
-    ?>
-    <!-- Set the parent Iframe size -->
+<?php } ?>
+    <!-- notify the parent -->
     <script type="text/javascript">
-        // Just resize the iframe if we are inside a form (not in the module designer)
-        if (window.parent.document.getElementById('filesIframe_' + '<?php echo $this->field; ?>')) {
-            window.parent.document.getElementById('filesIframe_' + '<?php echo $this->field; ?>').height = <?php echo $iframeSize; ?>;
-        }
+            dojo.ready(function() {
+                var fieldId = <?php echo $this->fieldId; ?>;
+                var callback = window.parent.phpr._uploadCallbacks[fieldId];
+                <?php if (isset($this->errorMessage) && !empty($this->errorMessage)) { ?>
+                    callback(<?php echo json_encode($this->errorMessage); ?>);
+                <?php } else { ?>
+                    callback(null, <?php echo json_encode($this->files); ?>);
+                <?php } ?>
+            });
     </script>
 </body>
 </html>

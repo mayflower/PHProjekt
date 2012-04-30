@@ -1,0 +1,16 @@
+<div>
+    <input
+        data-dojo-attach-point="checkbox"
+        data-dojo-type="dijit.form.CheckBox"
+        data-dojo-props="checked: {{checked}}, disabled: {{disabled}}">
+    <label>
+        {% if downloadable %}
+        <a href="{{downloadLink|safe}}">
+        {% endif %}
+            {{fileName}}
+        {% if downloadable %}
+        </a>
+        {% endif %}
+         {{size}}, {{ctime}}
+    </label>
+</div>
