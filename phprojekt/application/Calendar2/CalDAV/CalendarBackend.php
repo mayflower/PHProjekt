@@ -142,6 +142,14 @@ class Calendar2_CalDAV_CalendarBackend extends Sabre_CalDAV_Backend_Abstract
         return $ret;
     }
 
+    /**
+     * Helper function to get the iCalendar representation of a group of events with a common uri.
+     *
+     * @param string $calendarId                 The calendarId to use.
+     * @param array of Calendar2_Models_Calendar The events to convert. Must have the same ->uri.
+     *
+     * @return array The representation to use for SabreDav.
+     */
     private function getCalendarObjectsGroup($calendarId, $group)
     {
         $calendarData = new Sabre_VObject_Component('vcalendar');
