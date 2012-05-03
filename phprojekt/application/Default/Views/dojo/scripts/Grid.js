@@ -117,7 +117,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
 
         phpr.DataStore.addStore({url: this.getActionsUrl});
         var dlist = new dojo.DeferredList([
-            phpr.MetadataStore.metadataFor(this.main.module),
+            phpr.MetadataStore.metadataFor(this.main.module, this.main.state.projectId),
             phpr.DataStore.requestData({url: this.getActionsUrl})
         ]);
         dlist.addCallback(dojo.hitch(this, "onLoaded"));
