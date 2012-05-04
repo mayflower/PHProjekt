@@ -272,14 +272,17 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
 
     /**
      * Updated the database table for the unused files.
+     * Delete files that are no longe used by the item.
      *
      * @return void
      */
     public function trackUploadedfiles()
     {
-        // Is there is any upload file, -> delete the files from the server
-        $fields = $this->getInformation()->getInfo(Phprojekt_ModelInformation_Default::ORDERING_FORM,
-            Phprojekt_DatabaseManager::COLUMN_NAME);
+        $fields = $this->getInformation()->getInfo(
+            Phprojekt_ModelInformation_Default::ORDERING_FORM,
+            Phprojekt_DatabaseManager::COLUMN_NAME
+        );
+
         foreach ($fields as $field) {
             $field = Phprojekt_ActiveRecord_Abstract::convertVarFromSql($field);
             if ($this->getInformation()->getType($field) == 'upload') {
@@ -317,9 +320,12 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
      */
     public function deleteUploadFiles()
     {
-        // Is there is any upload file, -> delete the files from the server
-        $fields = $this->getInformation()->getInfo(Phprojekt_ModelInformation_Default::ORDERING_FORM,
-            Phprojekt_DatabaseManager::COLUMN_NAME);
+        // If there is any upload file -> delete the files from the server
+        $fields = $this->getInformation()->getInfo(
+            Phprojekt_ModelInformation_Default::ORDERING_FORM,
+            Phprojekt_DatabaseManager::COLUMN_NAME
+        );
+
         foreach ($fields as $field) {
             $field = Phprojekt_ActiveRecord_Abstract::convertVarFromSql($field);
             if ($this->getInformation()->getType($field) == 'upload') {
@@ -339,8 +345,10 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
      */
     public function getFieldsForFilter()
     {
-        return $this->getInformation()->getInfo(Phprojekt_ModelInformation_Default::ORDERING_LIST,
-            Phprojekt_DatabaseManager::COLUMN_NAME);
+        return $this->getInformation()->getInfo(
+            Phprojekt_ModelInformation_Default::ORDERING_LIST,
+            Phprojekt_DatabaseManager::COLUMN_NAME
+        );
     }
 
     /**

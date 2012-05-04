@@ -40,8 +40,6 @@ final class Default_Helpers_Upload
     /**
      * Init the session with the files uploaded or an empty string.
      *
-     * If the field parameter is wrong, the function die().
-     *
      * @param Phprojekt_Model_Interface $model  Current module.
      * @param string                    $field  Name of the field in the module.
      * @param integer                   $itemId Id of the current item.
@@ -80,8 +78,6 @@ final class Default_Helpers_Upload
 
     /**
      * Upload the file and return the new value.
-     *
-     * If the field parameter is wrong, the function die().
      *
      * @param Phprojekt_Model_Interface $model  Current module.
      * @param string                    $field  Name of the field in the module.
@@ -144,10 +140,6 @@ final class Default_Helpers_Upload
     /**
      * Retrieves the file from upload folder.
      *
-     * If the field parameter is wrong, the function die().
-     * If the order parameter is wrong, the function die().
-     * If the file do not exists, the function die().
-     *
      * @param Phprojekt_Model_Interface $model  Current module.
      * @param string                    $field  Name of the field in the module.
      * @param integer                   $itemId Id of the current item.
@@ -178,7 +170,7 @@ final class Default_Helpers_Upload
 
         if (!$permitted || !self::_isValidFileHash($md5Name) || empty($fileName)) {
             $error = Phprojekt::getInstance()->translate('You don\'t have permission for downloading on this item.');
-            die($error);
+            throw new RuntimeException($error);
         }
 
         $md5Name = self::_absoluteFilePathFromHash($md5Name);
@@ -194,7 +186,8 @@ final class Default_Helpers_Upload
             $fh = fopen($md5Name, 'r');
             fpassthru($fh);
         } else {
-            die('The file does not exists');
+            $error = Phprojekt::getInstance()->translate('The file does not exists');
+            throw new RuntimeException($error);
         }
     }
 
@@ -302,9 +295,12 @@ final class Default_Helpers_Upload
             $error  = Phprojekt::getInstance()->translate('Error in received parameter, consult the admin. Parameter:');
             $error .= ' field';
 
-            self::_logError("Error: wrong 'field' parameter trying to Download or Delete a file.",
-                array(get_class($model), $field));
-            die($error);
+            self::_logError(
+                "Error: wrong 'field' parameter trying to Download or Delete a file.",
+                array(get_class($model), $field)
+            );
+
+            throw new InvalidArgumentException($error);
         }
     }
 
