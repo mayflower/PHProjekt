@@ -48,6 +48,14 @@
     color: white;
 }
 
+.phprojekt .dijitTreeRowHover .dijitTreeExpandoOpened {
+    background-position: 0 0;
+}
+
+.phprojekt .dijitTreeRowHover .dijitTreeExpandoClosed {
+    background-position: -18px 0;
+}
+
 .phprojekt .dijitTreeContent {
     min-height: 18px;
     min-width: 18px;
@@ -87,6 +95,7 @@
 
 .phprojekt .dijitTreeExpandoClosed {
     background-image: url('images/spriteTree.gif');
+    background-position: 0 0;
 }
 
 .phprojekt .dijitTreeExpandoLeaf {
