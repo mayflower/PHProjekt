@@ -19,15 +19,13 @@
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 
-dojo.provide("phpr.Default.Grid");
+dojo.provide("phpr.Default.LegacyGrid");
 
 dojo.require("dijit.form.Button");
 dojo.require("dojo.data.ItemFileWriteStore");
 dojo.require("dojox.grid.DataGrid");
-dojo.require("dojo.store.JsonRest");
-dojo.require("dojo.data.ObjectStore");
 
-dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
+dojo.declare("phpr.Default.LegacyGrid", phpr.Default.System.Component, {
     // Summary:
     //    Class for displaying a PHProjekt grid
     // Description:
@@ -38,6 +36,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
     _newRowValues: [],
     _oldRowValues: [],
     gridData:      [],
+    url:           null,
     getActionsUrl: null,
     _tagUrl:       null,
     _exportButton: null,
@@ -65,6 +64,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
     _rules:            [],
     _filterCookie:     null,
     _deleteAllFilters: null,
+    _filterData:       [],
 
     // Constants
     MODE_XHR:        0,
@@ -90,6 +90,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
         this._newRowValues    = {};
         this._oldRowValues    = {};
         this.gridData         = {};
+        this.url              = null;
         this.getActionsUrl    = null;
         this.extraColumns     = [];
         this.comboActions     = [];
@@ -99,10 +100,10 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
         var getHashForCookie  = null;
 
         // Set cookies urls
-        if (phpr.isGlobalModule(this.main.module)) {
-            getHashForCookie = this.main.module;
+        if (phpr.isGlobalModule(phpr.module)) {
+            getHashForCookie = phpr.module;
         } else {
-            getHashForCookie = this.main.module + '.' + phpr.currentProjectId;
+            getHashForCookie = phpr.module + '.' + phpr.currentProjectId;
         }
         this._filterCookie     = getHashForCookie + '.filters';
         this._sortColumnCookie = getHashForCookie + ".grid.sortColumn";
@@ -112,12 +113,13 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
         this.gridLayout  = [];
         this.filterField = [];
 
-        this.saveFilters(this.getFilters());
+        this.setFilterQuery(this.getFilters());
         this.setGetExtraActionsUrl();
 
+        phpr.DataStore.addStore({url: this.url});
         phpr.DataStore.addStore({url: this.getActionsUrl});
         var dlist = new dojo.DeferredList([
-            phpr.MetadataStore.metadataFor(this.main.module, this.main.state.projectId || 1),
+            phpr.DataStore.requestData({url: this.url, serverQuery: this._getFiltersServerQuery(this._filterData)}),
             phpr.DataStore.requestData({url: this.getActionsUrl})
         ]);
         dlist.addCallback(dojo.hitch(this, "onLoaded"));
@@ -151,10 +153,15 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
         }
     },
 
-    getRestUrl: function() {
+    setUrl: function() {
         // Summary:
-        //    Get the url of the rest api to use
-        return phpr.webpath + 'index.php/' + this.main.module + '/' + this.main.module + '/';
+        //    Set the url for getting the data
+        // Description:
+        //    Set the url for getting the data
+        this.url = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonList/nodeId/' + this.id;
+        for (var key in this.extraParams) {
+            this.url += '/' + key + '/' + this.extraParams[key];
+        }
     },
 
     showTags: function() {
@@ -250,50 +257,6 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
         var vals = null;
         var maxLength = null;
 
-        var dateFormatter = function(date) {
-            if (!date) {
-                return '';
-            } else {
-                return dojo.date.locale.format(
-                    phpr.date.isoDateTojsDate(date),
-                    this.constraint
-                );
-            }
-        };
-
-        var getDateWidgetProps = function(date) {
-            return { value: phpr.date.isoDateTojsDate(date) };
-        };
-
-        var getDateValue = function(row) {
-            var date = this.widget.get("value");
-            if (!date) {
-                return;
-            }
-
-            var dt = this.grid.getItem(row)[this.field];
-            dt = phpr.date.isoDatetimeTojsDate(dt);
-            dt.setFullYear(date.getFullYear());
-            dt.setMonth(date.getMonth());
-            dt.setDate(date.getDate());
-            return phpr.date.getIsoDatetime(dt, dt);
-        };
-
-        var dtTimeGetValue = function(row) {
-            var time = this.widget.get("value");
-            if (!time) {
-                return;
-            }
-            var hours = time.getHours(),
-                minutes = time.getMinutes();
-
-            var dt = this.grid.getItem(row)[this.field];
-            dt = phpr.date.isoDateTojsDate(dt);
-            dt.setHours(hours);
-            dt.setMinutes(minutes);
-            return phpr.date.getIsoTime(dt);
-        };
-
         // Module columns
         for (var i = 0; i < meta.length; i++) {
             switch (meta[i].type) {
@@ -334,13 +297,12 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
                         name:          meta[i].label,
                         field:         meta[i].key,
                         styles:        "text-align: center;",
-                        type:          dojox.grid.cells.DateTextBox,
+                        type:          phpr.Default.System.Grid.cells.DateTextBox,
                         promptMessage: 'yyyy-MM-dd',
-                        formatter: dateFormatter,
-                        getValue: getDateValue,
                         constraint:    {
                             formatLength:   'short',
-                            selector:       'date'
+                            selector:       "date",
+                            datePattern:    'yyyy-MM-dd'
                         },
                         editable:      meta[i].readOnly ? false : true
                     });
@@ -353,26 +315,25 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
 
                 case 'datetime':
                     this.gridLayout.push({
-                        width: '90px',
-                        name: meta[i].label + ' (' + phpr.nls.get('Date') + ')',
-                        field: meta[i].key,
-                        styles: "text-align: center;",
-                        type: dojox.grid.cells.DateTextBox,
-                        getValue: getDateValue,
-                        formatter: dateFormatter,
-                        constraint: {
+                        width:         '90px',
+                        name:          meta[i].label + ' (' + phpr.nls.get('Date') + ')',
+                        field:         meta[i].key + '_forDate',
+                        styles:        "text-align: center;",
+                        type:          phpr.Default.System.Grid.cells.DateTextBox,
+                        promptMessage: 'yyyy-MM-dd',
+                        constraint:    {
                             formatLength:   'short',
-                            selector:       'date'
+                            selector:       "date",
+                            datePattern:    'yyyy-MM-dd'
                         },
-                        editable: meta[i].readOnly ? false : true
+                        editable:      meta[i].readOnly ? false : true
                     });
                     this.gridLayout.push({
-                        width: '90px',
-                        name: meta[i].label + ' (' + phpr.nls.get('Hour') + ')',
-                        field: meta[i].key,
-                        styles: "text-align: center;",
-                        type: phpr.Default.System.Grid.cells.Time,
-                        getValue: dtTimeGetValue,
+                        width:    '90px',
+                        name:     meta[i].label + ' (' + phpr.nls.get('Hour') + ')',
+                        field:    meta[i].key + '_forTime',
+                        styles:   "text-align: center;",
+                        type:     phpr.Default.System.Grid.cells.Time,
                         editable: meta[i].readOnly ? false : true
                     });
                     this.filterField.push({
@@ -579,6 +540,23 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
                 formatter: phpr.Default.System.Grid.formatIcon
             });
         }
+
+        this.customGridLayout(meta);
+    },
+
+    customGridLayout: function(meta) {
+        // Summary:
+        //    Custom functions for the layout
+        // Description:
+        //    Custom functions for the layout
+    },
+
+    setClickEdit: function() {
+        // Summary:
+        //    Set the edit type
+        // Description:
+        //    Set if each field is ediatable with one or two clicks
+        this.grid.singleClickEdit = false;
     },
 
     setExportButton: function(meta) {
@@ -660,7 +638,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
                     var filterform = new phpr.Default.System.TemplateWrapper({
                         templateName: "phpr.Default.template.filters.form.html",
                         templateData: {
-                            module:  this.main.module,
+                            module:  phpr.module,
                             andTxt:  phpr.nls.get("Filter_AND"),
                             orTxt:   phpr.nls.get("Filter_OR"),
                             okTxt:   phpr.nls.get("OK")
@@ -803,9 +781,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
             filters.push(data);
         }
 
-        this.saveFilters(filters);
-        this.manageFilters();
-        this.refresh();
+        this.sendFilterRequest(filters);
         return false;
     },
 
@@ -820,18 +796,37 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
         } else {
             filters.splice(index, 1);
         }
-        this.saveFilters(filters);
-        this.manageFilters();
-        this.refresh();
+        this.sendFilterRequest(filters);
     },
 
-    saveFilters: function(filters) {
+    setFilterQuery: function(filters) {
         // Summary:
         //    Make the POST values of the filters
         // Description:
         //    Make the POST values of the filters if there are any
         //    Save the used filters in the cookie
+        this.setUrl();
+
+        // Fix id
+        this._filterData = filters || [];
         dojo.cookie(this._filterCookie, dojo.toJson(filters), {expires: 365});
+    },
+
+    sendFilterRequest: function(filters) {
+        // Summary:
+        //    Make the request to the server
+        // Description:
+        //    Make the request to the server
+        this.setFilterQuery(filters);
+
+        phpr.DataStore.deleteData({url: this.url});
+        phpr.DataStore.addStore({url: this.url});
+        phpr.DataStore.requestData({url: this.url, serverQuery: this._getFiltersServerQuery(filters),
+            processData: dojo.hitch(this, "onLoaded")});
+    },
+
+    _getFiltersServerQuery: function(filters) {
+        return { 'filters': dojo.toJson(filters) };
     },
 
     getFilters: function() {
@@ -877,7 +872,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
             if (this.gridFilters.filterFieldDiv.domNode.style.display == 'none') {
                 if (this.filterField.length > 0) {
                     var fieldSelect = '<select name="filterField" dojoType="phpr.FilteringSelect" ' +
-                        'autocomplete="false" onchange="dojo.publish(\'' + this.main.module + '.gridProxy\', ' +
+                        'autocomplete="false" onchange="dojo.publish(\'' + phpr.module + '.gridProxy\', ' +
                         '[\'changeInputFilter\', this.value]); return false;">';
                     fieldSelect += '<option value=""></option>';
                     for (var i in this.filterField) {
@@ -940,7 +935,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
                     }
                 }
                 html += phpr.fillTemplate("phpr.Default.template.filters.display.html", {
-                    module:   this.main.module,
+                    module:   phpr.module,
                     id:       i,
                     operator: operator,
                     field:    label,
@@ -994,10 +989,9 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
             return;
         }
 
-        var meta = dataContent[0][1];
+        var meta = phpr.DataStore.getMetaData({url: this.url});
 
         if (meta.length === 0) {
-            //TODO: This never triggers at the moment.
             // Create a "ADD" button
             var params = {
                 label:     phpr.nls.get('Add a new item'),
@@ -1035,6 +1029,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
             this.gridData = {
                 items: []
             };
+            var content = dojo.clone(phpr.DataStore.getData({url: this.url}));
 
             // Get datetime keys
             this.splitFields = [];
@@ -1075,16 +1070,18 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
                 }
                 this.gridData.items.push(content[i]);
             }
+            var store = new dojo.data.ItemFileWriteStore({data: this.gridData});
+
             // Render export Button
             this.setExportButton(meta);
 
             this.setGridLayout(meta);
 
+            var type = this.useCheckbox() ? "phpr.Default.System.Grid._View" : "dojox.grid._View";
+
             this.grid = new dojox.grid.DataGrid({
-                store: new dojo.data.ObjectStore({objectStore: new dojo.store.JsonRest({target: this.getRestUrl()})}),
-                query: this.getQuery(),
-                structure: [{
-                    type: this.useCheckbox() ? "phpr.Default.System.Grid._View" : "dojox.grid._View",
+                store:     store,
+                structure: [{type: type,
                     defaultCell: {
                         editable: true,
                         type:     phpr.Default.System.Grid.cells.Text,
@@ -1092,9 +1089,9 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
                     },
                     rows: this.gridLayout
                 }]
-            }, dojo.create('div'));
+                }, dojo.create('div'));
 
-            this.grid.singleClickEdit = false;
+            this.setClickEdit();
 
             this.node.set('content', this.grid);
 
@@ -1130,7 +1127,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
                 var content = new phpr.Default.System.TemplateWrapper({
                     templateName: "phpr.Default.template.gridActions.html",
                     templateData: {
-                        module:        this.main.module,
+                        module:        phpr.module,
                         actions:       this.comboActions,
                         checkAllTxt:   phpr.nls.get('Check All'),
                         uncheckAllTxt: phpr.nls.get('Uncheck All')
@@ -1160,28 +1157,6 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
 
         // Draw the tags
         this.showTags();
-    },
-
-    refresh: function() {
-        this.grid.setQuery(this.getQuery());
-    },
-
-    getQuery: function() {
-        var q = {};
-        var state = phpr.pageManager.getState();
-        var filters = this.getFilters();
-
-        if (!phpr.isGlobalModule(state.moduleName)) {
-            q.projectId = state.projectId;
-        }
-        if (state.includeSubentries == "true") {
-            q.recursive = "true";
-        }
-        if (filters.length > 0) {
-            q.filters = dojo.toJson(filters);
-        }
-
-        return q;
     },
 
     saveGridScroll: function() {
@@ -1279,7 +1254,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
                             var rowId = this.grid.store.getValue(item, 'id');
                             this.hideTooltip(e);
                             this._doubleClickTimer = null;
-                            phpr.pageManager.modifyCurrentState({ id: rowId });
+                            this.getLinkForEdit(rowId);
                         },
                         e
                     ),
@@ -1287,6 +1262,14 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
                 );
             }
         }
+    },
+
+    getLinkForEdit: function(id) {
+        // Summary:
+        //    Return the link for open the form
+        // Description:
+        //    Return the link for open the form
+        phpr.pageManager.modifyCurrentState({ id: id });
     },
 
     checkCanEdit: function(inCell, inRowIndex) {
@@ -1324,12 +1307,121 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
         // Description:
         //    Save only the items that have changed, to save them later
         //    If the user can't edit the item, restore the last value
-        if (this.grid.store.isDirty()) {
-            this.grid.store.save({
-                onComplete: this.refresh,
-                scope: this
-            });
+
+        // Skip for combobox
+        if (inFieldIndex == 'gridComboBox') {
+            return;
         }
+
+        if (!this.canEdit(inRowIndex)) {
+            var item  = this.grid.getItem(inRowIndex);
+            var value = this._oldRowValues[inRowIndex][inFieldIndex];
+            this.grid.store.setValue(item, inFieldIndex, value);
+            var result     = [];
+            result.type    = 'error';
+            result.message = phpr.nls.get('You do not have access to edit this item');
+            new phpr.handleResponse('serverFeedback', result);
+        } else {
+            if (!this._newRowValues[inRowIndex]) {
+                this._newRowValues[inRowIndex] = {};
+            }
+
+            if (inFieldIndex.indexOf('_forDate') > 0) {
+                // Convert date to datetime
+                var item             = this.grid.getItem(inRowIndex);
+                var key              = inFieldIndex.replace('_forDate', '');
+                inFieldIndexConvined = key + '_forTime';
+                inValue              = inValue + ' ' + this.grid.store.getValue(item, inFieldIndexConvined);
+
+                if (inValue != this._oldRowValues[inRowIndex][key]) {
+                    this._newRowValues[inRowIndex][key] = inValue;
+                }
+            } else if (inFieldIndex.indexOf('_forTime') > 0) {
+                // Convert time to datetime
+                var item             = this.grid.getItem(inRowIndex);
+                var key              = inFieldIndex.replace('_forTime', '');
+                inFieldIndexConvined = key + '_forDate';
+                inValue              = inValue + ' ' + this.grid.store.getValue(item, inFieldIndexConvined);
+
+                if (inValue != this._oldRowValues[inRowIndex][key]) {
+                    this._newRowValues[inRowIndex][key] = inValue;
+                }
+            } else {
+                // Normal widgets
+                if (inValue != this._oldRowValues[inRowIndex][inFieldIndex]) {
+                    this._newRowValues[inRowIndex][inFieldIndex] = inValue;
+                }
+            }
+
+            this.applyChanges();
+        }
+    },
+
+    applyChanges: function() {
+        // Summary:
+        //    Call the saveChanges function
+        // Description:
+        //    Wait until the last call is finished
+        if (this._active === true) {
+            setTimeout(dojo.hitch(this, "applyChanges"), 500);
+        } else {
+            this._active = true;
+            this.saveChanges();
+        }
+    },
+
+    saveChanges: function() {
+        // Summary:
+        //    Apply the changes into the server
+        // Description:
+        //    Get all the new values into the _newRowValues
+        //    and send them to the server
+
+        // Get all the IDs for the data sets.
+
+        var changed = false;
+        var content = [];
+        var ids     = [];
+        for (var i in this._newRowValues) {
+            var item  = this.grid.getItem(i);
+            var curId = this.grid.store.getValue(item, 'id');
+            for (var j in this._newRowValues[i]) {
+                changed = true;
+                content['data[' + curId + '][' + j + ']'] = this._newRowValues[i][j];
+                ids[i] = j;
+            }
+        }
+
+        // Post the content of all changed forms
+        // Only if there are changes
+        if (changed) {
+            phpr.send({
+                url:       this.updateUrl,
+                content:   content
+            }).then(dojo.hitch(this, function(response) {
+                this._active = false;
+                if (response) {
+                    if (response.type == 'error') {
+                        new phpr.handleResponse('serverFeedback', response);
+                    }
+                    if (response.type == 'success') {
+                        this.updateAfterSaveChanges();
+                    }
+                    // Delete the changes that are already saved
+                    for (var i in ids) {
+                        delete this._newRowValues[i][ids[i]];
+                    }
+                }
+            }));
+        } else {
+            this._active = false;
+        }
+    },
+
+    updateAfterSaveChanges: function() {
+        // Summary:
+        //    Actions after the saveChanges call returns success
+        this.publish("updateCacheData");
     },
 
     exportData: function() {
@@ -1337,16 +1429,25 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
         //    Open a new window in CSV mode
         // Description:
         //    Open a new window in CSV mode
-        window.open(phpr.webpath + 'index.php/' + this.main.module +
+        window.open(phpr.webpath + 'index.php/' + phpr.module +
                 '/index/csvList/nodeId/' + this.id +
                 '/csrfToken/' + phpr.csrfToken);
         return false;
     },
 
+    updateData: function() {
+        // Summary:
+        //    Delete the cache for this grid
+        // Description:
+        //    Delete the cache for this grid
+        phpr.DataStore.deleteData({url: this.url});
+        phpr.DataStore.deleteData({url: this._tagUrl});
+    },
+
     setGetExtraActionsUrl: function() {
         // Summary:
         //    Sets the url where to get the grid actions data from
-        this.getActionsUrl = phpr.webpath + 'index.php/' + this.main.module + '/index/jsonGetExtraActions';
+        this.getActionsUrl = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonGetExtraActions';
     },
 
     itemsCheck: function(state) {
@@ -1475,7 +1576,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
         // Summary:
         //    Isolated code for easy customization, this function returns the URL to be called for the requested action.
 
-        return phpr.webpath + 'index.php/' + this.main.module + '/index/' + action +
+        return phpr.webpath + 'index.php/' + phpr.module + '/index/' + action +
             '/nodeId/' + phpr.currentProjectId + '/' + idUrl + '/' + ids;
     },
 

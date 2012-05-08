@@ -21,5 +21,5 @@
 
 dojo.provide("phpr.Helpdesk.Grid");
 
-dojo.declare("phpr.Helpdesk.Grid", phpr.Default.Grid, {
+dojo.declare("phpr.Helpdesk.Grid", phpr.Default.LegacyGrid, {
 });

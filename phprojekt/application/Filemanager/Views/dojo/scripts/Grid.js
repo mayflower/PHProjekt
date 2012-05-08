@@ -21,5 +21,5 @@
 
 dojo.provide("phpr.Filemanager.Grid");
 
-dojo.declare("phpr.Filemanager.Grid", phpr.Default.Grid, {
+dojo.declare("phpr.Filemanager.Grid", phpr.Default.LegacyGrid, {
 });

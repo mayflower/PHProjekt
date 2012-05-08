@@ -21,7 +21,7 @@
 
 dojo.provide("phpr.Core.Grid");
 
-dojo.declare("phpr.Core.Grid", phpr.Default.Grid, {
+dojo.declare("phpr.Core.Grid", phpr.Default.LegacyGrid, {
     setUrl:function() {
         this.url = phpr.webpath + 'index.php/Core/' + this.main.module.toLowerCase() + '/jsonList/nodeId/1';
     },

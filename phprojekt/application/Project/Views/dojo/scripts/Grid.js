@@ -21,7 +21,7 @@
 
 dojo.provide("phpr.Project.Grid");
 
-dojo.declare("phpr.Project.Grid", phpr.Default.Grid, {
+dojo.declare("phpr.Project.Grid", phpr.Default.LegacyGrid, {
     updateData: function() {
         this.inherited(arguments);
 

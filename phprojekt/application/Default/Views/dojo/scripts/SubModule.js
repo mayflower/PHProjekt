@@ -178,7 +178,7 @@ dojo.declare("phpr.Default.SubModule", phpr.Default.System.Component, {
     }
 });
 
-dojo.declare("phpr.Default.SubModule.Grid", phpr.Default.Grid, {
+dojo.declare("phpr.Default.SubModule.Grid", phpr.Default.LegacyGrid, {
     // Overwrite functions for use with internal vars
     // This functions can be Rewritten
     updateData: function() {

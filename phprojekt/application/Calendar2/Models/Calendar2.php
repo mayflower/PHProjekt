@@ -451,11 +451,11 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
     }
 
     /**
-     * Returns the count of the calendar2 objects matching the given sql clause.
+     * Returns the count of objects matching the given sql clause
      *
-     * @param string $where A SQL-where-clause limiting the result set
+     * @param string $where The sql where-clause
      *
-     * @return int
+     * @return int Count of matching entries
      */
     public function count($where = null) {
         return Phprojekt_ActiveRecord_Abstract::count($where);
@@ -858,6 +858,13 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
     public function getRecurrence()
     {
         return $this->getRruleHelper()->getHumanreadableRrule();
+    }
+
+    /**
+     * Dummy in order to make activerecord think that a recurrence field exists.
+     */
+    public function setRecurrence()
+    {
     }
 
     /**

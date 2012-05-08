@@ -1,4 +1,7 @@
+<?php
 /**
+ * Calendar2 Rest Controller.
+ *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 3 as published by the Free Software Foundation
@@ -10,16 +13,28 @@
  *
  * @category   PHProjekt
  * @package    Application
- * @subpackage Contact
+ * @subpackage Calendar2
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
+ * @since      File available since Release 6.1
  * @version    Release: @package_version@
- * @author     Gustavo Solt <solt@mayflower.de>
+ * @author     Simon Kohlmeyer <simon.kohlmeyer@mayflower.de>
  */
 
-dojo.provide("phpr.Contact.Grid");
-
-dojo.declare("phpr.Contact.Grid", phpr.Default.LegacyGrid, {
-});
+/**
+ * Calendar2 Rest Controller.
+ *
+ * @category   PHProjekt
+ * @package    Application
+ * @subpackage Calendar2
+ * @copyright  Copyright (c) 2012 Mayflower GmbH (http://www.mayflower.de)
+ * @license    LGPL v3 (See LICENSE file)
+ * @link       http://www.phprojekt.com
+ * @since      File available since Release 6.1
+ * @version    Release: @package_version@
+ * @author     Simon Kohlmeyer <simon.kohlmeyer@mayflower.de>
+ */
+class Calendar2_Calendar2Controller extends Phprojekt_RestController
+{
+}
