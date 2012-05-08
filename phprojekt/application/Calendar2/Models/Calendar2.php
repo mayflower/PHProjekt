@@ -861,6 +861,13 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
     }
 
     /**
+     * Dummy in order to make activerecord think that a recurrence field exists.
+     */
+    public function setRecurrence()
+    {
+    }
+
+    /**
      * Returns a Calendar2_Helper_Rrule object initialized with this objects
      * start date, recurrence rule and excluded ocurrences.
      *
