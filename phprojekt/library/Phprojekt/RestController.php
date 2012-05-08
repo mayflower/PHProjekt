@@ -106,6 +106,7 @@ abstract class Phprojekt_RestController extends Zend_Rest_Controller
         $record = $this->newModelObject();
         if (!empty($id)) {
             $record = $record->find($id);
+            Phprojekt::setCurrentProjectId($record->projectId);
         }
 
         Phprojekt_CompressedSender::send(
