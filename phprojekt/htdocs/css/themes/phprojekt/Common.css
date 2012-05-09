@@ -46,12 +46,31 @@
 }
 
 .phprojekt .header .searchBar {
-    margin: 10px 10px;
+    height: 26px;
     background: url("images/searchbar.png");
     width: 120px;
-    height: 26px;
     background-repeat: no-repeat;
     padding-top: 1px;
+}
+
+.phprojekt .subheader {
+    background: none;
+    width: 100%;
+    height: 26px;
+    background: white;
+}
+
+.phprojekt .subheader .navigationContainerTitle {
+    background: #294064;
+    height: 26px;
+    line-height: 24px;
+    color: #000000;
+    font-weight: 700;
+    padding-left: 8px;
+}
+
+.phprojekt .header .searchBar .dijitInputField {
+    padding: 0;
 }
 
 .phprojekt .header .searchBar .dijitTextBox {
@@ -65,7 +84,6 @@
 }
 
 .phprojekt .header .searchBar input {
-    background: url("images/searchfield_bg.png");
     width: 80px;
     border: none;
     height: 16px;
@@ -87,27 +105,21 @@
     margin-left: 20px;
     padding-top: 1px;
 }
+
 .dj_ie7 .phprojekt .header .searchBar {
     padding-top: 0;
 }
+
 .dj_ie7 .phprojekt .header .searchBar input {
     padding-top: 0;
 }
+
 .dj_ie .phprojekt .header .searchBar .dijitTextBox {
     margin-top: 3px !important;
 }
 
-.phprojekt .header .toolbar {
-    margin: 15px;
-    color: #ffffff;
-    font-size: 11px;
-    font-weight: bold;
-}
-
-.phprojekt .subheader {
-    background: none;
-    width: 100%;
-    height: 26px;
+.phprojekt .subheader .navigationContainerTitle p {
+    margin-left: 15px;
 }
 
 .phprojekt .subheader .tab {
@@ -340,14 +352,10 @@ h1,h2,h3,h4,h5,h6 {
     line-height: normal;
     text-align: start;
     vertical-align: baseline;
-    border-bottom: 1px solid #CBCBCB;
     margin-left: 10px;
     margin-right: 10px;
     padding-top: 10px;
     padding-bottom: 10px;
-    background-color: #fff;
-}
-
 }
 
 .phprojekt .results span {
@@ -388,10 +396,7 @@ h1,h2,h3,h4,h5,h6 {
     margin-top: 50px;
     margin-right: 0px;
     background-color: #294064;
-    position: absolute;
     border: 1px solid black;
-    right: 0px;
-    top: 50px;
     margin: 10px 0px;
 }
 
@@ -456,7 +461,6 @@ h1,h2,h3,h4,h5,h6 {
     -khtml-box-sizing: border-box;
     box-sizing: border-box;
     overflow: hidden;
-    width: 95%;
 }
 
 .phprojekt .formContainer td {

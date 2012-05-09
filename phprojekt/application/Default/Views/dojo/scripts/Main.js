@@ -23,6 +23,8 @@ dojo.provide("phpr.Default.Main");
 dojo.provide("phpr.Default.SearchContentMixin");
 
 dojo.require("dijit.form.Button");
+dojo.require("dijit.Menu");
+dojo.require("dijit.MenuItem");
 dojo.require("dijit.layout.TabContainer");
 dojo.require("dijit.layout.ContentPane");
 dojo.require("dijit.TitlePane");
@@ -512,6 +514,14 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
 
         toolbar.destroyDescendants();
 
+        button = new phpr.Default.SearchButton({
+            onChange: dojo.hitch(this, "showSearchSuggest"),
+            onSubmit: dojo.hitch(this, "showSearchResults")
+        });
+
+        this.searchButton = button;
+
+        toolbar.addChild(button);
 
         for (var i in globalModules) {
             moduleName = globalModules[i].name;
@@ -554,16 +564,37 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
             this.globalModuleNavigationButtons.Administration = button;
         }
 
+        var menu = new dijit.Menu({style: "display: none;"});
+        dojo.addClass(menu.domNode, "claro");
+
+        // Setting
+        button = new dijit.MenuItem({
+            label:     phpr.nls.get('Setting'),
+            showLabel: true,
+            onClick:   dojo.hitch(this, function() {
+                phpr.currentProjectId = phpr.rootProjectId;
+                phpr.pageManager.modifyCurrentState(
+                    dojo.mixin(dojo.clone(this._emptyState), { moduleName: "Setting" }),
+                    { forceModuleReload: true }
+                );
+            })
+        });
+
+        this.globalModuleNavigationButtons.Setting = button;
+
+        menu.addChild(button);
+
         // Help
-        button = new dijit.form.Button({
+        button = new dijit.MenuItem({
             label:     phpr.nls.get('Help'),
             showLabel: true,
             onClick:   dojo.hitch(this, "showHelp")
         });
 
+        menu.addChild(button);
 
         // Logout
-        button = new dijit.form.Button({
+        button = new dijit.MenuItem({
             label:     phpr.nls.get('Logout'),
             showLabel: true,
             onClick:   dojo.hitch(this, function() {
@@ -571,8 +602,29 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
             })
         });
 
+        menu.addChild(button);
+
+        var userList = this.userStore.getList();
+        var l = userList.length;
+        var userName = "";
+        for (var i = 0; i < l; i++) {
+            if (userList[i].id == phpr.currentUserId) {
+                userName = userList[i].display;
+            }
+        }
+
+        button = new dijit.form.DropDownButton({
+            label: userName,
+            dropDown: menu
+        });
+
+        toolbar.addChild(button);
+
+        phpr.tutorialAnchors.helpButton = button;
 
         // destroy cyclic refs
+        button = null;
+        menu = null;
         toolbar = null;
         this._registerGlobalModuleNavigationListener();
     },
@@ -910,12 +962,11 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         });
     },
 
-    showSearchSuggest: function() {
+    showSearchSuggest: function(words) {
         // Summary:
         //    This function show a box with suggest or quick result of the search
         // Description:
         //    The server return the found records and the function display it
-        var words = phpr.viewManager.getView().searchfield.get('value');
         if (words.length >= 3) {
             // hide the suggestBox
             var getDataUrl = phpr.webpath + 'index.php/Default/Search/jsonSearch';
@@ -924,50 +975,35 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                 content:   {words: words, count: 10}
             }).then(dojo.hitch(this, function(data) {
                 if (data) {
-                    var search        = '';
+                    var search        = [];
                     var results       = {};
                     var index         = 0;
 
                     for (var i = 0; i < data.length; i++) {
                         modulesData = data[i];
                         if (!results[modulesData.moduleLabel]) {
-                            results[modulesData.moduleLabel] = '';
+                            results[modulesData.moduleLabel] = [];
                         }
-                        results[modulesData.moduleLabel] += this.render(["phpr.Default.template.results",
-                            "results.html"], null, {
-                                id :           modulesData.id,
-                                moduleId :     modulesData.modulesId,
-                                moduleName:    modulesData.moduleName,
-                                projectId:     modulesData.projectId,
-                                firstDisplay:  modulesData.firstDisplay,
-                                secondDisplay: modulesData.secondDisplay,
-                                resultType:    "search"
-                            });
+                        results[modulesData.moduleLabel].push({
+                            id :           modulesData.id,
+                            moduleName:    modulesData.moduleName,
+                            projectId:     modulesData.projectId,
+                            firstDisplay:  modulesData.firstDisplay,
+                            secondDisplay: modulesData.secondDisplay,
+                            resultType:    "search"
+                        });
                     }
                     var moduleLabel = '';
-                    var html        = '';
                     for (var i in results) {
                         moduleLabel = i;
-                        html       = results[i];
-                        search += this.render(["phpr.Default.template.results", "suggestBlock.html"], null, {
-                            moduleLabel:   moduleLabel,
-                            results:       html
+                        search.push({
+                            name: moduleLabel,
+                            items: results[i]
                         });
                     }
 
-                    if (search === '') {
-                        search += "<div class=\"searchsuggesttitle\" dojoType=\"dijit.layout.ContentPane\">";
-                        search += phpr.drawEmptyMessage('There are no Results');
-                        search += "</div>";
-                    } else {
-                        search += "<div class=\"searchsuggesttitle\" dojoType=\"dijit.layout.ContentPane\">";
-                        search += "<a class=\"searchsuggesttitle\" href='javascript:" +
-                            "phpr.pageManager.getActiveModule().clickResult(\"search\");" +
-                            "phpr.pageManager.modifyCurrentState({search: \"" + words + "\"});" +
-                            "'>" + phpr.nls.get('View all') + "</a>";
-                        search += "</div>";
-                    }
-
+                    this.searchButton.setSuggest(search);
+                    this.searchButton.showSuggest();
                 }
             }));
         } else {
@@ -981,10 +1017,8 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         //    And show the detail view of the item selected
         // Description:
         //    The server return the found records and the function display it
-        if (undefined === words) {
-            words = phpr.viewManager.getView().searchfield.get('value');
-        }
         if (words.length >= 3) {
+            this.searchButton.hideSuggest();
             var getDataUrl   = phpr.webpath + 'index.php/Default/Search/jsonSearch';
             var resultsTitle = phpr.nls.get('Search results');
             var content      = {words: words};
