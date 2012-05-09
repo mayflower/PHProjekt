@@ -205,12 +205,8 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         dojo.subscribe(module + ".changeProject", this, "changeProject");
         dojo.subscribe(module + ".reload", this, "reload");
         dojo.subscribe(module + ".openForm", this, "openForm");
-        dojo.subscribe(module + ".showSuggest", this, "showSuggest");
-        dojo.subscribe(module + ".hideSuggest", this, "hideSuggest");
-        dojo.subscribe(module + ".setSuggest", this, "setSuggest");
         dojo.subscribe(module + ".showSearchResults", this, "showSearchResults");
         dojo.subscribe(module + ".showTagsResults", this, "showTagsResults");
-        dojo.subscribe(module + ".clickResult", this, "clickResult");
         dojo.subscribe(module + ".updateCacheData", this, "updateCacheData");
         dojo.subscribe(module + ".loadResult", this, "loadResult");
         dojo.subscribe(module + ".setLanguage", this, "setLanguage");
@@ -358,7 +354,6 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         var view = phpr.viewManager.useDefaultView({blank: true});
 
         phpr.InitialScreen.start();
-        this.hideSuggest();
 
         // Get all configuration.php vars for the front
         var config = new phpr.Default.System.Store.Config();
@@ -455,8 +450,6 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
             phpr.tree.fadeIn();
             this.setSubmoduleNavigation();
         }
-        this.hideSuggest();
-        this.setSearchForm();
     },
 
     rebuildGrid: function(includeSubentries) {
@@ -510,7 +503,6 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
     setGlobalModulesNavigation: function() {
         var view = phpr.viewManager.getView();
         var toolbar       = view.mainNavigation;
-        var systemToolbar = view.systemNavigation;
         var globalModules = phpr.DataStore.getData({url: phpr.globalModuleUrl});
         var isAdmin       = phpr.DataStore.getMetaData({url: phpr.globalModuleUrl});
         var button = null;
@@ -519,7 +511,6 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         var that = this;
 
         toolbar.destroyDescendants();
-        systemToolbar.destroyDescendants();
 
 
         for (var i in globalModules) {
@@ -545,23 +536,6 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
             button = null;
         }
 
-        // Setting
-        button = new dijit.form.Button({
-            label:     phpr.nls.get('Setting'),
-            showLabel: true,
-            onClick:   dojo.hitch(this, function() {
-                phpr.currentProjectId = phpr.rootProjectId;
-                phpr.pageManager.modifyCurrentState(
-                    dojo.mixin(dojo.clone(this._emptyState), { moduleName: "Setting" }),
-                    { forceModuleReload: true }
-                );
-            })
-        });
-
-        this.globalModuleNavigationButtons.Setting = button;
-        toolbar.addChild(button);
-        button = null;
-
         if (isAdmin > 0) {
             // Administration
             button = new dijit.form.Button({
@@ -578,7 +552,6 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
 
             toolbar.addChild(button);
             this.globalModuleNavigationButtons.Administration = button;
-            button = null;
         }
 
         // Help
@@ -588,10 +561,6 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
             onClick:   dojo.hitch(this, "showHelp")
         });
 
-        phpr.tutorialAnchors.helpButton = button;
-
-        systemToolbar.addChild(button);
-        button = null;
 
         // Logout
         button = new dijit.form.Button({
@@ -602,12 +571,9 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
             })
         });
 
-        systemToolbar.addChild(button);
-        button = null;
 
         // destroy cyclic refs
         toolbar = null;
-        systemToolbar = null;
         this._registerGlobalModuleNavigationListener();
     },
 
@@ -944,46 +910,6 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         });
     },
 
-    setSearchForm: function() {
-        // Summary:
-        //    Add the onkeyup to the search field
-        if (this._searchEvent === null) {
-            var searchfield = phpr.viewManager.getView().searchfield;
-            this._searchEvent = dojo.connect(searchfield.domNode, "onkeyup",
-                    dojo.hitch(this, "waitForSubmitSearchForm"));
-            this.garbageCollector.addEvent(this._searchEvent);
-        }
-    },
-
-    waitForSubmitSearchForm: function(event) {
-        // Summary:
-        //    This function call the search itself After 1000ms of the last letter
-        // Description:
-        //    The function will wait for 1000 ms on each keyup for try to
-        //    call the search query when the user finish to write the text
-        //    If the enter is presses, the suggest disapear.
-        //    If some "user" key is presses, the function don't run.
-        key = event.keyCode;
-        if (key == dojo.keys.ENTER || key == dojo.keys.NUMPAD_ENTER) {
-            // hide the suggestBox and delete the time
-            // for not show the suggest
-            if (window.mytimeout) {
-                window.clearTimeout(window.mytimeout);
-            }
-            this.hideSuggest();
-            var words = phpr.viewManager.getView().searchfield.get('value');
-            phpr.pageManager.getActiveModule().clickResult("search");
-            phpr.pageManager.modifyCurrentState({search: words});
-        } else if (phpr.isValidInputKey(key)) {
-            if (window.mytimeout) {
-                window.clearTimeout(window.mytimeout);
-            }
-            if (phpr.viewManager.getView().searchfield.isValid()) {
-                window.mytimeout = window.setTimeout(dojo.hitch(this, "showSearchSuggest"), 500);
-            }
-        }
-    },
-
     showSearchSuggest: function() {
         // Summary:
         //    This function show a box with suggest or quick result of the search
@@ -1042,12 +968,10 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                         search += "</div>";
                     }
 
-                    this.setSuggest(search);
-                    this.showSuggest();
                 }
             }));
         } else {
-            this.hideSuggest();
+            this.searchButton.hideSuggest();
         }
     },
 
@@ -1066,26 +990,6 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
             var content      = {words: words};
             this.showResults(getDataUrl, content, resultsTitle);
         }
-    },
-
-    clickResult: function(/*String*/type) {
-        if (type == 'search') {
-            this.hideSuggest();
-        }
-    },
-
-    showSuggest: function() {
-        if (phpr.viewManager.getView().searchsuggest.innerHTML !== '') {
-            phpr.viewManager.getView().searchsuggest.style.display = 'inline';
-        }
-    },
-
-    hideSuggest: function() {
-        phpr.viewManager.getView().searchsuggest.style.display = 'none';
-    },
-
-    setSuggest: function(html) {
-        phpr.viewManager.getView().searchsuggest.innerHTML = html;
     },
 
     showTagsResults: function(/*String*/tag) {
@@ -1107,8 +1011,6 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
 
         // Clean the navigation and forms buttons
         phpr.tree.fadeIn();
-        this.hideSuggest();
-        this.setSearchForm();
 
         phpr.send({
             url:       getDataUrl,

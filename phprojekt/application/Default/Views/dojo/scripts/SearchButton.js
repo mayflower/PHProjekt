@@ -130,7 +130,6 @@ dojo.declare(
         return new dijit.MenuItem({
             label: html,
             onClick: function() {
-                dojo.publish(item.moduleName + ".clickResult", [item.resultType]);
                 dojo.publish(item.moduleName + ".loadResult", [item.id, item.moduleName, item.projectId]);
             }
         });
