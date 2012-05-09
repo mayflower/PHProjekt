@@ -17,20 +17,9 @@
         </div>
         <!-- Top Bar menu -->
         <div dojoType="dijit.layout.ContentPane" region="top" dojoAttachPoint="header"
-        style="height: 60px; overflow: hidden;" class="header">
+        style="height: 60px; overflow: hidden;" class="claro header">
             <img class="left PHProjektLogo" src="{{webpath}}img/logo.png" alt="PHProjekt 6" dojoAttachPoint="PHProjektLogo"
             onClick='phpr.currentProjectId = 1; dojo.publish("Project.setUrlHash", ["Project"])' />
-            <form dojoType="dijit.form.Form" dojoAttachPoint="searchform" name="searchform"
-            onsubmit='phpr.pageManager.getActiveModule().showSearchResults(phpr.viewManager.getView().searchfield.get("value"));
-            return false;'
-            style="display: inline">
-            <div dojoAttachPoint="searchBar" class="last right align-right searchBar">
-                <input dojoAttachPoint="searchfield" class="searchfield" name="searchfield" dojoType="dijit.form.ValidationTextBox"
-                onmousedown='this.focus(); phpr.pageManager.getActiveModule().showSuggest();' />
-                <div dojoAttachPoint="systemNavigation" class="systemNavigation" dojoType="dijit.Toolbar">
-                </div>
-            </div>
-            </form>
             <div dojoAttachPoint="mainNavigation" class="right align-right mainNavigation" dojoType="dijit.Toolbar">
             </div>
             <div dojoAttachPoint="loadingIcon" class="right align-right loadingIcon"
@@ -81,10 +70,6 @@
                 </div>
             </div>
         </div>
-    </div>
-    <!-- Suggest seacrh -->
-    <div dojoAttachPoint="searchsuggest"
-    style="z-index: 100; display: inline" class="searchsuggest">
     </div>
     <!-- Help -->
     <div dojoType="dijit.Dialog" dojoAttachPoint="helpDialog" class="helpDialog" title="" draggable="false"
