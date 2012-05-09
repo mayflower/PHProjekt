@@ -196,6 +196,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
                 this.loadCaldavView();
                 break;
             default:
+                this.loadMonthList();
         }
     },
 
