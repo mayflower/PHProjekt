@@ -668,6 +668,9 @@ class IndexController extends Zend_Controller_Action
         }
 
         $model = $this->getModelObject()->find($id);
+        if ($model->hasField('projectId')) {
+            Phprojekt::setCurrentProjectId($model->projectId);
+        }
 
         if ($model instanceof Phprojekt_ActiveRecord_Abstract) {
             $tmp = Default_Helpers_Delete::delete($model);
@@ -711,6 +714,7 @@ class IndexController extends Zend_Controller_Action
     public function jsonDeleteMultipleAction()
     {
         $ids = $this->getRequest()->getParam('ids');
+        $this->setCurrentProjectId();
 
         if (!empty($ids)) {
             $message  = Phprojekt::getInstance()->translate(self::DELETE_MULTIPLE_TRUE_TEXT);
