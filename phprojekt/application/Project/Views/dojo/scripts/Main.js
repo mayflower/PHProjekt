@@ -58,8 +58,6 @@ dojo.declare("phpr.Project.Main", phpr.Default.Main, {
         this.destroyGrid();
 
         this.setSubmoduleNavigation('BasicData');
-        this.hideSuggest();
-        this.setSearchForm();
         phpr.tree.fadeIn();
 
         this.form = new this.formBasicDataWidget(this, phpr.currentProjectId, phpr.module, {}, view.centerMainContent);
