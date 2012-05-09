@@ -714,6 +714,7 @@ class IndexController extends Zend_Controller_Action
     public function jsonDeleteMultipleAction()
     {
         $ids = $this->getRequest()->getParam('ids');
+        $this->setCurrentProjectId();
 
         if (!empty($ids)) {
             $message  = Phprojekt::getInstance()->translate(self::DELETE_MULTIPLE_TRUE_TEXT);
