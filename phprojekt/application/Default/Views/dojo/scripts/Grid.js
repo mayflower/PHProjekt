@@ -49,7 +49,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
     _lastTime:     null,
     _active:       false,
     _doubleClickMaxTime: 750,
-    _gridActionContainer: null,
+    _gridComboAction: null,
 
     // gridFilters Widget
     gridFilters:   null,
@@ -1134,7 +1134,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
                     }
                 });
 
-                this._gridActionContainer = content;
+                this._gridComboAction = content.gridComboAction;
                 this.grid.views.views[0].gridActions.set('content', content);
 
                 content.startup();
@@ -1506,7 +1506,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
             }
             if (ids.length > 0) {
                 var idsSend = ids.join(',');
-                var select = this._gridActionContainer.gridComboAction;
+                var select = this._gridComboAction;
                 var key     = select.value;
                 if (key !== null) {
                     var temp   = key.split('|');
@@ -1526,7 +1526,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
                 }
                 select = null;// avoid cyclic ref
             } else {
-                dojo.byId("gridComboAction").selectedIndex = 0;
+                this._gridComboAction.selectedIndex = 0;
             }
         }
     },
@@ -1568,7 +1568,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
         }
 
         if (this.useCheckbox()) {
-            dojo.byId("gridComboAction").selectedIndex = 0;
+            this._gridComboAction.selectedIndex = 0;
         }
     },
 
