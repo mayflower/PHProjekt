@@ -628,7 +628,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
                 var dateString  = phpr.date.getIsoDate(this._date);
                 dateDescrip = this.dateDescripDay() + ', ' + dateString;
             } else if (this.isListActive(this.weekList)) {
-                dateDescrip = this.getWeek() + ' . ' + phpr.nls.get('Calendar2 week');
+                dateDescrip = this.getWeek() + ' . ' + phpr.nls.get('Calendar week');
             } else if (this.isListActive(this.monthList)) {
                 dateDescrip = this.dateDescripMonth() + ', ' + this._date.getFullYear();
             }
