@@ -1415,6 +1415,7 @@ dojo.declare("phpr.Calendar2.DefaultView", phpr.Default.System.Component, {
                     furtherEventsTemp['events'][nextPosition]['id']    = id;
                     furtherEventsTemp['events'][nextPosition]['time']  = eventInfo['timeDescrip'];
                     furtherEventsTemp['events'][nextPosition]['summary'] = summary;
+                    furtherEventsTemp.events[nextPosition].occurrence = occurrence;
                 }
             }
         }
@@ -1440,6 +1441,7 @@ dojo.declare("phpr.Calendar2.DefaultView", phpr.Default.System.Component, {
                     this._furtherEvents['events'][nextEvent]['id']    = furtherEventsTemp['events'][event]['id'];
                     this._furtherEvents['events'][nextEvent]['time']  = furtherEventsTemp['events'][event]['time'];
                     this._furtherEvents['events'][nextEvent]['summary'] = furtherEventsTemp['events'][event]['summary'];
+                    this._furtherEvents.events[nextEvent].occurrence = furtherEventsTemp.events[event].occurrence;
                 }
             }
         }
