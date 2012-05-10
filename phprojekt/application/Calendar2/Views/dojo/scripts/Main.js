@@ -400,7 +400,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
 
         var params = {};
 
-        if (id === undefined || id === 0) {
+        if (id === undefined || id === 0 || id === null) {
             var today            = new Date();
             var addDay           = false;
             var startDateIsToday = false;
