@@ -47,35 +47,6 @@ dojo.declare("phpr.Timecard.Form", phpr.Default.System.Component, {
         this.id            = 0;
         this._url          = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonDetail/nodeId/1/id/' + this.id;
 
-        // Fixed hours 0-24
-        var hours    = [];
-        var show     = '';
-        var rowClass = 'dayViewWhite';
-        for (var i = 0; i < 24; i++) {
-            for (j = 0; j < 2; j++) {
-                show = '';
-                if (rowClass == 'dayViewCelestial') {
-                    rowClass = 'dayViewWhite';
-                } else {
-                    rowClass = 'dayViewCelestial';
-                }
-                if (i < 10) {
-                    show = '0';
-                }
-                if (j === 0) {
-                    hour = i + ':00';
-                    show = show + i + ':00';
-                } else {
-                    hour = i + ':30';
-                    show = show + i + ':30';
-                }
-                hours.push({
-                    "hour":    hour,
-                    "display": show,
-                    "class":   rowClass
-                });
-            }
-        }
         this._dayView = new phpr.Default.System.TemplateWrapper({
             templateName: "phpr.Timecard.template.dayView.html",
             templateData: {
@@ -88,8 +59,6 @@ dojo.declare("phpr.Timecard.Form", phpr.Default.System.Component, {
         });
 
         this.main._contentWidget.dayView.set('content', this._dayView);
-
-        this.main._contentWidget.dayView.domNode.scrollTop = 320;
 
         this.setDate(date);
         this.loadView();
@@ -543,17 +512,5 @@ dojo.declare("phpr.Timecard.Form", phpr.Default.System.Component, {
 
             this.focusNote();
         })});
-    },
-
-    focusNote: function() {
-        // Summary:
-        //    Wait that the widget exists to focus it
-        // Description:
-        //    Wait that the widget exists to focus it
-        if (!dojo.byId('notes')) {
-            setTimeout(dojo.hitch(this, "focusNote"), 500);
-        } else {
-            dojo.byId('notes').focus();
-        }
     }
 });
