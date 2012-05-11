@@ -55,8 +55,10 @@
 <br />
     {{furtherEventsMessage}}:<br />
     {% for event in furtherEvents.events %}
-{{event.time|safe}}:&nbsp;
-<a href="javascript: dojo.publish('Calendar2.setUrlHash', ['Calendar2', {{event.id}}, '{{event.start}}']);">{{event.summary|safe}}</a>
-<br />
+        {{event.time|safe}}:&nbsp;
+        <a href="javascript: dojo.publish('Calendar2.openForm', [{{event.id}}, 0, 0, 0, '{{event.occurrence}}']);">
+            {{event.summary|safe}}
+        </a>
+        <br />
     {% endfor %}
 {% endif %}
