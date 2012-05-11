@@ -8,7 +8,8 @@
         </label>
     </td>
     <td>
-        <textarea dojoType="dijit.form.Textarea" id="{{id}}" name="{{id}}">{{value}}</textarea>
+        <textarea dojoType="dijit.form.Textarea" id="{{id}}" name="{{id}}" dojoAttachPoint="fieldNode"
+            >{{value}}</textarea>
     </td>
     <td>
         {{tooltip|safe}}

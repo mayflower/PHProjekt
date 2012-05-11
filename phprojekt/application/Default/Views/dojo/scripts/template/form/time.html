@@ -9,7 +9,8 @@
     </td>
     <td>
         <input type="text" id="{{id}}" name="{{id}}" value="T{{value}}" dojoType="dijit.form.TimeTextBox"
-        required="{{required}}" {{disabled}} constraints="{formatLength: 'short', timePattern: 'HH:mm'}" />
+        required="{{required}}" {{disabled}} constraints="{formatLength: 'short', timePattern: 'HH:mm'}"
+        dojoAttachPoint="fieldNode" />
     </td>
     <td>
         {{tooltip|safe}}
