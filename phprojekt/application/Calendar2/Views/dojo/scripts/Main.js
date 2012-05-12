@@ -628,7 +628,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
                 var dateString  = phpr.date.getIsoDate(this._date);
                 dateDescrip = this.dateDescripDay() + ', ' + dateString;
             } else if (this.isListActive(this.weekList)) {
-                dateDescrip = this.getWeek() + ' . ' + phpr.nls.get('Calendar2 week');
+                dateDescrip = this.getWeek() + ' . ' + phpr.nls.get('Calendar week');
             } else if (this.isListActive(this.monthList)) {
                 dateDescrip = this.dateDescripMonth() + ', ' + this._date.getFullYear();
             }
@@ -669,10 +669,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
     getWeek: function() {
         // Summary
         //    Returns the position in the year for the week we are working with
-        var firstDayYear = new Date(this._date.getFullYear(), 0, 1);
-        var week = Math.ceil((((this._date - firstDayYear) / 86400000) + firstDayYear.getDay() / 7));
-
-        return week;
+        return dojo.date.locale.format(this._date, {datePattern: "w", selector: "date"});
     },
 
     capitalizeFirstLetter: function(str) {
