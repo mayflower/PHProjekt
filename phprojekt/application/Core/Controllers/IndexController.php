@@ -86,7 +86,7 @@ class Core_IndexController extends IndexController
     }
 
     /**
-     * Gets the core class model of the module or the default one.
+     * Gets the core class model of the module.
      *
      * @return Phprojekt_Model_Interface An instance of Phprojekt_Model_Interface.
      */
@@ -102,7 +102,7 @@ class Core_IndexController extends IndexController
             $db = Phprojekt::getInstance()->getDb();
             return new $moduleName($db);
         } else {
-            return new Default_Models_Default();;
+            throw new Exception('No model object could be found');
         }
     }
 
