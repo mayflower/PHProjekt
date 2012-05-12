@@ -310,8 +310,7 @@ class IndexController extends Zend_Controller_Action
         $moduleName = $this->getModuleName();
         $object     = Phprojekt_Loader::getModel($modelName, $moduleName);
         if (null === $object) {
-            /* @todo throw error */
-            $object = new Default_Models_Default();
+            throw new Exception('No Model object could be found');
         }
 
         return $object;
