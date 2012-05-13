@@ -9,7 +9,7 @@
     </td>
     <td>
         <select id="{{id}}[]" name="{{id}}[]" dojoType="phpr.Default.System.Form.MultiFilteringSelect" required="{{required}}"
-        {{disabled}} invalidMessage="" multiple="true">
+        {{disabled}} invalidMessage="" multiple="true" dojoAttachPoint="fieldNode">
             {% for item in options %}
             <option value="{{item.id}}" {{item.selected}}>{{item.name}}</option>
             {% endfor %}

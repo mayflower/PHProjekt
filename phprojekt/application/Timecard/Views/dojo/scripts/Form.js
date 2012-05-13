@@ -47,35 +47,6 @@ dojo.declare("phpr.Timecard.Form", phpr.Default.System.Component, {
         this.id            = 0;
         this._url          = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonDetail/nodeId/1/id/' + this.id;
 
-        // Fixed hours 0-24
-        var hours    = [];
-        var show     = '';
-        var rowClass = 'dayViewWhite';
-        for (var i = 0; i < 24; i++) {
-            for (j = 0; j < 2; j++) {
-                show = '';
-                if (rowClass == 'dayViewCelestial') {
-                    rowClass = 'dayViewWhite';
-                } else {
-                    rowClass = 'dayViewCelestial';
-                }
-                if (i < 10) {
-                    show = '0';
-                }
-                if (j === 0) {
-                    hour = i + ':00';
-                    show = show + i + ':00';
-                } else {
-                    hour = i + ':30';
-                    show = show + i + ':30';
-                }
-                hours.push({
-                    "hour":    hour,
-                    "display": show,
-                    "class":   rowClass
-                });
-            }
-        }
         this._dayView = new phpr.Default.System.TemplateWrapper({
             templateName: "phpr.Timecard.template.dayView.html",
             templateData: {
@@ -88,8 +59,6 @@ dojo.declare("phpr.Timecard.Form", phpr.Default.System.Component, {
         });
 
         this.main._contentWidget.dayView.set('content', this._dayView);
-
-        this.main._contentWidget.dayView.domNode.scrollTop = 320;
 
         this.setDate(date);
         this.loadView();
@@ -164,6 +133,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Default.System.Component, {
                 var startDate = this._parseTimeToDate(data[i].startTime);
                 var startTime = dojo.date.locale.format(startDate, { selector: "time" });
                 var endTime = null;
+
                 if (data[i].endTime !== null) {
                     var endDate = this._parseTimeToDate(data[i].endTime);
                     endTime = dojo.date.locale.format(endDate, { selector: "time" });
@@ -197,7 +167,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Default.System.Component, {
                     dojo.connect(
                         entry.domNode,
                         "onclick",
-                        dojo.hitch(this, "fillForm", data[i].id)
+                        dojo.hitch(this, "drawFormView", data[i].id)
                     ),
                     "dayView"
                 );
@@ -205,7 +175,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Default.System.Component, {
 
             var hourdiff = this._getHourDifferenceText(new Date(0), new Date(accumulatedTime));
             this._dayView.footer.innerHTML = phpr.nls.get("Sum") + ": " + hourdiff;
-            this.fillForm(0);
+            this.drawFormView(0);
         })});
     },
 
@@ -233,43 +203,48 @@ dojo.declare("phpr.Timecard.Form", phpr.Default.System.Component, {
         }
     },
 
-    drawFormView: function(date, start, end, project, notes) {
+    drawFormView: function(id) {
         // Summary:
         //    Render the form and the favorites
         // Description:
         //    Render the form and the favorites
-        this._url = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonDetail/nodeId/1/id/' + this.id;
+        id = id || 0;
+
+        this._url = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonDetail/nodeId/1/id/' + id;
+
+        phpr.DataStore.addStore({url: this._url});
         var dlist = new dojo.DeferredList([
             phpr.DataStore.requestData({url: this._url}),
             this.main._store.getMergedFavoriteProjects()
         ]);
 
-        dlist.addCallback(dojo.hitch(this, function(data) {
+        dlist.addCallback(dojo.hitch(this, function(reqData) {
             if (this._formContent) {
                 this._formContent.destroyRecursive();
             }
-            var range = data[1][1];
-            var meta = data[0][1].metaData;
+            var data = reqData[0][1].data[0];
+            var meta = reqData[0][1].metaData;
+            var range = reqData[1][1];
 
             this._templateRenderer = new phpr.Default.Field();
 
             // Init formdata
             var formData = [];
             // startDatetime
-            formData.push(this._templateRenderer.datetimeRender(meta[0].label, meta[0].key, '',
+            formData.push(this._templateRenderer.datetimeRender(meta[0].label, meta[0].key, data[meta[0].key],
                     meta[0].required, false, meta[0].hint));
             // endTime
-            formData.push(this._templateRenderer.timeRender(meta[1].label, meta[1].key, '',
+            formData.push(this._templateRenderer.timeRender(meta[1].label, meta[1].key, data[meta[1].key],
                     meta[1].required, false, meta[1].hint));
 
-            formData.push(this._templateRenderer.selectRender(range, meta[3].label, meta[3].key, "1",
+            formData.push(this._templateRenderer.selectRender(range, meta[3].label, meta[3].key, data[meta[3].key],
                     meta[3].required, false, meta[3].hint));
             // notes
-            formData.push(this._templateRenderer.textAreaRender(meta[4].label, meta[4].key, '',
+            formData.push(this._templateRenderer.textAreaRender(meta[4].label, meta[4].key, data[meta[4].key],
                         meta[4].required, false, meta[4].hint));
 
             // timecardId
-            formData.push(this._templateRenderer.hiddenFieldRender('', 'timecardId', this.id, true, false));
+            formData.push(this._templateRenderer.hiddenFieldRender('', 'timecardId', id, true, false));
 
             this._formContent = new phpr.Default.System.TemplateWrapper({
                 templateName: "phpr.Timecard.template.formView.html",
@@ -277,7 +252,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Default.System.Component, {
                     saveText: phpr.nls.get('Save'),
                     deleteText: phpr.nls.get('Delete'),
                     newText: phpr.nls.get('New'),
-                    deleteDisplay: this.id > 0 ? "inline" : "none"
+                    deleteDisplay: id > 0 ? "inline" : "none"
                 }
             });
 
@@ -290,22 +265,22 @@ dojo.declare("phpr.Timecard.Form", phpr.Default.System.Component, {
             this._dayView.form.set('content', this._formContent);
 
             this.garbageCollector.addEvent(
-                dojo.connect(this._formContent.saveBookingButton, "onClick", dojo.hitch(this, "submitForm"))
+                dojo.connect(this._formContent.saveBookingButton, "onClick", dojo.hitch(this, "submitForm", id))
             );
 
             this.garbageCollector.addEvent(
                 dojo.connect(this._formContent.deleteBookingButton, "onClick", dojo.hitch(this, function() {
-                    phpr.confirmDialog(dojo.hitch(this, "deleteForm"), phpr.nls.get('Are you sure you want to delete?'));
+                    phpr.confirmDialog(dojo.hitch(this, "deleteForm", id), phpr.nls.get('Are you sure you want to delete?'));
                 }))
             );
 
             this.garbageCollector.addEvent(
                 dojo.connect(this._formContent.newBookingButton, "onClick", dojo.hitch(this, function() {
-                    this.fillForm(0);
+                    this.drawFormView(0);
                 }))
             );
 
-            dojo.byId('projectId').focus();
+            formData[2].fieldNode.focus();
         }));
     },
 
@@ -366,12 +341,11 @@ dojo.declare("phpr.Timecard.Form", phpr.Default.System.Component, {
         return true;
     },
 
-    submitForm: function(event) {
+    submitForm: function(id) {
         // Summary:
         //    Save the booking form
         // Description:
         //    Save the booking form and reload the views
-        this.id       = dijit.byId('timecardId').get('value');
         this.sendData = [];
         this.sendData = dojo.mixin(this.sendData, this._formContent.bookingForm.get('value'));
         if (!this.prepareSubmission()) {
@@ -379,7 +353,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Default.System.Component, {
         }
 
         phpr.send({
-            url: phpr.webpath + 'index.php/Timecard/index/jsonSave/nodeId/1/id/' + this.id,
+            url: phpr.webpath + 'index.php/Timecard/index/jsonSave/nodeId/1/id/' + id,
             content: this.sendData
         }).then(dojo.hitch(this, function(data) {
             if (data) {
@@ -393,14 +367,13 @@ dojo.declare("phpr.Timecard.Form", phpr.Default.System.Component, {
         }));
     },
 
-    deleteForm: function(id, event) {
+    deleteForm: function(id) {
         // Summary:
         //    Delete a booking
         // Description:
         //    Delete a bookinh and reload the views
-        this.id = dijit.byId('timecardId').get('value');
         phpr.send({
-            url: phpr.webpath + 'index.php/' + phpr.module + '/index/jsonDelete/id/' + this.id
+            url: phpr.webpath + 'index.php/' + phpr.module + '/index/jsonDelete/id/' + id
         }).then(dojo.hitch(this, function(data) {
             if (data) {
                 new phpr.handleResponse('serverFeedback', data);
@@ -503,57 +476,6 @@ dojo.declare("phpr.Timecard.Form", phpr.Default.System.Component, {
             dojo.style('projectFavoritesTarget', 'height', this._manFavBoxesHeight + 'px');
         } else {
             dojo.style('projectFavoritesTarget', 'height', '');
-        }
-    },
-
-    fillForm: function(id) {
-        // Summary:
-        //    Fill the form with the data from a saved item
-        // Description:
-        //    Fill the form with the data from a saved item
-        this.id = id;
-        this._url = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonDetail/nodeId/1/id/' + this.id;
-        phpr.DataStore.addStore({url: this._url});
-        phpr.DataStore.requestData({url: this._url, processData: dojo.hitch(this, function(reqData) {
-            var data = reqData.data;
-            var endTime = data[0].endTime.substr(0, 5);
-            var startTime = data[0].startDatetime.substr(11, 5);
-            if (endTime === 0 || endTime === null) {
-                var hour = parseInt(startTime, 10) + 1;
-                var endTime = phpr.date.getIsoTime(hour + '00');
-            }
-
-            var temp = startTime.split(':');
-
-            var start = parseInt(temp[0], 10);
-            if (start === 0) {
-                var start = parseInt(temp[0].substr(1, 1), 10);
-            }
-            var end = parseInt(temp[1], 10);
-
-            var index;
-            if (end >= 0 && end < 30) {
-                index = start + ':00';
-            } else if (end >= 30) {
-                index = start + ':30';
-            }
-
-            this.drawFormView(this.dateObject, startTime, endTime,
-                data[0].projectId, data[0].notes);
-
-            this.focusNote();
-        })});
-    },
-
-    focusNote: function() {
-        // Summary:
-        //    Wait that the widget exists to focus it
-        // Description:
-        //    Wait that the widget exists to focus it
-        if (!dojo.byId('notes')) {
-            setTimeout(dojo.hitch(this, "focusNote"), 500);
-        } else {
-            dojo.byId('notes').focus();
         }
     }
 });

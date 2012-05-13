@@ -13,7 +13,8 @@
             required="{{required}}" {{disabled}} constraints="{datePattern: 'yyyy-MM-dd'}" promptMessage="yyyy-MM-dd"
             invalidMessage="Invalid date. Use yyyy-MM-dd format." value="{{valueForDate}}"
             onchange="dijit.byId('{{id}}').set('value',
-                phpr.date.getIsoDatetime(this.value, dijit.byId('{{idForTime}}').get('value')));" />
+            phpr.date.getIsoDatetime(this.value, dijit.byId('{{idForTime}}').get('value')));"
+            dojoAttachPoint="fieldNode" />
             <input type="text" id="{{idForTime}}" name="{{idForTime}}" value="T{{valueForTime}}"
             dojoType="dijit.form.TimeTextBox" required="{{required}}" {{disabled}}
             constraints="{formatLength: 'short', timePattern: 'HH:mm'}"
