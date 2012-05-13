@@ -34,7 +34,6 @@ return array(
         "//css/themes/phprojekt/Editor_rtl.css",
         "//css/themes/phprojekt/Grid.css",
         "//css/themes/phprojekt/Grid_rtl.css",
-        "//css/themes/phprojekt/Menu.css",
         "//css/themes/phprojekt/Module_designer.css",
         "//css/themes/phprojekt/Module_gantt.css",
         "//css/themes/phprojekt/Module_timecard.css",
