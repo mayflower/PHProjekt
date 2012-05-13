@@ -367,25 +367,34 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
 
         def.then(dojo.hitch(this, function() {
             this._langUrl = phpr.webpath + 'index.php/Default/index/jsonGetTranslatedStrings/language/' + phpr.language;
+            this._fallbackLangUrl = phpr.webpath + 'index.php/Default/index/jsonGetTranslatedStrings/language/en';
+
             phpr.DataStore.addStore({ url: this._langUrl });
-            var def1 = phpr.DataStore.requestData({ url: this._langUrl });
+            phpr.DataStore.addStore({ url: this._fallbackLangUrl });
+
+            var defs = [];
+            defs.push(phpr.DataStore.requestData({ url: this._langUrl }));
+            defs.push(phpr.DataStore.requestData({ url: this._fallbackLangUrl }));
 
             phpr.DataStore.addStore({ url: phpr.globalModuleUrl});
-            var def2 = phpr.DataStore.requestData({ url: phpr.globalModuleUrl });
+            defs.push(phpr.DataStore.requestData({ url: phpr.globalModuleUrl }));
 
             phpr.DataStore.addStore({ url: phpr.tree.getUrl() });
-            var def3 = phpr.DataStore.requestData({ url: phpr.tree.getUrl() });
+            defs.push(phpr.DataStore.requestData({ url: phpr.tree.getUrl() }));
 
             var tabStore = new phpr.Default.System.Store.Tab();
-            var def4 = tabStore.fetch();
+            defs.push(tabStore.fetch());
 
             this.userStore = new phpr.Default.System.Store.User();
-            var def5 = this.userStore.fetch();
+            defs.push(this.userStore.fetch());
 
-            var defList = new dojo.DeferredList([ def1, def2, def3, def4, def5 ]);
+            var defList = new dojo.DeferredList(defs);
 
             defList.addCallback(dojo.hitch(this, function() {
-                phpr.nls = new phpr.translator(phpr.DataStore.getData({ url: this._langUrl }));
+                phpr.nls = new phpr.translator(
+                    phpr.DataStore.getData({ url: this._langUrl }),
+                    phpr.DataStore.getData({ url: this._fallbackLangUrl })
+                );
 
                 var isAdmin = phpr.DataStore.getMetaData({url: phpr.globalModuleUrl}) == "1" ? true : false;
                 phpr.isAdminUser = isAdmin;
