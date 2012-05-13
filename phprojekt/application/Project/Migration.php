@@ -48,7 +48,7 @@ class Project_Migration extends Phprojekt_Migration_Abstract
      */
     public function getCurrentModuleVersion()
     {
-        return '6.1.0-beta1';
+        return '6.1.0-dev';
     }
 
     /**
@@ -64,7 +64,7 @@ class Project_Migration extends Phprojekt_Migration_Abstract
     public function upgrade($currentVersion, Zend_Db_Adapter_Abstract $db)
     {
         if (is_null($currentVersion)
-                || Phprojekt::compareVersion($currentVersion, '6.1.0-beta1') < 0) {
+                || Phprojekt::compareVersion($currentVersion, '6.1.0-dev') < 0) {
             $this->parseDbFile('Project');
             Phprojekt::getInstance()->getCache()->clean(Zend_Cache::CLEANING_MODE_ALL);
         }
