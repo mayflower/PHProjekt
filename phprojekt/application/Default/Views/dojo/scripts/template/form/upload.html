@@ -8,9 +8,14 @@
         </label>
     </td>
     <td>
-        <input type="hidden" dojoType="dijit.form.TextBox" name="{{id}}" id="{{id}}" value="{{value}}" />
-        <iframe id="filesIframe_{{id}}" src="{{iFramePath}}" height="25" width="311px" frameborder="0" scrolling="no"
-        style="overflow: hidden; border: 0px;"></iframe>
+        <input type="hidden" dojoType="dijit.form.TextBox" dojoAttachPoint="inputField" name="{{id}}" id="{{id}}"
+            value="{{value}}" />
+        <iframe dojoAttachPoint="iframeNode" id="filesIframe_{{id}}" src="{{iFramePath}}" height="25" width="311px"
+            frameborder="0" scrolling="no" style="overflow: hidden; border: 0px;"></iframe>
+        <div dojoAttachPoint="errorBox" style="display: none">
+        </div>
+        <div dojoAttachPoint="uploadList">
+        </div>
     </td>
     <td>
         {{tooltip|safe}}

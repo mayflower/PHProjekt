@@ -96,6 +96,7 @@ class LoginController extends Zend_Controller_Action
                 $frontendMessage = new Phprojekt_Notification();
                 $frontendMessage->setControllProcess(Phprojekt_Notification::LAST_ACTION_LOGIN);
                 $frontendMessage->saveFrontendMessage();
+                Default_Helpers_Upload::cleanUnusedFiles();
                 $this->_redirect($config->webpath . 'index.php' . $hash);
                 die();
             }
