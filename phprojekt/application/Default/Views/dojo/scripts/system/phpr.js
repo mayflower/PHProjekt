@@ -586,30 +586,42 @@ dojo.declare("phpr.translator", null, {
     //     and return the request string translateds
     _strings: {},
 
-    constructor: function(translatedStrings) {
+    constructor: function(translatedStrings, fallbackStrings) {
         this._strings = translatedStrings;
+        this._fallbackStrings = fallbackStrings;
     },
 
     get: function(string, module) {
         var returnValue;
 
-        // Special module
-        if (module && this._strings[module] && this._strings[module][string]) {
-            returnValue = this._strings[module][string];
-        // Current module
-        } else if (this._strings[phpr.module] && this._strings[phpr.module][string]) {
-            returnValue = this._strings[phpr.module][string];
-        // Core module
-        } else if (this._strings.Core && this._strings.Core[string]) {
-            returnValue = this._strings.Core[string];
-        // Default module
-        } else if (this._strings.Default && this._strings.Default[string]) {
-            returnValue = this._strings.Default[string];
-        } else {
+        returnValue = this._getStringsFromObject(this._strings, string, module);
+        if (returnValue === null) {
+            returnValue = this._getStringsFromObject(this._fallbackStrings, string, module);
+        }
+
+        if (returnValue === null) {
             // Unstranslated string
             returnValue = string;
         }
+
         return returnValue;
+    },
+
+    _getStringsFromObject: function(stringObject, string, module) {
+        if (module && stringObject[module] && stringObject[module][string]) {
+            return stringObject[module][string];
+        // Current module
+        } else if (stringObject[phpr.module] && stringObject[phpr.module][string]) {
+            return stringObject[phpr.module][string];
+        // Core module
+        } else if (stringObject.Core && stringObject.Core[string]) {
+            return stringObject.Core[string];
+        // Default module
+        } else if (stringObject.Default && stringObject.Default[string]) {
+            return stringObject.Default[string];
+        } else {
+            return null;
+        }
     }
 });
 
