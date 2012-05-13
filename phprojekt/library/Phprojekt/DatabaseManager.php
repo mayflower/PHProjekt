@@ -95,6 +95,8 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
      */
     protected $_fieldTypes = array();
 
+    protected $hasFieldTypes = false;
+
     /**
      * Error Class.
      *
@@ -136,7 +138,6 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
         if (null !== $this->_model) {
             $this->_modelInfo = $this->_model->info();
         }
-        $this->getTypes();
     }
 
     /**
@@ -432,6 +433,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
     {
         $return = null;
 
+        $this->_ensureFieldTypePresence();
         if (isset($this->_fieldTypes[$fieldName])) {
             $return = $this->_fieldTypes[$fieldName];
         }
@@ -968,6 +970,13 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
         }
 
         return $options;
+    }
+
+    private function _ensureFieldTypePresence() {
+        if (!$this->hasFieldTypes) {
+            $this->getTypes();
+            $this->hasFieldTypes = true;
+        }
     }
 
     /**
