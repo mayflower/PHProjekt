@@ -82,4 +82,13 @@ class Calendar2_CalDAV_PrincipalBackend implements Sabre_DAVACL_IPrincipalBacken
         throw new Exception('not implemented3. $principal = ' . $principal);
     }
 
+    public function updatePrincipal($path, $mutations)
+    {
+        return false;
+    }
+
+    public function searchPrincipals($prefixPath, array $searchProperties)
+    {
+        return array();
+    }
 }
