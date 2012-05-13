@@ -98,7 +98,7 @@ dojo.declare("phpr.Core.ViewMixin", phpr.Default.System.ViewContentMixin, {
 dojo.declare("phpr.Core.Main", phpr.Default.Main, {
     action: null,
 
-    constructor:function() {
+    constructor: function() {
         this.module     = "Core";
         this.gridWidget = phpr.Core.Grid;
         this.formWidget = phpr.Core.Form;
@@ -107,22 +107,22 @@ dojo.declare("phpr.Core.Main", phpr.Default.Main, {
         this.loadFunctions(this.module);
     },
 
-    getSystemModules:function() {
+    getSystemModules: function() {
         // Summary:
         //    Return the modules that are like normal modules instead of just a form
         // Description:
         //    All this modules will have Grid and Form like normal modules
         //    Add here other modules if you add them into the Administration section
-        return new Array("Module","Tab","User","Role");
+        return new Array("Module", "Tab", "User", "Role");
     },
 
-    isSystemModule:function(module) {
+    isSystemModule: function(module) {
         // Summary:
         //    Return if the module is like a system one or not
         // Description:
         //    Return if the module is like a system one or not
         var modules = this.getSystemModules();
-        for (key in modules) {
+        for (var key in modules) {
             if (modules[key] === module) {
                 return true;
             }
@@ -131,14 +131,14 @@ dojo.declare("phpr.Core.Main", phpr.Default.Main, {
         return false;
     },
 
-    getSummary:function() {
+    getSummary: function() {
         // Summary:
         //    Function for be rewritten
         // Description:
         //    Function for be rewritten
     },
 
-    defineModules:function(module) {
+    defineModules: function(module) {
         // Summary:
         //    Set the global vars for this module
         // Description:
@@ -152,7 +152,7 @@ dojo.declare("phpr.Core.Main", phpr.Default.Main, {
         }
     },
 
-    reload:function(state) {
+    reload: function(state) {
         // Summary:
         //    Rewritten the function for work like a system module and like a form
         // Description:
@@ -170,8 +170,6 @@ dojo.declare("phpr.Core.Main", phpr.Default.Main, {
 
         phpr.tree.fadeOut();
         this.setSubGlobalModulesNavigation();
-        this.hideSuggest();
-        this.setSearchForm();
 
         if (this.isSystemModule(state.action)) {
             phpr.pageManager.modifyCurrentState({ action: undefined, moduleName: state.action });
@@ -191,16 +189,17 @@ dojo.declare("phpr.Core.Main", phpr.Default.Main, {
         }
     },
 
-    setSubGlobalModulesNavigation:function(currentModule) {
+    setSubGlobalModulesNavigation: function(currentModule) {
         // Summary:
         //    Display the sub modules for navigate them
         // Description:
         //    Join the system modules and the user modules defined with
         //    the Configuration.php and Setting.php files into the models
+        var parentModule;
         if (phpr.parentmodule) {
-            var parentModule = phpr.parentmodule;
+            parentModule = phpr.parentmodule;
         } else {
-            var parentModule = this.module;
+            parentModule = this.module;
         }
         var subModuleUrl = phpr.webpath + 'index.php/Core/' + parentModule.toLowerCase() + '/jsonGetModules';
         var self         = this;
@@ -210,13 +209,14 @@ dojo.declare("phpr.Core.Main", phpr.Default.Main, {
             url: subModuleUrl,
             processData: dojo.hitch(this, function() {
                 var systemModules = this.getSystemModules();
-                var modules       = new Array();
+                var modules       = [];
                 for (var index in systemModules) {
                     modules.push({
                         "name":           systemModules[index],
                         "label":          phpr.nls.get(systemModules[index]),
                         "moduleFunction": "setUrlHash",
-                        "functionParams": "'" + parentModule + "', null, ['" + systemModules[index] + "']"});
+                        "functionParams": "'" + parentModule + "', null, ['" + systemModules[index] + "']"
+                    });
                 }
                 var tmp = phpr.DataStore.getData({url: subModuleUrl});
                 for (var i = 0; i < tmp.length; i++) {
@@ -224,7 +224,8 @@ dojo.declare("phpr.Core.Main", phpr.Default.Main, {
                         "name":           tmp[i].name,
                         "label":          tmp[i].label,
                         "moduleFunction": "setUrlHash",
-                        "functionParams": "'" + parentModule + "', null, ['" + tmp[i].name + "']"});
+                        "functionParams": "'" + parentModule + "', null, ['" + tmp[i].name + "']"
+                    });
                 }
                 this._navigation = new phpr.Default.System.TabController({ });
 
@@ -264,10 +265,10 @@ dojo.declare("phpr.Core.Main", phpr.Default.Main, {
 
                 this.customSetSubmoduleNavigation();
             })
-        })
+        });
     },
 
-    updateCacheData:function() {
+    updateCacheData: function() {
         // Summary:
         //    Rewritten the function for delete all the cache
         // Description:
@@ -281,7 +282,7 @@ dojo.declare("phpr.Core.Main", phpr.Default.Main, {
         }
     },
 
-    processActionFromUrlHash:function(data) {
+    processActionFromUrlHash: function(data) {
         // Summary:
         //    Rewritten the function for work like a system module and like a form
         // Description:
@@ -307,7 +308,7 @@ dojo.declare("phpr.Core.Main", phpr.Default.Main, {
 
             if (data.id) {
                 // If is an id, open a form
-                if (subModule && (data.id > 0 || data.id == 0)) {
+                if (subModule && (data.id > 0 || data.id === 0)) {
                     state.id = data.id;
                     phpr.pageManager.modifyCurrentState(state);
                 }
@@ -320,7 +321,7 @@ dojo.declare("phpr.Core.Main", phpr.Default.Main, {
         }
     },
 
-    newEntry:function() {
+    newEntry: function() {
         // Summary:
         //     This function is responsible for displaying the form for a new entry in the
         //     current Module
@@ -331,7 +332,7 @@ dojo.declare("phpr.Core.Main", phpr.Default.Main, {
         }
     },
 
-    customSetSubmoduleNavigation:function() {
+    customSetSubmoduleNavigation: function() {
         // Summary:
         //    Function for be rewritten
         // Description:
