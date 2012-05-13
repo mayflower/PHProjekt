@@ -40,13 +40,11 @@ final class Default_Helpers_Upload
     /**
      * Init the session with the files uploaded or an empty string.
      *
-     * If the field parameter is wrong, the function die().
-     *
      * @param Phprojekt_Model_Interface $model  Current module.
      * @param string                    $field  Name of the field in the module.
      * @param integer                   $itemId Id of the current item.
      *
-     * @return string Md5 string of all the files separated by ||.
+     * @return array of all the files.
      */
     static public function initValue($model, $field, $itemId)
     {
@@ -57,9 +55,10 @@ final class Default_Helpers_Upload
             $model->find($itemId);
             $value = $model->$field;
         }
-        $_SESSION['uploadedFiles_' . $field] = $value;
 
-        return $value;
+        $files = self::parseModelValues($value);
+        self::_setSessionFiles($files, $field);
+        return $files;
     }
 
     /**
@@ -68,19 +67,17 @@ final class Default_Helpers_Upload
      * @param Phprojekt_Model_Interface $model  Current module.
      * @param string                    $field  Name of the field in the module.
      *
-     * @return string Md5 string of all the files separated by ||.
+     * @return array list of files.
      */
     static public function getFiles($model, $field)
     {
         self::_checkParamField($model, $field);
 
-        return $_SESSION['uploadedFiles_' . $field];
+        return self::_getSessionFiles($field);
     }
 
     /**
      * Upload the file and return the new value.
-     *
-     * If the field parameter is wrong, the function die().
      *
      * @param Phprojekt_Model_Interface $model  Current module.
      * @param string                    $field  Name of the field in the module.
@@ -95,9 +92,9 @@ final class Default_Helpers_Upload
         self::_checkParamField($model, $field);
         self::_checkWritePermission($model, $itemId);
 
-        $addedValue = '';
         $config     = Phprojekt::getInstance()->getConfig();
-        $value      = $_SESSION['uploadedFiles_' . $field];
+
+        $files = self::_getSessionFiles($field);
 
         // Remove all the upload files that are not "uploadedFile"
         foreach (array_keys($_FILES) as $key) {
@@ -105,10 +102,14 @@ final class Default_Helpers_Upload
                 unset($_FILES[$key]);
             }
         }
+
         // Fix name for save it as md5
         if (is_array($_FILES) && !empty($_FILES) && isset($_FILES['uploadedFile'])) {
             $md5name                        = md5(mt_rand() . time());
-            $addedValue                     = $md5name . '|' . $_FILES['uploadedFile']['name'];
+            $addedFile                     = array(
+                'md5' => $md5name,
+                'name' => $_FILES['uploadedFile']['name']
+            );
             $_FILES['uploadedFile']['name'] = $md5name;
         }
 
@@ -128,121 +129,144 @@ final class Default_Helpers_Upload
             }
             throw new Exception(implode("\n", $messages));
         } else {
-            if (!empty($value)) {
-                $value .= '||';
-            }
-            $value .= $addedValue;
+            $files[] = $addedFile;
+            self::addFilesToUnusedFileList(array($addedFile));
         }
-        $_SESSION['uploadedFiles_' . $field] = $value;
 
-        return $value;
+        self::_setSessionFiles($files, $field);
+        return $files;
     }
 
     /**
      * Retrieves the file from upload folder.
      *
-     * If the field parameter is wrong, the function die().
-     * If the order parameter is wrong, the function die().
-     * If the file do not exists, the function die().
-     *
      * @param Phprojekt_Model_Interface $model  Current module.
      * @param string                    $field  Name of the field in the module.
      * @param integer                   $itemId Id of the current item.
-     * @param integer                   $order  Position of the file in the value string.
+     * @param string                    $hash  Hash of the file.
      *
      * @return string Md5 string of all the files separated by ||.
      */
-    static public function downloadFile($model, $field, $itemId, $order)
+    static public function downloadFile($model, $field, $itemId, $hash)
     {
         self::_checkParamField($model, $field);
+        $files = self::_getSessionFiles($field);
+        $file = self::getSessionFileFromHash($hash, $field);
 
+        $permitted = false;
         if ($itemId > 0) {
             $model->find($itemId);
             // The user has download permission?
 
-            if (!$model->hasRight(Phprojekt_Auth_Proxy::getEffectiveUserId(), Phprojekt_Acl::DOWNLOAD)) {
-                $error = Phprojekt::getInstance()->translate('You don\'t have permission for downloading on this '
-                    . 'item.');
-                die($error);
+            if ($model->hasRight(Phprojekt_Auth_Proxy::getEffectiveUserId(), Phprojekt_Acl::DOWNLOAD)) {
+                $permitted = true;
             }
+        } else if (!is_null($file)) {
+            $permitted = true;
         }
 
-        $files = explode('||', $_SESSION['uploadedFiles_' . $field]);
-        self::_checkParamOrder($order, count($files), $model);
+        $md5Name  = $file['md5'];
+        $fileName = $file['name'];
 
-        $md5Name  = '';
-        $fileName = '';
-        if (isset($files[$order - 1])) {
-            list($md5Name, $fileName) = explode("|", $files[$order - 1], 2);
+        if (!$permitted || !self::_isValidFileHash($md5Name) || empty($fileName)) {
+            $error = Phprojekt::getInstance()->translate('You don\'t have permission for downloading on this item.');
+            throw new RuntimeException($error);
         }
 
-        if (!empty($fileName) && preg_match("/^[A-Fa-f0-9]{32,32}$/", $md5Name)) {
-            $md5Name = Phprojekt::getInstance()->getConfig()->uploadPath . $md5Name;
-            if (file_exists($md5Name)) {
-                header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
-                header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
-                header("Cache-Control: no-store, no-cache, must-revalidate");
-                header("Cache-Control: post-check=0, pre-check=0", false);
-                header("Pragma: no-cache");
-                header('Content-Length: ' . filesize($md5Name));
-                header("Content-Disposition: attachment; filename=\"" . (string) $fileName . "\"");
-                header('Content-Type: download');
-                $fh = fopen($md5Name, 'r');
-                fpassthru($fh);
-            } else {
-                die('The file does not exists');
-            }
+        $md5Name = self::_absoluteFilePathFromHash($md5Name);
+        if (file_exists($md5Name)) {
+            header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
+            header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+            header("Cache-Control: no-store, no-cache, must-revalidate");
+            header("Cache-Control: post-check=0, pre-check=0", false);
+            header("Pragma: no-cache");
+            header('Content-Length: ' . filesize($md5Name));
+            header("Content-Disposition: attachment; filename=\"" . (string) $fileName . "\"");
+            header('Content-Type: download');
+            $fh = fopen($md5Name, 'r');
+            fpassthru($fh);
         } else {
-            die('Wrong file');
+            $error = Phprojekt::getInstance()->translate('The file does not exists');
+            throw new RuntimeException($error);
         }
     }
 
     /**
-     * Delete a file and return the new value.
+     * Delete a files.
      *
-     * If the field parameter is wrong, the function die().
-     * If the order parameter is wrong, the function die().
-     *
-     * @param Phprojekt_Model_Interface $model  Current module.
-     * @param string                    $field  Name of the field in the module.
-     * @param integer                   $itemId Id of the current item.
-     * @param integer                   $order  Position of the file in the value string.
+     * @param array $files list of files.
      *
      * @throws Exception On no write access.
      *
-     * @return string Md5 string of all the files separated by ||.
+     * @return void.
      */
-    static public function deleteFile($model, $field, $itemId, $order)
+    static public function deleteFiles($files)
     {
-        self::_checkParamField($model, $field);
-        self::_checkWritePermission($model, $itemId);
-
-        $files = explode('||', $_SESSION['uploadedFiles_' . $field]);
-        self::_checkParamOrder($order, count($files), $model);
-
-        // Delete the file name and md5 from the string
-        $value = '';
-        $i     = 1;
         foreach ($files as $file) {
-            if ($i != $order) {
-                if ($value != '') {
-                    $value .= '||';
-                }
-                $value .= $file;
-            } else {
-                // Delete the file from the server
-                $md5Name          = substr($file, 0, strpos($file, '|'));
-                $fileAbsolutePath = Phprojekt::getInstance()->getConfig()->uploadPath . $md5Name;
-                if (preg_match("/^[A-Fa-f0-9]{32,32}$/", $md5Name) && file_exists($fileAbsolutePath)) {
-                    unlink($fileAbsolutePath);
-                }
+            $hash = $file['md5'];
+            $fileAbsolutePath = self::_absoluteFilePathFromHash($hash);
+
+            if (self::_isValidFileHash($hash) && file_exists($fileAbsolutePath)) {
+                unlink($fileAbsolutePath);
             }
-            $i++;
+        }
+    }
+
+    /**
+     * Add files to the List of unused files.
+     *
+     * @param array $hashes array of file hashes.
+     *
+     * @return void.
+     */
+    static public function addFilesToUnusedFileList($files)
+    {
+        if (count($files) === 0) {
+            return;
         }
 
-        $_SESSION['uploadedFiles_' . $field] = $value;
+        $db = Phprojekt::getInstance()->getDb();
+        $table = new Zend_Db_Table(array(
+            'db' => $db,
+            'name' => 'uploaded_unused_files'
+        ));
 
-        return $value;
+        $rows = array();
+
+        foreach ($files as $file) {
+            $rows[] = array(
+                "created" => new Zend_Db_Expr('NOW()'),
+                "hash" => $file['md5']
+            );
+        }
+
+        foreach ($rows as $row) {
+            $table->insert($row);
+        }
+    }
+
+    /**
+     * Removes files from the List of unused files.
+     *
+     * @param array $hashes array of file hashes.
+     *
+     * @return void.
+     */
+    static public function removeFilesFromUnusedFileList($files)
+    {
+        if (count($files) === 0) {
+            return;
+        }
+
+        $db = Phprojekt::getInstance()->getDb();
+
+        $hashes = array();
+        foreach ($files as $file) {
+            $hashes[] = $file['md5'];
+        }
+
+        $where = $db->quoteInto("hash IN (?)", $hashes);
+        $db->delete('uploaded_unused_files', $where);
     }
 
     /**
@@ -271,31 +295,12 @@ final class Default_Helpers_Upload
             $error  = Phprojekt::getInstance()->translate('Error in received parameter, consult the admin. Parameter:');
             $error .= ' field';
 
-            self::_logError("Error: wrong 'field' parameter trying to Download or Delete a file.",
-                array(get_class($model), $field));
-            die($error);
-        }
-    }
+            self::_logError(
+                "Error: wrong 'field' parameter trying to Download or Delete a file.",
+                array(get_class($model), $field)
+            );
 
-    /**
-     * Checks that the 'order' parameter for download and delete file actions is valid.
-     * If not, terminates script execution printing an error.
-     *
-     * @param integer                   $order  Position of the file (Can be many uploaded files in the same field).
-     * @param integer                   $amount Number of uploaded files for the field.
-     * @param Phprojekt_Model_Interface $model  Current module.
-     *
-     * @return void
-     */
-    static private function _checkParamOrder($order, $amount, $model)
-    {
-        if ($order < 1 || $order > $amount) {
-            $error  = Phprojekt::getInstance()->translate('Error in received parameter, consult the admin. Parameter:');
-            $error .= " order";
-
-            self::_logError("Error: wrong 'order' parameter trying to Download or Delete a file.",
-                array(get_class($model), $order));
-            die($error);
+            throw new InvalidArgumentException($error);
         }
     }
 
@@ -336,5 +341,159 @@ final class Default_Helpers_Upload
         // Log error
         Phprojekt::getInstance()->getLog()->err($message . " User Id: " . Phprojekt_Auth::getUserId()
             . " - Values: ". implode("," , $values));
+    }
+
+    /**
+     * Gets the files from the session for the provided field.
+     */
+    static private function _getSessionFiles($field)
+    {
+        try {
+            $files = unserialize($_SESSION['uploadedFiles_' . $field]);
+        } catch (Exception $e) {
+            $files = array();
+        }
+
+        if (!is_array($files)) {
+            $files = array();
+        }
+
+        return $files;
+    }
+
+    /**
+     * Saves the given files into the session for the provided field.
+     */
+    static private function _setSessionFiles($files, $field)
+    {
+        $value = serialize($files);
+        $_SESSION['uploadedFiles_' . $field] = $value;
+        return $value;
+    }
+
+    /**
+     * Parses the file lists in the model into a usable format.
+     *
+     * This has to be done to not break backwards compatibility.
+     */
+    static public function parseModelValues($value)
+    {
+        $fileFields = explode('||', $value);
+        $files = array();
+
+        if ($fileFields[0] !== "") {
+            foreach ($fileFields as $fileField) {
+                list($md5Name, $fileName) = explode("|", $fileField, 2);
+                $files[] = array(
+                    'md5' => $md5Name,
+                    'name' => $fileName
+                );
+            }
+        }
+
+        return $files;
+    }
+
+    /**
+     * Returns a file from the session by hash and field.
+     *
+     * @param string    $hash   Hash of the file.
+     * @param string    $field  Name of the field in the module.
+     *
+     * @return array    The file and hash.
+     */
+    static public function getSessionFileFromHash($hash, $field)
+    {
+        $files = self::_getSessionFiles($field);
+
+        foreach ($files as $file) {
+            if ($file['md5'] == $hash) {
+                return $file;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns true if the passed hash is a valid filename hash.
+     *
+     * @param string    $hash   Hash of the file.
+     *
+     * @return boolean  Correct hash or not.
+     */
+    static private function _isValidFileHash($hash)
+    {
+        return preg_match("/^[A-Fa-f0-9]{32,32}$/", $hash);
+    }
+
+    /**
+     * Returns the absolute path of a file by hash.
+     *
+     * @param string    $hash   Hash of the file.
+     *
+     * @return string   The absolute path.
+     */
+    static private function _absoluteFilePathFromHash($hash)
+    {
+        return Phprojekt::getInstance()->getConfig()->uploadPath . $hash;
+    }
+
+    /**
+     * Returns size and creation time of the given file.
+     *
+     * @param array     $file   The file.
+     *
+     * @return mixed    size and ctime of the file if file is valid, null else;
+     */
+    static public function getInfosFromFile($file) {
+        if (self::_isValidFileHash($file['md5'])) {
+            $stat = lstat(self::_absoluteFilePathFromHash($file['md5']));
+
+            return array(
+                "size" => $stat['size'],
+                "ctime" => $stat['ctime']
+            );
+        }
+
+        return null;
+    }
+
+    /**
+     * Retrieves a list of file hashes that are without association for longer than
+     * 2 hours.
+     */
+    static private function _getOldFileHashes() {
+        $db = Phprojekt::getInstance()->getDb();
+
+        $select = $db->select()->from('uploaded_unused_files', array('hash', 'created'))
+            ->where('created < ?', new Zend_Db_Expr('DATE_SUB(NOW(), INTERVAL 2 HOUR)'));
+        $stmt = $select->query();
+
+        $rows = $stmt->fetchAll();
+        $hashes = array();
+
+        foreach ($rows as $row) {
+            $hashes[] = $row['hash'];
+        }
+
+        return $hashes;
+    }
+
+    /**
+     * Deletes all files in the "unused_upload" table older than 2 hours.
+     *
+     * @return  void
+     */
+    static public function cleanUnusedFiles() {
+
+        $files = array();
+        $hashes = self::_getOldFileHashes();
+        foreach ($hashes as $hash) {
+            $files[] = array('md5' => $hash);
+        }
+
+        self::removeFilesFromUnusedFileList($files);
+        self::deleteFiles($files);
     }
 }
