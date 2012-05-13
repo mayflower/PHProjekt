@@ -59,6 +59,10 @@ dojo.declare("phpr.Calendar2.ViewWeekList", phpr.Calendar2.DefaultView, {
         // Description:
         //    It parses that json info and prepares the appropriate arrays so that it can be rendered correctly the
         //    template and the events.
+        if (this._destroyed) {
+            return;
+        }
+
         var meta = phpr.DataStore.getMetaData({url: this.url});
 
         // Render Export buttons?

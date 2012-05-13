@@ -63,6 +63,9 @@ dojo.declare("phpr.Calendar2.ViewDayListSelect", phpr.Calendar2.DefaultView, {
         // Description:
         //    It parses that json info and prepares an apropriate array so that the template can render
         // appropriately the TABLE html element.
+        if (this._destroyed) {
+            return;
+        }
 
         var meta = phpr.DataStore.getMetaData({url: this.url});
 
