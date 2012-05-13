@@ -565,7 +565,6 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         }
 
         var menu = new dijit.Menu({style: "display: none;"});
-        dojo.addClass(menu.domNode, "claro");
 
         // Setting
         button = new dijit.MenuItem({
@@ -1163,8 +1162,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         var container = new dijit.layout.TabContainer({
             style:     'height: 100%;',
             useMenu:   false,
-            useSlider: false,
-            'class': 'claro'
+            useSlider: false
         }, document.createElement('div'));
 
         this.garbageCollector.addNode(container, 'help');

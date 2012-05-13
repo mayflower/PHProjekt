@@ -772,7 +772,6 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         //    Set the Container
 
         var container = new dijit.layout.ContentPane({}, dojo.create('div'));
-        dojo.addClass(container.domNode, 'claro');
 
         this.garbageCollector.addNode(container);
 
