@@ -495,6 +495,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
 
         if (data.length === 0) {
             this.node.set('content', p.drawEmptyMessage('The Item was not found'));
+            this._finishFormRendering();
         } else {
             var firstRequiredField = null;
 
@@ -664,10 +665,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
 
                 this.node.set('content', this.form);
 
-                this.node.resize();
-
-                this.postRenderForm();
-                this._loadIndicator.hide();
+                this._finishFormRendering();
 
                 // Set cursor to the first required field
                 if (dojo.byId(firstRequiredField)) {
@@ -675,6 +673,13 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
                 }
             }));
         }
+    },
+
+    _finishFormRendering: function() {
+        this.node.resize();
+
+        this.postRenderForm();
+        this._loadIndicator.hide();
     },
 
     setFieldValues: function(meta, data) {
