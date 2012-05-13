@@ -536,17 +536,24 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         // Description:
         //    This function is responsible for displaying the Navigation top bar of the Calendar2
         //    Current submodules are: List, Day and Week.
+        var activeUser = this.getActiveUser();
         var moduleViews = [];
+
         this.addModuleView(moduleViews, phpr.nls.get('List'), 'listViewClick', this.isListActive(this.grid));
         this.addModuleView(moduleViews, phpr.nls.get('Day'), 'dayViewClick', this.isListActive('dayList'));
         this.addModuleView(moduleViews, phpr.nls.get('Week'), 'weekViewClick', this.isListActive(this.weekList));
         this.addModuleView(moduleViews, phpr.nls.get('Month'), 'monthViewClick', this.isListActive(this.monthList));
-        this.addModuleView(moduleViews, phpr.nls.get('CalDav'), 'caldavViewClick', this.isListActive(this.caldavView));
+
+        if (activeUser && activeUser.id === phpr.currentUserId) {
+            this.addModuleView(moduleViews, phpr.nls.get('CalDav'), 'caldavViewClick', this.isListActive(this.caldavView));
+        }
+
         if (this.isListActive('dayList')) {
             this.addModuleView(moduleViews, phpr.nls.get('Selection'), 'userSelectionClick', this._usersSelectionMode);
         }
 
         this._navigation = new phpr.Default.System.TabController({ });
+
         var selectedEntry;
 
         for (var i = 0; i < moduleViews.length; i++) {
@@ -887,9 +894,12 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
     },
 
     reload: function(state) {
-        if (state && !state.action) {
+        var activeUser = this.getActiveUser();
+        if (state && (!state.action ||
+                (state.action === "caldavView" && activeUser && activeUser.id != phpr.currentUserId))) {
             state.action = "monthList";
         }
+
         this.inherited(arguments);
     },
 
