@@ -36,8 +36,6 @@ dojo.declare(
         }
     },
     postCreate: function() {
-        this.focusNode = this.focusNode.domNode;
-
         this.connect(
             this.dropDown,
             "onKeyDown",
