@@ -179,6 +179,11 @@
     border-bottom-style: double;
 }
 
+.phprojekt #eventsArea .eventsDivMain .dojoxResizeHandle {
+    background-position: right;
+    background-repeat: no-repeat;
+}
+
 .phprojekt #calendarSchedule .monthEvents {
     border: 1px solid;
     vertical-align:top;
