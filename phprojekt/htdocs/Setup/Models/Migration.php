@@ -2316,11 +2316,19 @@ HERE
      */
     private function _fix($string, $length = 0)
     {
-        if ($length == 0) {
-            return utf8_encode($string);
-        } else {
-            return substr(utf8_encode($string), 0, $length);
+        $encodings = mb_detect_order();
+        $encodings[] = 'ISO-8859-1';
+
+        $string = mb_convert_encoding(
+            $string,
+            'UTF-8',
+            mb_detect_encoding($string, $encodings, true)
+        );
+
+        if ($length !== 0) {
+            $string = substr($string, 0, $length);
         }
+        return $string;
     }
 
     /**
