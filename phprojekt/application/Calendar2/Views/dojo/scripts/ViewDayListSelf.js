@@ -28,25 +28,25 @@ dojo.declare("phpr.Calendar2.ViewDayListSelf", phpr.Calendar2.DefaultView, {
     //    This Class takes care of displaying the list information we receive from our Server in a HTML table
 
     // Variables that will be passed to the template for django to render it
-    _furtherEvents :  Array(),
+    _furtherEvents :  [],
     _maxSimultEvents: 1,
-    events:           Array(),
+    events:           [],
 
-    afterConstructor:function() {
+    afterConstructor: function() {
         // Summary:
         //    Loads the data from the database
         phpr.DataStore.addStore({url: this.url, noCache: true});
         phpr.DataStore.requestData({url: this.url, processData: dojo.hitch(this, "onLoaded")});
     },
 
-    setUrl:function() {
+    setUrl: function() {
         // Summary:
         //    Sets the url to get the data from
         this.url = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonDayListSelf/date/' + this._date +
             '/userId/' + this.main.getActiveUser().id;
     },
 
-    onLoaded:function(dataContent) {
+    onLoaded: function(dataContent) {
         // Summary:
         //    This function is called when the request to the DB is received
         // Description:
@@ -68,12 +68,11 @@ dojo.declare("phpr.Calendar2.ViewDayListSelf", phpr.Calendar2.DefaultView, {
         this.fillScheduleArray();
         this.fillEventsArrays(content);
 
-        var eventsAttr         = new Array();
+        var eventsAttr         = [];
         eventsAttr.borderWidth = this.EVENTS_BORDER_WIDTH;
         eventsAttr.divIdPre    = this.EVENTS_MAIN_DIV_ID;
 
         // All done, let's render the template
-        ;
 
         phpr.viewManager.getView().gridContainer.set('content',
             phpr.fillTemplate("phpr.Calendar2.template.dayListSelf.html", {
@@ -94,11 +93,11 @@ dojo.declare("phpr.Calendar2.ViewDayListSelf", phpr.Calendar2.DefaultView, {
         this.classesSetup(true);
     },
 
-    exportData:function() {
+    exportData: function() {
         // Summary:
         //    Open a new window in CSV mode
-        window.open(phpr.webpath + 'index.php/' + phpr.module + '/index/csvDayListSelf/nodeId/1/date/' + this._date
-            + '/csrfToken/' + phpr.csrfToken);
+        window.open(phpr.webpath + 'index.php/' + phpr.module + '/index/csvDayListSelf/nodeId/1/date/' + this._date +
+            '/csrfToken/' + phpr.csrfToken);
 
         return false;
     }
