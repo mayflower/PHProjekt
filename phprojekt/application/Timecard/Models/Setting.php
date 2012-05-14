@@ -45,7 +45,7 @@ class Timecard_Models_Setting extends Phprojekt_ModelInformation_Default
     public function setFields()
     {
         // favorites
-        $this->fillField('favorites', 'Favorite projects', 'multipleselectbox', 1, 1, array(
+        $this->fillField('favorites', 'Favorite projects', 'multiplefilteringselectbox', 1, 1, array(
             'range'    => $this->getProjectRange(),
             'required' => true));
     }
