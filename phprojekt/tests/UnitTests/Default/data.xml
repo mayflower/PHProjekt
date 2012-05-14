@@ -11,7 +11,7 @@
     <user id="1" username="David"
         firstname="Max" lastname="Mustermann" status="A" admin="1" />
     <module id="1" name="Project" label="Project"
-        save_type="0" version="6.1.0-beta1" active="1" />
+        save_type="0" version="6.1.0-dev" active="1" />
     <module id="2" name="Note" label="Note"
         save_type="0" version="6.0.0" active="1" />
     <module id="3" name="Calendar2" label="Calendar" save_type="1"
