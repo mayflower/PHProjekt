@@ -75,8 +75,7 @@
 .phprojekt .add {
     background-image: url("../images/add.gif");
     background-repeat: no-repeat;
-    margin-left: 5px;
-    width: 20px;
+    width: 16px;
     height: 16px;
 }
 
@@ -353,6 +352,9 @@ input[type="file"] > input[type="button"]::-moz-focus-inner {
     width: 15px;
     border: none;
     background: none;
+    box-shadow: none;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
 }
 
 .phprojekt .addButton {
