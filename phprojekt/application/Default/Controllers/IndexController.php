@@ -667,6 +667,9 @@ class IndexController extends Zend_Controller_Action
         }
 
         $model = $this->getModelObject()->find($id);
+        if (empty($model)) {
+            throw new Zend_Controller_Action_Exception(self::NOT_FOUND, 404);
+        }
         if ($model->hasField('projectId')) {
             Phprojekt::setCurrentProjectId($model->projectId);
         }
