@@ -132,32 +132,14 @@ class Core_Models_User_Setting extends Phprojekt_ModelInformation_Default
         return '';
     }
 
-    /**
-     * Getter for proxies field.
+    /* Return the value of the proxy setting for the effective user.
      *
-     * @return string proxy string.
+     * @return Array list of proxies.
      */
-    public function getProxies($value)
+    public function getProxiesValue()
     {
         $proxyTable = new Phprojekt_Auth_ProxyTable();
-        return implode(',', $proxyTable->getProxyIdsForUserId(Phprojekt_Auth::getUserId()));
-    }
-
-    /* Return the value of one setting.
-     *
-     * @param string  $settingName The name of the setting.
-     * @param integer $userId      The user ID, if is not setted, the current user is used.
-     *
-     * @return mix Value of the setting.
-     */
-    public function getSetting($settingName, $userId = 0)
-    {
-        if ($settingName != 'proxies') {
-            return parent::getSetting($settingName, $userId);
-        } else {
-            $proxyTable = new Phprojekt_Auth_ProxyTable();
-            return $proxyTable->getProxyableUserIdsForUserId(Phprojekt_Auth::getUserId());
-        }
+        return $proxyTable->getProxyIdsForUserId(Phprojekt_Auth::getUserId());
     }
 
     /**
@@ -243,6 +225,9 @@ class Core_Models_User_Setting extends Phprojekt_ModelInformation_Default
             foreach ($params as $key => $value) {
                 if ($key == $data['key'] && $key != 'oldValue' && $key != 'confirmValue') {
                     if ($key == 'proxies') {
+                        if (count($value) === 1 && $value[0] === "") {
+                            $value = array();
+                        }
                         $proxyTable = new Phprojekt_Auth_ProxyTable();
                         $proxyTable->setProxyIdsForUserId($value);
                     } else {

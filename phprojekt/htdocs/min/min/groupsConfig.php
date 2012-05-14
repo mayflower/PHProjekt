@@ -53,6 +53,7 @@ return array(
         "//css/themes/phprojekt/form/ComboBox.css",
         "//css/themes/phprojekt/form/Common.css",
         "//css/themes/phprojekt/form/Common_rtl.css",
+        "//css/themes/phprojekt/form/MultipleFilteringSelectBox.css",
         "//css/themes/phprojekt/form/RadioButton.css",
         "//css/themes/phprojekt/form/Rating.css",
         "//css/themes/phprojekt/form/Slider.css",

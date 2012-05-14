@@ -452,11 +452,11 @@ dojo.declare("phpr.Default.Field", phpr.Default.System.Component, {
         phpr.destroyWidget(itemid + "_disabled");
 
         var options = [];
-        var tmp     = itemvalue.split(',');
+        var tmp     = itemvalue;
 
         for (var j in range) {
+            range[j].selected = '';
             for (var k in tmp) {
-                range[j].selected = '';
                 if (parseInt(tmp[k]) === range[j].id) {
                     range[j].selected = 'selected="selected"';
                     break;
