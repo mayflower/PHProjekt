@@ -74,14 +74,18 @@ dojo.declare("phpr.Core.Form", phpr.Default.Form, {
             return false;
         }
 
-        if (
-            (this.main.action && this.main.isSystemModule(this.main.action)) ||
+        var moduleName, url;
+        if ((this.main.action && this.main.isSystemModule(this.main.action)) ||
             (!this.main.action && this.main.isSystemModule(this.main.module))
            ) {
-            var url = phpr.webpath + 'index.php/Core/' + this.main.module.toLowerCase() + '/jsonSave/nodeId/1/id/' + this.id;
+            url = phpr.webpath + 'index.php/Core/' + this.main.module.toLowerCase() + '/jsonSave/nodeId/1/id/' + this.id;
+
+            moduleName = this.main.module;
         } else {
-            var url = phpr.webpath + 'index.php/Core/' + this.main.module.toLowerCase() + '/jsonSave/nodeId/1/moduleName/'
-                + this.main.action;
+            url = phpr.webpath + 'index.php/Core/' + this.main.module.toLowerCase() +
+                '/jsonSave/nodeId/1/moduleName/' + this.main.action;
+
+            moduleName = this.main.action;
         }
 
         this.setSubmitInProgress(true);
@@ -93,7 +97,7 @@ dojo.declare("phpr.Core.Form", phpr.Default.Form, {
                 this.setSubmitInProgress(false);
                 new phpr.handleResponse('serverFeedback', data);
                 if (data.type == 'success') {
-                    this.customActionOnSuccess();
+                    this.customActionOnSuccess(moduleName);
                     this.publish("updateCacheData");
                     phpr.pageManager.modifyCurrentState(
                         { id: undefined },

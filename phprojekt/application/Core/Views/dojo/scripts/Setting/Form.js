@@ -22,7 +22,8 @@
 dojo.provide("phpr.Setting.Form");
 
 dojo.declare("phpr.Setting.Form", phpr.Core.Form, {
-    customActionOnSuccess:function() {
+    customActionOnSuccess: function(module) {
+        dojo.publish("phpr.moduleSettingsChanged", [module]);
         if (phpr.submodule == 'User') {
             var result     = Array();
             result.type    = 'warning';

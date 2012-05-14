@@ -41,10 +41,17 @@ dojo.declare("phpr.Timecard.Store", null, {
         this._date = date;
 
         this._updateListener = dojo.subscribe("Project.updateCacheData", this, "dataChanged");
+        this._updateListener = dojo.subscribe("phpr.moduleSettingsChanged", this, "_settingsChanged");
     },
 
     destory: function() {
         dojo.unsubscribe(this._updateListener);
+    },
+
+    _settingsChanged: function(module) {
+        if (module === "Timecard") {
+            this.dataChanged();
+        }
     },
 
     _setUrls: function() {
