@@ -303,44 +303,11 @@ class Phprojekt_Notification
         $bodyFields      = array();
 
         foreach ($fieldDefinition as $key => $field) {
-            switch ($field['type']) {
-                case 'selectbox':
-                case 'multipleselectbox':
-                    // Search the value
-                    foreach ($field['range'] as $range) {
-                        if ($range['id'] == $this->_model->$field['key']) {
-                            $value = isset($range['originalName'])
-                            ? Phprojekt::getInstance()->translate($range['originalName'], $lang)
-                            : $range['name'];
-                            break;
-                        }
-                    }
-                    break;
-                case 'display':
-                    // Search if there is an Id value that should be translated into a descriptive String
-                    $value = null;
-                    foreach ($field['range'] as $range) {
-                        if (is_array($range)) {
-                            if ($range['id'] == $this->_model->$field['key']) {
-                                $value = isset($range['originalName'])
-                                ? Phprojekt::getInstance()->translate($range['originalName'], $lang)
-                                : $range['name'];
-                                break 2;
-                            }
-                        }
-                    }
-                    if (null === $value) {
-                        $value = $this->_model->$field['key'];
-                    }
-                    break;
-                default:
-                    $value = Phprojekt_Converter_Text::convert($this->_model, $field);
-                    break;
-            }
-
-            $bodyFields[] = array('field' => $field['key'],
-                                  'label' => Phprojekt::getInstance()->translate($field['originalLabel'], $lang),
-                                  'value' => $value);
+            $bodyFields[] = array(
+                'field' => $field['key'],
+                'label' => Phprojekt::getInstance()->translate($field['originalLabel'], $lang),
+                'value' => $this->_convert($field, $this->_model->$field['key'], $lang)
+            );
         }
 
         return $bodyFields;
@@ -408,11 +375,53 @@ class Phprojekt_Notification
                             }
                         }
                     }
+                    $bodyChanges[$i]['oldValue'] = $this->_convert($field, $bodyChanges[$i]['oldValue'], $lang);
                 }
             }
         }
 
         return $bodyChanges;
+    }
+
+    /**
+     * Converts a single value for use in notifications.
+     *
+     * @param array       $field The field definition for this value
+     * @param mixed       $value The value to convert.
+     * @param Zend_Locale $lang The language to use for localization.
+     *
+     * @return string A string representing $value.
+     */
+    private function _convert($field, $value, $lang)
+    {
+        switch ($field['type']) {
+            case 'selectbox':
+            case 'multipleselectbox':
+                // Search the value
+                foreach ($field['range'] as $range) {
+                    if ($range['id'] == $value) {
+                        return isset($range['originalName'])
+                            ? Phprojekt::getInstance()->translate($range['originalName'], $lang)
+                            : $range['name'];
+                    }
+                }
+                //TODO: What if it's not in range?
+                break;
+            case 'display':
+                // Search if there is an Id value that should be translated into a descriptive String
+                foreach ($field['range'] as $range) {
+                    if (is_array($range)) {
+                        if ($range['id'] == $this->_model->$field['key']) {
+                            return isset($range['originalName'])
+                                ? Phprojekt::getInstance()->translate($range['originalName'], $lang)
+                                : $range['name'];
+                        }
+                    }
+                }
+                return $this->_model->$field['key'];
+            default:
+                return Phprojekt_Converter_Text::convert($this->_model, $field);
+        }
     }
 
     /**
