@@ -375,6 +375,7 @@ class Phprojekt_Notification
                             }
                         }
                     }
+                    $bodyChanges[$i]['oldValue'] = $this->_convert($field, $bodyChanges[$i]['oldValue'], $lang);
                 }
             }
         }
