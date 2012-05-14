@@ -40,7 +40,7 @@
  */
 function Sabre_autoload($className) {
     if(strpos($className,'Sabre_')===0) {
-        include dirname(__FILE__) . '/SabreDAV/Sabre/' . str_replace('_','/',substr($className,6)) . '.php';
+        include dirname(__FILE__) . '/SabreDAV/lib/Sabre/' . str_replace('_','/',substr($className,6)) . '.php';
     }
 }
 
