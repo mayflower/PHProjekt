@@ -59,7 +59,7 @@ class Timecard_Models_Setting extends Phprojekt_ModelInformation_Default
      */
     public function getFavorites($value)
     {
-        return implode(",", unserialize($value));
+        return unserialize($value);
     }
 
     /**
@@ -80,6 +80,9 @@ class Timecard_Models_Setting extends Phprojekt_ModelInformation_Default
                     $setting->setModule('Timecard');
 
                     if (($key == 'favorites')) {
+                        if (count($value) === 1 && $value[0] === "") {
+                            $value = array();
+                        }
                         $value = serialize($value);
                     }
 
