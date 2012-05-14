@@ -19,7 +19,7 @@
  * @license   LGPL v3 (See LICENSE file)
  * @link      http://www.thinkforge.org/projects/Cleaner
  * @since     File available since Release 6.0
- * @version   Release: 6.1.0
+ * @version   Release: @package_version@
  * @author    Peter Voringer <peter.voringer@mayflower.de>
  */
 
@@ -55,7 +55,7 @@ require_once 'Cleaner/Util.php';
  * @license   LGPL v3 (See LICENSE file)
  * @link      http://www.thinkforge.org/projects/Cleaner
  * @since     File available since Release 6.0
- * @version   Release: 6.1.0
+ * @version   Release: @package_version@
  * @author    Peter Voringer <peter.voringer@mayflower.de>
  */
 class Cleaner

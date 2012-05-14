@@ -18,7 +18,7 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @version    Release: 6.1.0
+ * @version    Release: @package_version@
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 
@@ -32,7 +32,7 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @version    Release: 6.1.0
+ * @version    Release: @package_version@
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 class Phprojekt
@@ -50,12 +50,12 @@ class Phprojekt
     /**
      * The third part of the version number.
      */
-    const VERSION_RELEASE = 0;
+    const VERSION_RELEASE = 1;
 
     /**
      * The extra part of the version number.
      */
-    const VERSION_EXTRA = null;
+    const VERSION_EXTRA = 'dev';
 
     /**
      * Name of the Registry for current project.
