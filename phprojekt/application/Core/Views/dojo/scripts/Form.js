@@ -22,7 +22,7 @@
 dojo.provide("phpr.Core.Form");
 
 dojo.declare("phpr.Core.Form", phpr.Default.Form, {
-    setUrl:function() {
+    setUrl: function() {
         // Summary:
         //    Rewritten the function for work like a system module and like a form
         // Description:
@@ -31,18 +31,18 @@ dojo.declare("phpr.Core.Form", phpr.Default.Form, {
             (this.main.action && this.main.isSystemModule(this.main.action)) ||
             (!this.main.action && this.main.isSystemModule(this.main.module))
            ) {
-            this._url = phpr.webpath + 'index.php/Core/' + this.main.module.toLowerCase() + '/jsonDetail/nodeId/1/id/'
-                + this.id;
+            this._url = phpr.webpath + 'index.php/Core/' + this.main.module.toLowerCase() + '/jsonDetail/nodeId/1/id/' +
+                this.id;
         } else {
-            this._url = phpr.webpath + 'index.php/Core/' + this.main.module.toLowerCase() + '/jsonDetail/nodeId/1/'
-                + 'moduleName/' + this.main.action;
+            this._url = phpr.webpath + 'index.php/Core/' + this.main.module.toLowerCase() + '/jsonDetail/nodeId/1/' +
+                'moduleName/' + this.main.action;
         }
     },
 
-    initData:function() {
+    initData: function() {
     },
 
-    setPermissions:function(data) {
+    setPermissions: function(data) {
         this._writePermissions  = true;
         this._deletePermissions = false;
         if (this.id > 0) {
@@ -51,13 +51,13 @@ dojo.declare("phpr.Core.Form", phpr.Default.Form, {
         this._accessPermissions = true;
     },
 
-    addBasicFields:function() {
+    addBasicFields: function() {
     },
 
-    addModuleTabs:function(data) {
+    addModuleTabs: function(data) {
     },
 
-    useCache:function() {
+    useCache: function() {
         if (this.main.isSystemModule(this.main.module)) {
             return true;
         } else {
@@ -65,7 +65,7 @@ dojo.declare("phpr.Core.Form", phpr.Default.Form, {
         }
     },
 
-    submitForm:function() {
+    submitForm: function() {
         // Summary:
         //    Rewritten the function for work like a system module and like a form
         // Description:
@@ -108,14 +108,14 @@ dojo.declare("phpr.Core.Form", phpr.Default.Form, {
         }));
     },
 
-    customActionOnSuccess:function() {
+    customActionOnSuccess: function() {
         // Summary:
         //    Function for be rewritten
         // Description:
         //    Function for be rewritten
     },
 
-    deleteForm:function() {
+    deleteForm: function() {
         phpr.send({
             url: phpr.webpath + 'index.php/Core/' + this.main.action.toLowerCase() + '/jsonDelete/id/' + this.id
         }).then(dojo.hitch(this, function(data) {
@@ -133,11 +133,11 @@ dojo.declare("phpr.Core.Form", phpr.Default.Form, {
         }));
     },
 
-    updateData:function() {
+    updateData: function() {
         phpr.DataStore.deleteData({url: this._url});
     },
 
-    setBreadCrumbItem:function(itemValue) {
+    setBreadCrumbItem: function(itemValue) {
         phpr.BreadCrumb.setItem(itemValue);
     }
 });
