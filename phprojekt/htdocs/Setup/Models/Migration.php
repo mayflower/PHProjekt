@@ -2307,10 +2307,10 @@ HERE
     }
 
     /**
-     * Fix string witn utf8 encode and limit the characters.
+     * Fix string witn utf8 encode and limit the length of the string.
      *
      * @param string  $string Normal string.
-     * @param integer $length Limit if characters.
+     * @param integer $length Maximal length of the string in bytes.
      *
      * @return string Fixed string.
      */
@@ -2326,7 +2326,7 @@ HERE
         );
 
         if ($length !== 0) {
-            $string = substr($string, 0, $length);
+            $string = mb_strcut($string, 0, $length);
         }
         return $string;
     }
