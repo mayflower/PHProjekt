@@ -48279,6 +48279,495 @@ dojo.declare("dojox.layout.ExpandoPane",
 
 }
 
+if(!dojo._hasResource["dojox.html._base"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
+dojo._hasResource["dojox.html._base"] = true;
+/*
+	Status: dont know where this will all live exactly
+	Need to pull in the implementation of the various helper methods
+	Some can be static method, others maybe methods of the ContentSetter (?)
+	
+	Gut the ContentPane, replace its _setContent with our own call to dojox.html.set()
+	
+
+*/
+
+dojo.provide("dojox.html._base");
+
+
+
+(function() {
+
+	if(dojo.isIE){
+		var alphaImageLoader = /(AlphaImageLoader\([^)]*?src=(['"]))(?![a-z]+:|\/)([^\r\n;}]+?)(\2[^)]*\)\s*[;}]?)/g;
+	}
+
+	// css at-rules must be set before any css declarations according to CSS spec
+	// match:
+	// @import 'http://dojotoolkit.org/dojo.css';
+	// @import 'you/never/thought/' print;
+	// @import url("it/would/work") tv, screen;
+	// @import url(/did/you/now.css);
+	// but not:
+	// @namespace dojo "http://dojotoolkit.org/dojo.css"; /* namespace URL should always be a absolute URI */
+	// @charset 'utf-8';
+	// @media print{ #menuRoot {display:none;} }
+		
+	// we adjust all paths that dont start on '/' or contains ':'
+	//(?![a-z]+:|\/)
+
+	var cssPaths = /(?:(?:@import\s*(['"])(?![a-z]+:|\/)([^\r\n;{]+?)\1)|url\(\s*(['"]?)(?![a-z]+:|\/)([^\r\n;]+?)\3\s*\))([a-z, \s]*[;}]?)/g;
+
+	var adjustCssPaths = dojox.html._adjustCssPaths = function(cssUrl, cssText){
+		//	summary:
+		//		adjusts relative paths in cssText to be relative to cssUrl
+		//		a path is considered relative if it doesn't start with '/' and not contains ':'
+		//	description:
+		//		Say we fetch a HTML page from level1/page.html
+		//		It has some inline CSS:
+		//			@import "css/page.css" tv, screen;
+		//			...
+		//			background-image: url(images/aplhaimage.png);
+		//
+		//		as we fetched this HTML and therefore this CSS
+		//		from level1/page.html, these paths needs to be adjusted to:
+		//			@import 'level1/css/page.css' tv, screen;
+		//			...
+		//			background-image: url(level1/images/alphaimage.png);
+		//
+		//		In IE it will also adjust relative paths in AlphaImageLoader()
+		//			filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='images/alphaimage.png');
+		//		will be adjusted to:
+		//			filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='level1/images/alphaimage.png');
+		//
+		//		Please note that any relative paths in AlphaImageLoader in external css files wont work, as
+		//		the paths in AlphaImageLoader is MUST be declared relative to the HTML page,
+		//		not relative to the CSS file that declares it
+
+		if(!cssText || !cssUrl){ return; }
+
+		// support the ImageAlphaFilter if it exists, most people use it in IE 6 for transparent PNGs
+		// We are NOT going to kill it in IE 7 just because the PNGs work there. Somebody might have
+		// other uses for it.
+		// If user want to disable css filter in IE6  he/she should
+		// unset filter in a declaration that just IE 6 doesn't understands
+		// like * > .myselector { filter:none; }
+		if(alphaImageLoader){
+			cssText = cssText.replace(alphaImageLoader, function(ignore, pre, delim, url, post){
+				return pre + (new dojo._Url(cssUrl, './'+url).toString()) + post;
+			});
+		}
+
+		return cssText.replace(cssPaths, function(ignore, delimStr, strUrl, delimUrl, urlUrl, media){
+			if(strUrl){
+				return '@import "' + (new dojo._Url(cssUrl, './'+strUrl).toString()) + '"' + media;
+			}else{
+				return 'url(' + (new dojo._Url(cssUrl, './'+urlUrl).toString()) + ')' + media;
+			}
+		});
+	};
+
+	// attributepaths one tag can have multiple paths, example:
+	// <input src="..." style="url(..)"/> or <a style="url(..)" href="..">
+	// <img style='filter:progid...AlphaImageLoader(src="noticeTheSrcHereRunsThroughHtmlSrc")' src="img">
+	var htmlAttrPaths = /(<[a-z][a-z0-9]*\s[^>]*)(?:(href|src)=(['"]?)([^>]*?)\3|style=(['"]?)([^>]*?)\5)([^>]*>)/gi;
+
+	var adjustHtmlPaths = dojox.html._adjustHtmlPaths = function(htmlUrl, cont){
+		var url = htmlUrl || "./";
+
+		return cont.replace(htmlAttrPaths,
+			function(tag, start, name, delim, relUrl, delim2, cssText, end){
+				return start + (name ?
+							(name + '=' + delim + (new dojo._Url(url, relUrl).toString()) + delim)
+						: ('style=' + delim2 + adjustCssPaths(url, cssText) + delim2)
+				) + end;
+			}
+		);
+	};
+	
+	var snarfStyles = dojox.html._snarfStyles = function	(/*String*/cssUrl, /*String*/cont, /*Array*/styles){
+		/****************  cut out all <style> and <link rel="stylesheet" href=".."> **************/
+		// also return any attributes from this tag (might be a media attribute)
+		// if cssUrl is set it will adjust paths accordingly
+		styles.attributes = [];
+
+		return cont.replace(/(?:<style([^>]*)>([\s\S]*?)<\/style>|<link\s+(?=[^>]*rel=['"]?stylesheet)([^>]*?href=(['"])([^>]*?)\4[^>\/]*)\/?>)/gi,
+			function(ignore, styleAttr, cssText, linkAttr, delim, href){
+				// trim attribute
+				var i, attr = (styleAttr||linkAttr||"").replace(/^\s*([\s\S]*?)\s*$/i, "$1");
+				if(cssText){
+					i = styles.push(cssUrl ? adjustCssPaths(cssUrl, cssText) : cssText);
+				}else{
+					i = styles.push('@import "' + href + '";');
+					attr = attr.replace(/\s*(?:rel|href)=(['"])?[^\s]*\1\s*/gi, ""); // remove rel=... and href=...
+				}
+				if(attr){
+					attr = attr.split(/\s+/);// split on both "\n", "\t", " " etc
+					var atObj = {}, tmp;
+					for(var j = 0, e = attr.length; j < e; j++){
+						tmp = attr[j].split('='); // split name='value'
+						atObj[tmp[0]] = tmp[1].replace(/^\s*['"]?([\s\S]*?)['"]?\s*$/, "$1"); // trim and remove ''
+					}
+					styles.attributes[i - 1] = atObj;
+				}
+				return "";
+			}
+		);
+	};
+
+	var snarfScripts = dojox.html._snarfScripts = function(cont, byRef){
+		// summary
+		//		strips out script tags from cont
+		// invoke with
+		//	byRef = {errBack:function(){/*add your download error code here*/, downloadRemote: true(default false)}}
+		//	byRef will have {code: 'jscode'} when this scope leaves
+		byRef.code = "";
+
+		//Update script tags nested in comments so that the script tag collector doesn't pick
+		//them up.
+		cont = cont.replace(/<[!][-][-](.|\s)*?[-][-]>/g,
+			function(comment){
+				return comment.replace(/<(\/?)script\b/ig,"&lt;$1Script");
+			}
+		);
+
+		function download(src){
+			if(byRef.downloadRemote){
+				// console.debug('downloading',src);
+				//Fix up src, in case there were entity character encodings in it.
+				//Probably only need to worry about a subset.
+				src = src.replace(/&([a-z0-9#]+);/g, function(m, name) {
+					switch(name) {
+						case "amp"	: return "&";
+						case "gt"	: return ">";
+						case "lt"	: return "<";
+						default:
+							return name.charAt(0)=="#" ? String.fromCharCode(name.substring(1)) : "&"+name+";";
+					}
+				});
+				dojo.xhrGet({
+					url: src,
+					sync: true,
+					load: function(code){
+						byRef.code += code+";";
+					},
+					error: byRef.errBack
+				});
+			}
+		}
+		
+		// match <script>, <script type="text/..., but not <script type="dojo(/method)...
+		return cont.replace(/<script\s*(?![^>]*type=['"]?(?:dojo\/|text\/html\b))(?:[^>]*?(?:src=(['"]?)([^>]*?)\1[^>]*)?)*>([\s\S]*?)<\/script>/gi,
+			function(ignore, delim, src, code){
+				if(src){
+					download(src);
+				}else{
+					byRef.code += code;
+				}
+				return "";
+			}
+		);
+	};
+	
+	var evalInGlobal = dojox.html.evalInGlobal = function(code, appendNode){
+		// we do our own eval here as dojo.eval doesn't eval in global crossbrowser
+		// This work X browser but but it relies on a DOM
+		// plus it doesn't return anything, thats unrelevant here but not for dojo core
+		appendNode = appendNode || dojo.doc.body;
+		var n = appendNode.ownerDocument.createElement('script');
+		n.type = "text/javascript";
+		appendNode.appendChild(n);
+		n.text = code; // DOM 1 says this should work
+	};
+
+	dojo.declare("dojox.html._ContentSetter", [dojo.html._ContentSetter], {
+		// adjustPaths: Boolean
+		//		Adjust relative paths in html string content to point to this page
+		//		Only useful if you grab content from a another folder than the current one
+		adjustPaths: false,
+		referencePath: ".",
+		renderStyles: false,
+
+		executeScripts: false,
+		scriptHasHooks: false,
+		scriptHookReplacement: null,
+		
+		_renderStyles: function(styles){
+			// insert css from content into document head
+			this._styleNodes = [];
+			var st, att, cssText, doc = this.node.ownerDocument;
+			var head = doc.getElementsByTagName('head')[0];
+
+			for(var i = 0, e = styles.length; i < e; i++){
+				cssText = styles[i]; att = styles.attributes[i];
+				st = doc.createElement('style');
+				st.setAttribute("type", "text/css"); // this is required in CSS spec!
+
+				for(var x in att){
+					st.setAttribute(x, att[x]);
+				}
+
+				this._styleNodes.push(st);
+				head.appendChild(st); // must insert into DOM before setting cssText
+
+				if(st.styleSheet){ // IE
+					st.styleSheet.cssText = cssText;
+				}else{ // w3c
+					st.appendChild(doc.createTextNode(cssText));
+				}
+			}
+		},
+
+		empty: function() {
+			this.inherited("empty", arguments);
+			
+			// empty out the styles array from any previous use
+			this._styles = [];
+		},
+		
+		onBegin: function() {
+			// summary
+			//		Called after instantiation, but before set();
+			//		It allows modification of any of the object properties - including the node and content
+			//		provided - before the set operation actually takes place
+			//		This implementation extends that of dojo.html._ContentSetter
+			//		to add handling for adjustPaths, renderStyles on the html string content before it is set
+			this.inherited("onBegin", arguments);
+			
+			var cont = this.content,
+				node = this.node;
+				
+			var styles = this._styles;// init vars
+
+			if(dojo.isString(cont)){
+				if(this.adjustPaths && this.referencePath){
+					cont = adjustHtmlPaths(this.referencePath, cont);
+				}
+
+				if(this.renderStyles || this.cleanContent){
+					cont = snarfStyles(this.referencePath, cont, styles);
+				}
+
+				// because of a bug in IE, script tags that is first in html hierarchy doesnt make it into the DOM
+				//	when content is innerHTML'ed, so we can't use dojo.query to retrieve scripts from DOM
+				if(this.executeScripts){
+					var _t = this;
+					var byRef = {
+						downloadRemote: true,
+						errBack:function(e){
+							_t._onError.call(_t, 'Exec', 'Error downloading remote script in "'+_t.id+'"', e);
+						}
+					};
+					cont = snarfScripts(cont, byRef);
+					this._code = byRef.code;
+				}
+			}
+			this.content = cont;
+		},
+		
+		onEnd: function() {
+			// summary
+			//		Called after set(), when the new content has been pushed into the node
+			//		It provides an opportunity for post-processing before handing back the node to the caller
+			//		This implementation extends that of dojo.html._ContentSetter
+			
+			var code = this._code,
+				styles = this._styles;
+				
+			// clear old stylenodes from the DOM
+			// these were added by the last set call
+			// (in other words, if you dont keep and reuse the ContentSetter for a particular node
+			// .. you'll have no practical way to do this)
+			if(this._styleNodes && this._styleNodes.length){
+				while(this._styleNodes.length){
+					dojo.destroy(this._styleNodes.pop());
+				}
+			}
+			// render new style nodes
+			if(this.renderStyles && styles && styles.length){
+				this._renderStyles(styles);
+			}
+
+			if(this.executeScripts && code){
+				if(this.cleanContent){
+					// clean JS from html comments and other crap that browser
+					// parser takes care of in a normal page load
+					code = code.replace(/(<!--|(?:\/\/)?-->|<!\[CDATA\[|\]\]>)/g, '');
+				}
+				if(this.scriptHasHooks){
+					// replace _container_ with this.scriptHookReplace()
+					// the scriptHookReplacement can be a string
+					// or a function, which when invoked returns the string you want to substitute in
+					code = code.replace(/_container_(?!\s*=[^=])/g, this.scriptHookReplacement);
+				}
+				try{
+					evalInGlobal(code, this.node);
+				}catch(e){
+					this._onError('Exec', 'Error eval script in '+this.id+', '+e.message, e);
+				}
+			}
+			this.inherited("onEnd", arguments);
+		},
+		tearDown: function() {
+			this.inherited(arguments);
+			delete this._styles;
+			// only tear down -or another set() - will explicitly throw away the
+			// references to the style nodes we added
+			if(this._styleNodes && this._styleNodes.length){
+				while(this._styleNodes.length){
+					dojo.destroy(this._styleNodes.pop());
+				}
+			}
+			delete this._styleNodes;
+			// reset the defaults from the prototype
+			dojo.mixin(this, dojo.getObject(this.declaredClass).prototype);
+		}
+		
+	});
+	
+	dojox.html.set = function(/* DomNode */ node, /* String|DomNode|NodeList */ cont, /* Object? */ params){
+		// TODO: add all the other options
+			// summary:
+			//		inserts (replaces) the given content into the given node
+			//	node:
+			//		the parent element that will receive the content
+			//	cont:
+			//		the content to be set on the parent element.
+			//		This can be an html string, a node reference or a NodeList, dojo.NodeList, Array or other enumerable list of nodes
+			//	params:
+			//		Optional flags/properties to configure the content-setting. See dojo.html._ContentSetter
+			//	example:
+			//		A safe string/node/nodelist content replacement/injection with hooks for extension
+			//		Example Usage:
+			//		dojo.html.set(node, "some string");
+			//		dojo.html.set(node, contentNode, {options});
+			//		dojo.html.set(node, myNode.childNodes, {options});
+	 
+		if(!params){
+			// simple and fast
+			return dojo.html._setNodeContent(node, cont, true);
+		}else{
+			// more options but slower
+			var op = new dojox.html._ContentSetter(dojo.mixin(
+					params,
+					{ content: cont, node: node }
+			));
+			return op.set();
+		}
+	};
+	
+})();
+
+}
+
+if(!dojo._hasResource["dojox.layout.ContentPane"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
+dojo._hasResource["dojox.layout.ContentPane"] = true;
+dojo.provide("dojox.layout.ContentPane");
+
+
+
+
+dojo.declare("dojox.layout.ContentPane", dijit.layout.ContentPane, {
+	// summary:
+	//		An extended version of dijit.layout.ContentPane.
+	//		Supports infile scripts and external ones declared by <script src=''
+	//		relative path adjustments (content fetched from a different folder)
+	//		<style> and <link rel='stylesheet' href='..'> tags,
+	//		css paths inside cssText is adjusted (if you set adjustPaths = true)
+	//
+	//		NOTE that dojo.require in script in the fetched file isn't recommended
+	//		Many widgets need to be required at page load to work properly
+
+	// adjustPaths: Boolean
+	//		Adjust relative paths in html string content to point to this page.
+	//		Only useful if you grab content from a another folder then the current one
+	adjustPaths: false,
+
+	// cleanContent: Boolean
+	//	summary:
+	//		cleans content to make it less likely to generate DOM/JS errors.
+	//	description:
+	//		useful if you send ContentPane a complete page, instead of a html fragment
+	//		scans for
+	//
+	//			* title Node, remove
+	//			* DOCTYPE tag, remove
+	cleanContent: false,
+
+	// renderStyles: Boolean
+	//		trigger/load styles in the content
+	renderStyles: false,
+
+	// executeScripts: Boolean
+	//		Execute (eval) scripts that is found in the content
+	executeScripts: true,
+
+	// scriptHasHooks: Boolean
+	//		replace keyword '_container_' in scripts with 'dijit.byId(this.id)'
+	// NOTE this name might change in the near future
+	scriptHasHooks: false,
+
+	/*======
+	// ioMethod: dojo.xhrGet|dojo.xhrPost
+	//		reference to the method that should grab the content
+	ioMethod: dojo.xhrGet,
+	
+	// ioArgs: Object
+	//		makes it possible to add custom args to xhrGet, like ioArgs.headers['X-myHeader'] = 'true'
+	ioArgs: {},
+	======*/
+
+	constructor: function(){
+		// init per instance properties, initializer doesn't work here because how things is hooked up in dijit._Widget
+		this.ioArgs = {};
+		this.ioMethod = dojo.xhrGet;
+	},
+
+	onExecError: function(e){
+		// summary:
+		//		event callback, called on script error or on java handler error
+		//		overide and return your own html string if you want a some text
+		//		displayed within the ContentPane
+	},
+
+	_setContent: function(cont){
+		// override dijit.layout.ContentPane._setContent, to enable path adjustments
+		
+		var setter = this._contentSetter;
+		if(! (setter && setter instanceof dojox.html._ContentSetter)) {
+			setter = this._contentSetter = new dojox.html._ContentSetter({
+				node: this.containerNode,
+				_onError: dojo.hitch(this, this._onError),
+				onContentError: dojo.hitch(this, function(e){
+					// fires if a domfault occurs when we are appending this.errorMessage
+					// like for instance if domNode is a UL and we try append a DIV
+					var errMess = this.onContentError(e);
+					try{
+						this.containerNode.innerHTML = errMess;
+					}catch(e){
+						console.error('Fatal '+this.id+' could not change content due to '+e.message, e);
+					}
+				})/*,
+				_onError */
+			});
+		};
+
+		// stash the params for the contentSetter to allow inheritance to work for _setContent
+		this._contentSetterParams = {
+			adjustPaths: Boolean(this.adjustPaths && (this.href||this.referencePath)),
+			referencePath: this.href || this.referencePath,
+			renderStyles: this.renderStyles,
+			executeScripts: this.executeScripts,
+			scriptHasHooks: this.scriptHasHooks,
+			scriptHookReplacement: "dijit.byId('"+this.id+"')"
+		};
+
+		this.inherited("_setContent", arguments);
+	}
+	// could put back _renderStyles by wrapping/aliasing dojox.html._ContentSetter.prototype._renderStyles
+});
+
+}
+
 if(!dojo._hasResource["dojox.layout.ResizeHandle"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
 dojo._hasResource["dojox.layout.ResizeHandle"] = true;
 dojo.provide("dojox.layout.ResizeHandle");
@@ -48635,6 +49124,414 @@ dojo.declare("dojox.layout._ResizeHelper",
 		dojo.marginBox(this.domNode, dim);
 	}
 	
+});
+
+}
+
+if(!dojo._hasResource["dojox.layout.FloatingPane"]){ //_hasResource checks added by build. Do not use _hasResource directly in your code.
+dojo._hasResource["dojox.layout.FloatingPane"] = true;
+dojo.provide("dojox.layout.FloatingPane");
+dojo.experimental("dojox.layout.FloatingPane");
+
+
+
+
+
+
+
+
+
+
+dojo.declare("dojox.layout.FloatingPane",
+	[ dojox.layout.ContentPane, dijit._Templated ],
+	{
+	// summary:
+	//		A non-modal Floating window.
+	//
+	// description:
+	// 		Makes a `dojox.layout.ContentPane` float and draggable by it's title [similar to TitlePane]
+	// 		and over-rides onClick to onDblClick for wipeIn/Out of containerNode
+	// 		provides minimize(dock) / show() and hide() methods, and resize [almost]
+	//
+	// closable: Boolean
+	//		Allow closure of this Node
+	closable: true,
+
+	// dockable: Boolean
+	//		Allow minimizing of pane if true
+	dockable: true,
+
+	// resizable: Boolean
+	//		Allow resizing of pane true if true
+	resizable: false,
+
+	// maxable: Boolean
+	//		Horrible param name for "Can you maximize this floating pane?"
+	maxable: false,
+
+	// resizeAxis: String
+	//		One of: x | xy | y to limit pane's sizing direction
+	resizeAxis: "xy",
+
+	// title: String
+	//		Title to use in the header
+	title: "",
+
+	// dockTo: DomNode?
+	//		if empty, will create private layout.Dock that scrolls with viewport
+	//		on bottom span of viewport.
+	dockTo: "",
+
+	// duration: Integer
+	//		Time is MS to spend toggling in/out node
+	duration: 400,
+
+	/*=====
+	// iconSrc: String
+	//		[not implemented yet] will be either icon in titlepane to left
+	//		of Title, and/or icon show when docked in a fisheye-like dock
+	//		or maybe dockIcon would be better?
+	iconSrc: null,
+	=====*/
+
+	// contentClass: String
+	// 		The className to give to the inner node which has the content
+	contentClass: "dojoxFloatingPaneContent",
+
+	// animation holders for toggle
+	_showAnim: null,
+	_hideAnim: null,
+	// node in the dock (if docked)
+	_dockNode: null,
+
+	// privates:
+	_restoreState: {},
+	_allFPs: [],
+	_startZ: 100,
+
+	templateString: dojo.cache("dojox.layout", "resources/FloatingPane.html", "<div class=\"dojoxFloatingPane\" id=\"${id}\">\n\t<div tabindex=\"0\" role=\"button\" class=\"dojoxFloatingPaneTitle\" dojoAttachPoint=\"focusNode\">\n\t\t<span dojoAttachPoint=\"closeNode\" dojoAttachEvent=\"onclick: close\" class=\"dojoxFloatingCloseIcon\"></span>\n\t\t<span dojoAttachPoint=\"maxNode\" dojoAttachEvent=\"onclick: maximize\" class=\"dojoxFloatingMaximizeIcon\">&thinsp;</span>\n\t\t<span dojoAttachPoint=\"restoreNode\" dojoAttachEvent=\"onclick: _restore\" class=\"dojoxFloatingRestoreIcon\">&thinsp;</span>\t\n\t\t<span dojoAttachPoint=\"dockNode\" dojoAttachEvent=\"onclick: minimize\" class=\"dojoxFloatingMinimizeIcon\">&thinsp;</span>\n\t\t<span dojoAttachPoint=\"titleNode\" class=\"dijitInline dijitTitleNode\"></span>\n\t</div>\n\t<div dojoAttachPoint=\"canvas\" class=\"dojoxFloatingPaneCanvas\">\n\t\t<div dojoAttachPoint=\"containerNode\" role=\"region\" tabindex=\"-1\" class=\"${contentClass}\">\n\t\t</div>\n\t\t<span dojoAttachPoint=\"resizeHandle\" class=\"dojoxFloatingResizeHandle\"></span>\n\t</div>\n</div>\n"),
+	
+	attributeMap: dojo.delegate(dijit._Widget.prototype.attributeMap, {
+		title: { type:"innerHTML", node:"titleNode" }
+	}),
+	
+	postCreate: function(){
+		this.inherited(arguments);
+		new dojo.dnd.Moveable(this.domNode,{ handle: this.focusNode });
+		//this._listener = dojo.subscribe("/dnd/move/start",this,"bringToTop");
+
+		if(!this.dockable){ this.dockNode.style.display = "none"; }
+		if(!this.closable){ this.closeNode.style.display = "none"; }
+		if(!this.maxable){
+			this.maxNode.style.display = "none";
+			this.restoreNode.style.display = "none";
+		}
+		if(!this.resizable){
+			this.resizeHandle.style.display = "none";
+		}else{
+			this.domNode.style.width = dojo.marginBox(this.domNode).w + "px";
+		}
+		this._allFPs.push(this);
+		this.domNode.style.position = "absolute";
+		
+		this.bgIframe = new dijit.BackgroundIframe(this.domNode);
+		this._naturalState = dojo.coords(this.domNode);
+	},
+	
+	startup: function(){
+		if(this._started){ return; }
+		
+		this.inherited(arguments);
+
+		if(this.resizable){
+			if(dojo.isIE){
+				this.canvas.style.overflow = "auto";
+			}else{
+				this.containerNode.style.overflow = "auto";
+			}
+			
+			this._resizeHandle = new dojox.layout.ResizeHandle({
+				targetId: this.id,
+				resizeAxis: this.resizeAxis
+			},this.resizeHandle);
+
+		}
+
+		if(this.dockable){
+			// FIXME: argh.
+			var tmpName = this.dockTo;
+
+			if(this.dockTo){
+				this.dockTo = dijit.byId(this.dockTo);
+			}else{
+				this.dockTo = dijit.byId('dojoxGlobalFloatingDock');
+			}
+
+			if(!this.dockTo){
+				var tmpId, tmpNode;
+				// we need to make our dock node, and position it against
+				// .dojoxDockDefault .. this is a lot. either dockto="node"
+				// and fail if node doesn't exist or make the global one
+				// once, and use it on empty OR invalid dockTo="" node?
+				if(tmpName){
+					tmpId = tmpName;
+					tmpNode = dojo.byId(tmpName);
+				}else{
+					tmpNode = dojo.create('div', null, dojo.body());
+					dojo.addClass(tmpNode,"dojoxFloatingDockDefault");
+					tmpId = 'dojoxGlobalFloatingDock';
+				}
+				this.dockTo = new dojox.layout.Dock({ id: tmpId, autoPosition: "south" }, tmpNode);
+				this.dockTo.startup();
+			}
+			
+			if((this.domNode.style.display == "none")||(this.domNode.style.visibility == "hidden")){
+				// If the FP is created dockable and non-visible, start up docked.
+				this.minimize();
+			}
+		}
+		this.connect(this.focusNode,"onmousedown","bringToTop");
+		this.connect(this.domNode,	"onmousedown","bringToTop");
+
+		// Initial resize to give child the opportunity to lay itself out
+		this.resize(dojo.coords(this.domNode));
+		
+		this._started = true;
+	},
+
+	setTitle: function(/* String */ title){
+		// summary: Update the Title bar with a new string
+		dojo.deprecated("pane.setTitle", "Use pane.set('title', someTitle)", "2.0");
+		this.set("title", title);
+		// this.setTitle = dojo.hitch(this, "setTitle") ??
+	},
+		
+	close: function(){
+		// summary: Close and destroy this widget
+		if(!this.closable){ return; }
+		dojo.unsubscribe(this._listener);
+		this.hide(dojo.hitch(this,function(){
+			this.destroyRecursive();
+		}));
+	},
+
+	hide: function(/* Function? */ callback){
+		// summary: Close, but do not destroy this FloatingPane
+		dojo.fadeOut({
+			node:this.domNode,
+			duration:this.duration,
+			onEnd: dojo.hitch(this,function() {
+				this.domNode.style.display = "none";
+				this.domNode.style.visibility = "hidden";
+				if(this.dockTo && this.dockable){
+					this.dockTo._positionDock(null);
+				}
+				if(callback){
+					callback();
+				}
+			})
+		}).play();
+	},
+
+	show: function(/* Function? */callback){
+		// summary: Show the FloatingPane
+		var anim = dojo.fadeIn({node:this.domNode, duration:this.duration,
+			beforeBegin: dojo.hitch(this,function(){
+				this.domNode.style.display = "";
+				this.domNode.style.visibility = "visible";
+				if (this.dockTo && this.dockable) { this.dockTo._positionDock(null); }
+				if (typeof callback == "function") { callback(); }
+				this._isDocked = false;
+				if (this._dockNode) {
+					this._dockNode.destroy();
+					this._dockNode = null;
+				}
+			})
+		}).play();
+		this.resize(dojo.coords(this.domNode));
+		this._onShow(); // lazy load trigger
+	},
+
+	minimize: function(){
+		// summary: Hide and dock the FloatingPane
+		if(!this._isDocked){ this.hide(dojo.hitch(this,"_dock")); }
+	},
+
+	maximize: function(){
+		// summary: Make this FloatingPane full-screen (viewport)
+		if(this._maximized){ return; }
+		this._naturalState = dojo.position(this.domNode);
+		if(this._isDocked){
+			this.show();
+			setTimeout(dojo.hitch(this,"maximize"),this.duration);
+		}
+		dojo.addClass(this.focusNode,"floatingPaneMaximized");
+		this.resize(dojo.window.getBox());
+		this._maximized = true;
+	},
+
+	_restore: function(){
+		if(this._maximized){
+			this.resize(this._naturalState);
+			dojo.removeClass(this.focusNode,"floatingPaneMaximized");
+			this._maximized = false;
+		}
+	},
+
+	_dock: function(){
+		if(!this._isDocked && this.dockable){
+			this._dockNode = this.dockTo.addNode(this);
+			this._isDocked = true;
+		}
+	},
+	
+	resize: function(/* Object */dim){
+		// summary: Size the FloatingPane and place accordingly
+		dim = dim || this._naturalState;
+		this._currentState = dim;
+
+		// From the ResizeHandle we only get width and height information
+		var dns = this.domNode.style;
+		if("t" in dim){ dns.top = dim.t + "px"; }
+		if("l" in dim){ dns.left = dim.l + "px"; }
+		dns.width = dim.w + "px";
+		dns.height = dim.h + "px";
+
+		// Now resize canvas
+		var mbCanvas = { l: 0, t: 0, w: dim.w, h: (dim.h - this.focusNode.offsetHeight) };
+		dojo.marginBox(this.canvas, mbCanvas);
+
+		// If the single child can resize, forward resize event to it so it can
+		// fit itself properly into the content area
+		this._checkIfSingleChild();
+		if(this._singleChild && this._singleChild.resize){
+			this._singleChild.resize(mbCanvas);
+		}
+	},
+	
+	bringToTop: function(){
+		// summary: bring this FloatingPane above all other panes
+		var windows = dojo.filter(
+			this._allFPs,
+			function(i){
+				return i !== this;
+			},
+		this);
+		windows.sort(function(a, b){
+			return a.domNode.style.zIndex - b.domNode.style.zIndex;
+		});
+		windows.push(this);
+		
+		dojo.forEach(windows, function(w, x){
+			w.domNode.style.zIndex = this._startZ + (x * 2);
+			dojo.removeClass(w.domNode, "dojoxFloatingPaneFg");
+		}, this);
+		dojo.addClass(this.domNode, "dojoxFloatingPaneFg");
+	},
+	
+	destroy: function(){
+		// summary: Destroy this FloatingPane completely
+		this._allFPs.splice(dojo.indexOf(this._allFPs, this), 1);
+		if(this._resizeHandle){
+			this._resizeHandle.destroy();
+		}
+		this.inherited(arguments);
+	}
+});
+
+
+dojo.declare("dojox.layout.Dock",
+	[dijit._Widget,dijit._Templated],
+	{
+	// summary:
+	//		A widget that attaches to a node and keeps track of incoming / outgoing FloatingPanes
+	// 		and handles layout
+
+	templateString: '<div class="dojoxDock"><ul dojoAttachPoint="containerNode" class="dojoxDockList"></ul></div>',
+
+	// private _docked: array of panes currently in our dock
+	_docked: [],
+	
+	_inPositioning: false,
+	
+	autoPosition: false,
+	
+	addNode: function(refNode){
+		// summary: Instert a dockNode refernce into the dock
+		
+		var div = dojo.create('li', null, this.containerNode),
+			node = new dojox.layout._DockNode({
+				title: refNode.title,
+				paneRef: refNode
+			}, div)
+		;
+		node.startup();
+		return node;
+	},
+
+	startup: function(){
+				
+		if (this.id == "dojoxGlobalFloatingDock" || this.isFixedDock) {
+			// attach window.onScroll, and a position like in presentation/dialog
+			this.connect(window, 'onresize', "_positionDock");
+			this.connect(window, 'onscroll', "_positionDock");
+			if(dojo.isIE){
+				this.connect(this.domNode, "onresize", "_positionDock");
+			}
+		}
+		this._positionDock(null);
+		this.inherited(arguments);
+
+	},
+	
+	_positionDock: function(/* Event? */e){
+		if(!this._inPositioning){
+			if(this.autoPosition == "south"){
+				// Give some time for scrollbars to appear/disappear
+				setTimeout(dojo.hitch(this, function() {
+					this._inPositiononing = true;
+					var viewport = dojo.window.getBox();
+					var s = this.domNode.style;
+					s.left = viewport.l + "px";
+					s.width = (viewport.w-2) + "px";
+					s.top = (viewport.h + viewport.t) - this.domNode.offsetHeight + "px";
+					this._inPositioning = false;
+				}), 125);
+			}
+		}
+	}
+
+
+});
+
+dojo.declare("dojox.layout._DockNode",
+	[dijit._Widget,dijit._Templated],
+	{
+	// summary:
+	//		dojox.layout._DockNode is a private widget used to keep track of
+	//		which pane is docked.
+	//
+	// title: String
+	// 		Shown in dock icon. should read parent iconSrc?
+	title: "",
+
+	// paneRef: Widget
+	//		reference to the FloatingPane we reprasent in any given dock
+	paneRef: null,
+
+	templateString:
+		'<li dojoAttachEvent="onclick: restore" class="dojoxDockNode">'+
+			'<span dojoAttachPoint="restoreNode" class="dojoxDockRestoreButton" dojoAttachEvent="onclick: restore"></span>'+
+			'<span class="dojoxDockTitleNode" dojoAttachPoint="titleNode">${title}</span>'+
+		'</li>',
+
+	restore: function(){
+		// summary: remove this dock item from parent dock, and call show() on reffed floatingpane
+		this.paneRef.show();
+		this.paneRef.bringToTop();
+		this.destroy();
+	}
+
 });
 
 }
