@@ -974,41 +974,26 @@ dojo.declare("phpr.Calendar2.DefaultView", phpr.Default.System.Component, {
     },
 
     setVarsAndDivs: function() {
-        // Summary:
-        //    The first time this function is called (on class load) sets / updates class variables of div sizes,
-        //    steps, limits, etc. and updates sizes of the eventsArea and events on screen.
-        //    The following times does the same things only if the gridBox width has changed.
         var gridBox          = phpr.viewManager.getView().gridContainer;
         var gridBoxWidth     = dojo.style(gridBox.domNode, "width");
         var calendarSchedule = dojo.byId('calendarSchedule');
         var calenSchedWidth  = dojo.style(calendarSchedule, "width");
 
-        if (gridBoxWidth != this._gridBoxWidthPrev || calenSchedWidth != this._calenSchedWidthPrev) {
-            var doUpdateAndResize = true;
-            var minCalenSchedSize = 600;
+        var minCalenSchedSize = 600;
 
-            // Don't allow very small sizes because floating events positioning would start to be imprecise
-            if (gridBoxWidth < minCalenSchedSize) {
-                if (calenSchedWidth < minCalenSchedSize) {
-                    dojo.style(calendarSchedule, 'width', minCalenSchedSize + 'px');
-                } else {
-                    // The width of the calendar schedule hasn't changed
-                    doUpdateAndResize = false;
-                }
-            } else if (calenSchedWidth == minCalenSchedSize) {
-                dojo.style(calendarSchedule, 'width', '');
+        // Don't allow very small sizes because floating events positioning would start to be imprecise
+        if (gridBoxWidth < minCalenSchedSize) {
+            if (calenSchedWidth < minCalenSchedSize) {
+                dojo.style(calendarSchedule, 'width', minCalenSchedSize + 'px');
             }
-
-            this._gridBoxWidthPrev    = gridBoxWidth;
-            this._calenSchedWidthPrev = dojo.style(calendarSchedule, "width");
-
-            if (doUpdateAndResize) {
-                this.updateSizeValuesPart1();
-                this.setEventsAreaDivValues();
-                this.setEventDivsValues();
-                this.updateSizeValuesPart2();
-            }
+        } else if (calenSchedWidth == minCalenSchedSize) {
+            dojo.style(calendarSchedule, 'width', '');
         }
+
+        this.updateSizeValuesPart1();
+        this.setEventsAreaDivValues();
+        this.setEventDivsValues();
+        this.updateSizeValuesPart2();
     },
 
     putDivInTheFront: function(node) {
