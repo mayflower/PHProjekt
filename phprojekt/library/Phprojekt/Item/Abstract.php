@@ -285,7 +285,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
 
         foreach ($fields as $field) {
             $field = Phprojekt_ActiveRecord_Abstract::convertVarFromSql($field);
-            if ($this->getInformation()->getType($field) == 'upload') {
+            if ($this->getInformation()->getType($field) == 'upload' && !empty($this->_storedId)) {
                 $files = Default_Helpers_Upload::parseModelValues($this->_data[$field]);
                 $originalFiles = Default_Helpers_Upload::parseModelValues($this->_originalData[$field]);
 
