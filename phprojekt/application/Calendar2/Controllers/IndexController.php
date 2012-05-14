@@ -97,6 +97,15 @@ class Calendar2_IndexController extends IndexController
      */
     public function jsonListAction()
     {
+        // If we have a large database, this might take loads of memory. In order to avoid eating up all memory, we
+        // lower the memory limit to 256 MB here.
+        $memory = ini_get('memory_limit');
+        $unit   = substr($memory, -1);
+        if (!ctype_digit($unit)
+                && "k" !== strtolower($unit)
+                && ('m' !== strtolower($unit) || (int) substr($memory, 0, -1) > 256)) {
+            ini_set('memory_limit', '256M');
+        }
         $userId = $this->getRequest()->getParam('userId', Phprojekt_Auth_Proxy::getEffectiveUserId());
 
         if (!Cleaner::validate('int', $userId)) {
