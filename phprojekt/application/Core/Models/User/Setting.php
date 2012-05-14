@@ -139,7 +139,7 @@ class Core_Models_User_Setting extends Phprojekt_ModelInformation_Default
     public function getProxiesValue()
     {
         $proxyTable = new Phprojekt_Auth_ProxyTable();
-        return $proxyTable->getProxyIdsForUserId(Phprojekt_Auth_Proxy::getEffectiveUserId());
+        return $proxyTable->getProxyIdsForUserId(Phprojekt_Auth::getUserId());
     }
 
     /**
