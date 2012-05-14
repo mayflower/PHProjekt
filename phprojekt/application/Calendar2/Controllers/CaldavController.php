@@ -54,8 +54,14 @@ class Calendar2_CaldavController extends IndexController
      */
     public function checkAuthentication()
     {
-        if (array_key_exists('PHP_AUTH_USER', $_SERVER)) {
-            Phprojekt_Auth::login($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
+        try {
+            if (array_key_exists('PHP_AUTH_USER', $_SERVER)) {
+                Phprojekt_Auth::login($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
+            }
+        } catch (Phprojekt_Auth_Exception $e) {
+            // We have to delete the stack trace here because we need to avoid logging the user's password.
+            // This would be done because of Phprojekt_Auth::login($user, $password)
+            throw new Phprojekt_Auth_Exception($e->getMessage());
         }
     }
 
