@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.1.59, for pc-linux-gnu (x86_64)
+-- MySQL dump 10.13  Distrib 5.1.62, for pc-linux-gnu (x86_64)
 --
 -- Host: localhost    Database: phprojekt_test
 -- ------------------------------------------------------
--- Server version	5.1.59-log
+-- Server version	5.1.62-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -683,6 +683,21 @@ CREATE TABLE `todo` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `uploaded_unused_files`
+--
+
+DROP TABLE IF EXISTS `uploaded_unused_files`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `uploaded_unused_files` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `created` datetime NOT NULL,
+  `hash` varchar(32) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MEMORY DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `user`
 --
 
@@ -725,4 +740,4 @@ CREATE TABLE `user_proxy` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2012-01-10  8:54:56
+-- Dump completed on 2012-05-14 12:10:30
