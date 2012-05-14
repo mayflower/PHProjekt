@@ -103,7 +103,6 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         this.module = "Calendar2";
         this.loadFunctions(this.module);
         dojo.subscribe(this.module + ".showFormFromList", this, "showFormFromList");
-        dojo.subscribe(this.module + ".listViewClick", this, "listViewClick");
         dojo.subscribe(this.module + ".dayViewClick", this, "dayViewClick");
         dojo.subscribe(this.module + ".weekViewClick", this, "weekViewClick");
         dojo.subscribe(this.module + ".monthViewClick", this, "monthViewClick");
@@ -188,9 +187,6 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
             case "weekList":
                 this.loadWeekList();
                 break;
-            case "grid":
-                this.loadGrid();
-                break;
             case "monthList":
                 this.loadMonthList();
                 break;
@@ -200,25 +196,6 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
             default:
                 this.loadMonthList();
         }
-    },
-
-    loadGrid: function() {
-        // Summary:
-        //   This function loads the Dojo Grid
-        this.destroyOtherLists('grid');
-        phpr.viewManager.getView().buttonRow.set('content', '');
-        this.setNewEntry();
-        var updateUrl = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSaveMultiple/nodeId/' +
-            phpr.currentProjectId + '/userId/' + this.getActiveUser().id;
-        this.destroyGrid();
-        var gridBoxContainer = new phpr.Default.System.TemplateWrapper({
-            templateName: "phpr.Default.template.GridBox.html"
-        });
-        phpr.viewManager.getView().gridContainer.set('content', gridBoxContainer);
-        gridBoxContainer.startup();
-        this.grid = new this.gridWidget(updateUrl, this, phpr.currentProjectId, gridBoxContainer, {userId: this.getActiveUser().id});
-        this.setSubmoduleNavigation();
-        this.setScheduleBar(false, false);
     },
 
     loadDayListSelf: function() {
@@ -302,12 +279,6 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         // Summary:
         //    This function opens an specific item clicked from the views
         this.publish("openForm", [rowID]);
-    },
-
-    listViewClick: function() {
-        // Summary:
-        //    List button clicked, loads the regular grid
-        this._changeStateWithNewAction("grid");
     },
 
     dayViewClick: function() {
@@ -515,10 +486,6 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
     destroyOtherLists: function(mode) {
         // Summary:
         //    Destroys the objects of the lists not being used
-        if (mode != 'grid') {
-            this.destroyGrid();
-        }
-
         this.garbageCollector.collect('lists');
         if (mode != 'dayListSelf') {
             this.dayListSelf = null;
@@ -541,7 +508,6 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         var activeUser = this.getActiveUser();
         var moduleViews = [];
 
-        this.addModuleView(moduleViews, phpr.nls.get('List'), 'listViewClick', this.isListActive(this.grid));
         this.addModuleView(moduleViews, phpr.nls.get('Day'), 'dayViewClick', this.isListActive('dayList'));
         this.addModuleView(moduleViews, phpr.nls.get('Week'), 'weekViewClick', this.isListActive(this.weekList));
         this.addModuleView(moduleViews, phpr.nls.get('Month'), 'monthViewClick', this.isListActive(this.monthList));
@@ -692,18 +658,6 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
     updateCacheData: function() {
         // Summary:
         //    Forces every widget of the page to update its data, by deleting its cache.
-
-        // As the 'grid' object may not exist, it is not called always updateData function but deleted the cache
-        // manually - Note: preUrl may be used later to make the url of other views
-        var preUrl = phpr.webpath + 'index.php/' + phpr.module + '/index/';
-        if (this.grid) {
-            this.grid.updateData();
-        } else {
-            var gridUrl = preUrl + 'jsonList/nodeId/' + phpr.currentProjectId + '/userId/' + this.getActiveUser().id;
-            var tagUrl  = phpr.webpath + 'index.php/Default/Tag/jsonGetTags';
-            phpr.DataStore.deleteDataPartialString({url: gridUrl});
-            phpr.DataStore.deleteData({url: tagUrl});
-        }
 
         if (this.form) {
             this.form.updateData();
