@@ -1,3 +1,0 @@
-[submodule "phprojekt/library/SabreDAV"]
-	path = phprojekt/library/SabreDAV
-	url = git://github.com/evert/SabreDAV.git
