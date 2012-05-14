@@ -278,7 +278,7 @@ DROP TABLE IF EXISTS `hmabtm_test`;
 CREATE TABLE `hmabtm_test` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -295,7 +295,7 @@ CREATE TABLE `hmabtm_test_project_relation` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `project_id` (`project_id`,`hmabtm_test_id`),
   KEY `hmabtm_test_id` (`hmabtm_test_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
