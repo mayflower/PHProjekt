@@ -485,15 +485,20 @@ final class Default_Helpers_Upload
      *
      * @return  void
      */
-    static public function cleanUnusedFiles() {
+    static public function cleanUnusedFiles()
+    {
 
-        $files = array();
-        $hashes = self::_getOldFileHashes();
-        foreach ($hashes as $hash) {
-            $files[] = array('md5' => $hash);
+        try {
+            $files = array();
+            $hashes = self::_getOldFileHashes();
+            foreach ($hashes as $hash) {
+                $files[] = array('md5' => $hash);
+            }
+
+            self::removeFilesFromUnusedFileList($files);
+            self::deleteFiles($files);
+        } catch (Exception $e) {
+            //ignore, might be because of missing table before migration
         }
-
-        self::removeFilesFromUnusedFileList($files);
-        self::deleteFiles($files);
     }
 }
