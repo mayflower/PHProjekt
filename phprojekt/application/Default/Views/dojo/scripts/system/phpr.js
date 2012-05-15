@@ -352,6 +352,9 @@ dojo.declare("phpr.DataStore", null, {
             (error.name && error.name == "SyntaxError")) { // FF
             // PHP Error
             phpr.handleError(scope.url, 'php');
+        } else if (error.status === 0) {
+            // Lost connection to server
+            phpr.handleError(null, 'connection');
         } else {
             // Js error
             if (phpr.config.showInternalJsErrors) {
@@ -364,6 +367,8 @@ dojo.declare("phpr.DataStore", null, {
                 phpr.handleError(scope.url, 'js', message);
             }
         }
+
+        scope.processData();
     },
 
     saveData: function(params, data) {
@@ -747,6 +752,9 @@ phpr.handleError = function(url, type, message) {
         case 'silence':
             console.log(phpr.nls.get('Server unreachable! ') + message);
             return;
+        case 'connection':
+            response.message += phpr.nls.get('Server unreachable! ') + '<br />';
+            break;
         default:
             response.message += phpr.nls.get('Unexpected error');
             break;
