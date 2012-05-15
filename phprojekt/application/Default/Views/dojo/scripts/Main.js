@@ -745,7 +745,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                         checked: this.state.includeSubentries == "true"
                     });
                     phpr.viewManager.getView().rightButtonRow.set('content', isListRecursiveBox);
-                    var label = dojo.html.set(dojo.create('label'), phpr.nls.get("Include Subprojects?"));
+                    var label = dojo.html.set(dojo.create('label'), phpr.nls.get("Include Subprojects"));
                     dojo.place(label, phpr.viewManager.getView().rightButtonRow.domNode, 0);
                     isListRecursiveBox.startup();
                     dojo.connect(
