@@ -915,7 +915,7 @@ class Phprojekt
     public static function checkExtensionsAndSettings()
     {
         // PHP version
-        $requiredPhpVersion = "5.2.4";
+        $requiredPhpVersion = "5.3.0";
 
         // The following extensions are either needed by components of the Zend Framework that are used
         // or by P6 components itself.
