@@ -127,7 +127,7 @@ class Phprojekt_SettingTest extends DatabaseTest
         $metadata = $setting->getModel()->getFieldDefinition(Phprojekt_ModelInformation_Default::ORDERING_FORM);
         $records  = $setting->getList(4, $metadata);
 
-        $data = array('id' => 0, 'favorites' => "1,2");
+        $data = array('id' => 0, 'favorites' => array (0 => 1, 1 => 2));
         $this->assertEquals(array($data), $records);
 
         $setting = new Phprojekt_Setting();
