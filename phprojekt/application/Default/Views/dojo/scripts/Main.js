@@ -537,7 +537,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
             button = null;
             try {
                 module = phpr.pageManager.getModule(moduleName);
-                button = module.getGlobalModuleNavigationButton(globalModules[i].label);
+                button = module.getGlobalModuleNavigationButton(phpr.nls.get(globalModules[i].label, moduleName));
             } catch (e) {
                 //error in button creation, ignore
                 console.error("error while creating button for module " + moduleName);
