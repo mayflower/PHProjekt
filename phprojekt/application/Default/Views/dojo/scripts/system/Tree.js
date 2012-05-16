@@ -101,7 +101,7 @@ dojo.declare("phpr.Default.System.Tree", phpr.Default.System.Component, {
         var treeWidget = new dijit.Tree({
                 model:    this._model,
                 showRoot: false,
-                persist:  false,
+                persist:  true,
                 _onNodeMouseEnter: dojo.hitch(this, "_treeOnNodeMouseEnter"),
                 _onNodeMouseLeave: dojo.hitch(this, "_treeOnNodeMouseLeave")
             },
