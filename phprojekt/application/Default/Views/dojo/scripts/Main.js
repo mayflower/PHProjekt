@@ -366,15 +366,11 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         }));
 
         def.then(dojo.hitch(this, function() {
-            this._langUrl = phpr.webpath + 'index.php/Default/index/jsonGetTranslatedStrings/language/' + phpr.language;
-            this._fallbackLangUrl = phpr.webpath + 'index.php/Default/index/jsonGetTranslatedStrings/language/en';
-
-            phpr.DataStore.addStore({ url: this._langUrl });
-            phpr.DataStore.addStore({ url: this._fallbackLangUrl });
-
             var defs = [];
-            defs.push(phpr.DataStore.requestData({ url: this._langUrl }));
-            defs.push(phpr.DataStore.requestData({ url: this._fallbackLangUrl }));
+
+            phpr.nls = new phpr.translator();
+            defs.push(phpr.nls.loadTranslation(phpr.language));
+            defs.push(phpr.nls.loadFallback("en"));
 
             phpr.DataStore.addStore({ url: phpr.globalModuleUrl});
             defs.push(phpr.DataStore.requestData({ url: phpr.globalModuleUrl }));
@@ -391,11 +387,6 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
             var defList = new dojo.DeferredList(defs);
 
             defList.addCallback(dojo.hitch(this, function() {
-                phpr.nls = new phpr.translator(
-                    phpr.DataStore.getData({ url: this._langUrl }),
-                    phpr.DataStore.getData({ url: this._fallbackLangUrl })
-                );
-
                 var isAdmin = phpr.DataStore.getMetaData({url: phpr.globalModuleUrl}) == "1" ? true : false;
                 phpr.isAdminUser = isAdmin;
 
@@ -405,6 +396,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                 phpr.tree.loadTree();
                 this.addLogoTooltip();
                 this.setGlobalModulesNavigation();
+                this._monitorLanguageChange();
 
                 this._setTutorialButton();
                 this._maybeShowTutorial();
@@ -428,6 +420,12 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         this.renderTemplate();
         this.setNavigations();
         this.setWidgets();
+    },
+
+    _monitorLanguageChange: function() {
+        dojo.subscribe("phpr.languageChanged", this, function(lang) {
+            this.setGlobalModulesNavigation();
+        });
     },
 
     setGlobalVars: function() {
