@@ -97,7 +97,7 @@ dojo.declare("phpr.Core.Form", phpr.Default.Form, {
                 this.setSubmitInProgress(false);
                 new phpr.handleResponse('serverFeedback', data);
                 if (data.type == 'success') {
-                    this.customActionOnSuccess(moduleName);
+                    this.customActionOnSuccess(moduleName, this.sendData);
                     this.publish("updateCacheData");
                     phpr.pageManager.modifyCurrentState(
                         { id: undefined },
