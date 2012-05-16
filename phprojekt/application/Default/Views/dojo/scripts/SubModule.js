@@ -359,7 +359,7 @@ dojo.declare("phpr.Default.SubModule.Form", phpr.Default.Form, {
         //    Return the field names with the original name
         // Description:
         //    Return the field names with the original name
-        this.sendData = [];
+        this.sendData = {};
         for (var i = 0; i < this.formsWidget.length; i++) {
             if (!this.formsWidget[i].isValid()) {
                 var parent = this.formsWidget[i].containerNode.parentNode.id;
