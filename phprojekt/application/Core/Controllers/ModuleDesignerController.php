@@ -113,9 +113,52 @@ class Core_ModuleDesignerController extends Core_IndexController
             $module = Cleaner::sanitize('alnum', $this->getRequest()->getParam('label'));
         }
         $module = ucfirst(str_replace(" ", "", $module));
+        $this->getRequest()->setParam('name', $module);
+
         if ($id > 0) {
             $model = Phprojekt_Loader::getModel($module, $module);
         }
+
+        $message = $this->_handleDatabaseChange($model, $module, $data, $saveType, $id);
+
+        if (!is_null($message)) {
+            Phprojekt_Converter_Json::echoConvert($return);
+            return;
+        }
+
+        $message = $this->_handleModuleChange($model, $data, $id);
+
+        $this->setCurrentProjectId();
+
+        if (empty($id)) {
+            $model   = new Phprojekt_Module_Module();
+            $message = Phprojekt::getInstance()->translate('The module was added correctly');
+        } else {
+            $model   = new Phprojekt_Module_Module();
+            $model   = $model->find($id);
+            $message = Phprojekt::getInstance()->translate('The module was edited correctly');
+        }
+
+        $model->saveModule($this->getRequest()->getParams());
+
+        Phprojekt_Module::clearCache();
+
+        $return = array(
+            'type'    => 'success',
+            'message' => $message,
+            'id'      => $model->id
+        );
+
+        Phprojekt_Converter_Json::echoConvert($return);
+    }
+
+    private function _handleDatabaseChange($model, $module, $data, $saveType, $id)
+    {
+        $ret = array(
+            'type' => null,
+            'message' => null,
+            'id'      => $id
+        );
 
         if ($model instanceof Phprojekt_Item_Abstract || $id == 0) {
             $databaseManager = new Phprojekt_DatabaseManager($model);
@@ -126,8 +169,8 @@ class Core_ModuleDesignerController extends Core_IndexController
                 // Update Table Structure
                 $tableData = $this->_getTableData($data);
                 if (!$databaseManager->syncTable($data, $module, $tableData)) {
-                    $type    = 'error';
-                    $message = Phprojekt::getInstance()->translate('There was an error writing the table');
+                    $ret['type']    = 'error';
+                    $ret['message'] = Phprojekt::getInstance()->translate('There was an error writing the table');
                 } else {
                     // remove possible id's as we are not allowed to change id's
                     foreach ($data as $key => $value) {
@@ -137,28 +180,18 @@ class Core_ModuleDesignerController extends Core_IndexController
                     // Update DatabaseManager Table
                     $databaseManager->saveData($module, $data, $tableData);
 
-                    if (empty($id)) {
-                        $message = Phprojekt::getInstance()->translate('The table module was created correctly');
-                    } else {
-                        $message = Phprojekt::getInstance()->translate('The table module was edited correctly');
-                    }
-                    $type = 'success';
+                    $ret = null;
                 }
             } else {
                 $error   = $databaseManager->getError();
-                $message = $error['label'] . ': ' . $error['message'];
-                $type    = 'error';
+                $ret['message'] = $error['label'] . ': ' . $error['message'];
+                $ret['type']    = 'error';
             }
         } else {
-            $type    = 'success';
-            $message = null;
+            $ret = null;
         }
 
-        $return = array('type'    => $type,
-                        'message' => $message,
-                        'id'      => $id);
-
-        Phprojekt_Converter_Json::echoConvert($return);
+        return $ret;
     }
 
     /**
