@@ -18,7 +18,7 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @version    Release: 6.1.0
+ * @version    Release: 6.1.1
  * @author     David Soria Parra <soria_parra@mayflower.de>
  */
 
@@ -41,7 +41,7 @@ require_once 'Models/ModuleTest.php';
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @version    Release: 6.1.0
+ * @version    Release: 6.1.1
  * @author     David Soria Parra <soria_parra@mayflower.de>
  */
 class Module_AllTests

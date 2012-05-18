@@ -26,7 +26,7 @@ require_once 'PHPUnit/Extensions/SeleniumTestCase.php';
  * Selenium Test for PHProjekt
  *
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @version    Release: 6.1.0
+ * @version    Release: 6.1.1
  * @license    LGPL v3 (See LICENSE file)
  * @package    PHProjekt
  * @link       http://www.phprojekt.com

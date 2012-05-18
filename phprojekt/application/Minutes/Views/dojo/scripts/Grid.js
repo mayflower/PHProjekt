@@ -15,7 +15,7 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @version    Release: 6.1.0
+ * @version    Release: 6.1.1
  * @author     Sven Rautenberg <sven.rautenberg@mayflower.de>
  */
 
