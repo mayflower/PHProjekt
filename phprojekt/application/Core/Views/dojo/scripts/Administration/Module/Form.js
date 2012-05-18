@@ -335,7 +335,10 @@ dojo.declare("phpr.Module.Form", phpr.Core.DialogForm, {
                     url:         phpr.globalModuleUrl
                 }).then(dojo.hitch(this, function() {
                     this.main.setGlobalModulesNavigation();
-                    this.publish("setUrlHash", [phpr.parentmodule, null, [phpr.module]]);
+                    phpr.pageManager.modifyCurrentState(
+                        { moduleName: "Module", id: undefined },
+                        { forceModuleReload: true }
+                    );
                 }));
             }
         }));

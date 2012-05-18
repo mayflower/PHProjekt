@@ -37,10 +37,6 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.DialogForm, {
     _FRMWIDG_RECURRENCE: 2,
 
     initData: function() {
-        // Get all the active users
-        this.userStore = new phpr.Default.System.Store.User();
-        this._initData.push({'store': this.userStore});
-
         // Get the tags
         this._tagUrl = phpr.webpath + 'index.php/Default/Tag/jsonGetTagsByModule/moduleName/' + phpr.module + '/id/' +
             this.id;
@@ -228,7 +224,7 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.DialogForm, {
         //    Participants tab
         // Description:
         //    Display all the users for add into the event
-        var userList       = this.userStore.getList();
+        var userList       = phpr.userStore.getList();
         var currentUser    = data[0].rights[phpr.currentUserId] ? phpr.currentUserId : 0;
         var participantIds = data[0].participants;
         var participants   = [];

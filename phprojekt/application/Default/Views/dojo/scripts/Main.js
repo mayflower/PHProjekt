@@ -381,8 +381,8 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
             var tabStore = new phpr.Default.System.Store.Tab();
             defs.push(tabStore.fetch());
 
-            this.userStore = new phpr.Default.System.Store.User();
-            defs.push(this.userStore.fetch());
+            phpr.userStore = new phpr.Default.System.Store.User();
+            defs.push(phpr.userStore.fetch());
 
             var defList = new dojo.DeferredList(defs);
 
@@ -610,7 +610,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
 
         menu.addChild(button);
 
-        var userList = this.userStore.getList();
+        var userList = phpr.userStore.getList();
         var l = userList.length;
         var userName = "";
         for (var i = 0; i < l; i++) {
@@ -1217,7 +1217,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         //    Add a tooltip to the logo with the current user and p6 version
         // Description:
         //    Add a tooltip to the logo with the current user and p6 version
-        var userList = this.userStore.getList();
+        var userList = phpr.userStore.getList();
 
         // Add a tooltip with the current user
         for (var i = 0; i < userList.length; i++) {
