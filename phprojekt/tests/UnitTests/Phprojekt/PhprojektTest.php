@@ -99,7 +99,7 @@ class Phprojekt_PhprojektTest extends PHPUnit_Framework_TestCase
                     'magic_quotes_sybase'  => array('required' => 0, 'checked' => true,
                         'help' => 'http://us.php.net/manual/en/sybase.configuration.php#ini.magic-quotes-sybase'),
                 ),
-                'php' => array('required' => '5.2.4', 'checked' => true, 'help' => 'http://us.php.net/')
+                'php' => array('required' => '5.3.0', 'checked' => true, 'help' => 'http://us.php.net/')
             ),
             'recommendations' => array(
                 'settings' => array(
