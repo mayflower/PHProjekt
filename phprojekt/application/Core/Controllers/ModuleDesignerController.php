@@ -141,6 +141,8 @@ class Core_ModuleDesignerController extends Core_IndexController
 
         $model->saveModule($this->getRequest()->getParams());
 
+        Phprojekt_Module::clearCache();
+
         $return = array(
             'type'    => 'success',
             'message' => $message,
