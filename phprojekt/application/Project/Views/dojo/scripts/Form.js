@@ -15,7 +15,7 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @version    Release: @package_version@
+ * @version    Release: 6.1.1
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 
@@ -208,8 +208,16 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
         // Description:
         //    Add a new row of one user-role
         //    with the values selected on the first row
-        var roleId = this._rolesTab.relationRoleAdd.get('value');
-        var userId = this._rolesTab.relationUserAdd.get('value');
+        var roleWidget = this._rolesTab.relationRoleAdd;
+        var userWidget = this._rolesTab.relationUserAdd;
+
+        if (!roleWidget.validate() || !userWidget.validate()) {
+            return;
+        }
+
+        var roleId = roleWidget.get('value');
+        var userId = userWidget.get('value');
+
         var data = {
             userId:      userId,
             roleId:      roleId,

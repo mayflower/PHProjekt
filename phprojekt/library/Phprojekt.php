@@ -18,7 +18,7 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @version    Release: @package_version@
+ * @version    Release: 6.1.1
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 
@@ -32,7 +32,7 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @version    Release: @package_version@
+ * @version    Release: 6.1.1
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 class Phprojekt
@@ -915,7 +915,7 @@ class Phprojekt
     public static function checkExtensionsAndSettings()
     {
         // PHP version
-        $requiredPhpVersion = "5.2.4";
+        $requiredPhpVersion = "5.3.0";
 
         // The following extensions are either needed by components of the Zend Framework that are used
         // or by P6 components itself.

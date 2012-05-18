@@ -19,7 +19,7 @@
  * @license   LGPL v3 (See LICENSE file)
  * @link      http://www.thinkforge.org/projects/Cleaner
  * @since     File available since Release 6.0
- * @version   Release: @package_version@
+ * @version   Release: 6.1.1
  * @author    Peter Voringer <peter.voringer@mayflower.de>
  */
 
@@ -34,7 +34,7 @@
  * @license   LGPL v3 (See LICENSE file)
  * @link      http://www.thinkforge.org/projects/Cleaner
  * @since     File available since Release 6.0
- * @version   Release: @package_version@
+ * @version   Release: 6.1.1
  * @author    Peter Voringer <peter.voringer@mayflower.de>
  */
 class Cleaner_Util

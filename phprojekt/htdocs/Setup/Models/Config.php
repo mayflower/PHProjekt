@@ -18,7 +18,7 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @version    Release: @package_version@
+ * @version    Release: 6.1.1
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 
@@ -32,7 +32,7 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @version    Release: @package_version@
+ * @version    Release: 6.1.1
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 class Setup_Models_Config
@@ -519,18 +519,18 @@ authentication.integration.timeZone = '0000002'
 ; Example at:
 ; http://framework.zend.com/manual/en/zend.auth.adapter.ldap.html
 
-authentication.ldap.server1.host                   = 'ldaphost'
-authentication.ldap.server1.port                   = 389
-authentication.ldap.server1.useSsl                 = false
-authentication.ldap.server1.useStartTls            = false
-authentication.ldap.server1.accountDomainName      = 'domain.com'
-authentication.ldap.server1.accountDomainNameShort = 'DOMAIN'
-authentication.ldap.server1.baseDn                 = 'OU=OrgUnit,DC=domain,DC=com'
-authentication.ldap.server1.allowEmptyPassword     = false
-authentication.ldap.server1.bindRequiresDn         = false
-authentication.ldap.server1.optReferrals           = false
-authentication.ldap.server1.tryUsernameSplit       = false
-authentication.ldap.server1.accountFilterFormat    = null
+; authentication.ldap.server1.host                   = "ldaphost"
+; authentication.ldap.server1.port                   = 389
+; authentication.ldap.server1.useSsl                 = false
+; authentication.ldap.server1.useStartTls            = false
+; authentication.ldap.server1.accountDomainName      = "domain.com"
+; authentication.ldap.server1.accountDomainNameShort = "DOMAIN"
+; authentication.ldap.server1.baseDn                 = "OU=OrgUnit,DC=domain,DC=com"
+; authentication.ldap.server1.allowEmptyPassword     = false
+; authentication.ldap.server1.bindRequiresDn         = false
+; authentication.ldap.server1.optReferrals           = false
+; authentication.ldap.server1.tryUsernameSplit       = false
+; authentication.ldap.server1.accountFilterFormat    = null
 HERE;
     }
 }

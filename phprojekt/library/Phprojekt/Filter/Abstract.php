@@ -19,7 +19,7 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @version    Release: @package_version@
+ * @version    Release: 6.1.1
  * @author     David Soria Parra <david.soria_parra@mayflower.de>
  */
 
@@ -34,7 +34,7 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @version    Release: @package_version@
+ * @version    Release: 6.1.1
  * @author     David Soria Parra <david.soria_parra@mayflower.de>
  */
 abstract class Phprojekt_Filter_Abstract

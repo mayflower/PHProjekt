@@ -18,7 +18,7 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @version    Release: @package_version@
+ * @version    Release: 6.1.1
  * @author     Eduardo Polidor <polidor@mayflower.de>
  */
 
@@ -32,7 +32,7 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @version    Release: @package_version@
+ * @version    Release: 6.1.1
  * @author     Eduardo Polidor <polidor@mayflower.de>
  */
 class Phprojekt_Auth extends Zend_Auth

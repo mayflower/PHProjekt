@@ -22,7 +22,7 @@ $lang["Tag results"] = "Tag results";
 $lang["Help"] = "Hilfe";
 $lang["Logout"] = "Logout";
 $lang["Tags"] = "Tags";
-$lang["Include Subprojects?"] = "Unterprojekte einbeziehen?";
+$lang["Include Subprojects"] = "Unterprojekte einbeziehen";
 
 // Tabs
 $lang["Access"] = "Zugriff";
