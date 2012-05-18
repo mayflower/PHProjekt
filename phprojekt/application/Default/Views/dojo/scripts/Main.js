@@ -1264,7 +1264,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
             if (modules[j].name) {
                 var found = false;
                 for (var i in sortedModules) {
-                    if (modules[j].name == sortedModules[i].name) {
+                    if (modules[j].name == sortedModules[i].name && modules[j].action == sortedModules[i].action) {
                         found = true;
                     }
                 }
