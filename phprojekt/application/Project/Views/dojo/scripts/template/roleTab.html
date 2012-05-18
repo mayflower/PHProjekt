@@ -16,16 +16,16 @@
         </tr>
         <tr>
             <td>
-                <select dojoAttachPoint="relationUserAdd" name="relationUserAdd" dojoType="phpr.FilteringSelect" required="false"
-                autocomplete="false" value="" invalidMessage="" {{disabled}} >
+                <select dojoAttachPoint="relationUserAdd" name="relationUserAdd" dojoType="phpr.FilteringSelect"
+                    required="true" autocomplete="false" value="" invalidMessage="" {{disabled}} >
                     {% for user in users %}
                     <option value="{{user.id}}" >{{user.display}}</option>
                     {% endfor %}
                 </select>
             </td>
             <td>
-                <select dojoAttachPoint="relationRoleAdd" name="relationRoleAdd" dojoType="phpr.FilteringSelect" required="false"
-                autocomplete="false" value="" invalidMessage="" {{disabled}} >
+                <select dojoAttachPoint="relationRoleAdd" name="relationRoleAdd" dojoType="phpr.FilteringSelect"
+                    required="true" autocomplete="false" value="" invalidMessage="" {{disabled}} >
                     {% for role in roles %}
                     <option value="{{role.id}}" >{{role.name}}</option>
                     {% endfor %}

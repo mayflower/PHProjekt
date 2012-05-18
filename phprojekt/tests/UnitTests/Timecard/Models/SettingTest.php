@@ -73,10 +73,10 @@ class Timecard_Models_Setting_Test extends DatabaseTest
     public function testGetFavorites()
     {
         $timecardSetting = clone($this->_model);
-        $favorites       = serialize(array(0 => 1,
-                                           1 => 2));
-        $response = $timecardSetting->getFavorites($favorites);
-        $this->assertEquals("1,2", $response);
+        $favorites       = array(0 => 1, 1 => 2);
+        $favoritesS      = serialize($favorites);
+        $response = $timecardSetting->getFavorites($favoritesS);
+        $this->assertEquals($favorites , $response);
     }
 
     /**
