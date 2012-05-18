@@ -122,11 +122,11 @@ class Phprojekt_Auth_ProxyTable
     public function getProxyableUsersForUserId($userId = null)
     {
         $userIds   = $this->getProxyableUserIdsForUserId($userId);
-        $userClass = new Phprojekt_User_User();
 
         $userList = array();
 
         foreach ($userIds as $userId) {
+            $userClass  = new Phprojekt_User_User();
             $userList[] = $userClass->find($userId);
         }
 
