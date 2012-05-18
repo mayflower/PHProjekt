@@ -1179,8 +1179,6 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         var helpDialog = phpr.viewManager.getView().helpDialog;
         var helpContainer = phpr.viewManager.getView().helpContainer;
 
-        helpContainer.set('content', container);
-
         helpDialog.show();
 
         for (var tab in helpData) {
@@ -1212,6 +1210,8 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
 
             content = null;
         }
+
+        helpContainer.set('content', container);
     },
 
     addLogoTooltip: function() {
