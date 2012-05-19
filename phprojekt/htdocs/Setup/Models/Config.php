@@ -275,6 +275,8 @@ class Setup_Models_Config
         $content .= '; Name of the database, inside the server' . $this->_eol;
         $content .= 'database.params.dbname = "' . addcslashes($dbname, '"') . '"' . $this->_eol;
         $content .= 'database.params.port = ' . (int) $port . $this->_eol;
+        $content .= $this->_eol;
+        $content .= 'database.params.charset = "utf8"' . $this->_eol;
 
         return $content;
     }

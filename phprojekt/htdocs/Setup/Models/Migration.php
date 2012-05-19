@@ -346,7 +346,7 @@ CREATE TABLE `calendar` (
   `visibility` int(1) DEFAULT '0',
   `participant_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-)
+) DEFAULT CHARSET utf8
 HERE
     );
         Phprojekt::getInstance()->getDb()->insert(
