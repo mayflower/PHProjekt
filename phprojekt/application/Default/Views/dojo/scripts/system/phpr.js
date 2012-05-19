@@ -601,10 +601,8 @@ dojo.declare("phpr.translator", null, {
     },
 
     _onSettingsChange: function(module, data) {
-        if (module === "User") {
-            if (data && data.language) {
-                this.loadTranslation(data.language);
-            }
+        if (module === "User" && data && data.language) {
+            this.loadTranslation(data.language);
         }
     },
 
