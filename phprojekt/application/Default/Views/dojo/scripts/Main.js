@@ -651,7 +651,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         }
 
         var activeModuleButton = this.globalModuleNavigationButtons[activeModuleName];
-        if (activeModuleButton) {
+        if (activeModuleButton && activeModuleButton.containerNode) {
             dojo.addClass(activeModuleButton.containerNode, 'selected');
         }
     },
