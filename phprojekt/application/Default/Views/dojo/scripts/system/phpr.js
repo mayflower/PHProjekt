@@ -589,11 +589,59 @@ dojo.declare("phpr.translator", null, {
     // Description:
     //     Collect all the trasnlated strings into an array
     //     and return the request string translateds
-    _strings: {},
+    _currentLanguage: null,
+    _firstLoad: true,
+    _strings: null,
+    _fallbackStrings: null,
+    _listener: null,
 
-    constructor: function(translatedStrings, fallbackStrings) {
-        this._strings = translatedStrings;
-        this._fallbackStrings = fallbackStrings;
+    constructor: function() {
+        this._listener = dojo.subscribe("phpr.moduleSettingsChanged", this, "_onSettingsChange");
+        this._strings = {};
+        this._fallbackStrings = {};
+    },
+
+    destroy: function() {
+        dojo.unsubscribed(this._listener);
+    },
+
+    _onSettingsChange: function(module, data) {
+        if (module === "User") {
+            if (data && data.language) {
+                this.loadTranslation(data.language);
+            }
+        }
+    },
+
+    loadTranslation: function(language)  {
+        var self = this;
+        return this._loadLanguage(language).then(function(data) {
+            self._strings = data;
+
+            if (!self._firstLoad && self._currentLanguage !== language) {
+                dojo.publish("phpr.languageChanged", [language]);
+            } else {
+                self._firstLoad = false;
+            }
+
+            self._currentLanguage = language;
+        });
+    },
+
+    loadFallback: function(language)  {
+        var self = this;
+        return this._loadLanguage(language).then(function(data) {
+            self._fallbackStrings = data;
+        });
+    },
+
+    _loadLanguage: function(lang) {
+        var url = phpr.webpath + 'index.php/Default/index/jsonGetTranslatedStrings/language/' + lang;
+        var param = { url: url };
+        phpr.DataStore.addStore(param);
+        return phpr.DataStore.requestData(param).then(function () {
+            return phpr.DataStore.getData(param);
+        });
     },
 
     get: function(string, module) {
