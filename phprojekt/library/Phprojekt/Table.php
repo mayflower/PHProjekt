@@ -146,7 +146,7 @@ class Phprojekt_Table
         } else {
             $sqlString = substr($sqlString, 0, -2);
         }
-        $sqlString .= ")";
+        $sqlString .= ") DEFAULT CHARSET=utf8";
 
         try {
             $this->_db->getConnection()->exec($sqlString);
