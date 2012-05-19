@@ -431,7 +431,7 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
         //    Collect all the project values and save it
         // Description:
         //    Collect all the project values and save it
-        var sendData   = [];
+        var sendData   = {};
         var projects   = [];
         var listIndex  = -1;
         var listLength = this.gantt.projectDataBuffer.length;

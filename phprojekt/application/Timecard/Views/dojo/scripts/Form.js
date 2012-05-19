@@ -28,7 +28,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Default.System.Component, {
     dateObject: null,
     formdata: [],
     id: 0,
-    sendData: [],
+    sendData: {},
     _bookUrl: null,
     _date: null,
     _favoriteButton: null,
@@ -346,7 +346,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Default.System.Component, {
         //    Save the booking form
         // Description:
         //    Save the booking form and reload the views
-        this.sendData = [];
+        this.sendData = {};
         this.sendData = dojo.mixin(this.sendData, this._formContent.bookingForm.get('value'));
         if (!this.prepareSubmission()) {
             return false;
