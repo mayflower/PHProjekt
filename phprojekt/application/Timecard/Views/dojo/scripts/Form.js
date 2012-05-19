@@ -193,13 +193,20 @@ dojo.declare("phpr.Timecard.Form", phpr.Default.System.Component, {
                 label:     phpr.nls.get('Manage project list'),
                 showLabel: true,
                 baseClass: "positive",
-                disabled:  false
+                disabled:  false,
+                onClick: function() {
+                    phpr.pageManager.modifyCurrentState({
+                        moduleName: "Setting",
+                        action: "Timecard",
+                        projectId: undefined,
+                        id: undefined
+                    });
+                }
             };
+
             this._favoriteButton = new dijit.form.Button(params);
             phpr.viewManager.getView().buttonRow.domNode.appendChild(this._favoriteButton.domNode);
             this.garbageCollector.addNode(this._favoriteButton);
-            this.garbageCollector.addEvent(
-                dojo.connect(this._favoriteButton, "onClick",  dojo.hitch(this, "openManageFavorites")));
         }
     },
 
@@ -284,37 +291,6 @@ dojo.declare("phpr.Timecard.Form", phpr.Default.System.Component, {
         }));
     },
 
-    createFavoritesDialog: function(allProjects, favoritesList) {
-        // Summary:
-        //    Render the dialog for manage favorites
-        // Description:
-        //    Render the dialog for manage favorites
-        if (!this._favoritesDialogContent) {
-            this._favoritesDialogContent = new phpr.Default.System.TemplateWrapper({
-                templateName: "phpr.Timecard.template.favoritesDialog.html",
-                templateData: {
-                    titleTxt: phpr.nls.get('Drag the projects from left to right'),
-                    helpTxt: phpr.nls.get('Favorite projects appear first in the select box of the form'),
-                    allProjects: allProjects,
-                    favoritesList: favoritesList
-                }
-            });
-
-            this.main._contentWidget.dialogContent.set('content', this._favoritesDialogContent);
-
-            this.garbageCollector.addNode(this._favoritesDialogContent);
-
-            // Event buttons
-            this.garbageCollector.addEvent(
-                    dojo.connect(this._favoritesDialogContent.favoritesDialogButton, "onClick",
-                        dojo.hitch(this.main._contentWidget.manageFavorites, "hide")));
-
-            // Event buttons
-            this.garbageCollector.addEvent(
-                    dojo.connect(this.main._contentWidget.manageFavorites, "hide",  dojo.hitch(this, "submitFavoritesForm")));
-        }
-    },
-
     prepareSubmission: function() {
         // Summary:
         //    Correct some data before send it to the server
@@ -386,21 +362,6 @@ dojo.declare("phpr.Timecard.Form", phpr.Default.System.Component, {
         }));
     },
 
-    submitFavoritesForm: function() {
-        // Summary:
-        //    Save the favorites projects
-        // Description:
-        //    Save the favorites projects
-        var favorites = [];
-
-        projectFavoritesTarget.getAllNodes().forEach(function(node) {
-            var id = dojo.attr(node, 'dojoAttachPoint').replace(/favoritesTarget-/, "").replace(/favoritesSource-/, "");
-            favorites.push(id);
-        });
-
-        this.main._store.setFavoriteProjects(favorites);
-    },
-
     updateData: function() {
         // Summary:
         //    Delete the cache for all the views
@@ -410,72 +371,5 @@ dojo.declare("phpr.Timecard.Form", phpr.Default.System.Component, {
         phpr.DataStore.deleteData({url: this._bookUrl});
         phpr.DataStore.deleteData({url: this._url});
         this.drawDayView();
-    },
-
-    openManageFavorites: function() {
-        // Summary:
-        //    Function called on manageFavorites button click, to regulate the popup project's boxes height, and then
-        //    open the Manage Favorites dialog
-        if (this.main._contentWidget.dialogContent.domNode.innerHTML.replace(/\s/g, "") === "") {
-            var dlist = new dojo.DeferredList([
-                this.main._store.getProjectRange(),
-                this.main._store.getFavoriteProjects()
-            ]);
-
-            dlist.addCallback(dojo.hitch(this, function(reqData) {
-                var range = reqData[0][1];
-                var favorites = reqData[1][1];
-
-                // Get Favorites
-                var favoritesList = [];
-                for (var k in favorites) {
-                    for (var j in range) {
-                        if (range[j].id == favorites[k].id) {
-                            favoritesList.push(range[j]);
-                        }
-                    }
-                }
-
-                // Get All Projects
-                var allProjects = [];
-                for (var j in range) {
-                    var found = false;
-                    for (var k in favorites) {
-                        if (range[j].id == favorites[k].id) {
-                            found = true;
-                        }
-                    }
-                    if (!found) {
-                        allProjects.push(range[j]);
-                    }
-                }
-
-                // Make Dialog
-                this.createFavoritesDialog(allProjects, favoritesList);
-
-                this.finishDialog();
-            }));
-        } else {
-            this.finishDialog();
-        }
-    },
-
-    finishDialog: function() {
-        // Summary:
-        //    Show the dialog and resize it
-        dijit.popup.close(this._timecardTooltipDialog);
-        this.main._contentWidget.manageFavorites.show();
-
-        // If there are no projects in any of the boxes, don't let it reduce its height so much
-        if (projectFavoritesSource && projectFavoritesSource.getAllNodes().length === 0) {
-            dojo.style('projectFavoritesSource', 'height', this._manFavBoxesHeight + 'px');
-        } else {
-            dojo.style('projectFavoritesSource', 'height', '');
-        }
-        if (projectFavoritesTarget && projectFavoritesTarget.getAllNodes().length === 0) {
-            dojo.style('projectFavoritesTarget', 'height', this._manFavBoxesHeight + 'px');
-        } else {
-            dojo.style('projectFavoritesTarget', 'height', '');
-        }
     }
 });
