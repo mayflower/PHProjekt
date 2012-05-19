@@ -1,0 +1,108 @@
+remove configuration.php
+clear database
+clear phprojekt_private folder
+
+- Installation
+    - press continue
+    - input wrong database credentials, press continue, an error should be shown
+    - input correct database credentials, press continue, message shoudl be "database ok"
+    - input different admin password and confirmation, error should occur
+    - input different test password and confirmation, error should occur
+    - input same admin and test password, error should occur
+    - input correct values, continue
+    - message "users ok", continue
+    - enter malformated url as the private dir, error should occur
+    - enter path without write permissions, error shoudl occur
+    - enter correct path, continue
+      - if path is inside the document root, warning shoud appear
+    - continue to tables
+      - shoudl display Private folders OK
+    - continue
+    - click install tables, leave example data checked
+    - everything should be displayed as ok
+    - continue with the migration
+    - input a wrong path to a configuration, click migrate
+      - should display: The file "/etc/bla" do not exists.
+    - click do not migrate data
+      - shoudl display "step 7 done"
+
+- Tutorial
+  - first login
+    - log into phprojekt the first time as a user
+    - the tutorial shoul appear
+    - upon clicking the tutorial tabs, the mathing elements on the page should highlight in red.
+    - uncheck the "Show tutorial on Login?" checkbox, log out
+  - second login
+    - no tutorial should appear
+    - click on the username on the toolbar, select "help" from the popup menu
+    - click the "Tutorial" button in the help dialog
+      - the help dialog should close and the tutorial dialog should appear with the "show on login" checkbox unchecked
+    - the tutorial tabs should work like on the first login
+
+- as admin and as user
+  - test item creation
+    - test errors for:
+      - missing required fields
+      - end date before start date
+    - test whether roles and rights are correctly applied
+    - test whether settings item rights and roles work
+    - test whether enter key works in dialog form
+  - test item deletion
+    - test for delete button in dialog form
+    - test for delete button via checkboxed in grid view
+  - test item upload in filemanager
+  - test submodules in notes module
+  - test project switching through the tree
+  - test module creation in module manager
+    - test whether dynamic module load works
+    - test whether new global modules work correctly
+    - test whether new normal modules work correctly
+  - test module deletion in module manager
+  - test whether administration for user, roles, tabs and general works
+  - test whether appropriate help is displayed for the active module
+  - test whether help dialog is rendered fine multiple times
+  - test whether timecard quich buttons work
+    - test start
+    - test module selection on end
+  - test whether timecard month change work
+  - test whether timecard favorites are updates ofter the favorites setting has been changed
+    - check in: timecard details, quick menu for stop button
+  - test whether PHProjekt (root project) is replaced with "unassigned" in all menues in timecard and settings
+  - test whether "include subprojects" work for different projects and different modules
+  - test gantt chart:
+    - if you can see all projects
+    - if you can move projects
+  - test calendar
+    - web:
+      - event creation:
+        - utf8 in summary, description, location, comments
+        - participant adding
+        - participant availability
+        - daily, weekly, monthly, yearly repeats
+        - intervals
+        - until date
+        - weekdays
+        - confirmation statuses
+        - visibility
+      - monthview:
+        - all events present
+        - open the right occurrence on click of recurrent event
+        - open/save/view update on event creation
+        - right day in the form if clicked on add-quickbutton
+      - weekview:
+        - moving events horizontally
+        - moving events vertically
+        - event form click after moving
+        - resizing event
+        - current day still correct after click on dayview
+        - move event and click on it very fast
+      - dayview:
+        - moving events vertically
+        - event form click after moving
+        - resizing event
+        - current day still correct after click on weekview
+        - move event and click on it very fast
+      - user selection day view:
+        - selecting users work
+        - displaying the correct events for all users
+        - moving events vertically
