@@ -338,7 +338,7 @@ class JsController extends IndexController
         $output = "";
         $files = scandir($path);
         foreach ($files as $file) {
-            if ($file != '.'  && $file != '..' && $file != 'Default'
+            if ($file != '.'  && $file != '..' && $file != 'Default' && $file != 'Calendar'
                     && is_dir($path . '/' . $file . '/Views')) {
                 if (is_dir($path . $file . '/Views/dojo/scripts/')) {
                     $scripts = scandir($path . $file . '/Views/dojo/scripts/');
