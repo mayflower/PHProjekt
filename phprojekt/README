@@ -18,8 +18,7 @@ or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public
 License for more details.
 
 PHProjekt uses and contains the following external projects: -
-Zend Framework 1.10.7 (http://www.zend.com) - Dojo Toolkit 1.5.0
-(http://www.dojotoolkit.org)
+Zend Framework (http://www.zend.com) - Dojo Toolkit (http://www.dojotoolkit.org)
 
 It is possible to perform a data migration from Phprojekt 5 while
 installing 6th version, read wiki installation documentation.
