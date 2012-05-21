@@ -1177,8 +1177,6 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         var helpDialog = phpr.viewManager.getView().helpDialog;
         var helpContainer = phpr.viewManager.getView().helpContainer;
 
-        helpContainer.set('content', container);
-
         helpDialog.show();
 
         for (var tab in helpData) {
@@ -1210,6 +1208,8 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
 
             content = null;
         }
+
+        helpContainer.set('content', container);
     },
 
     addLogoTooltip: function() {
@@ -1262,7 +1262,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
             if (modules[j].name) {
                 var found = false;
                 for (var i in sortedModules) {
-                    if (modules[j].name == sortedModules[i].name) {
+                    if (modules[j].name == sortedModules[i].name && modules[j].action == sortedModules[i].action) {
                         found = true;
                     }
                 }
