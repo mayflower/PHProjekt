@@ -1,32 +1,29 @@
-PHProjekt - README
+PHProjekt Version 6.1.1
+-----------------------
+http://www.PHProjekt.com
+Copyright (c) 2012 Mayflower GmbH (http://www.mayflower.de)
 
 Manual installation and update: please read the "INSTALL" file
 or the wiki documentation.
-(http://docs.phprojekt.com/index.php/Administrator:Manual_installation)
+(http://confluence.opensource.mayflower.de/confluence/display/phprojekt/Setup+guide)
 
-Automatic installation: read wiki documentation.
-(http://docs.phprojekt.com/index.php/Administrator:Automatic_installation)
 
-Version 6.0.0 - 2010-03-18
-http://www.PHProjekt.com
-Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
+This software is free software; you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License version 3
+as published by the Free Software Foundation
 
-This software is free software; you can redistribute it and/or
-modify it under the terms of the GNU Lesser General Public
-License version 3 as published by the Free Software Foundation
+This library is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public
+License for more details.
 
-This library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-Lesser General Public License for more details.
-
-PHProjekt uses and contains the following external projects:
-- Zend Framework 1.10.7 (http://www.zend.com)
-- Dojo Toolkit 1.5.0 (http://www.dojotoolkit.org)
+PHProjekt uses and contains the following external projects: -
+Zend Framework 1.10.7 (http://www.zend.com) - Dojo Toolkit 1.5.0
+(http://www.dojotoolkit.org)
 
 It is possible to perform a data migration from Phprojekt 5 while
 installing 6th version, read wiki installation documentation.
-(http://docs.phprojekt.com/index.php/Administrator:Migration)
+(http://confluence.opensource.mayflower.de/confluence/display/phprojekt/Migration)
 
 Suggested and tested browsers are last versions of Firefox and Internet
 Explorer. You can try any other at your own risk.
