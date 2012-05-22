@@ -120,6 +120,13 @@ class Phprojekt
     protected $_view;
 
     /**
+     * Array of blocked Modules.
+     *
+     * @var Array
+     */
+    protected $_blockedModules = array("Calendar");
+
+    /**
      * Returns the current version of PHProjekt.
      *
      * @return string The current version.
@@ -1015,6 +1022,16 @@ class Phprojekt
 
         return array('requirements'    => $requirements,
                      'recommendations' => $recommendations);
+    }
+
+    /**
+     * Returns a list of modules that should be blocked explicitely.
+     *
+     * @return array    Array of bocked module names
+     */
+    public function getBlockedModuleNames()
+    {
+        return $this->_blockedModules;
     }
 
     private function _dieWithInternalServerError()
