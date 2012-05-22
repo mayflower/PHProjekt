@@ -16,7 +16,7 @@ B. License
 
   * HTTP Server
   * MySQL version 5.x
-  * PHP 5.2.4 with pdo_mysql drivers installed
+  * PHP 5.3.0 with pdo_mysql drivers installed
   * PHP extensions:
         mbstring
         iconv
@@ -47,7 +47,7 @@ B. License
 
     Note: Phprojekt 6 has been tested with:
         * Apache HTTP Server 2.2
-        * PHP 5.2.6
+        * PHP 5.3.0
         * MySQL Server 5.0
 
 2. Installation
