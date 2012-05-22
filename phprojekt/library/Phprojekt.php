@@ -1025,13 +1025,15 @@ class Phprojekt
     }
 
     /**
-     * Returns a list of modules that should be blocked explicitely.
+     * Tests whether the prodived module is blocked.
      *
-     * @return array    Array of bocked module names
+     * @param string $name  Module name to test.
+     *
+     * @return bool     True if the given module is blocked
      */
-    public function getBlockedModuleNames()
+    public function isBlockedModule($name)
     {
-        return $this->_blockedModules;
+        return in_array($name, $this->_blockedModules);
     }
 
     private function _dieWithInternalServerError()

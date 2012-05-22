@@ -339,8 +339,7 @@ class JsController extends IndexController
         $files = scandir($path);
         foreach ($files as $file) {
             if ($file != '.'  && $file != '..' && $file != 'Default' &&
-                    !in_array($file, Phprojekt::getInstance()->getBlockedModuleNames()) &&
-                    is_dir($path . '/' . $file . '/Views')) {
+                    !Phprojekt::getInstance()->isBlockedModule($file) && is_dir($path . '/' . $file . '/Views')) {
                 if (is_dir($path . $file . '/Views/dojo/scripts/')) {
                     $scripts = scandir($path . $file . '/Views/dojo/scripts/');
                 } else {
