@@ -1165,8 +1165,8 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         //    This function collect and process the history data
         // Description:
         //    This function collect and process the history data
-        var history     = phpr.DataStore.getData({url: this._historyUrl});
-        var userList    = phpr.userStore.getList();
+        var history = phpr.DataStore.getData({url: this._historyUrl});
+        var userList = this.userStore ? this.userStore.getList() : phpr.userStore.getList();
         var historyData = [];
         var userDisplay = [];
         var row         = 0;
