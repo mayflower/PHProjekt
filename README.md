@@ -6,6 +6,8 @@ teams and companies. It includes a group calendar, project management, a
 request tracker and 12 other modules in 26 languages. 
 See http://www.phprojekt.com for more details
 
+[![Build Status](https://secure.travis-ci.org/Mayflower/PHProjekt.png)](http://travis-ci.org/Mayflower/PHProjekt)
+
 Contributing 
 -----------
 
