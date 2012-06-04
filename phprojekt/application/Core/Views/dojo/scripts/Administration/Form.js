@@ -15,14 +15,14 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @version    Release: @package_version@
+ * @version    Release: 6.1.0
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 
 dojo.provide("phpr.Administration.Form");
 
-dojo.declare("phpr.Administration.Form", phpr.Core.DialogForm, {
-    setBreadCrumbItem:function() {
+dojo.declare("phpr.Administration.Form", phpr.Core.Form, {
+    setBreadCrumbItem: function() {
         phpr.BreadCrumb.setItem(phpr.nls.get(phpr.submodule));
     }
 });

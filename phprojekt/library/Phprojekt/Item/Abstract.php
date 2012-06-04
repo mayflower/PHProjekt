@@ -18,7 +18,7 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @version    Release: @package_version@
+ * @version    Release: 6.1.0
  * @author     Gustavao Solt <solt@mayflower.de>
  */
 
@@ -32,7 +32,7 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @version    Release: @package_version@
+ * @version    Release: 6.1.0
  * @author     Gustavao Solt <solt@mayflower.de>
  */
 abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract implements Phprojekt_Model_Interface
@@ -229,6 +229,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     public function save()
     {
         $result = true;
+        $this->trackUploadedfiles();
         if ($this->id > 0) {
             $this->_history->saveFields($this, 'edit');
             $result = parent::save();
@@ -270,27 +271,67 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     }
 
     /**
+     * Updated the database table for the unused files.
+     * Delete files that are no longe used by the item.
+     *
+     * @return void
+     */
+    public function trackUploadedfiles()
+    {
+        $fields = $this->getInformation()->getInfo(
+            Phprojekt_ModelInformation_Default::ORDERING_FORM,
+            Phprojekt_DatabaseManager::COLUMN_NAME
+        );
+
+        foreach ($fields as $field) {
+            $field = Phprojekt_ActiveRecord_Abstract::convertVarFromSql($field);
+            if ($this->getInformation()->getType($field) == 'upload' && !empty($this->_storedId)) {
+                $files = Default_Helpers_Upload::parseModelValues($this->_data[$field]);
+                $originalFiles = Default_Helpers_Upload::parseModelValues($this->_originalData[$field]);
+
+                // remove files that are in the old filelist, but not in the new one
+                $toBeDeleted = array();
+                foreach ($originalFiles as $ofile) {
+                    $toBeDeleted[$ofile['md5']] = $ofile;
+                }
+
+                foreach ($files as $file) {
+                    if (array_key_exists($file['md5'], $toBeDeleted)) {
+                        unset($toBeDeleted[$file['md5']]);
+                    }
+                }
+
+                $deleteList = array();
+                foreach ($toBeDeleted as $hash => $file) {
+                    $deleteList[] = $file;
+                }
+
+                Default_Helpers_Upload::deleteFiles($deleteList);
+
+                Default_Helpers_Upload::removeFilesFromUnusedFileList($files);
+            }
+        }
+    }
+
+    /**
      * Delete all the files uploaded in the upload fields.
      *
      * @return void
      */
     public function deleteUploadFiles()
     {
-        // Is there is any upload file, -> delete the files from the server
-        $fields = $this->getInformation()->getInfo(Phprojekt_ModelInformation_Default::ORDERING_FORM,
-            Phprojekt_DatabaseManager::COLUMN_NAME);
+        // If there is any upload file -> delete the files from the server
+        $fields = $this->getInformation()->getInfo(
+            Phprojekt_ModelInformation_Default::ORDERING_FORM,
+            Phprojekt_DatabaseManager::COLUMN_NAME
+        );
+
         foreach ($fields as $field) {
             $field = Phprojekt_ActiveRecord_Abstract::convertVarFromSql($field);
             if ($this->getInformation()->getType($field) == 'upload') {
                 $filesField = $this->$field;
-                $files      = explode('||', $filesField);
-                foreach ($files as $file) {
-                    $md5Name          = substr($file, 0, strpos($file, '|'));
-                    $fileAbsolutePath = Phprojekt::getInstance()->getConfig()->uploadPath . $md5Name;
-                    if (!empty($md5Name) && file_exists($fileAbsolutePath)) {
-                        unlink($fileAbsolutePath);
-                    }
-                }
+                $files = Default_Helpers_Upload::parseModelValues($filesField);
+                Default_Helpers_Upload::deleteFiles($files);
             }
         }
     }
@@ -304,8 +345,10 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
      */
     public function getFieldsForFilter()
     {
-        return $this->getInformation()->getInfo(Phprojekt_ModelInformation_Default::ORDERING_LIST,
-            Phprojekt_DatabaseManager::COLUMN_NAME);
+        return $this->getInformation()->getInfo(
+            Phprojekt_ModelInformation_Default::ORDERING_LIST,
+            Phprojekt_DatabaseManager::COLUMN_NAME
+        );
     }
 
     /**

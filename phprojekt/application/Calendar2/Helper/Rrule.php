@@ -18,7 +18,7 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.1
- * @version    Release: @package_version@
+ * @version    Release: 6.1.0
  * @author     Simon Kohlmeyer <simon.kohlmeyer@mayflower.de>
  */
 
@@ -37,7 +37,7 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.1
- * @version    Release: @package_version@
+ * @version    Release: 6.1.0
  * @author     Simon Kohlmeyer <simon.kohlmeyer@mayflower.de>
  */
 class Calendar2_Helper_Rrule
@@ -203,7 +203,9 @@ class Calendar2_Helper_Rrule
 
             $ts = $date->getTimestamp();
             if ($startTs <= $ts + $this->_duration && $ts <= $endTs && !in_array($date, $this->_exceptions)) {
-                $ret[] = new Datetime('@' . $ts);
+                $dt = new Datetime('@' . $ts);
+                $dt->setTimezone(new DateTimeZone('utc'));
+                $ret[] = $dt;
             } else if ($ts > $endTs) {
                break;
             }

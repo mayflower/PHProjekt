@@ -41,12 +41,12 @@ class Phprojekt_PhprojektTest extends PHPUnit_Framework_TestCase
 {
     public function testGetVersion()
     {
-        $this->assertEquals("6.1.0-dev", Phprojekt::getVersion());
+        $this->assertEquals("6.1.2-dev", Phprojekt::getVersion());
     }
 
     public function testCompareVersion()
     {
-        $this->assertGreaterThan(0, Phprojekt::compareVersion("6.1.0", Phprojekt::getVersion()));
+        $this->assertLessThan(0, Phprojekt::compareVersion("6.1.0", Phprojekt::getVersion()));
         $this->assertGreaterThan(0, Phprojekt::compareVersion("6.0.1", "6.0.0"));
         $this->assertLessThan(0, Phprojekt::compareVersion("6.0.1", "6.1.0"));
         $this->assertGreaterThan(0, Phprojekt::compareVersion("6.0.1-RC2", "6.0.1-RC1"));
@@ -99,7 +99,7 @@ class Phprojekt_PhprojektTest extends PHPUnit_Framework_TestCase
                     'magic_quotes_sybase'  => array('required' => 0, 'checked' => true,
                         'help' => 'http://us.php.net/manual/en/sybase.configuration.php#ini.magic-quotes-sybase'),
                 ),
-                'php' => array('required' => '5.2.4', 'checked' => true, 'help' => 'http://us.php.net/')
+                'php' => array('required' => '5.3.0', 'checked' => true, 'help' => 'http://us.php.net/')
             ),
             'recommendations' => array(
                 'settings' => array(

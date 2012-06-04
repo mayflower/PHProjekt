@@ -14,6 +14,22 @@
             }
         }
     }
+},
+
+"6.1.0-dev":
+{
+    "structure":
+    {
+        "uploaded_unused_files":
+        {
+            "create":
+            {
+                "id":      "default",
+                "created": {"type": "datetime", "notNull": "true"},
+                "hash":    {"type": "varchar", "length": "32", "notNull": "true"}
+            }
+        }
+    }
 }
 
 }

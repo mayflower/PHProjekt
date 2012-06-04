@@ -15,7 +15,7 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @version    Release: @package_version@
+ * @version    Release: 6.1.0
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 
@@ -33,7 +33,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
     //    This Class takes care of displaying the form information we receive from our Server
     //    in a dojo form with tabs
 
-    sendData:           [],
+    sendData:           {},
     formdata:           [],
     _url:               null,
     _writePermissions:  true,
@@ -495,6 +495,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
 
         if (data.length === 0) {
             this.node.set('content', p.drawEmptyMessage('The Item was not found'));
+            this._finishFormRendering();
         } else {
             var firstRequiredField = null;
 
@@ -664,10 +665,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
 
                 this.node.set('content', this.form);
 
-                this.node.resize();
-
-                this.postRenderForm();
-                this._loadIndicator.hide();
+                this._finishFormRendering();
 
                 // Set cursor to the first required field
                 if (dojo.byId(firstRequiredField)) {
@@ -675,6 +673,13 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
                 }
             }));
         }
+    },
+
+    _finishFormRendering: function() {
+        this.node.resize();
+
+        this.postRenderForm();
+        this._loadIndicator.hide();
     },
 
     setFieldValues: function(meta, data) {
@@ -767,7 +772,6 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         //    Set the Container
 
         var container = new dijit.layout.ContentPane({}, dojo.create('div'));
-        dojo.addClass(container.domNode, 'claro');
 
         this.garbageCollector.addNode(container);
 
@@ -838,16 +842,10 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         for (var index in subModules) {
             var subModuleName = subModules[index].name;
             def = def.then(dojo.hitch(this, function(name) {
-                return this.addTab([], 'tab' + subModuleName, phpr.nls.get(subModuleName, subModuleName),
-                    subModuleName + 'FormTab');
-            }, subModuleName));
-
-            def = def.then(dojo.hitch(this, function(name) {
                 if (this._destroyed) {
                     return;
                 }
-                dojo.addClass('tab' + subModuleName, 'subModuleDiv');
-                subModules[index]['class'].fillTab('tab' + subModuleName);
+                return subModules[index]['class'].createTab(this);
             }, subModuleName));
         }
         this.form.resize();
@@ -966,7 +964,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         // Description:
         //    This function prepares the content of this.sendData before it is
         //    submitted to the Server.
-        this.sendData = [];
+        this.sendData = {};
         for (var i = 0; i < this.formsWidget.length; i++) {
             if (!this.formsWidget[i].isValid()) {
                 this.formsWidget[i].validate();

@@ -1,15 +1,11 @@
 <div>
     <div dojoAttachPoint="completeContent" class="completeContent" dojoType="dijit.layout.BorderContainer" persist="true"
-     style="width: 100%; height: 100%;">
+        style="width: 100%; height: 100%;" gutters="false">
         <!-- Left Content -->
         <div dojoType="dijit.layout.ContentPane" region="left" splitter="true" minSize="100" maxSize="300"
-        style="width: 15%; overflow: hidden;">
+            style="width: 15%; overflow: hidden;">
             <div dojoAttachPoint="navigationContainer" class="navigationContainer" dojoType="dijit.layout.BorderContainer" region="left" persist="true">
-                <div dojoType="dijit.layout.ContentPane" region="top" dojoAttachPoint="subheader" class="block subheader">
-                    <div dojoType="dijit.layout.ContentPane" dojoAttachPoint="navigationContainerTitle" class="navigationContainerTitle">
-                    </div>
-                </div>
-                <div class="claro" region="center" dojoType="dijit.layout.ContentPane">
+                <div region="center" dojoType="dijit.layout.ContentPane">
                     <!-- Tree menu -->
                     <div dojoAttachPoint="treeNavigation" class="treeNavigation">
                         <div dojoType="dijit.layout.ContentPane" dojoAttachPoint="treeBox"
@@ -17,27 +13,13 @@
                         </div>
                     </div>
                 </div>
-                <div dojoAttachPoint="tagsbox" dojoType="dojox.layout.ExpandoPane" title="Tags" region="bottom" maxHeight="150"
-                    style="height: 160px;">
-                </div>
             </div>
         </div>
         <!-- Top Bar menu -->
         <div dojoType="dijit.layout.ContentPane" region="top" dojoAttachPoint="header"
-        style="height: 55px; overflow: hidden;" class="header">
+        style="height: 60px; overflow: hidden;" class="header">
             <img class="left PHProjektLogo" src="{{webpath}}img/logo.png" alt="PHProjekt 6" dojoAttachPoint="PHProjektLogo"
             onClick='phpr.currentProjectId = 1; dojo.publish("Project.setUrlHash", ["Project"])' />
-            <form dojoType="dijit.form.Form" dojoAttachPoint="searchform" name="searchform"
-            onsubmit='phpr.pageManager.getActiveModule().showSearchResults(phpr.viewManager.getView().searchfield.get("value"));
-            return false;'
-            style="display: inline">
-            <div dojoAttachPoint="searchBar" class="last right align-right searchBar">
-                <input dojoAttachPoint="searchfield" class="searchfield" name="searchfield" dojoType="dijit.form.ValidationTextBox"
-                onmousedown='this.focus(); phpr.pageManager.getActiveModule().showSuggest();' />
-                <div dojoAttachPoint="systemNavigation" class="systemNavigation" dojoType="dijit.Toolbar">
-                </div>
-            </div>
-            </form>
             <div dojoAttachPoint="mainNavigation" class="right align-right mainNavigation" dojoType="dijit.Toolbar">
             </div>
             <div dojoAttachPoint="loadingIcon" class="right align-right loadingIcon"
@@ -52,10 +34,10 @@
             style="height: 100%;">
                 <!-- Second Top Bar -->
                 <div dojoType="dijit.layout.ContentPane" region="top" class="block" splitter="false"
-                style="height: 70px; border-bottom: 5px solid #294064; overflow: hidden;">
+                style="height: 70px; overflow: hidden;">
                     <!-- Submodule navigation -->
                     <div class="containSubModuleNavigation left align-left" dojoAttachPoint="containSubModuleNavigation">
-                        <div dojoType="dijit.layout.ContentPane" class="align-left claro subModuleNavigation" dojoAttachPoint="subModuleNavigation">
+                        <div dojoType="dijit.layout.ContentPane" class="align-left subModuleNavigation" dojoAttachPoint="subModuleNavigation">
                         </div>
                     </div>
                     <!-- Add / Save Buttons -->
@@ -82,23 +64,12 @@
                         </button>
                     </div>
                 </div>
-                <!-- Form buttons -->
-                <div dojoType="dijit.layout.ContentPane" region="bottom" class="block" splitter="false"
-                style="margin-top: 0px; height: 0px; overflow: hidden; border-bottom: 14px solid #294064;">
-                    <div class="column"
-                    style="width: 100%;">
-                    </div>
-                </div>
                 <!-- Main Content -->
                 <div dojoType="dijit.layout.ContentPane" region="center" class="centerMainContent"
                     dojoAttachPoint="centerMainContent">
                 </div>
             </div>
         </div>
-    </div>
-    <!-- Suggest seacrh -->
-    <div dojoAttachPoint="searchsuggest"
-    style="z-index: 100; display: inline" class="searchsuggest">
     </div>
     <!-- Help -->
     <div dojoType="dijit.Dialog" dojoAttachPoint="helpDialog" class="helpDialog" title="" draggable="false"

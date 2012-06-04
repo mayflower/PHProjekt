@@ -18,7 +18,7 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @version    Release: @package_version@
+ * @version    Release: 6.1.0
  * @author     Eduardo Polidor <polidor@mayflower.de>
  */
 
@@ -32,7 +32,7 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @version    Release: @package_version@
+ * @version    Release: 6.1.0
  * @author     Eduardo Polidor <polidor@mayflower.de>
  */
 class Phprojekt_Converter_Csv
@@ -85,10 +85,11 @@ class Phprojekt_Converter_Csv
             header("Content-type: application/octet-stream; charset=utf-8");
         }
 
-        $detected = mb_detect_encoding($outputString);
-        if ($detected !== 'ASCII') {
-            $outputString = chr(254) . chr(255) . mb_convert_encoding($outputString, 'UTF-16', $detected);
-        }
+        $outputString = mb_convert_encoding(
+            $outputString,
+            'UTF-8',
+            mb_detect_encoding($outputString)
+        );
 
         echo $outputString;
     }

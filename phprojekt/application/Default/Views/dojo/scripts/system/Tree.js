@@ -15,7 +15,7 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @version    Release: @package_version@
+ * @version    Release: 6.1.0
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 
@@ -40,6 +40,7 @@ dojo.declare("phpr.Default.System.Tree", phpr.Default.System.Component, {
     constructor: function() {
         this.setUrl();
         this.setId(null);
+        dojo.subscribe("phpr.activeModuleChanged", this, "drawBreadCrumb");
     },
 
     loadTree: function() {
@@ -61,7 +62,6 @@ dojo.declare("phpr.Default.System.Tree", phpr.Default.System.Component, {
                 treeNode.set('content', this.tree.domNode);
                 this.tree.startup();
                 dojo.connect(this.tree, "onClick", dojo.hitch(this, "onItemClick"));
-                phpr.viewManager.getView().navigationContainerTitle.set('content', phpr.nls.get('Projects'));
                 this.finishDraw();
             }, tree)
         });
@@ -101,7 +101,7 @@ dojo.declare("phpr.Default.System.Tree", phpr.Default.System.Component, {
         var treeWidget = new dijit.Tree({
                 model:    this._model,
                 showRoot: false,
-                persist:  false,
+                persist:  true,
                 _onNodeMouseEnter: dojo.hitch(this, "_treeOnNodeMouseEnter"),
                 _onNodeMouseLeave: dojo.hitch(this, "_treeOnNodeMouseLeave")
             },

@@ -15,7 +15,7 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.1
- * @version    Release: @package_version@
+ * @version    Release: 6.1.0
  * @author     Mariano La Penna <mariano.lapenna@mayflower.de>
  */
 
@@ -34,33 +34,37 @@ dojo.declare("phpr.Calendar2.ViewMonthList", phpr.Calendar2.DefaultView, {
     COLOR_TODAY:        '#DEEBF7',
     COLOR_OUT_OF_MONTH: '#DEDFDE',
 
-    beforeConstructor:function() {
+    beforeConstructor: function() {
         // Summary:
         //    Calls the schedule array basic filling function, before constructor function
         this.fillScheduleArrayPart1();
     },
 
-    afterConstructor:function() {
+    afterConstructor: function() {
         // Summary:
         //    Loads the data from the database
         phpr.DataStore.addStore({url: this.url, noCache: true});
         phpr.DataStore.requestData({url: this.url, processData: dojo.hitch(this, "onLoaded")});
     },
 
-    setUrl:function() {
+    setUrl: function() {
         // Summary:
         //    Sets the url to get the data from
-        this.url = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonPeriodList/dateStart/'
-            + this._schedule[0][0]['date'] + '/dateEnd/' + this._schedule[this._schedule.length - 1][6]['date'] +
+        this.url = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonPeriodList/dateStart/' +
+            this._schedule[0][0].date + '/dateEnd/' + this._schedule[this._schedule.length - 1][6].date +
             '/userId/' + this.main.getActiveUser().id;
     },
 
-    onLoaded:function(dataContent) {
+    onLoaded: function(dataContent) {
         // Summary:
         //    This function is called when the request to the DB is received
         // Description:
         //    It parses that json info and prepares an apropriate array so that the template can render
         //    appropriately the TABLE html element.
+        if (this._destroyed) {
+            return;
+        }
+
         var meta = phpr.DataStore.getMetaData({url: this.url});
 
         // Render export Button?
@@ -75,16 +79,17 @@ dojo.declare("phpr.Calendar2.ViewMonthList", phpr.Calendar2.DefaultView, {
         // All done, let's render the template
 
         phpr.viewManager.getView().gridContainer.set('content',
-                phpr.fillTemplate("phpr.Calendar2.template.monthList.html", {
-                    widthTable: this._widthTable,
-                    header: this._header,
-                    schedule: this._schedule
-            }));
+            phpr.fillTemplate("phpr.Calendar2.template.monthList.html", {
+                widthTable: this._widthTable,
+                header: this._header,
+                schedule: this._schedule
+            }
+        ));
 
         dojo.publish('Calendar2.connectMouseScroll');
     },
 
-    exportData:function() {
+    exportData: function() {
         // Summary:
         //    Opens a new window in CSV mode
         var dateTemp = phpr.date.isoDateTojsDate(this._date);
@@ -94,13 +99,13 @@ dojo.declare("phpr.Calendar2.ViewMonthList", phpr.Calendar2.DefaultView, {
         dateTemp.setDate(daysInMonth);
         var lastDayMonth = phpr.date.getIsoDate(dateTemp);
 
-        window.open(phpr.webpath + 'index.php/' + phpr.module + '/index/csvPeriodList/nodeId/1/dateStart/'
-            + firstDayMonth + '/dateEnd/' + lastDayMonth + '/csrfToken/' + phpr.csrfToken);
+        window.open(phpr.webpath + 'index.php/' + phpr.module + '/index/csvPeriodList/nodeId/1/dateStart/' +
+            firstDayMonth + '/dateEnd/' + lastDayMonth + '/csrfToken/' + phpr.csrfToken);
 
         return false;
     },
 
-    fillScheduleArrayPart1:function() {
+    fillScheduleArrayPart1: function() {
         // Summary:
         //    Fills the schedule array with the basic structure and data of every day of the calendar month table.
         //    It includes not only the days of this month but the necessary days of the previous and next month in
@@ -109,7 +114,7 @@ dojo.declare("phpr.Calendar2.ViewMonthList", phpr.Calendar2.DefaultView, {
         today     = phpr.date.getIsoDate(today);
 
         // First dimension is each row shown, the amount of rows depends on each month:
-        this._schedule = new Array();
+        this._schedule = [];
 
         var dateTemp    = phpr.date.isoDateTojsDate(this._date);
         var daysInMonth = dojo.date.getDaysInMonth(dateTemp);
@@ -128,67 +133,63 @@ dojo.declare("phpr.Calendar2.ViewMonthList", phpr.Calendar2.DefaultView, {
             this._schedule[i] = new Array(7);
             // For every day of the week
             for (var j = 0; j < 7; j ++) {
-                this._schedule[i][j]         = new Array();
+                this._schedule[i][j]         = [];
                 dateTemp                     = dojo.date.add(firstDayShown, 'day', (i * 7) + j);
-                this._schedule[i][j]['day']  = dateTemp.getDate();
-                this._schedule[i][j]['date'] = phpr.date.getIsoDate(dateTemp);
-                if (this._schedule[i][j]['date'] == today) {
-                    this._schedule[i][j]['color'] = this.COLOR_TODAY;
-                } else if (((i == 0) && (this._schedule[i][j]['day'] > 22))
-                    || ((i > 3) && (this._schedule[i][j]['day'] < 7))) {
-                    this._schedule[i][j]['color'] = this.COLOR_OUT_OF_MONTH;
+                this._schedule[i][j].day  = dateTemp.getDate();
+                this._schedule[i][j].date = phpr.date.getIsoDate(dateTemp);
+                if (this._schedule[i][j].date == today) {
+                    this._schedule[i][j].color = this.COLOR_TODAY;
+                } else if (((i === 0) && (this._schedule[i][j].day > 22)) ||
+                        ((i > 3) && (this._schedule[i][j].day < 7))) {
+                    this._schedule[i][j].color = this.COLOR_OUT_OF_MONTH;
                 } else if (j < 5) {
-                    this._schedule[i][j]['color'] = this.COLOR_WEEKDAY;
+                    this._schedule[i][j].color = this.COLOR_WEEKDAY;
                 } else {
-                    this._schedule[i][j]['color'] = this.COLOR_WEEKEND;
+                    this._schedule[i][j].color = this.COLOR_WEEKEND;
                 }
             }
         }
     },
 
-    fillHeaderArray:function() {
+    fillHeaderArray: function() {
         // Summary:
         //    Fills the header array with the main row of the table.
-        this._header['columnsWidth'] = Math.floor((100 - this._widthHourColumn) / 7);
-        this._header['days']         = new Array();
-        this._header['days'][0]      = phpr.nls.get('Monday');
-        this._header['days'][1]      = phpr.nls.get('Tuesday');
-        this._header['days'][2]      = phpr.nls.get('Wednesday');
-        this._header['days'][3]      = phpr.nls.get('Thursday');
-        this._header['days'][4]      = phpr.nls.get('Friday');
-        this._header['days'][5]      = phpr.nls.get('Saturday');
-        this._header['days'][6]      = phpr.nls.get('Sunday');
+        this._header.columnsWidth = Math.floor((100 - this._widthHourColumn) / 7);
+        this._header.days         = [];
+        this._header.days[0]      = phpr.nls.get('Monday');
+        this._header.days[1]      = phpr.nls.get('Tuesday');
+        this._header.days[2]      = phpr.nls.get('Wednesday');
+        this._header.days[3]      = phpr.nls.get('Thursday');
+        this._header.days[4]      = phpr.nls.get('Friday');
+        this._header.days[5]      = phpr.nls.get('Saturday');
+        this._header.days[6]      = phpr.nls.get('Sunday');
     },
 
-    fillScheduleArrayPart2:function(content) {
+    fillScheduleArrayPart2: function(content) {
         // Summary:
         //    Puts every event in the corresponding array position.
         for (var event in content) {
 
             // Split datetime in date and time
-            var dateTime = phpr.date.isoDatetimeTojsDate(content[event]['start']);
-            content[event]['startDate'] = phpr.date.getIsoDate(dateTime);
-            content[event]['startTime'] = phpr.date.getIsoTime(dateTime);
-            dateTime = phpr.date.isoDatetimeTojsDate(content[event]['end']);
-            content[event]['endDate'] = phpr.date.getIsoDate(dateTime);
-            content[event]['endTime'] = phpr.date.getIsoTime(dateTime);
+            var dateTime = phpr.date.isoDatetimeTojsDate(content[event].start);
+            content[event].startDate = phpr.date.getIsoDate(dateTime);
+            content[event].startTime = phpr.date.getIsoTime(dateTime);
+            dateTime = phpr.date.isoDatetimeTojsDate(content[event].end);
+            content[event].endDate = phpr.date.getIsoDate(dateTime);
+            content[event].endTime = phpr.date.getIsoTime(dateTime);
             var warning = '';
-            var currentUserId = content[event].rights[phpr.currentUserId].userId;
-            if (currentUserId == content[event]['ownerId']) {
+            var currentUserId = content[event].rights[this.main.getActiveUser().id].userId;
+            if (currentUserId == content[event].ownerId) {
                 // This is our event, let's add a warning if somebody has not
                 // accepted (or beware, somebody rejected!) our invitation.
-                for (p in content[event]['confirmationStatuses']) {
-                    var status = content[event]['confirmationStatuses'][p];
+                for (var p in content[event].confirmationStatuses) {
+                    var status = content[event].confirmationStatuses[p];
                     if (1 == status) { // Pending
-                        warning = '<img src="'+phpr.webpath+'/css/themes/phprojekt/images/help.gif"'
-                            + ' title="'
-                            + phpr.nls.get('Some participants have not accepted yet.')
-                            + '"/>';
+                        warning = '<img src="' + phpr.webpath + '/css/themes/phprojekt/images/help.gif"' + ' title="' +
+                            phpr.nls.get('Some participants have not accepted yet.') + '"/>';
                     } else if (3 == status) { //Rejected
-                        warning = '<img src="'+phpr.webpath+'/css/themes/phprojekt/images/warning.png"'
-                            + ' title="'
-                            + phpr.nls.get('Some participants have rejected your invitation.')
-                            + '"/>';
+                        warning = '<img src="' + phpr.webpath + '/css/themes/phprojekt/images/warning.png"' +
+                            ' title="' + phpr.nls.get('Some participants have rejected your invitation.') + '"/>';
                         // Break to prevent warning from being overwritten if
                         // someone after this participant is pending.
                         break;
@@ -197,31 +198,29 @@ dojo.declare("phpr.Calendar2.ViewMonthList", phpr.Calendar2.DefaultView, {
             } else {
                 // We're just invited. Let's remind the user if we didn't
                 // respond yet.
-                if (content[event]['confirmationStatus'] == 1) {
-                    warning = '<img src="'+phpr.webpath+'/css/themes/phprojekt/images/help.gif"'
-                        + ' title="'
-                        + phpr.nls.get('You did not respond to this invitation yet.')
-                        + '"/>';
+                if (content[event].confirmationStatus == 1) {
+                    warning = '<img src="' + phpr.webpath + '/css/themes/phprojekt/images/help.gif"' + ' title="' +
+                        phpr.nls.get('You did not respond to this invitation yet.') + '"/>';
                 }
             }
 
             for (var row in this._schedule) {
                 for (var weekDay in this._schedule[row]) {
-                    var eventInfo = this.getEventInfo(content[event]['startDate'], content[event]['startTime'],
-                        content[event]['endDate'], content[event]['endTime'], this._schedule[row][weekDay]['date']);
-                    if (eventInfo['range'] == this.SHOWN_INSIDE_CHART) {
-                        if (typeof(this._schedule[row][weekDay]['events']) == 'undefined') {
-                            this._schedule[row][weekDay]['events'] = new Array();
+                    var eventInfo = this.getEventInfo(content[event].startDate, content[event].startTime,
+                        content[event].endDate, content[event].endTime, this._schedule[row][weekDay].date);
+                    if (eventInfo.range == this.SHOWN_INSIDE_CHART) {
+                        if (typeof(this._schedule[row][weekDay].events) == 'undefined') {
+                            this._schedule[row][weekDay].events = [];
                         }
-                        var nextEvent    = this._schedule[row][weekDay]['events'].length;
-                        var contentTitle = content[event]['summary'];
-                        this._schedule[row][weekDay]['events'][nextEvent]            = new Array();
-                        this._schedule[row][weekDay]['events'][nextEvent]['id']      = content[event]['id'];
-                        this._schedule[row][weekDay]['events'][nextEvent]['summary'] = this.htmlEntities(contentTitle);
-                        this._schedule[row][weekDay]['events'][nextEvent]['time']    = eventInfo['time'];
-                        this._schedule[row][weekDay]['events'][nextEvent]['start']   = content[event]['start'];
-                        this._schedule[row][weekDay]['events'][nextEvent]['occurrence'] = content[event]['occurrence'];
-                        this._schedule[row][weekDay]['events'][nextEvent]['warning'] = warning;
+                        var nextEvent    = this._schedule[row][weekDay].events.length;
+                        var contentTitle = content[event].summary;
+                        this._schedule[row][weekDay].events[nextEvent]            = [];
+                        this._schedule[row][weekDay].events[nextEvent].id      = content[event].id;
+                        this._schedule[row][weekDay].events[nextEvent].summary = this.htmlEntities(contentTitle);
+                        this._schedule[row][weekDay].events[nextEvent].time    = eventInfo.time;
+                        this._schedule[row][weekDay].events[nextEvent].start   = content[event].start;
+                        this._schedule[row][weekDay].events[nextEvent].occurrence = content[event].occurrence;
+                        this._schedule[row][weekDay].events[nextEvent].warning = warning;
                     }
                 }
             }
@@ -242,12 +241,12 @@ dojo.declare("phpr.Calendar2.ViewMonthList", phpr.Calendar2.DefaultView, {
         }
     },
 
-    getEventInfo:function(/*string*/ eventStartDate_String, /*string*/ eventStartTime_String,
+    getEventInfo: function(/*string*/ eventStartDate_String, /*string*/ eventStartTime_String,
                           /*string*/ eventEndDate_String, /*string*/ eventEndTime_String,
                           /*string*/ momentAskedDate) {
         // Summary:
         //    Returns useful data about an event, used to create the schedule table.
-        var result             = new Array(); // The variable that will be returned
+        var result             = []; // The variable that will be returned
         var eventStart_Date    = new Date();  // Date and time the event starts
         var eventEnd_Date      = new Date();  // Date and time the event ends
         var momentAsked_Date   = new Date();  // momentAsked (with or without time)
@@ -276,10 +275,10 @@ dojo.declare("phpr.Calendar2.ViewMonthList", phpr.Calendar2.DefaultView, {
         momentAsked_Date.setHours(0, 0, 0, 0);
 
         // Has the event to be shown for the day received (momentAskedDate)?
-        if ((dojo.date.compare(eventStartDay_Date, momentAsked_Date) <= 0)
-            && (dojo.date.compare(eventEndDay_Date, momentAsked_Date) >= 0)) {
+        if ((dojo.date.compare(eventStartDay_Date, momentAsked_Date) <= 0) &&
+                (dojo.date.compare(eventEndDay_Date, momentAsked_Date) >= 0)) {
             // Yes
-            result['range']       = this.SHOWN_INSIDE_CHART;
+            result.range       = this.SHOWN_INSIDE_CHART;
             temp                  = eventStartTime_String.split(':');
             var eventStartHour    = parseInt(temp[0], 10);
             var eventStartMinutes = parseInt(temp[1], 10);
@@ -293,20 +292,20 @@ dojo.declare("phpr.Calendar2.ViewMonthList", phpr.Calendar2.DefaultView, {
             eventEnd_Date.setHours(eventEndHour, eventEndMinutes, 0, 0);
 
             // Time description
-            if ((dojo.date.compare(eventStartDay_Date, momentAsked_Date) < 0)
-                && (dojo.date.compare(eventEndDay_Date, momentAsked_Date) > 0)) {
-                result['time'] = this.eventDateTimeDescrip(this.DATETIME_MULTIDAY_MIDDLE);
+            if ((dojo.date.compare(eventStartDay_Date, momentAsked_Date) < 0) &&
+                    (dojo.date.compare(eventEndDay_Date, momentAsked_Date) > 0)) {
+                result.time = this.eventDateTimeDescrip(this.DATETIME_MULTIDAY_MIDDLE);
             } else if (dojo.date.compare(eventEndDay_Date, momentAsked_Date) > 0) {
-                result['time'] = this.eventDateTimeDescrip(this.DATETIME_MULTIDAY_START, eventStartTime_String);
+                result.time = this.eventDateTimeDescrip(this.DATETIME_MULTIDAY_START, eventStartTime_String);
             } else if (dojo.date.compare(eventStartDay_Date, momentAsked_Date) < 0) {
-                result['time'] = this.eventDateTimeDescrip(this.DATETIME_MULTIDAY_END, null, eventEndTime_String);
+                result.time = this.eventDateTimeDescrip(this.DATETIME_MULTIDAY_END, null, eventEndTime_String);
             } else {
-                result['time'] = this.eventDateTimeDescrip(this.DATETIME_SHORT, eventStartTime_String,
+                result.time = this.eventDateTimeDescrip(this.DATETIME_SHORT, eventStartTime_String,
                                                            eventEndTime_String);
             }
         } else {
             // No
-            result['range'] = this.SHOWN_NOT;
+            result.range = this.SHOWN_NOT;
         }
 
         return result;

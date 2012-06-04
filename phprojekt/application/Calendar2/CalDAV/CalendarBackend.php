@@ -18,7 +18,7 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.1
- * @version    Release: @package_version@
+ * @version    Release: 6.1.0
  * @author     Simon Kohlmeyer <simon.kohlmeyer@mayflower.de>
  */
 
@@ -34,7 +34,7 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.1.0
- * @version    Release: @package_version@
+ * @version    Release: 6.1.0
  * @author     Simon Kohlmeyer <simon.kohlmeyer@mayflower.de>
  */
 class Calendar2_CalDAV_CalendarBackend extends Sabre_CalDAV_Backend_Abstract
@@ -116,33 +116,58 @@ class Calendar2_CalDAV_CalendarBackend extends Sabre_CalDAV_Backend_Abstract
         $calendar = new Calendar2_Models_Calendar2();
         $where    = $db->quoteInto('u.user_id = ?', $calendarId);
         $join     = 'JOIN calendar2_user_relation AS u ON calendar2.id = u.calendar2_id';
-        $events   = $calendar->fetchAll($where, null, null, null, null, $join);
-        $ret      = array();
+        $events   = $calendar->fetchAll($where, 'uri', null, null, null, $join);
 
-        $eventsByUri = array();
-        foreach ($events as $event) {
-            $eventsByUri[$event->uid][] = $event;
+        if (empty($events)) {
+            return array();
         }
 
-        foreach ($eventsByUri as $group) {
-            $calendarData = new Sabre_VObject_Component('vcalendar');
-            $calendarData->add('version', '2.0');
-            $calendarData->add('prodid', 'Phprojekt ' . Phprojekt::getVersion());
-            $lastModified = $group[0]->lastModified;
-            foreach ($group as $event) {
-                $calendarData->add($event->asVObject());
-                $lastModified = max($lastModified, $event->lastModified);
+        $ret = array();
+
+        $currentUri = $events[0]->uri;
+        $group      = array(array_shift($events));
+        while (!empty($events)) {
+            $e = array_shift($events);
+            if ($e->uri === $currentUri) {
+                $group[] = $e;
+            } else {
+                $ret[] = $this->getCalendarObjectsGroup($calendarId, $group);
+
+                $currentUri = $e->uri;
+                $group      = array($e);
             }
-
-            $ret[$group[0]->uri] = array(
-                'id'           => $group[0]->uid,
-                'uri'          => $group[0]->uri,
-                'lastmodified' => $lastModified,
-                'calendarid'   => $calendarId,
-                'calendardata' => $calendarData->serialize()
-            );
         }
-        return array_values($ret);
+        $ret[] = $this->getCalendarObjectsGroup($calendarId, $group);
+
+        return $ret;
+    }
+
+    /**
+     * Helper function to get the iCalendar representation of a group of events with a common uri.
+     *
+     * @param string $calendarId                 The calendarId to use.
+     * @param array of Calendar2_Models_Calendar The events to convert. Must have the same ->uri.
+     *
+     * @return array The representation to use for SabreDav.
+     */
+    private function getCalendarObjectsGroup($calendarId, $group)
+    {
+        $calendarData = new Sabre_VObject_Component('vcalendar');
+        $calendarData->add('version', '2.0');
+        $calendarData->add('prodid', 'Phprojekt ' . Phprojekt::getVersion());
+        $lastModified = $group[0]->lastModified;
+        foreach ($group as $event) {
+            $calendarData->add($event->asVObject($group));
+            $lastModified = max($lastModified, $event->lastModified);
+        }
+
+        return array(
+            'id'           => $group[0]->uid,
+            'uri'          => $group[0]->uri,
+            'lastmodified' => $lastModified,
+            'calendarid'   => $calendarId,
+            'calendardata' => $calendarData->serialize()
+        );
     }
 
     /**
@@ -169,7 +194,7 @@ class Calendar2_CalDAV_CalendarBackend extends Sabre_CalDAV_Backend_Abstract
         $calendarData->add('prodid', 'Phprojekt ' . Phprojekt::getVersion());
         $lastModified = $events[0]->lastModified;
         foreach ($events as $e) {
-            $calendarData->add($e->asVObject());
+            $calendarData->add($e->asVObject($events));
             $lastModified = max($lastModified, $e->lastModified);
         }
         $lastModified = new Datetime($lastModified);

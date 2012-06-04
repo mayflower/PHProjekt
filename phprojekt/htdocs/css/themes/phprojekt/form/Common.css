@@ -144,11 +144,6 @@
     background-color: #f9f7ba;
 }
 
-.phprojekt .dijitMenuItemSelected {
-    background-color: #d9e6f9;
-    color: #243C5F;
-}
-
 /* Two fields in the same row */
 .phprojekt .twoFields .dijitInputField input,
 .phprojekt .twoFields .dijitTextBox,

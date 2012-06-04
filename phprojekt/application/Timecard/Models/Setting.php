@@ -18,7 +18,7 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @version    Release: @package_version@
+ * @version    Release: 6.1.0
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 
@@ -32,7 +32,7 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @version    Release: @package_version@
+ * @version    Release: 6.1.0
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 class Timecard_Models_Setting extends Phprojekt_ModelInformation_Default
@@ -45,7 +45,7 @@ class Timecard_Models_Setting extends Phprojekt_ModelInformation_Default
     public function setFields()
     {
         // favorites
-        $this->fillField('favorites', 'Favorite projects', 'multipleselectbox', 1, 1, array(
+        $this->fillField('favorites', 'Favorite projects', 'multiplefilteringselectbox', 1, 1, array(
             'range'    => $this->getProjectRange(),
             'required' => true));
     }
@@ -59,7 +59,7 @@ class Timecard_Models_Setting extends Phprojekt_ModelInformation_Default
      */
     public function getFavorites($value)
     {
-        return implode(",", unserialize($value));
+        return unserialize($value);
     }
 
     /**
@@ -80,6 +80,9 @@ class Timecard_Models_Setting extends Phprojekt_ModelInformation_Default
                     $setting->setModule('Timecard');
 
                     if (($key == 'favorites')) {
+                        if (count($value) === 1 && $value[0] === "") {
+                            $value = array();
+                        }
                         $value = serialize($value);
                     }
 

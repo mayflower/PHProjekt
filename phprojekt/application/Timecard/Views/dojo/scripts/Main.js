@@ -15,7 +15,7 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @version    Release: @package_version@
+ * @version    Release: 6.1.0
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 
@@ -41,10 +41,17 @@ dojo.declare("phpr.Timecard.Store", null, {
         this._date = date;
 
         this._updateListener = dojo.subscribe("Project.updateCacheData", this, "dataChanged");
+        this._updateListener = dojo.subscribe("phpr.moduleSettingsChanged", this, "_settingsChanged");
     },
 
     destory: function() {
         dojo.unsubscribe(this._updateListener);
+    },
+
+    _settingsChanged: function(module) {
+        if (module === "Timecard") {
+            this.dataChanged();
+        }
     },
 
     _setUrls: function() {

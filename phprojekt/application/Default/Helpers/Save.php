@@ -18,7 +18,7 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @version    Release: @package_version@
+ * @version    Release: 6.1.0
  * @author     David Soria Parra <soria_parra@mayflower.de>
  */
 
@@ -32,7 +32,7 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @version    Release: @package_version@
+ * @version    Release: 6.1.0
  * @author     David Soria Parra <soria_parra@mayflower.de>
  */
 final class Default_Helpers_Save
@@ -113,6 +113,7 @@ final class Default_Helpers_Save
                 403
             );
         }
+        $setRights = isset($params['dataAccess']);
 
         $userId = Phprojekt_Auth_Proxy::getEffectiveUserId();
         $model  = $node->getActiveRecord();
@@ -135,14 +136,16 @@ final class Default_Helpers_Save
 
         if ($newItem || $model->hasRight($userId, Phprojekt_Acl::ADMIN, $model->id)) {
             /* ensure we have at least one right */
-            if (count($rights) <= 0) {
-                throw new Zend_Controller_Action_Exception(
-                    'At least one person must have access to this item',
-                    400
-                );
-            }
+            if ($setRights) {
+                if (count($rights) <= 0) {
+                    throw new Zend_Controller_Action_Exception(
+                        'At least one person must have access to this item',
+                        400
+                    );
+                }
 
-            $model->saveRights($rights);
+                $model->saveRights($rights);
+            }
             // Save the module-project relation
             if (isset($params['moduleRelation'])) {
                 if (!isset($params['checkModuleRelation'])) {

@@ -15,7 +15,7 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.1
- * @version    Release: @package_version@
+ * @version    Release: 6.1.0
  * @author     Mariano La Penna <mariano.lapenna@mayflower.de>
  */
 
@@ -26,39 +26,43 @@ dojo.declare("phpr.Calendar2.ViewWeekList", phpr.Calendar2.DefaultView, {
     //    Class for displaying a Calendar2 Week List
     // description:
     //    This Class takes care of displaying the list information we receive from our Server in a HTML table
-    _header:              Array(7),
-    _furtherEvents:       Array(),
-    _weekDays:            Array(7),
-    events:               Array(),
+    _header:              new Array(7),
+    _furtherEvents:       [],
+    _weekDays:            new Array(7),
+    events:               [],
     _htmlEventDivsAmount: null,
     _cellDayHeight:       null,
 
-    beforeConstructor:function() {
+    beforeConstructor: function() {
         // Summary:
         //    Calls the weekDays array creation function, before constructor function
         this.setWeekDays();
     },
 
-    afterConstructor:function() {
+    afterConstructor: function() {
         // Summary:
         //    Loads the data from the database
         phpr.DataStore.addStore({url: this.url, noCache: true});
         phpr.DataStore.requestData({url: this.url, processData: dojo.hitch(this, "onLoaded")});
     },
 
-    setUrl:function() {
+    setUrl: function() {
         // Summary:
         //    Sets the url to get the data from
-        this.url = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonPeriodList/dateStart/' + this._weekDays[0]
-            + '/dateEnd/' + this._weekDays[6] + '/userId/' + this.main.getActiveUser().id;
+        this.url = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonPeriodList/dateStart/' + this._weekDays[0] +
+            '/dateEnd/' + this._weekDays[6] + '/userId/' + this.main.getActiveUser().id;
     },
 
-    onLoaded:function(dataContent) {
+    onLoaded: function(dataContent) {
         // Summary:
         //    This function is called when the request to the DB is received
         // Description:
         //    It parses that json info and prepares the appropriate arrays so that it can be rendered correctly the
         //    template and the events.
+        if (this._destroyed) {
+            return;
+        }
+
         var meta = phpr.DataStore.getMetaData({url: this.url});
 
         // Render Export buttons?
@@ -71,23 +75,24 @@ dojo.declare("phpr.Calendar2.ViewWeekList", phpr.Calendar2.DefaultView, {
         this.fillScheduleArray();
         this.fillEventsArrays(content);
 
-        var eventsAttr         = new Array();
+        var eventsAttr         = [];
         eventsAttr.borderWidth = this.EVENTS_BORDER_WIDTH;
         eventsAttr.divIdPre    = this.EVENTS_MAIN_DIV_ID;
 
         // All done, let's render the template
 
         phpr.viewManager.getView().gridContainer.set('content',
-                phpr.fillTemplate("phpr.Calendar2.template.weekList.html", {
-                    widthTable:           this._widthTable,
-                    widthHourColumn:      this._widthHourColumn,
-                    header:               this._header,
-                    schedule:             this._schedule,
-                    events:               this.events,
-                    furtherEvents:        this._furtherEvents,
-                    furtherEventsMessage: phpr.nls.get('Further events'),
-                    eventsAttr:           eventsAttr
-                }));
+            phpr.fillTemplate("phpr.Calendar2.template.weekList.html", {
+                widthTable:           this._widthTable,
+                widthHourColumn:      this._widthHourColumn,
+                header:               this._header,
+                schedule:             this._schedule,
+                events:               this.events,
+                furtherEvents:        this._furtherEvents,
+                furtherEventsMessage: phpr.nls.get('Further events'),
+                eventsAttr:           eventsAttr
+            }
+        ));
 
         dojo.publish('Calendar2.connectMouseScroll');
         dojo.publish('Calendar2.connectViewResize');
@@ -98,16 +103,16 @@ dojo.declare("phpr.Calendar2.ViewWeekList", phpr.Calendar2.DefaultView, {
         this.classesSetup(true);
     },
 
-    exportData:function() {
+    exportData: function() {
         // Summary:
         //    Opens a new window in CSV mode
-        window.open(phpr.webpath + 'index.php/' + phpr.module + '/index/csvPeriodList/nodeId/1/dateStart/'
-            + this._weekDays[0] + '/dateEnd/' + this._weekDays[6] + '/csrfToken/' + phpr.csrfToken);
+        window.open(phpr.webpath + 'index.php/' + phpr.module + '/index/csvPeriodList/nodeId/1/dateStart/' +
+                this._weekDays[0] + '/dateEnd/' + this._weekDays[6] + '/csrfToken/' + phpr.csrfToken);
 
         return false;
     },
 
-    setWeekDays:function() {
+    setWeekDays: function() {
         // Summary:
         //    Fills the weekDays array with all the dates of the selected week in string format.
         var selectedDate = phpr.date.isoDateTojsDate(this._date);
@@ -119,31 +124,32 @@ dojo.declare("phpr.Calendar2.ViewWeekList", phpr.Calendar2.DefaultView, {
         }
     },
 
-    fillHeaderArray:function() {
+    fillHeaderArray: function() {
         // Summary:
         //    Fills the header array with the main row of the table.
-        this._header['columnsWidth'] = Math.floor((100 - this._widthHourColumn) / 7);
-        this._header['days']         = new Array();
+        this._header.columnsWidth = Math.floor((100 - this._widthHourColumn) / 7);
+        this._header.days         = [];
         for (var i = 0; i < 7; i ++) {
             var index                            = (i + 1) < 7 ? i + 1 : 0;
-            this._header['days'][i]              = new Array();
-            this._header['days'][i]['dayAbbrev'] = phpr.date.getShortTranslateWeekDay(index);
-            this._header['days'][i]['date']      = this._weekDays[i];
+            this._header.days[i]              = [];
+            this._header.days[i].dayAbbrev = phpr.date.getShortTranslateWeekDay(index);
+            this._header.days[i].date      = this._weekDays[i];
         }
     },
 
-    toggleMultDaysDivs:function(index, visible) {
+    toggleMultDaysDivs: function(index, visible) {
         // Summary:
         //    Makes it visible or invisible all the divs of a multiple days event but the one being dragged.
 
-        var id = this.events[index]['id'];
+        var id = this.events[index].id;
         for (var i in this.events) {
-            if (this.events[i] != null && i != index && id == this.events[i]['id']) {
+            if (this.events[i] !== null && i != index && id == this.events[i].id) {
                 // This is another div of received event!
+                var mode;
                 if (!visible) {
-                    var mode = 'hidden';
+                    mode = 'hidden';
                 } else {
-                    var mode = 'visible';
+                    mode = 'visible';
                 }
                 dojo.style(dojo.byId(this.EVENTS_MAIN_DIV_ID + i), 'visibility', mode);
             }

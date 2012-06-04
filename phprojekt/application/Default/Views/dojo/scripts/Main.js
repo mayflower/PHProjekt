@@ -15,7 +15,7 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @version    Release: @package_version@
+ * @version    Release: 6.1.0
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 
@@ -23,6 +23,8 @@ dojo.provide("phpr.Default.Main");
 dojo.provide("phpr.Default.SearchContentMixin");
 
 dojo.require("dijit.form.Button");
+dojo.require("dijit.Menu");
+dojo.require("dijit.MenuItem");
 dojo.require("dijit.layout.TabContainer");
 dojo.require("dijit.layout.ContentPane");
 dojo.require("dijit.TitlePane");
@@ -205,13 +207,8 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         dojo.subscribe(module + ".changeProject", this, "changeProject");
         dojo.subscribe(module + ".reload", this, "reload");
         dojo.subscribe(module + ".openForm", this, "openForm");
-        dojo.subscribe(module + ".showSuggest", this, "showSuggest");
-        dojo.subscribe(module + ".hideSuggest", this, "hideSuggest");
-        dojo.subscribe(module + ".setSuggest", this, "setSuggest");
         dojo.subscribe(module + ".showSearchResults", this, "showSearchResults");
-        dojo.subscribe(module + ".drawTagsBox", this, "drawTagsBox");
         dojo.subscribe(module + ".showTagsResults", this, "showTagsResults");
-        dojo.subscribe(module + ".clickResult", this, "clickResult");
         dojo.subscribe(module + ".updateCacheData", this, "updateCacheData");
         dojo.subscribe(module + ".loadResult", this, "loadResult");
         dojo.subscribe(module + ".setLanguage", this, "setLanguage");
@@ -359,7 +356,6 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         var view = phpr.viewManager.useDefaultView({blank: true});
 
         phpr.InitialScreen.start();
-        this.hideSuggest();
 
         // Get all configuration.php vars for the front
         var config = new phpr.Default.System.Store.Config();
@@ -370,39 +366,37 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         }));
 
         def.then(dojo.hitch(this, function() {
-            this._langUrl = phpr.webpath + 'index.php/Default/index/jsonGetTranslatedStrings/language/' + phpr.language;
-            phpr.DataStore.addStore({ url: this._langUrl });
-            var def1 = phpr.DataStore.requestData({ url: this._langUrl });
+            var defs = [];
+
+            phpr.nls = new phpr.translator();
+            defs.push(phpr.nls.loadTranslation(phpr.language));
+            defs.push(phpr.nls.loadFallback("en"));
 
             phpr.DataStore.addStore({ url: phpr.globalModuleUrl});
-            var def2 = phpr.DataStore.requestData({ url: phpr.globalModuleUrl });
+            defs.push(phpr.DataStore.requestData({ url: phpr.globalModuleUrl }));
 
             phpr.DataStore.addStore({ url: phpr.tree.getUrl() });
-            var def3 = phpr.DataStore.requestData({ url: phpr.tree.getUrl() });
+            defs.push(phpr.DataStore.requestData({ url: phpr.tree.getUrl() }));
 
             var tabStore = new phpr.Default.System.Store.Tab();
-            var def4 = tabStore.fetch();
+            defs.push(tabStore.fetch());
 
             this.userStore = new phpr.Default.System.Store.User();
-            var def5 = this.userStore.fetch();
+            defs.push(this.userStore.fetch());
 
-            var defList = new dojo.DeferredList([ def1, def2, def3, def4, def5 ]);
+            var defList = new dojo.DeferredList(defs);
 
             defList.addCallback(dojo.hitch(this, function() {
-                phpr.nls = new phpr.translator(phpr.DataStore.getData({ url: this._langUrl }));
-
                 var isAdmin = phpr.DataStore.getMetaData({url: phpr.globalModuleUrl}) == "1" ? true : false;
                 phpr.isAdminUser = isAdmin;
 
                 translatedText = phpr.nls.get("Disable Frontend Messages");
                 view.disableFrontendMessage.set('label', translatedText);
 
-                translatedText = phpr.nls.get("Tags");
-                view.tagsbox.titleNode.innerHTML = translatedText;
-
                 phpr.tree.loadTree();
                 this.addLogoTooltip();
                 this.setGlobalModulesNavigation();
+                this._monitorLanguageChange();
 
                 this._setTutorialButton();
                 this._maybeShowTutorial();
@@ -426,6 +420,12 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         this.renderTemplate();
         this.setNavigations();
         this.setWidgets();
+    },
+
+    _monitorLanguageChange: function() {
+        dojo.subscribe("phpr.languageChanged", this, function(lang) {
+            this.setGlobalModulesNavigation();
+        });
     },
 
     setGlobalVars: function() {
@@ -459,8 +459,6 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
             phpr.tree.fadeIn();
             this.setSubmoduleNavigation();
         }
-        this.hideSuggest();
-        this.setSearchForm();
     },
 
     rebuildGrid: function(includeSubentries) {
@@ -514,7 +512,6 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
     setGlobalModulesNavigation: function() {
         var view = phpr.viewManager.getView();
         var toolbar       = view.mainNavigation;
-        var systemToolbar = view.systemNavigation;
         var globalModules = phpr.DataStore.getData({url: phpr.globalModuleUrl});
         var isAdmin       = phpr.DataStore.getMetaData({url: phpr.globalModuleUrl});
         var button = null;
@@ -523,15 +520,22 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         var that = this;
 
         toolbar.destroyDescendants();
-        systemToolbar.destroyDescendants();
 
+        button = new phpr.Default.SearchButton({
+            onChange: dojo.hitch(this, "showSearchSuggest"),
+            onSubmit: dojo.hitch(this, "showSearchResults")
+        });
+
+        this.searchButton = button;
+
+        toolbar.addChild(button);
 
         for (var i in globalModules) {
             moduleName = globalModules[i].name;
             button = null;
             try {
                 module = phpr.pageManager.getModule(moduleName);
-                button = module.getGlobalModuleNavigationButton(globalModules[i].label);
+                button = module.getGlobalModuleNavigationButton(phpr.nls.get(globalModules[i].label, moduleName));
             } catch (e) {
                 //error in button creation, ignore
                 console.error("error while creating button for module " + moduleName);
@@ -549,23 +553,6 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
             button = null;
         }
 
-        // Setting
-        button = new dijit.form.Button({
-            label:     phpr.nls.get('Setting'),
-            showLabel: true,
-            onClick:   dojo.hitch(this, function() {
-                phpr.currentProjectId = phpr.rootProjectId;
-                phpr.pageManager.modifyCurrentState(
-                    dojo.mixin(dojo.clone(this._emptyState), { moduleName: "Setting" }),
-                    { forceModuleReload: true }
-                );
-            })
-        });
-
-        this.globalModuleNavigationButtons.Setting = button;
-        toolbar.addChild(button);
-        button = null;
-
         if (isAdmin > 0) {
             // Administration
             button = new dijit.form.Button({
@@ -582,23 +569,38 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
 
             toolbar.addChild(button);
             this.globalModuleNavigationButtons.Administration = button;
-            button = null;
         }
 
+        var menu = new dijit.Menu({style: "display: none;"});
+
+        // Setting
+        button = new dijit.MenuItem({
+            label:     phpr.nls.get('Setting'),
+            showLabel: true,
+            onClick:   dojo.hitch(this, function() {
+                phpr.currentProjectId = phpr.rootProjectId;
+                phpr.pageManager.modifyCurrentState(
+                    dojo.mixin(dojo.clone(this._emptyState), { moduleName: "Setting" }),
+                    { forceModuleReload: true }
+                );
+            })
+        });
+
+        this.globalModuleNavigationButtons.Setting = button;
+
+        menu.addChild(button);
+
         // Help
-        button = new dijit.form.Button({
+        button = new dijit.MenuItem({
             label:     phpr.nls.get('Help'),
             showLabel: true,
             onClick:   dojo.hitch(this, "showHelp")
         });
 
-        phpr.tutorialAnchors.helpButton = button;
-
-        systemToolbar.addChild(button);
-        button = null;
+        menu.addChild(button);
 
         // Logout
-        button = new dijit.form.Button({
+        button = new dijit.MenuItem({
             label:     phpr.nls.get('Logout'),
             showLabel: true,
             onClick:   dojo.hitch(this, function() {
@@ -606,12 +608,30 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
             })
         });
 
-        systemToolbar.addChild(button);
-        button = null;
+        menu.addChild(button);
+
+        var userList = this.userStore.getList();
+        var l = userList.length;
+        var userName = "";
+        for (var i = 0; i < l; i++) {
+            if (userList[i].id == phpr.currentUserId) {
+                userName = userList[i].display;
+            }
+        }
+
+        button = new dijit.form.DropDownButton({
+            label: userName,
+            dropDown: menu
+        });
+
+        toolbar.addChild(button);
+
+        phpr.tutorialAnchors.helpButton = button;
 
         // destroy cyclic refs
+        button = null;
+        menu = null;
         toolbar = null;
-        systemToolbar = null;
         this._registerGlobalModuleNavigationListener();
     },
 
@@ -723,7 +743,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                         checked: this.state.includeSubentries == "true"
                     });
                     phpr.viewManager.getView().rightButtonRow.set('content', isListRecursiveBox);
-                    var label = dojo.html.set(dojo.create('label'), phpr.nls.get("Include Subprojects?"));
+                    var label = dojo.html.set(dojo.create('label'), phpr.nls.get("Include Subprojects"));
                     dojo.place(label, phpr.viewManager.getView().rightButtonRow.domNode, 0);
                     isListRecursiveBox.startup();
                     dojo.connect(
@@ -948,52 +968,11 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         });
     },
 
-    setSearchForm: function() {
-        // Summary:
-        //    Add the onkeyup to the search field
-        if (this._searchEvent === null) {
-            var searchfield = phpr.viewManager.getView().searchfield;
-            this._searchEvent = dojo.connect(searchfield.domNode, "onkeyup",
-                    dojo.hitch(this, "waitForSubmitSearchForm"));
-            this.garbageCollector.addEvent(this._searchEvent);
-        }
-    },
-
-    waitForSubmitSearchForm: function(event) {
-        // Summary:
-        //    This function call the search itself After 1000ms of the last letter
-        // Description:
-        //    The function will wait for 1000 ms on each keyup for try to
-        //    call the search query when the user finish to write the text
-        //    If the enter is presses, the suggest disapear.
-        //    If some "user" key is presses, the function don't run.
-        key = event.keyCode;
-        if (key == dojo.keys.ENTER || key == dojo.keys.NUMPAD_ENTER) {
-            // hide the suggestBox and delete the time
-            // for not show the suggest
-            if (window.mytimeout) {
-                window.clearTimeout(window.mytimeout);
-            }
-            this.hideSuggest();
-            var words = phpr.viewManager.getView().searchfield.get('value');
-            phpr.pageManager.getActiveModule().clickResult("search");
-            phpr.pageManager.modifyCurrentState({search: words});
-        } else if (phpr.isValidInputKey(key)) {
-            if (window.mytimeout) {
-                window.clearTimeout(window.mytimeout);
-            }
-            if (phpr.viewManager.getView().searchfield.isValid()) {
-                window.mytimeout = window.setTimeout(dojo.hitch(this, "showSearchSuggest"), 500);
-            }
-        }
-    },
-
-    showSearchSuggest: function() {
+    showSearchSuggest: function(words) {
         // Summary:
         //    This function show a box with suggest or quick result of the search
         // Description:
         //    The server return the found records and the function display it
-        var words = phpr.viewManager.getView().searchfield.get('value');
         if (words.length >= 3) {
             // hide the suggestBox
             var getDataUrl = phpr.webpath + 'index.php/Default/Search/jsonSearch';
@@ -1002,56 +981,39 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                 content:   {words: words, count: 10}
             }).then(dojo.hitch(this, function(data) {
                 if (data) {
-                    var search        = '';
+                    var search        = [];
                     var results       = {};
                     var index         = 0;
 
                     for (var i = 0; i < data.length; i++) {
                         modulesData = data[i];
                         if (!results[modulesData.moduleLabel]) {
-                            results[modulesData.moduleLabel] = '';
+                            results[modulesData.moduleLabel] = [];
                         }
-                        results[modulesData.moduleLabel] += this.render(["phpr.Default.template.results",
-                            "results.html"], null, {
-                                id :           modulesData.id,
-                                moduleId :     modulesData.modulesId,
-                                moduleName:    modulesData.moduleName,
-                                projectId:     modulesData.projectId,
-                                firstDisplay:  modulesData.firstDisplay,
-                                secondDisplay: modulesData.secondDisplay,
-                                resultType:    "search"
-                            });
+                        results[modulesData.moduleLabel].push({
+                            id :           modulesData.id,
+                            moduleName:    modulesData.moduleName,
+                            projectId:     modulesData.projectId,
+                            firstDisplay:  modulesData.firstDisplay,
+                            secondDisplay: modulesData.secondDisplay,
+                            resultType:    "search"
+                        });
                     }
                     var moduleLabel = '';
-                    var html        = '';
                     for (var i in results) {
                         moduleLabel = i;
-                        html       = results[i];
-                        search += this.render(["phpr.Default.template.results", "suggestBlock.html"], null, {
-                            moduleLabel:   moduleLabel,
-                            results:       html
+                        search.push({
+                            name: moduleLabel,
+                            items: results[i]
                         });
                     }
 
-                    if (search === '') {
-                        search += "<div class=\"searchsuggesttitle\" dojoType=\"dijit.layout.ContentPane\">";
-                        search += phpr.drawEmptyMessage('There are no Results');
-                        search += "</div>";
-                    } else {
-                        search += "<div class=\"searchsuggesttitle\" dojoType=\"dijit.layout.ContentPane\">";
-                        search += "<a class=\"searchsuggesttitle\" href='javascript:" +
-                            "phpr.pageManager.getActiveModule().clickResult(\"search\");" +
-                            "phpr.pageManager.modifyCurrentState({search: \"" + words + "\"});" +
-                            "'>" + phpr.nls.get('View all') + "</a>";
-                        search += "</div>";
-                    }
-
-                    this.setSuggest(search);
-                    this.showSuggest();
+                    this.searchButton.setSuggest(search);
+                    this.searchButton.showSuggest();
                 }
             }));
         } else {
-            this.hideSuggest();
+            this.searchButton.hideSuggest();
         }
     },
 
@@ -1061,97 +1023,13 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         //    And show the detail view of the item selected
         // Description:
         //    The server return the found records and the function display it
-        if (undefined === words) {
-            words = phpr.viewManager.getView().searchfield.get('value');
-        }
         if (words.length >= 3) {
+            this.searchButton.hideSuggest();
             var getDataUrl   = phpr.webpath + 'index.php/Default/Search/jsonSearch';
             var resultsTitle = phpr.nls.get('Search results');
             var content      = {words: words};
             this.showResults(getDataUrl, content, resultsTitle);
         }
-    },
-
-    clickResult: function(/*String*/type) {
-        if (type == 'search') {
-            this.hideSuggest();
-        }
-    },
-
-    showSuggest: function() {
-        if (phpr.viewManager.getView().searchsuggest.innerHTML !== '') {
-            phpr.viewManager.getView().searchsuggest.style.display = 'inline';
-        }
-    },
-
-    hideSuggest: function() {
-        phpr.viewManager.getView().searchsuggest.style.display = 'none';
-    },
-
-    setSuggest: function(html) {
-        phpr.viewManager.getView().searchsuggest.innerHTML = html;
-    },
-
-    drawTagsBox: function(/*Array*/data) {
-        var value   = '';
-        var newline = false;
-        var size    = '';
-        for (var i = 0; i < data.length; i++) {
-            if (((i % 3) === 0) && i !== 0) {
-                newline = true;
-            } else {
-                newline = false;
-            }
-            if (data[i].count < 5) {
-                size = 10;
-            } else if (data[i].count < 10) {
-                size = 12;
-            } else if (data[i].count < 15) {
-                size = 14;
-            } else if (data[i].count < 20) {
-                size = 16;
-            } else if (data[i].count < 25) {
-                size = 18;
-            } else if (data[i].count < 30) {
-                size = 20;
-            } else if (data[i].count < 35) {
-                size = 22;
-            } else if (data[i].count < 40) {
-                size = 24;
-            } else if (data[i].count < 45) {
-                size = 26;
-            } else if (data[i].count < 50) {
-                size = 28;
-            } else if (data[i].count < 55) {
-                size = 30;
-            } else if (data[i].count < 60) {
-                size = 32;
-            } else if (data[i].count < 65) {
-                size = 33;
-            } else if (data[i].count < 70) {
-                size = 34;
-            } else if (data[i].count < 75) {
-                size = 36;
-            } else if (data[i].count < 80) {
-                size = 38;
-            } else if (data[i].count < 85) {
-                size = 40;
-            } else if (data[i].count < 90) {
-                size = 42;
-            } else {
-                size = 48;
-            }
-            value += this.render(["phpr.Default.template", "tag.html"], null, {
-                moduleName: phpr.module,
-                size: size,
-                newline: newline,
-                tag: data[i].string
-            });
-        }
-        if (value === '') {
-            value += phpr.drawEmptyMessage('There are no Tags');
-        }
-        phpr.viewManager.getView().tagsbox.set('content', value);
     },
 
     showTagsResults: function(/*String*/tag) {
@@ -1173,8 +1051,6 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
 
         // Clean the navigation and forms buttons
         phpr.tree.fadeIn();
-        this.hideSuggest();
-        this.setSearchForm();
 
         phpr.send({
             url:       getDataUrl,
@@ -1293,16 +1169,13 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         var container = new dijit.layout.TabContainer({
             style:     'height: 100%;',
             useMenu:   false,
-            useSlider: false,
-            'class': 'claro'
+            useSlider: false
         }, document.createElement('div'));
 
         this.garbageCollector.addNode(container, 'help');
 
         var helpDialog = phpr.viewManager.getView().helpDialog;
         var helpContainer = phpr.viewManager.getView().helpContainer;
-
-        helpContainer.set('content', container);
 
         helpDialog.show();
 
@@ -1335,6 +1208,8 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
 
             content = null;
         }
+
+        helpContainer.set('content', container);
     },
 
     addLogoTooltip: function() {
@@ -1387,7 +1262,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
             if (modules[j].name) {
                 var found = false;
                 for (var i in sortedModules) {
-                    if (modules[j].name == sortedModules[i].name) {
+                    if (modules[j].name == sortedModules[i].name && modules[j].action == sortedModules[i].action) {
                         found = true;
                     }
                 }

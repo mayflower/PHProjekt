@@ -18,7 +18,7 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.1
- * @version    Release: @package_version@
+ * @version    Release: 6.1.0
  * @author     Reno Reckling <reno.reckling@mayflower.de>
  */
 
@@ -34,7 +34,7 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.1
- * @version    Release: @package_version@
+ * @version    Release: 6.1.0
  * @author     Reno Reckling <reno.reckling@mayflower.de>
  */
 class Phprojekt_Auth_ProxyTable
@@ -122,11 +122,11 @@ class Phprojekt_Auth_ProxyTable
     public function getProxyableUsersForUserId($userId = null)
     {
         $userIds   = $this->getProxyableUserIdsForUserId($userId);
-        $userClass = new Phprojekt_User_User();
 
         $userList = array();
 
         foreach ($userIds as $userId) {
+            $userClass  = new Phprojekt_User_User();
             $userList[] = $userClass->find($userId);
         }
 

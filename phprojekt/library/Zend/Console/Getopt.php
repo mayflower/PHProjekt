@@ -82,7 +82,7 @@
  * @package    Zend_Console_Getopt
  * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    Release: @package_version@
+ * @version    Release: 6.1.0
  * @since      Class available since Release 0.6.0
  *
  * @todo  Handle params with multiple values, e.g. --colors=red,green,blue

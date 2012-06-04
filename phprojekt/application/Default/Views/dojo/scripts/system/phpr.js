@@ -15,7 +15,7 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @version    Release: @package_version@
+ * @version    Release: 6.1.0
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 
@@ -352,6 +352,9 @@ dojo.declare("phpr.DataStore", null, {
             (error.name && error.name == "SyntaxError")) { // FF
             // PHP Error
             phpr.handleError(scope.url, 'php');
+        } else if (error.status === 0) {
+            // Lost connection to server
+            phpr.handleError(null, 'connection');
         } else {
             // Js error
             if (phpr.config.showInternalJsErrors) {
@@ -364,6 +367,8 @@ dojo.declare("phpr.DataStore", null, {
                 phpr.handleError(scope.url, 'js', message);
             }
         }
+
+        scope.processData();
     },
 
     saveData: function(params, data) {
@@ -584,32 +589,90 @@ dojo.declare("phpr.translator", null, {
     // Description:
     //     Collect all the trasnlated strings into an array
     //     and return the request string translateds
-    _strings: {},
+    _currentLanguage: null,
+    _firstLoad: true,
+    _strings: null,
+    _fallbackStrings: null,
+    _listener: null,
 
-    constructor: function(translatedStrings) {
-        this._strings = translatedStrings;
+    constructor: function() {
+        this._listener = dojo.subscribe("phpr.moduleSettingsChanged", this, "_onSettingsChange");
+        this._strings = {};
+        this._fallbackStrings = {};
+    },
+
+    destroy: function() {
+        dojo.unsubscribed(this._listener);
+    },
+
+    _onSettingsChange: function(module, data) {
+        if (module === "User" && data && data.language) {
+            this.loadTranslation(data.language);
+        }
+    },
+
+    loadTranslation: function(language)  {
+        var self = this;
+        return this._loadLanguage(language).then(function(data) {
+            self._strings = data;
+
+            if (!self._firstLoad && self._currentLanguage !== language) {
+                dojo.publish("phpr.languageChanged", [language]);
+            } else {
+                self._firstLoad = false;
+            }
+
+            self._currentLanguage = language;
+        });
+    },
+
+    loadFallback: function(language)  {
+        var self = this;
+        return this._loadLanguage(language).then(function(data) {
+            self._fallbackStrings = data;
+        });
+    },
+
+    _loadLanguage: function(lang) {
+        var url = phpr.webpath + 'index.php/Default/index/jsonGetTranslatedStrings/language/' + lang;
+        var param = { url: url };
+        phpr.DataStore.addStore(param);
+        return phpr.DataStore.requestData(param).then(function () {
+            return phpr.DataStore.getData(param);
+        });
     },
 
     get: function(string, module) {
         var returnValue;
 
-        // Special module
-        if (module && this._strings[module] && this._strings[module][string]) {
-            returnValue = this._strings[module][string];
-        // Current module
-        } else if (this._strings[phpr.module] && this._strings[phpr.module][string]) {
-            returnValue = this._strings[phpr.module][string];
-        // Core module
-        } else if (this._strings.Core && this._strings.Core[string]) {
-            returnValue = this._strings.Core[string];
-        // Default module
-        } else if (this._strings.Default && this._strings.Default[string]) {
-            returnValue = this._strings.Default[string];
-        } else {
+        returnValue = this._getStringsFromObject(this._strings, string, module);
+        if (returnValue === null) {
+            returnValue = this._getStringsFromObject(this._fallbackStrings, string, module);
+        }
+
+        if (returnValue === null) {
             // Unstranslated string
             returnValue = string;
         }
+
         return returnValue;
+    },
+
+    _getStringsFromObject: function(stringObject, string, module) {
+        if (module && stringObject[module] && stringObject[module][string]) {
+            return stringObject[module][string];
+        // Current module
+        } else if (stringObject[phpr.module] && stringObject[phpr.module][string]) {
+            return stringObject[phpr.module][string];
+        // Core module
+        } else if (stringObject.Core && stringObject.Core[string]) {
+            return stringObject.Core[string];
+        // Default module
+        } else if (stringObject.Default && stringObject.Default[string]) {
+            return stringObject.Default[string];
+        } else {
+            return null;
+        }
     }
 });
 
@@ -735,6 +798,9 @@ phpr.handleError = function(url, type, message) {
         case 'silence':
             console.log(phpr.nls.get('Server unreachable! ') + message);
             return;
+        case 'connection':
+            response.message += phpr.nls.get('Server unreachable! ') + '<br />';
+            break;
         default:
             response.message += phpr.nls.get('Unexpected error');
             break;

@@ -15,7 +15,7 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @version    Release: @package_version@
+ * @version    Release: 6.1.0
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 
@@ -58,8 +58,6 @@ dojo.declare("phpr.Project.Main", phpr.Default.Main, {
         this.destroyGrid();
 
         this.setSubmoduleNavigation('BasicData');
-        this.hideSuggest();
-        this.setSearchForm();
         phpr.tree.fadeIn();
 
         this.form = new this.formBasicDataWidget(this, phpr.currentProjectId, phpr.module, {}, view.centerMainContent);

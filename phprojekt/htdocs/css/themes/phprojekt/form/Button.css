@@ -75,8 +75,7 @@
 .phprojekt .add {
     background-image: url("../images/add.gif");
     background-repeat: no-repeat;
-    margin-left: 5px;
-    width: 20px;
+    width: 16px;
     height: 16px;
 }
 
@@ -214,10 +213,6 @@
     color: #111;
 }
 
-.phprojekt .dijitComboButton .dijitDownArrowButton {
-    padding-right: 4px;
-}
-
 .dj_ff2 .phprojekt .dijitComboButton .dijitButtonContentsFocused,
 .dj_ff2 .phprojekt .dijitComboButton .dijitDownArrowButtonFocused {
     border: 1px black dotted !important;
@@ -295,23 +290,6 @@
     width: 11px;
 }
 
-.phprojekt .systemNavigation {
-    margin: 0px 0px 0px;
-    float: left;
-}
-
-.phprojekt .mainNavigation .dijitButtonContents,
-.phprojekt .systemNavigation .dijitButtonContents {
-    font-family: "Helvetica Neue", "Lucida Grande", Helvetica, Arial, Verdana, sans-serif;
-    color: #ffffff;
-    font-size: 12px;
-    font-weight: normal;
-}
-
-.phprojekt .mainNavigation .selected {
-    color: #ffcc33;
-}
-
 .phprojekt .mainNavigation button::-moz-focus-inner,
 input[type="reset"]::-moz-focus-inner,
 input[type="button"]::-moz-focus-inner,
@@ -374,6 +352,9 @@ input[type="file"] > input[type="button"]::-moz-focus-inner {
     width: 15px;
     border: none;
     background: none;
+    box-shadow: none;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
 }
 
 .phprojekt .addButton {

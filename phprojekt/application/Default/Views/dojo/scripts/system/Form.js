@@ -15,7 +15,7 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @version    Release: @package_version@
+ * @version    Release: 6.1.0
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 
@@ -83,11 +83,15 @@ dojo.provide("phpr.Default.System.Form.MultiFilteringSelect");
 dojo.require("dijit.form.FilteringSelect");
 dojo.require("dijit.form.Button");
 dojo.declare("phpr.Default.System.Form.MultiFilteringSelect", dijit.form.FilteringSelect, {
-    selection: {},
+    selection: null,
     selectionContainer: null,
     _createdOwnSelectionContainer: false,
     value: null,
-    _buttons: [],
+    _items: null,
+    constructor: function() {
+        this.selection = {};
+        this._items = [];
+    },
     destroy: function() {
         this._destroyButtons();
 
@@ -130,7 +134,8 @@ dojo.declare("phpr.Default.System.Form.MultiFilteringSelect", dijit.form.Filteri
         this.selectionContainer = dojo.byId(this.selectionContainer);
 
         if (!this.selectionContainer) {
-            this.selectionContainer = dojo.create('div', null, this.domNode, 'after');
+            this.selectionContainer = dojo.create('ul', null, this.domNode, 'after');
+            dojo.addClass(this.selectionContainer, "multipleFilteringSelectContainer");
             this._createdOwnSelectionContainer = true;
         }
 
@@ -192,22 +197,25 @@ dojo.declare("phpr.Default.System.Form.MultiFilteringSelect", dijit.form.Filteri
             dojo.empty(this.selectionContainer);
             var self = this;
             for (var i in this.selection) {
-                var button = new dijit.form.Button({
-                    label: this.selection[i],
-                    onClick: dojo.hitch(null, function(value) {
-                            self._removeFromSelection(value);
-                        }, i)
+                var item = new phpr.Default.System.TemplateWrapper({
+                    templateName: "phpr.Default.template.form.multipleFilteringSelectItem.html",
+                    templateData: {
+                        text: this.selection[i]
+                    }
                 });
-                this.selectionContainer.appendChild(button.domNode);
-                this._buttons.push(button);
+
+                this.connect(item.checkBox, 'onChange', dojo.hitch(this, "_removeFromSelection", i));
+
+                this.selectionContainer.appendChild(item.domNode);
+                this._items.push(item);
             }
         }
     },
     _destroyButtons: function() {
-        for (var i = 0; i < this._buttons.lengh; i++) {
-            this._buttons[i].destroyRecursive();
+        for (var i = 0; i < this._items.lengh; i++) {
+            this._items[i].destroyRecursive();
         }
-        this._buttons = [];
+        this._items = [];
     },
     _getValueAttr: function() {
         var ret = [];
@@ -245,8 +253,9 @@ dojo.declare("phpr.Default.System.Form.MultiFilteringSelect", dijit.form.Filteri
 });
 
 dojo.declare("phpr.Default.System._ComboBoxDataStore", dijit.form._ComboBoxDataStore, {
-    _selectedItems: {},
+    _selectedItems: null,
     constructor: function( /*DomNode*/ root) {
+        this._selectedItems = {};
         var self = this;
         dojo.query("> option", this.root).forEach(function(option) {
             if (option.selected && option.value) {

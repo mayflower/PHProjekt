@@ -18,7 +18,7 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @version    Release: @package_version@
+ * @version    Release: 6.1.0
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 
@@ -32,7 +32,7 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @version    Release: @package_version@
+ * @version    Release: 6.1.0
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 class Setup_Models_Migration
@@ -330,6 +330,34 @@ class Setup_Models_Migration
      */
     public function migrateCalendar()
     {
+        Phprojekt::getInstance()->getDb()->query(<<<HERE
+CREATE TABLE `calendar` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `parent_id` int(11) DEFAULT '0',
+  `owner_id` int(11) DEFAULT NULL,
+  `project_id` int(11) NOT NULL,
+  `title` varchar(255) DEFAULT NULL,
+  `place` varchar(255) DEFAULT NULL,
+  `notes` text,
+  `start_datetime` datetime DEFAULT NULL,
+  `end_datetime` datetime DEFAULT NULL,
+  `status` int(1) DEFAULT '0',
+  `rrule` text,
+  `visibility` int(1) DEFAULT '0',
+  `participant_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) DEFAULT CHARSET utf8
+HERE
+    );
+        Phprojekt::getInstance()->getDb()->insert(
+            'module',
+            array(
+                'name' => 'Calendar',
+                'label' => 'Calendar',
+                'save_type' => 1,
+                'active' => 1
+            )
+        );
         $this->_migrateCalendar();
 
         $this->_executeItemRightsInsert();
@@ -337,6 +365,9 @@ class Setup_Models_Migration
 
         // Save words
         $this->_saveSession('migratedSearchWord', $this->_searchWord);
+
+        $c2migration = new Calendar2_Migration();
+        $c2migration->upgrade(null, Phprojekt::getInstance()->getDb());
     }
 
     /**
@@ -2276,20 +2307,28 @@ class Setup_Models_Migration
     }
 
     /**
-     * Fix string witn utf8 encode and limit the characters.
+     * Fix string witn utf8 encode and limit the length of the string.
      *
      * @param string  $string Normal string.
-     * @param integer $length Limit if characters.
+     * @param integer $length Maximal length of the string in bytes.
      *
      * @return string Fixed string.
      */
     private function _fix($string, $length = 0)
     {
-        if ($length == 0) {
-            return utf8_encode($string);
-        } else {
-            return substr(utf8_encode($string), 0, $length);
+        $encodings = mb_detect_order();
+        $encodings[] = 'ISO-8859-1';
+
+        $string = mb_convert_encoding(
+            $string,
+            'UTF-8',
+            mb_detect_encoding($string, $encodings, true)
+        );
+
+        if ($length !== 0) {
+            $string = mb_strcut($string, 0, $length);
         }
+        return $string;
     }
 
     /**

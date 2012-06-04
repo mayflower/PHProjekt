@@ -20,7 +20,7 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @version    Release: @package_version@
+ * @version    Release: 6.1.0
  * @author     David Soria Parra <soria_parra@mayflower.de>
  */
 
@@ -36,7 +36,7 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @version    Release: @package_version@
+ * @version    Release: 6.1.0
  * @author     David Soria Parra <soria_parra@mayflower.de>
  */
 class Phprojekt_Loader extends Zend_Loader
@@ -52,6 +52,18 @@ class Phprojekt_Loader extends Zend_Loader
      * Define the set of allowed characters for classes..
      */
     const CLASS_PATTERN = '[A-Za-z0-9_]+';
+
+    /**
+     * Adds a directory to search when autoloading.
+     *
+     * @param string $directory The directory
+     *
+     * @return void
+     */
+    public static function addIncludeDirectory($directory)
+    {
+        self::$_directories[] = $directory;
+    }
 
     /**
      * Load a class

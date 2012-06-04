@@ -18,7 +18,7 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @version    Release: @package_version@
+ * @version    Release: 6.1.0
  * @author     Eduardo Polidor <soria_parra@mayflower.de>
  */
 
@@ -32,7 +32,7 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @version    Release: @package_version@
+ * @version    Release: 6.1.0
  * @author     Eduardo Polidor <epolidor@mayflower.de>
  */
 class LoginController extends Zend_Controller_Action
@@ -96,6 +96,7 @@ class LoginController extends Zend_Controller_Action
                 $frontendMessage = new Phprojekt_Notification();
                 $frontendMessage->setControllProcess(Phprojekt_Notification::LAST_ACTION_LOGIN);
                 $frontendMessage->saveFrontendMessage();
+                Default_Helpers_Upload::cleanUnusedFiles();
                 $this->_redirect($config->webpath . 'index.php' . $hash);
                 die();
             }

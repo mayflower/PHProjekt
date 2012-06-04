@@ -18,7 +18,7 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @version    Release: @package_version@
+ * @version    Release: 6.1.0
  * @author     Eduardo Polidor <polidor@mayflower.de>
  */
 
@@ -34,7 +34,7 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @version    Release: @package_version@
+ * @version    Release: 6.1.0
  * @author     Eduardo Polidor <polidor@mayflower.de>
  */
 interface Phprojekt_Model_Interface extends Iterator
@@ -72,4 +72,13 @@ interface Phprojekt_Model_Interface extends Iterator
      * @return boolean True on sucessful save.
      */
     public function save();
+
+    /**
+     * Checks if the model has a specified field.
+     *
+     * @param string $field Name of the field.
+     *
+     * @return boolean Whether is exists.
+     */
+    public function hasField($field);
 }

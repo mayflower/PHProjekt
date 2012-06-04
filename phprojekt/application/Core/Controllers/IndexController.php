@@ -18,7 +18,7 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @version    Release: @package_version@
+ * @version    Release: 6.1.0
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 
@@ -32,7 +32,7 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @version    Release: @package_version@
+ * @version    Release: 6.1.0
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 class Core_IndexController extends IndexController
@@ -86,7 +86,7 @@ class Core_IndexController extends IndexController
     }
 
     /**
-     * Gets the core class model of the module or the default one.
+     * Gets the core class model of the module.
      *
      * @return Phprojekt_Model_Interface An instance of Phprojekt_Model_Interface.
      */
@@ -102,7 +102,7 @@ class Core_IndexController extends IndexController
             $db = Phprojekt::getInstance()->getDb();
             return new $moduleName($db);
         } else {
-            return new Default_Models_Default();;
+            throw new Exception('No model object could be found');
         }
     }
 

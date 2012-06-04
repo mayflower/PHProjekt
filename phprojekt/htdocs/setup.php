@@ -18,7 +18,7 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @version    Release: @package_version@
+ * @version    Release: 6.1.0
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 
@@ -48,6 +48,10 @@ require_once 'Phprojekt/Loader.php';
 
 $autoloader = Zend_Loader_Autoloader::getInstance();
 $autoloader->pushAutoloader(array('Phprojekt_Loader', 'autoload'));
+
+Phprojekt_Loader::addIncludeDirectory(
+    realpath(PHPR_ROOT_PATH . DIRECTORY_SEPARATOR . 'application')
+);
 
 ini_set('max_execution_time', 0);
 error_reporting(-1);

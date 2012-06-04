@@ -18,7 +18,7 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @version    Release: @package_version@
+ * @version    Release: 6.1.0
  * @author     David Soria Parra <soria_parra@mayflower.de>
  */
 
@@ -32,7 +32,6 @@ require_once 'Controllers/IndexControllerTest.php';
 require_once 'Controllers/LoginControllerTest.php';
 require_once 'Controllers/TagControllerTest.php';
 require_once 'Controllers/SearchControllerTest.php';
-require_once 'Models/DefaultTest.php';
 
 /**
  * Test suite for the default module
@@ -44,7 +43,7 @@ require_once 'Models/DefaultTest.php';
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @version    Release: @package_version@
+ * @version    Release: 6.1.0
  * @author     David Soria Parra <soria_parra@mayflower.de>
  */
 class Default_AllTests
@@ -68,7 +67,6 @@ class Default_AllTests
     {
         $suite = new PHPUnit_Framework_TestSuite('Default Controller');
 
-        $suite->addTestSuite('Phprojekt_DefaultModelDefault_Test');
         $suite->addTestSuite('Phprojekt_IndexController_Test');
         $suite->addTestSuite('Phprojekt_TagController_Test');
         $suite->addTestSuite('Phprojekt_SearchController_Test');

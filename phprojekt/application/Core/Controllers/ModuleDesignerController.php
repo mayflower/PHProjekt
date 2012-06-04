@@ -18,7 +18,7 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @version    Release: @package_version@
+ * @version    Release: 6.1.0
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 
@@ -32,7 +32,7 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @version    Release: @package_version@
+ * @version    Release: 6.1.0
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 class Core_ModuleDesignerController extends Core_IndexController
@@ -119,7 +119,7 @@ class Core_ModuleDesignerController extends Core_IndexController
 
         if ($model instanceof Phprojekt_Item_Abstract || $id == 0) {
             $databaseManager = new Phprojekt_DatabaseManager($model);
-            $data            = Zend_Json_Decoder::decode($data);
+            $data            = Zend_Json::decode($data);
 
             // Validate
             if ($databaseManager->recordValidate($data, $saveType)) {

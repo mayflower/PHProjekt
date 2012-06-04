@@ -18,7 +18,7 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @version    Release: @package_version@
+ * @version    Release: 6.1.0
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 
@@ -32,7 +32,7 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @version    Release: @package_version@
+ * @version    Release: 6.1.0
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Phprojekt_Model_Interface
@@ -307,6 +307,29 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
         }
 
         return $value;
+    }
+
+    /**
+     * This function wraps around the phprojekt setting for the user timezone
+     * to return a DateTimeZone object.
+     *
+     * @return DateTimeZone The timezone of the user.
+     */
+    public static function getUserDateTimeZone()
+    {
+        $tz = self::getSetting('timezone', '0');
+        $tz = explode('_', $tz);
+        $hours = (int) $tz[0];
+        if ($hours >= 0) {
+            $hours = '+' . $hours;
+        }
+        $minutes = '00';
+        if (array_key_exists(1, $tz)) {
+            // We don't need the minus sign
+            $minutes = abs($tz[1]);
+        }
+        $datetime = new Datetime($hours . ':' . $minutes);
+        return $datetime->getTimezone();
     }
 
     /**

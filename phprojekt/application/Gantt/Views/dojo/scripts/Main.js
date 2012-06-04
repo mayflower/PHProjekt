@@ -15,7 +15,7 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @version    Release: @package_version@
+ * @version    Release: 6.1.0
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 
@@ -431,7 +431,7 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
         //    Collect all the project values and save it
         // Description:
         //    Collect all the project values and save it
-        var sendData   = [];
+        var sendData   = {};
         var projects   = [];
         var listIndex  = -1;
         var listLength = this.gantt.projectDataBuffer.length;

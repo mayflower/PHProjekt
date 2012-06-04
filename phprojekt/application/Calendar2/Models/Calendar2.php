@@ -18,7 +18,7 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.1
- * @version    Release: @package_version@
+ * @version    Release: 6.1.0
  * @author     Simon Kohlmeyer <simon.kohlmeyer@mayflower.de>
  */
 require_once 'Sabre.autoload.php';
@@ -35,7 +35,7 @@ require_once 'Sabre.autoload.php';
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.1
- * @version    Release: @package_version@
+ * @version    Release: 6.1.0
  * @author     Simon Kohlmeyer <simon.kohlmeyer@mayflower.de>
  */
 class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
@@ -968,6 +968,29 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
                 "Invalid type of vobject_component passed to Calendar2_Models_Calendar2::fromVobject ({$vevent->name})"
             );
         }
+        // Workarounds for missing features. We currently don't support locale-time (we just assume it's the user's
+        // usual timzeone) or date values without time (we just assume 0800 - 2000 there).
+        if (!is_null($vevent->dtstart['VALUE']) && $vevent->dtstart['VALUE']->value === 'DATE') {
+            // No T means it's only a date. iCalendar dicates that dtend must be a date, too.
+            $vevent->dtstart->value .= 'T080000';
+            unset($vevent->dtstart['VALUE']);
+            // Caldav end dates are not inclusive
+            $end = new Datetime($vevent->dtend->value);
+            $end->sub(new DateInterval('P1D'));
+            $vevent->dtend->value = $end->format('Ymd') . 'T200000';
+            unset($vevent->dtend['VALUE']);
+        }
+
+        $utc = new DateTimezone('UTC');
+        $timezone = null;
+        if ('Z' === substr($vevent->dtstart->value, -1)) {
+            $timezone = $utc;
+        } else if (!is_null($vevent->dtstart['tzid'])) {
+            $timezone = new DateTimeZone($vevent->dtstart['tzid']->value);
+        } else {
+            $timezone = Phprojekt_User_User::getUserDateTimeZone();
+        }
+
         // 0-1
         // handled:
         //  last-mod, description, dtstart, location, summary, uid
@@ -983,7 +1006,6 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
         //  comment, rrule
         // not handling:
         //  attach, attendee, categories, contact, exdate, exrule, rstatus, related, resources, rdate, x-prop
-        $utc = new DateTimezone('UTC');
         $mappable = array(
             array('veventkey' => 'SUMMARY', 'ourkey' => 'summary', 'default' => '_'),
             array('veventkey' => 'LOCATION', 'ourkey' => 'location', 'default' => ''),
@@ -1001,20 +1023,12 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
             }
         }
 
-        if (substr($vevent->dtstart->value, -1) === 'Z') {
-            $start = new Datetime($vevent->dtstart->value);
-        } else {
-            $start = new Datetime($vevent->dtstart->value, new DateTimezone($vevent->dtstart['tzid']->value));
-        }
+        $start = new Datetime($vevent->dtstart->value, $timezone);
         $start->setTimezone($utc);
         $this->start = Phprojekt_Converter_Time::utcToUser($start->format('Y-m-d H:i:s'));
 
         if ($vevent->dtend) {
-            if (substr($vevent->dtend->value, -1) === 'Z') {
-                $end = new Datetime($vevent->dtend->value);
-            } else {
-                $end = new Datetime($vevent->dtend->value, new DateTimezone($vevent->dtend['tzid']->value));
-            }
+            $end = new Datetime($vevent->dtend->value, $timezone);
         } else if ($vevent->duration) {
             $duration = new DateInterval($vevent->duration->value);
             $end = clone $start;
@@ -1027,9 +1041,11 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
     /**
      * Returns a Sabre_Vobject_Component representing this object.
      *
+     * @param subevents All events with the uid of this one. If not given, these will be fetched from the database.
+     *
      * @return Sabre_VObject_Component representing $this.
      */
-    public function asVObject()
+    public function asVObject($subevents = null)
     {
         $vobject = new Sabre_VObject_Component('vevent');
         if ($this->summary) {
@@ -1058,15 +1074,17 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
                 // occurrence as excluded in the original event. In caldav, the exclusion takes precedence over the
                 // extracted event, which means that events that have been changed will not show up in caldav clients.
                 // To go around this, we filter these dates out of the excluded dates.
-                $subEvents = $this->fetchByUid($this->uid);
-                $subEventDates = array();
-                foreach ($subEvents as $e) {
+                if (is_null($subevents)) {
+                    $subevents = $this->fetchByUid($this->uid);
+                }
+                $subeventDates = array();
+                foreach ($subevents as $e) {
                     if ($e->recurrenceId) {
                         $dt = new Datetime($e->recurrenceId);
-                        $subEventDates[] = $dt->format('Ymd\THis\Z');
+                        $subeventDates[] = $dt->format('Ymd\THis\Z');
                     }
                 }
-                $exdates = array_diff($exdates, $subEventDates);
+                $exdates = array_diff($exdates, $subeventDates);
                 $vobject->add('exdate', implode(',', $exdates));
             }
         }
@@ -1322,6 +1340,16 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
     private function _generateUid()
     {
         // UID generation method taken from rfc 5545
-        $this->uid = rand() . '-' . time() . '-' . getMyPid() . '@' . php_uname('n');
+        $this->uid = self::generateUniqueIdentifier();
+    }
+
+    /**
+     * Generates a unique identifier, usable for example as a uri or uid.
+     *
+     * @return string
+     */
+    public static function generateUniqueIdentifier()
+    {
+        return rand() . '-' . time() . '-' . getMyPid() . '@' . php_uname('n');
     }
 }

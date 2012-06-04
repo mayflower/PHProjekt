@@ -15,7 +15,7 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.1
- * @version    Release: @package_version@
+ * @version    Release: 6.1.0
  * @author     Reno Reckling <reno.reckling@mayflower.de>
  */
 
@@ -71,7 +71,6 @@ dojo.declare("phpr.Default.TutorialOverlay", phpr.Default.System.Component, {
         this._addGridTutorial();
         this._addProjectModulesTutorial();
         this._addGlobalModulesTutorial();
-        this._addTagsTutorial();
         this._addActionsTutorial();
         this._addHelpTutorial();
     },
@@ -121,11 +120,6 @@ dojo.declare("phpr.Default.TutorialOverlay", phpr.Default.System.Component, {
     _addGlobalModulesTutorial: function() {
         var domNode = phpr.viewManager.getView().mainNavigation.domNode;
         this._addTutorialEntry("Global Modules", "Global Modules tutorial text", domNode);
-    },
-
-    _addTagsTutorial: function() {
-        var domNode = phpr.viewManager.getView().tagsbox.domNode;
-        this._addTutorialEntry("Tags", "Tags tutorial text", domNode);
     },
 
     _addActionsTutorial: function() {

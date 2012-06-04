@@ -18,7 +18,7 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @version    Release: @package_version@
+ * @version    Release: 6.1.0
  * @author     David Soria Parra <soria_parra@mayflower.de>
  */
 
@@ -55,7 +55,7 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @version    Release: @package_version@
+ * @version    Release: 6.1.0
  * @author     David Soria Parra <soria_parra@mayflower.de>
  */
 class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implements Phprojekt_ModelInformation_Interface
@@ -94,6 +94,8 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
      * @var array
      */
     protected $_fieldTypes = array();
+
+    protected $hasFieldTypes = false;
 
     /**
      * Error Class.
@@ -136,7 +138,6 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
         if (null !== $this->_model) {
             $this->_modelInfo = $this->_model->info();
         }
-        $this->getTypes();
     }
 
     /**
@@ -432,6 +433,7 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
     {
         $return = null;
 
+        $this->_ensureFieldTypePresence();
         if (isset($this->_fieldTypes[$fieldName])) {
             $return = $this->_fieldTypes[$fieldName];
         }
@@ -968,6 +970,13 @@ class Phprojekt_DatabaseManager extends Phprojekt_ActiveRecord_Abstract implemen
         }
 
         return $options;
+    }
+
+    private function _ensureFieldTypePresence() {
+        if (!$this->hasFieldTypes) {
+            $this->getTypes();
+            $this->hasFieldTypes = true;
+        }
     }
 
     /**

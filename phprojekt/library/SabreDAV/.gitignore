@@ -1,0 +1,14 @@
+docs/api
+docs/wikidocs
+build.properties
+build
+public
+data
+fileserver.php
+fileserver2.php
+calendarserver.php
+groupwareserver.php
+package.xml
+tmpdata
+tests/temp
+*.swp

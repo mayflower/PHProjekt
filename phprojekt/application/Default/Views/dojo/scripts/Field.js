@@ -15,7 +15,7 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @version    Release: @package_version@
+ * @version    Release: 6.1.0
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 
@@ -121,6 +121,108 @@ dojo.declare("phpr.Default.Field", phpr.Default.System.Component, {
     uploadFieldRender: function(itemlabel, itemid, itemvalue, itemrequired, itemdisabled, iFramePath, itemhint) {
         phpr.destroyWidget(itemid);
         phpr.destroyWidget(itemid + "_disabled");
+
+        var fieldId = Math.floor(Math.random() * 100000);
+
+        if (!phpr._uploadCallbacks) {
+            phpr._uploadCallbacks = {};
+        }
+
+        var deletedHashes = {};
+        var lastFileList = [];
+
+        var getFilelistWithoutDeleted = function(filelist) {
+            var newlist = [];
+            var l = filelist.length;
+
+            for (var i = 0; i < l; i++) {
+                if (deletedHashes[filelist[i].hash] !== true) {
+                    newlist.push(filelist[i]);
+                }
+            }
+
+            return newlist;
+        };
+
+        var convertFilelistToFormValue = function(filelist) {
+            filelist = getFilelistWithoutDeleted(filelist);
+            var l = filelist.length;
+            var values = [];
+
+            for (var i = 0; i < l; i++) {
+                values.push(filelist[i].hash + "|" + filelist[i].fileName);
+            }
+
+            return values.join("||");
+        };
+
+        var onCheckboxChange = function(hash, value) {
+            deletedHashes[hash] = !value;
+            refreshList();
+        };
+
+        var prettyPrintFileSize = function(size) {
+            if (size < 1024) {
+                return "" + size + ' bytes';
+            } else if (size < 1048576) {
+                return "" + Math.floor(size / (1024)) + ' KB';
+            } else if (size < 1073741824) {
+                return "" + Math.floor(size / (1048576)) + ' MB';
+            } else if (size < 1099511627776) {
+                return "" + Math.floor(size / (1073741824)) + ' GB';
+            }
+        };
+
+        var refreshList = dojo.hitch(this, function() {
+            this.garbageCollector.collect("uploadListItems");
+            widget.uploadList.innerHTML = "";
+            var filelist = lastFileList;
+            var file, size, ctime, listItem;
+
+            for (var i in filelist) {
+                file = filelist[i];
+                size = prettyPrintFileSize(file.size);
+                ctime = dojo.date.locale.format(new Date(file.ctime * 1000));
+                listItem = new phpr.Default.System.TemplateWrapper({
+                    templateName: "phpr.Default.template.form.uploadListItem.html",
+                    templateData: {
+                        downloadLink: file.downloadLink,
+                        downloadable: file.downloadLink !== undefined,
+                        fileName: file.fileName,
+                        size: size,
+                        ctime: ctime,
+                        checked: deletedHashes[file.hash] === true ? "false" : "true",
+                        disabled:  (itemdisabled) ? "true" : "false"
+                    }
+                });
+
+                listItem.checkbox.onChange = dojo.hitch(this, onCheckboxChange, filelist[i].hash);
+                this.garbageCollector.addNode(listItem, "uploadListItems");
+                dojo.place(listItem.domNode, widget.uploadList);
+            }
+
+            widget.inputField.set('value', convertFilelistToFormValue(filelist));
+        });
+
+        var displayError = function(error) {
+            dojo.style(widget.errorBox, "display", "block");
+            widget.errorBox.innerHTML = error;
+        };
+
+        var hideError = function() {
+            dojo.style(widget.errorBox, "display", "none");
+        };
+
+        phpr._uploadCallbacks[fieldId] = function(error, filelist) {
+            if (error) {
+                displayError(error);
+            } else {
+                hideError();
+                lastFileList = filelist;
+                refreshList();
+            }
+        };
+
         var widget = new phpr.Default.System.TemplateWrapper({
             templateName: "phpr.Default.template.form.upload.html",
             templateData: {
@@ -130,7 +232,7 @@ dojo.declare("phpr.Default.Field", phpr.Default.System.Component, {
                 value:      itemvalue,
                 required:   itemrequired,
                 disabled:   (itemdisabled) ? "disabled" : '',
-                iFramePath: iFramePath,
+                iFramePath: iFramePath + "/fieldId/" + fieldId,
                 tooltip:    this.getTooltip(itemhint)
             }
         });
@@ -350,11 +452,11 @@ dojo.declare("phpr.Default.Field", phpr.Default.System.Component, {
         phpr.destroyWidget(itemid + "_disabled");
 
         var options = [];
-        var tmp     = itemvalue.split(',');
+        var tmp     = itemvalue;
 
         for (var j in range) {
+            range[j].selected = '';
             for (var k in tmp) {
-                range[j].selected = '';
                 if (parseInt(tmp[k]) === range[j].id) {
                     range[j].selected = 'selected="selected"';
                     break;

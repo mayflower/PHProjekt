@@ -20,7 +20,7 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @version    Release: @package_version@
+ * @version    Release: 6.1.0
  * @author     Eduardo Polidor <polidor@mayflower.de>
  */
 
@@ -36,7 +36,7 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @version    Release: @package_version@
+ * @version    Release: 6.1.0
  * @author     Eduardo Polidor <polidor@mayflower.de>
  */
 class Phprojekt_Table
@@ -146,7 +146,7 @@ class Phprojekt_Table
         } else {
             $sqlString = substr($sqlString, 0, -2);
         }
-        $sqlString .= ")";
+        $sqlString .= ") DEFAULT CHARSET=utf8";
 
         try {
             $this->_db->getConnection()->exec($sqlString);

@@ -18,7 +18,7 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @version    Release: @package_version@
+ * @version    Release: 6.1.0
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 
@@ -32,7 +32,7 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @version    Release: @package_version@
+ * @version    Release: 6.1.0
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 class Setup_Models_Setup
@@ -59,23 +59,13 @@ class Setup_Models_Setup
     private $_message = array();
 
     /**
-     * Constructor.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->_checkServer();
-    }
-
-    /**
      * Do some checks before install.
      *
      * @throws Expeption If the server don't have the requirements.
      *
      * @return void
      */
-    private function _checkServer()
+    public function checkServer()
     {
         // Check the server
         $checkServer = Phprojekt::checkExtensionsAndSettings();
@@ -407,11 +397,11 @@ class Setup_Models_Setup
 
         // Set access
         if (PHP_OS == 'WIN32' || PHP_OS == 'WINNT') {
-            $this->_error[] = '"' . $privateDir . '" should have the next rights: 0770 for folders, 0660 for files';
+            $this->_error[] = "\"$privateDir\" should have the following rights: 0770 for folders, 0660 for files";
         } else {
             // Private folder
             if (!$this->chmodRecursive($privateDir, 0770, 0660)) {
-                $this->_error[] = '"' . $privateDir . '" should have the next rights: 0770 for folders, 0660 for files';
+                $this->_error[] = "\"$privateDir \" should have the following rights: 0770 for folders, 0660 for files";
             }
         }
 
@@ -580,33 +570,8 @@ class Setup_Models_Setup
      */
     public function finish()
     {
-        // Create config file
-        $databaseNamespace = new Zend_Session_Namespace('databaseData');
-        $config            = new Setup_Models_Config();
-        $content           = $config->getDefaultProduction($databaseNamespace->data['dbUser'],
-            $databaseNamespace->data['dbPass'], $databaseNamespace->data['dbName'], 'Pdo_Mysql',
-            $databaseNamespace->data['dbHost'], $databaseNamespace->data['dbPort']);
-
-        $baseDir    = $this->getBaseDir();
-        $configFile = $baseDir . "configuration.php";
-        file_put_contents($configFile, $content);
-
-        // Set access
-        if (PHP_OS == 'WIN32' || PHP_OS == 'WINNT') {
-            $this->_error[] = '"' . $baseDir . '" should have the next rights: 0755 for folders, 0644 for files';
-        } else {
-            // Root
-            if (!$this->chmodRecursive($baseDir, 0755, 0644)) {
-                $this->_error[] = '"' . $baseDir . '" should have the next rights: 0755 for folders, 0644 for files';
-            }
-        }
-
-        // Delete a session if exists
-        $_SESSION = array();
-        foreach ($_COOKIE as $key => $value) {
-            setcookie($key, "", 1);
-        }
-        Zend_Session::writeClose();
+        $this->_checkPrivateDirRights();
+        $this->_deleteSessionAndCookies();
     }
 
     /**
@@ -738,5 +703,44 @@ class Setup_Models_Setup
      */
     private function getBaseDir() {
         return realpath(dirname(__FILE__) . "/../../../") . "/";
+    }
+
+    public function writeConfigFile()
+    {
+        $databaseNamespace = new Zend_Session_Namespace('databaseData');
+        $config            = new Setup_Models_Config();
+        $content           = $config->getDefaultProduction(
+            $databaseNamespace->data['dbUser'],
+            $databaseNamespace->data['dbPass'],
+            $databaseNamespace->data['dbName'],
+            'Pdo_Mysql',
+            $databaseNamespace->data['dbHost'],
+            $databaseNamespace->data['dbPort']
+        );
+
+        $baseDir    = $this->getBaseDir();
+        $configFile = $baseDir . "configuration.php";
+        file_put_contents($configFile, $content);
+    }
+
+    private function _checkPrivateDirRights()
+    {
+        $baseDir = $this->getBaseDir();
+        if (PHP_OS == 'WIN32' || PHP_OS == 'WINNT') {
+            $this->_error[] = "\"$baseDir\" should have the following rights: 0755 for folders, 0644 for files";
+        } else {
+            if (!$this->chmodRecursive($baseDir, 0755, 0644)) {
+                $this->_error[] = "\"$baseDir\" should have the following rights: 0755 for folders, 0644 for files";
+            }
+        }
+    }
+
+    private function _deleteSessionAndCookies()
+    {
+        $_SESSION = array();
+        foreach ($_COOKIE as $key => $value) {
+            setcookie($key, "", 1);
+        }
+        Zend_Session::writeClose();
     }
 }

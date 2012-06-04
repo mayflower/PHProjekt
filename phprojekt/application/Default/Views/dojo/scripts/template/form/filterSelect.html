@@ -9,7 +9,7 @@
     </td>
     <td>
         <select id="{{id}}" name="{{id}}" dojoType="phpr.FilteringSelect" required="{{required}}" {{disabled}}
-        autocomplete="false" value="{{value}}" searchAttr="name" invalidMessage="" >
+        autocomplete="false" value="{{value}}" searchAttr="name" invalidMessage="" dojoAttachPoint="fieldNode">
             {% for item in values %}
             <option value="{{item.id}}">{{item.name}}</option>
             {% endfor %}

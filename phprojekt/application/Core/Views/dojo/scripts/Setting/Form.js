@@ -15,16 +15,17 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @version    Release: @package_version@
+ * @version    Release: 6.1.0
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 
 dojo.provide("phpr.Setting.Form");
 
 dojo.declare("phpr.Setting.Form", phpr.Core.Form, {
-    customActionOnSuccess:function() {
+    customActionOnSuccess: function(module, data) {
+        dojo.publish("phpr.moduleSettingsChanged", [module, data]);
         if (phpr.submodule == 'User') {
-            var result     = Array();
+            var result     = [];
             result.type    = 'warning';
             result.message = phpr.nls.get('You need to log out and log in again in order to let changes have effect');
             new phpr.handleResponse('serverFeedback', result);
@@ -32,7 +33,7 @@ dojo.declare("phpr.Setting.Form", phpr.Core.Form, {
     },
 
 
-    setBreadCrumbItem:function() {
+    setBreadCrumbItem: function() {
         phpr.BreadCrumb.setItem(phpr.nls.get(phpr.submodule));
     }
 });

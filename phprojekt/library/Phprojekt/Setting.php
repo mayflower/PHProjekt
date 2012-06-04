@@ -18,7 +18,7 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @version    Release: @package_version@
+ * @version    Release: 6.1.0
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 
@@ -32,7 +32,7 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @version    Release: @package_version@
+ * @version    Release: 6.1.0
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 class Phprojekt_Setting extends Phprojekt_ActiveRecord_Abstract
@@ -217,16 +217,34 @@ class Phprojekt_Setting extends Phprojekt_ActiveRecord_Abstract
         $data['id'] = 0;
         foreach ($metadata as $meta) {
             $data[$meta['key']] = '';
-            foreach ($record as $oneSetting) {
-                if ($oneSetting->keyValue == $meta['key']) {
-                    $getter = 'get' . ucfirst($oneSetting->keyValue);
-                    if (method_exists($this->getModel(), $getter)) {
-                        $data[$meta['key']] = call_user_func(array($this->getModel(), $getter), $oneSetting->value);
-                    } else {
-                        $data[$meta['key']] = $oneSetting->value;
+            $found = false;
+            $value = null;
+
+            $valueGetter = 'get' . ucfirst($meta['key']) . 'Value';
+            if (method_exists($this->getModel(), $valueGetter)) {
+                $value = call_user_func(array($this->getModel(), $valueGetter));
+                $found = true;
+            }
+
+            if (!$found) {
+                foreach ($record as $oneSetting) {
+                    if ($oneSetting->keyValue == $meta['key']) {
+                        $getter = 'get' . ucfirst($oneSetting->keyValue);
+
+                        if (method_exists($this->getModel(), $getter)) {
+                            $value = call_user_func(array($this->getModel(), $getter), $oneSetting->value);
+                        } else {
+                            $value = $oneSetting->value;
+                        }
+
+                        $found = true;
+                        break;
                     }
-                    break;
                 }
+            }
+
+            if ($found) {
+                $data[$meta['key']] = $value;
             }
         }
         $settings[] = $data;
