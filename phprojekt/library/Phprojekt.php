@@ -120,6 +120,13 @@ class Phprojekt
     protected $_view;
 
     /**
+     * Array of blocked Modules.
+     *
+     * @var Array
+     */
+    protected $_blockedModules = array("Calendar");
+
+    /**
      * Returns the current version of PHProjekt.
      *
      * @return string The current version.
@@ -1015,6 +1022,18 @@ class Phprojekt
 
         return array('requirements'    => $requirements,
                      'recommendations' => $recommendations);
+    }
+
+    /**
+     * Tests whether the prodived module is blocked.
+     *
+     * @param string $name  Module name to test.
+     *
+     * @return bool     True if the given module is blocked
+     */
+    public function isBlockedModule($name)
+    {
+        return in_array($name, $this->_blockedModules);
     }
 
     private function _dieWithInternalServerError()
