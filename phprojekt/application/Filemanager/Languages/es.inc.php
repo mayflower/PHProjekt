@@ -4,7 +4,7 @@ $lang["Filemanager"] = "Archivo";
 
 // Fields
  // Basic Data
-$lang["Title"] = "Título";
+$lang["Title"] = "TÃ­tulo";
 $lang["Comments"] = "Comentarios";
 $lang["Project"] = "Projecto";
 $lang["Upload"] = "Archivos";
