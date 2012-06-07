@@ -10,7 +10,6 @@
  *
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
- * @version    $Id$
  * @author     Gustavo Solt <solt@mayflower.de>
  * @package    PHProjekt
  * @link       http://www.phprojekt.com
