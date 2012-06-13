@@ -71,6 +71,15 @@ phpr.Default.System.Grid.formatIcon = function(value) {
     return '<div class="' + data[0] + '" title="' + data[1] + '"></div>';
 };
 
+dojo.declare("phpr.Default.System.Grid.cells.NonSubmittingCheckbox", dojox.grid.cells.Bool, {
+    alwaysEditing: false,
+    formatter: function() {
+        return this.formatEditing();
+    },
+    applyStaticValue: function() {
+    }
+});
+
 dojo.declare("phpr.Default.System.Grid.cells.Percentage", dojox.grid.cells._Widget, {
     // summary:
     //    Redefine the function to return the correct value
