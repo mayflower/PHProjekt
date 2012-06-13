@@ -1,4 +1,7 @@
+<?php
 /**
+ * Note Module Controller.
+ *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 3 as published by the Free Software Foundation
@@ -14,12 +17,22 @@
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
- * @version    Release: 6.1.0
- * @author     Gustavo Solt <solt@mayflower.de>
+ * @since      File available since Release 6.1.2
+ * @author     Reno Reckling <reno.reckling@mayflower.de>
  */
 
-dojo.provide("phpr.Note.Grid");
-
-dojo.declare("phpr.Note.Grid", phpr.Default.Grid, {
-});
+/**
+ * Note Module Controller.
+ *
+ * @category   PHProjekt
+ * @package    Application
+ * @subpackage Note
+ * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
+ * @license    LGPL v3 (See LICENSE file)
+ * @link       http://www.phprojekt.com
+ * @since      File available since Release 6.1.2
+ * @author     Reno Reckling <reno.reckling@mayflower.de>
+ */
+class Note_NoteController extends Phprojekt_RestController
+{
+}
