@@ -1,4 +1,7 @@
+<?php
 /**
+ * Minutes Module Controller.
+ *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 3 as published by the Free Software Foundation
@@ -14,12 +17,22 @@
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
- * @version    Release: 6.1.0
- * @author     Sven Rautenberg <sven.rautenberg@mayflower.de>
+ * @since      File available since Release 6.1.2
+ * @author     Reno Reckling <reno.reckling@mayflower.de>
  */
 
-dojo.provide("phpr.Minutes.Grid");
-
-dojo.declare("phpr.Minutes.Grid", phpr.Default.Grid, {
-});
+/**
+ * Minutes Module Controller.
+ *
+ * @category   PHProjekt
+ * @package    Application
+ * @subpackage Minutes
+ * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
+ * @license    LGPL v3 (See LICENSE file)
+ * @link       http://www.phprojekt.com
+ * @since      File available since Release 6.1.2
+ * @author     Reno Reckling <reno.reckling@mayflower.de>
+ */
+class Minutes_MinutesController extends Phprojekt_RestController
+{
+}
