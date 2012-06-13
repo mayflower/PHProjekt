@@ -65,9 +65,15 @@ abstract class Phprojekt_RestController extends Zend_Rest_Controller
         $isGlobal  = Phprojekt_Module::saveTypeIsGlobal($moduleId);
 
         if (empty($projectId) && !$isGlobal) {
-            throw new Phprojekt_PublishedException('projectId not given for non-global module');
+            throw new Zend_Controller_Action_Exception(
+                'projectId not given for non-global module',
+                422
+            );
         } else if (!empty($projectId) && $isGlobal) {
-            throw new Phprojekt_PublishedException('projectId given for global module');
+            throw new Zend_Controller_Action_Exception(
+                'projectId given for global module',
+                422
+            );
         }
 
         if ($recursive && !$model->hasField('projectId')) {
@@ -116,22 +122,22 @@ abstract class Phprojekt_RestController extends Zend_Rest_Controller
 
     public function postAction()
     {
-        throw new Phprojekt_PublishedException('Not implemented!');
+        throw new Zend_Controller_Action_Exception('Not implemented!', 501);
     }
 
     public function putAction()
     {
         if (!$id = $this->_getParam('id', false)) {
-            throw new Phprojekt_PublishedException('No id given');
+            throw new Zend_Controller_Action_Exception('No id given', 400);
         }
 
         $item = Zend_Json::decode($this->getRequest()->getRawBody());
         if (!$item) {
-            throw new Phprojekt_PublishedException('No data was received');
+            throw new Zend_Controller_Action_Exception('No data was received', 400);
         }
 
         if ($item['id'] !== $id) {
-            throw new Phprojekt_PublishedException('Can not alter the id of existing items');
+            throw new Zend_Controller_Action_Exception('Can not alter the id of existing items', 422);
         }
         unset($item['id']);
 
@@ -154,7 +160,7 @@ abstract class Phprojekt_RestController extends Zend_Rest_Controller
 
     public function deleteAction()
     {
-        throw new Phprojekt_PublishedException('Not implemented!');
+        throw new Zend_Controller_Action_Exception('Not implemented!', 501);
     }
 
     protected function newModelObject()
