@@ -220,7 +220,7 @@ final class Default_Helpers_Save
                 $rights[$userId] = Phprojekt_Acl::ALL;
             } else if (!$model->hasRight($userId, Phprojekt_Acl::WRITE)) {
                 throw new Zend_Controller_Action_Exception(
-                    'You do not have the necessary wrte right',
+                    'You do not have the necessary write right',
                     403
                 );
             }
