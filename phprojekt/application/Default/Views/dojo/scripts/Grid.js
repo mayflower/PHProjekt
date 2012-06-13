@@ -210,7 +210,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
                 name:     " ",
                 field:    "gridComboBox",
                 width:    "20px",
-                type:     dojox.grid.cells.Bool,
+                type:     phpr.Default.System.Grid.cells.NonSubmittingCheckbox,
                 editable: true
             });
         }
@@ -1396,13 +1396,18 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
         // Summary:
         //    Process the action selected in the combo, for the checked Ids. Calls 'doAction' function
         if (this.useCheckbox()) {
+            var checkBoxCellIndex = 0;
             var ids = [];
-            for (row = 0; row < this.grid.rowCount; row ++) {
-                var checked = this.grid.store.getValue(this.grid.getItem(row), 'gridComboBox');
-                if (checked) {
-                    ids[ids.length] = this.grid.store.getValue(this.grid.getItem(row), 'id');
+            for (var i = 0; i < this.grid.rowCount; i++) {
+                var inputQry = dojo.query('td[idx="0"] > input', this.grid.getRowNode(i));
+                if (inputQry.length > 0) {
+                    var checked = inputQry[0].checked;
+                    if (checked) {
+                        ids.push(this.grid.store.getValue(this.grid.getItem(i), 'id'));
+                    }
                 }
-            }
+            };
+
             if (ids.length > 0) {
                 var idsSend = ids.join(',');
                 var select = this._gridComboAction;
