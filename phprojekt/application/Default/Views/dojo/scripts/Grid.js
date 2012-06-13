@@ -1162,8 +1162,15 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
         this.showTags();
     },
 
-    refresh: function() {
-        this.grid.setQuery(this.getQuery());
+    refresh: function(idx) {
+        if (idx !== undefined) {
+            if (this.grid._by_idx[idx] && this.grid._by_idx[idx].item) {
+                delete this.grid._by_idx[idx].item;
+            }
+            this.grid.updateRow(idx);
+        } else {
+            this.grid.setQuery(this.getQuery());
+        }
     },
 
     getQuery: function() {
@@ -1326,7 +1333,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
         //    If the user can't edit the item, restore the last value
         if (this.grid.store.isDirty()) {
             this.grid.store.save({
-                onComplete: this.refresh,
+                onComplete: dojo.hitch(this, "refresh", inRowIndex),
                 scope: this
             });
         }
