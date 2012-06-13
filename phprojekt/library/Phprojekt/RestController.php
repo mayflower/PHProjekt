@@ -79,7 +79,7 @@ abstract class Phprojekt_RestController extends Zend_Rest_Controller
         if ($recursive) {
             $tree = new Phprojekt_Tree_Node_Database(new Project_Models_Project(), $projectId);
             $tree->setup();
-            $records     = $tree->getRecordsFor($model, $sort, $count, $start, $this->getFilterWhere());
+            $records     = $tree->getRecordsFor($model, $count, $start, $this->getFilterWhere(), $sort);
             $recordCount = $tree->getRecordsCount($model);
         } else {
             if (!empty($projectId) && $model->hasField('projectId')) {
