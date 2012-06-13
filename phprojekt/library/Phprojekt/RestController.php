@@ -76,9 +76,7 @@ abstract class Phprojekt_RestController extends Zend_Rest_Controller
             );
         }
 
-        if ($recursive && !$model->hasField('projectId')) {
-            throw new Phprojekt_PublishedException('recursive listing is only supported on non-global modules');
-        }
+        $recursive = $isGlobal ? false : $recursive;
 
         $records     = array();
         $recordCount = 0;
