@@ -73,6 +73,8 @@ database.params.password = "phprojekt_password"
 ; Name of the database, inside the server
 database.params.dbname = "phprojekt"
 
+database.params.charset = "utf8"
+
 ;;;;;;;
 ; LOG ;
 ;;;;;;;

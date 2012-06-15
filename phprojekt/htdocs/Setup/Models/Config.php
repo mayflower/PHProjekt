@@ -18,7 +18,7 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @version    Release: 6.1.1
+ * @version    Release: 6.1.0
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 
@@ -32,7 +32,7 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @version    Release: 6.1.1
+ * @version    Release: 6.1.0
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 class Setup_Models_Config
@@ -275,6 +275,8 @@ class Setup_Models_Config
         $content .= '; Name of the database, inside the server' . $this->_eol;
         $content .= 'database.params.dbname = "' . addcslashes($dbname, '"') . '"' . $this->_eol;
         $content .= 'database.params.port = ' . (int) $port . $this->_eol;
+        $content .= $this->_eol;
+        $content .= 'database.params.charset = "utf8"' . $this->_eol;
 
         return $content;
     }

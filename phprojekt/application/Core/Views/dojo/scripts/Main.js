@@ -15,7 +15,6 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @version    Release: 6.1.1
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 
@@ -212,19 +211,16 @@ dojo.declare("phpr.Core.Main", phpr.Default.Main, {
                 var modules       = [];
                 for (var index in systemModules) {
                     modules.push({
-                        "name":           systemModules[index],
-                        "label":          phpr.nls.get(systemModules[index]),
-                        "moduleFunction": "setUrlHash",
-                        "functionParams": "'" + parentModule + "', null, ['" + systemModules[index] + "']"
+                        "name": systemModules[index],
+                        "label": phpr.nls.get(systemModules[index])
                     });
                 }
                 var tmp = phpr.DataStore.getData({url: subModuleUrl});
                 for (var i = 0; i < tmp.length; i++) {
                     modules.push({
-                        "name":           tmp[i].name,
-                        "label":          tmp[i].label,
-                        "moduleFunction": "setUrlHash",
-                        "functionParams": "'" + parentModule + "', null, ['" + tmp[i].name + "']"
+                        "name": parentModule,
+                        "label": tmp[i].label,
+                        "action": tmp[i].name
                     });
                 }
                 this._navigation = new phpr.Default.System.TabController({ });
@@ -234,12 +230,11 @@ dojo.declare("phpr.Core.Main", phpr.Default.Main, {
                 var activeTab = false;
                 for (var i = 0; i < modules.length; i++) {
                     var liclass        = '';
-                    var moduleName     = modules[i].name;
-                    var moduleLabel    = modules[i].label;
-                    var moduleFunction = modules[i].moduleFunction;
-                    var functionParams = modules[i].functionParams;
+                    var moduleName = modules[i].name;
+                    var moduleLabel = modules[i].label;
+                    var moduleAction = modules[i].action;
 
-                    if (moduleName == this.action || moduleName == this.module) {
+                    if (moduleAction == this.state.action && moduleName == this.module) {
                         activeTab = true;
                     }
 
@@ -247,10 +242,15 @@ dojo.declare("phpr.Core.Main", phpr.Default.Main, {
                         moduleLabel: moduleLabel,
                         callback: dojo.hitch(
                             this,
-                            "_subModuleNavigationClick",
-                            parentModule,
-                            moduleFunction,
-                            functionParams)
+                            function(moduleName, moduleAction) {
+                                phpr.pageManager.modifyCurrentState(
+                                    { moduleName: moduleName, id: undefined, action: moduleAction },
+                                    { forceModuleReload: true }
+                                );
+                            },
+                            moduleName,
+                            moduleAction
+                        )
                     });
                     this._navigation.onAddChild(entry);
 
@@ -301,10 +301,6 @@ dojo.declare("phpr.Core.Main", phpr.Default.Main, {
                 moduleName: module,
                 action: data.action
             };
-
-            if (this.isSystemModule(data.moduleName)) {
-                state.parentModule = this.module;
-            }
 
             if (data.id) {
                 // If is an id, open a form

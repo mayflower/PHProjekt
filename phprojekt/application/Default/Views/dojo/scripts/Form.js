@@ -15,7 +15,6 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @version    Release: 6.1.1
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 
@@ -33,7 +32,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
     //    This Class takes care of displaying the form information we receive from our Server
     //    in a dojo form with tabs
 
-    sendData:           [],
+    sendData:           {},
     formdata:           [],
     _url:               null,
     _writePermissions:  true,
@@ -964,7 +963,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         // Description:
         //    This function prepares the content of this.sendData before it is
         //    submitted to the Server.
-        this.sendData = [];
+        this.sendData = {};
         for (var i = 0; i < this.formsWidget.length; i++) {
             if (!this.formsWidget[i].isValid()) {
                 this.formsWidget[i].validate();

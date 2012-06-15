@@ -15,7 +15,6 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @version    Release: 6.1.1
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 
@@ -97,7 +96,7 @@ dojo.declare("phpr.Core.Form", phpr.Default.Form, {
                 this.setSubmitInProgress(false);
                 new phpr.handleResponse('serverFeedback', data);
                 if (data.type == 'success') {
-                    this.customActionOnSuccess(moduleName);
+                    this.customActionOnSuccess(moduleName, this.sendData);
                     this.publish("updateCacheData");
                     phpr.pageManager.modifyCurrentState(
                         { id: undefined },

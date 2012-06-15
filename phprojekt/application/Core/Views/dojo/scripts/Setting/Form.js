@@ -15,15 +15,14 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @version    Release: 6.1.1
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 
 dojo.provide("phpr.Setting.Form");
 
 dojo.declare("phpr.Setting.Form", phpr.Core.Form, {
-    customActionOnSuccess: function(module) {
-        dojo.publish("phpr.moduleSettingsChanged", [module]);
+    customActionOnSuccess: function(module, data) {
+        dojo.publish("phpr.moduleSettingsChanged", [module, data]);
         if (phpr.submodule == 'User') {
             var result     = [];
             result.type    = 'warning';

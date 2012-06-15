@@ -15,7 +15,6 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @version    Release: 6.1.1
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 
@@ -359,7 +358,7 @@ dojo.declare("phpr.Default.SubModule.Form", phpr.Default.Form, {
         //    Return the field names with the original name
         // Description:
         //    Return the field names with the original name
-        this.sendData = [];
+        this.sendData = {};
         for (var i = 0; i < this.formsWidget.length; i++) {
             if (!this.formsWidget[i].isValid()) {
                 var parent = this.formsWidget[i].containerNode.parentNode.id;

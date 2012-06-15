@@ -19,7 +19,6 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @version    Release: 6.1.1
  * @author     Gustavao Solt <solt@mayflower.de>
  */
 
@@ -34,7 +33,6 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @version    Release: 6.1.1
  * @author     Gustavao Solt <solt@mayflower.de>
  */
 class Phprojekt_ModelInformation_Default implements Phprojekt_ModelInformation_Interface
