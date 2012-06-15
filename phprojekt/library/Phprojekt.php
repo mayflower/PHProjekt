@@ -53,7 +53,7 @@ class Phprojekt
     /**
      * The extra part of the version number.
      */
-    const VERSION_EXTRA = 'dev';
+    const VERSION_EXTRA = null;
 
     /**
      * Name of the Registry for current project.
