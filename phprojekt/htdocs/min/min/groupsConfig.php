@@ -25,7 +25,6 @@ return array(
         "//dojo/release/dojo/dojox/layout/resources/FloatingPane.css",
         "//dojo/release/dojo/dojox/layout/resources/ResizeHandle.css",
         "//css/themes/phprojekt/Calendar.css",
-        "//css/themes/phprojekt/Calendar_rtl.css",
         "//css/themes/phprojekt/ColorPalette.css",
         "//css/themes/phprojekt/Common.css",
         "//css/themes/phprojekt/Dialog.css",
