@@ -22,35 +22,35 @@ dojo.provide("phpr.Contact.Form");
 
 dojo.declare("phpr.Contact.Form", phpr.Default.DialogForm, {
 
-    initData:function() {
+    initData: function() {
         // Get all the active users
         this.userStore = new phpr.Default.System.Store.User();
         this._initData.push({'store': this.userStore});
     },
 
-    addModuleTabs:function(data) {
+    addModuleTabs: function(data) {
         return this.addHistoryTab();
     },
 
-    addBasicFields:function() {
+    addBasicFields: function() {
     },
 
-    submitForm:function() {
+    submitForm: function() {
         if (!this.prepareSubmission()) {
             return false;
         }
 
         this.setSubmitInProgress(true);
         phpr.send({
-            url: phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSave/nodeId/' + phpr.currentProjectId
-                + '/id/' + this.id,
+            url: phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSave/nodeId/' + phpr.currentProjectId +
+                '/id/' + this.id,
             content:   this.sendData
         }).then(dojo.hitch(this, function(data) {
             this.setSubmitInProgress(false);
             if (data) {
                 new phpr.handleResponse('serverFeedback', data);
                 if (!this.id) {
-                    this.id = data['id'];
+                    this.id = data.id;
                 }
                 if (data.type == 'success') {
                     this.publish("updateCacheData");
@@ -60,7 +60,7 @@ dojo.declare("phpr.Contact.Form", phpr.Default.DialogForm, {
         }));
     },
 
-    deleteForm:function() {
+    deleteForm: function() {
         phpr.send({
             url:       phpr.webpath + 'index.php/' + phpr.module + '/index/jsonDelete/id/' + this.id
         }).then(dojo.hitch(this, function(data) {
@@ -74,7 +74,7 @@ dojo.declare("phpr.Contact.Form", phpr.Default.DialogForm, {
         }));
     },
 
-    updateData:function() {
+    updateData: function() {
         phpr.DataStore.deleteData({url: this._url});
     }
 });
