@@ -34,6 +34,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
 
     sendData:           {},
     formdata:           [],
+    userStore:          null,
     _url:               null,
     _writePermissions:  true,
     _deletePermissions: false,
@@ -177,10 +178,6 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
             '/index/jsonGetUsersRights' + '/nodeId/' + phpr.currentProjectId + '/id/' + this.id;
         this._initData.push({'url': this._accessUrl});
 
-        // Get all the active users
-        this.userStore = new phpr.Default.System.Store.User();
-        this._initData.push({'store': this.userStore});
-
         // Get the tags
         this._tagUrl  = phpr.webpath + 'index.php/Default/Tag/jsonGetTagsByModule/moduleName/' +
             phpr.module + '/id/' + this.id;
@@ -197,7 +194,8 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
             return;
         }
 
-        var userList      = this.userStore.getList();
+        // use an eventual override, if there is no local userStore, use the global
+        var userList      = this.userStore ? this.userStore.getList() : phpr.userStore.getList();
         var accessContent = phpr.DataStore.getData({url: this._accessUrl});
         var currentUser   = data[0].rights[phpr.currentUserId] ? phpr.currentUserId : 0;
         var users         = [];
@@ -1166,8 +1164,8 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         //    This function collect and process the history data
         // Description:
         //    This function collect and process the history data
-        var history     = phpr.DataStore.getData({url: this._historyUrl});
-        var userList    = this.userStore.getList();
+        var history = phpr.DataStore.getData({url: this._historyUrl});
+        var userList = this.userStore ? this.userStore.getList() : phpr.userStore.getList();
         var historyData = [];
         var userDisplay = [];
         var row         = 0;

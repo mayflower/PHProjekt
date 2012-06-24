@@ -169,7 +169,9 @@ class JsController extends IndexController
         $scripttext .= $this->_getModuleScripts(PHPR_USER_CORE_PATH, $scripts, $module);
 
         $scripttext .= '
-            this.' . $module . ' = new phpr.' . $module . '.Main();
+            phpr.pageManager.register(
+                new phpr.' . $module . '.Main()
+            );
         ';
 
         $this->_send($this->_collectTemplates() . $scripttext);
