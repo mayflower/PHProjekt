@@ -284,7 +284,7 @@ class Phprojekt
     public function getTranslate($locale = null)
     {
         if (null === $locale) {
-            $locale = Phprojekt_User_User::getSetting("language", $this->_config->language);
+            $locale = Phprojekt_Auth_Proxy::getEffectiveUser()->getSetting("language", $this->_config->language);
         }
 
         if (!($translate = $this->_cache->load('Phprojekt_getTranslate_' . $locale))) {
@@ -347,7 +347,7 @@ class Phprojekt
         }
 
         if (null === $locale) {
-            $locale = Phprojekt_User_User::getSetting("language", $this->_config->language);
+            $locale = Phprojekt_Auth_Proxy::getEffectiveUser()->getSetting("language", $this->_config->language);
         }
 
         return $translate->translate($message, $moduleName, $locale);

@@ -59,6 +59,13 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
     protected $_validate = null;
 
     /**
+     * Setting object. Cached for Efficiency.
+     *
+     * @var Phprojekt_Setting
+     */
+    protected $_setting = null;
+
+    /**
      * Initialize new user.
      *
      * If is seted the user id in the session,
@@ -294,12 +301,14 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
      *
      * @return mix Setting value.
      */
-    static public function getSetting($settingName, $defaultValue = null)
+    public function getSetting($settingName, $defaultValue = null)
     {
-        $setting = new Phprojekt_Setting();
-        $setting->setModule('User');
+        if (is_null($this->_setting)) {
+            $this->_setting = new Phprojekt_Setting();
+            $this->_setting->setModule('User');
+        }
 
-        $value = $setting->getSetting($settingName);
+        $value = $this->_setting->getSetting($settingName, $this->id);
         if (empty($value)) {
             $value = $defaultValue;
         }
@@ -315,7 +324,7 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
      */
     public static function getUserDateTimeZone()
     {
-        $tz = self::getSetting('timezone', '0');
+        $tz = Phprojekt_Auth_Proxy::getEffectiveUser()->getSetting('timezone', '0');
         $tz = explode('_', $tz);
         $hours = (int) $tz[0];
         if ($hours >= 0) {

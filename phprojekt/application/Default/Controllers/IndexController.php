@@ -261,7 +261,10 @@ class IndexController extends Zend_Controller_Action
      */
     public function indexAction()
     {
-        $language = Phprojekt_User_User::getSetting("language", Phprojekt::getInstance()->getConfig()->language);
+        $language = Phprojekt_Auth_Proxy::getEffectiveUser()->getSetting(
+            "language",
+            Phprojekt::getInstance()->getConfig()->language
+        );
 
         $this->view->webpath        = Phprojekt::getInstance()->getConfig()->webpath;
         $this->view->language       = $language;
