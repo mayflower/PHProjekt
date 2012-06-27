@@ -913,17 +913,9 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
      */
     public function copy()
     {
-        $m = new Calendar2_Models_Calendar2();
-        $m->find($this->id);
-
-        // use _data to bypass __set
-        foreach ($this->_data as $k => $v) {
-            $m->_data[$k] = $v;
-        }
-        $m->_participantData     = $this->_participantData;
-        $m->_participantDataInDb = $this->_participantDataInDb;
-        $m->_isFirst             = $this->_isFirst;
-        $m->_originalStart       = $this->_originalStart;
+        $m            = clone $this;
+        $m->_data     = $this->_data;
+        $m->_storedId = $this->_storedId;
 
         return $m;
     }
