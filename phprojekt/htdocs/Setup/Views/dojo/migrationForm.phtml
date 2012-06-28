@@ -128,7 +128,7 @@ style="display: none">
         <button dojoType="dijit.form.Button" baseClass="positive" type="button" iconClass="cross"
         onClick="
         phprSend({
-            url:       '<?php echo $this->webPath; ?>' + 'setup.php/index/jsonFinish',
+            url:       'setup.php/index/jsonFinish',
             onSuccess: dojo.hitch(this, function(data) {
                 dijit.byId('formContent').attr('content', data.template);
                 changeStep(6, 7);

@@ -163,7 +163,7 @@
 
             makeImg(params['module']);
             phprSend({
-                url: '<?php echo $this->webPath; ?>' + 'setup.php/index/jsonMigrateSetup/module/'
+                url: 'setup.php/index/jsonMigrateSetup/module/'
                     + params['module'],
                 content:   dijit.byId('installForm').attr('value'),
                 onSuccess: dojo.hitch(this, function(data) {
