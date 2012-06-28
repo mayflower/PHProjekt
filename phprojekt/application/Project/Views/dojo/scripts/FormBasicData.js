@@ -24,13 +24,13 @@ dojo.declare("phpr.Project.FormBasicData", phpr.Project.Form, {
     setUrl: function() {
         // Summary:
         //    Set the url for get the data
-        this._url = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonDetail/nodeId/' +
+        this._url = 'index.php/' + phpr.module + '/index/jsonDetail/nodeId/' +
                     phpr.tree.getParentId(this.id) + '/id/' + this.id;
     },
 
     initData: function() {
         // Get the rights for other users
-        this._accessUrl = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonGetUsersRights' +
+        this._accessUrl = 'index.php/' + phpr.module + '/index/jsonGetUsersRights' +
                         '/nodeId/' + phpr.tree.getParentId(phpr.currentProjectId) + '/id/' + this.id;
         this._initData.push({'url': this._accessUrl});
 
@@ -47,7 +47,7 @@ dojo.declare("phpr.Project.FormBasicData", phpr.Project.Form, {
         this._initData.push({'store': this.moduleStore});
 
         // Get the tags
-        this._tagUrl  = phpr.webpath + 'index.php/Default/Tag/jsonGetTagsByModule/moduleName/' + phpr.module +
+        this._tagUrl  = 'index.php/Default/Tag/jsonGetTagsByModule/moduleName/' + phpr.module +
                         '/id/' + this.id;
         this._initData.push({'url': this._tagUrl});
     },
@@ -64,7 +64,7 @@ dojo.declare("phpr.Project.FormBasicData", phpr.Project.Form, {
         }
 
         phpr.send({
-            url: phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSave/nodeId/' +
+            url: 'index.php/' + phpr.module + '/index/jsonSave/nodeId/' +
                     phpr.tree.getParentId(this.id) + '/id/' + this.id,
             content:   this.sendData
         }).then(dojo.hitch(this, function(data) {
@@ -75,7 +75,7 @@ dojo.declare("phpr.Project.FormBasicData", phpr.Project.Form, {
                 }
                 if (data.type == 'success') {
                     return phpr.send({
-                        url: phpr.webpath + 'index.php/Default/Tag/jsonSaveTags/moduleName/' + phpr.module +
+                        url: 'index.php/Default/Tag/jsonSaveTags/moduleName/' + phpr.module +
                             '/id/' + this.id,
                         content: this.sendData
                     });

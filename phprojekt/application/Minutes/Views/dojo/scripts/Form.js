@@ -40,7 +40,7 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.DialogForm, {
         //    The form will wait for all the data are loaded.
         this.inherited(arguments);
         if (this.id > 0) {
-            this._peopleUrl = phpr.webpath + 'index.php/Minutes/index/jsonListUser/id/' + this.id;
+            this._peopleUrl = 'index.php/Minutes/index/jsonListUser/id/' + this.id;
             this._initData.push({'url': this._peopleUrl});
         }
     },
@@ -111,7 +111,7 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.DialogForm, {
             this.garbageCollector.addEvent(
                 dojo.connect(dijit.byId('minutesMailFormSend'), 'onClick', dojo.hitch(this, function() {
                     phpr.send({
-                        url: phpr.webpath + 'index.php/Minutes/index/jsonSendMail/nodeId/' + phpr.currentProjectId +
+                        url: 'index.php/Minutes/index/jsonSendMail/nodeId/' + phpr.currentProjectId +
                             '/id/' + this.id,
                         content: dijit.byId('mailFormTab').get('value')
                     }).then(dojo.hitch(this, function(data) {

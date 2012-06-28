@@ -66,7 +66,7 @@ dojo.declare("phpr.Default.SubModule", phpr.Default.System.Component, {
         //    Set all the urls
         // Description:
         //    Set all the urls
-        var url = phpr.webpath + 'index.php/' + this.module + '/' + this.getController();
+        var url = 'index.php/' + this.module + '/' + this.getController();
         switch (type) {
             case 'grid':
                 url += '/jsonList/';

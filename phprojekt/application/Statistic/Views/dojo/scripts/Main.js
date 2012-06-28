@@ -82,7 +82,7 @@ dojo.declare("phpr.Statistic.Main", phpr.Default.Main, {
         dijit.byId("startDate").set('value', new Date(start.getFullYear(), start.getMonth(), start.getDate()));
         dijit.byId("endDate").set('value', new Date(end.getFullYear(), end.getMonth(), end.getDate()));
 
-        this._url = phpr.webpath + 'index.php/Statistic/index/jsonGetStatistic'
+        this._url = 'index.php/Statistic/index/jsonGetStatistic'
             + '/nodeId/' + phpr.currentProjectId
             + '/startDate/' + phpr.date.getIsoDate(start)
             + '/endDate/' + phpr.date.getIsoDate(end);

@@ -442,7 +442,7 @@ dojo.declare("phpr.DataStore", null, {
         //    Delete all the cache
         for (var i in this._internalCache) {
             // Special case for global modules since are not reloaded
-            if (this._internalCache[i] && i != phpr.webpath + 'index.php/Core/module/jsonGetGlobalModules') {
+            if (this._internalCache[i] && i != 'index.php/Core/module/jsonGetGlobalModules') {
                 this._internalCache[i].data = [];
             }
         }
@@ -481,7 +481,7 @@ dojo.declare("phpr.ReadStore", dojox.data.QueryReadStore, {
             phpr.handleError(this.url, 'exception');
         } else if (data.code && data.code == 500) {
             // 500 is the error code for logut
-            location = phpr.webpath + 'index.php/Login/logout';
+            location = 'index.php/Login/logout';
         } else if (data.type && data.type == "error") {
             phpr.handleError(this.url, 'error', data.message);
         } else {
@@ -633,7 +633,7 @@ dojo.declare("phpr.translator", null, {
     },
 
     _loadLanguage: function(lang) {
-        var url = phpr.webpath + 'index.php/Default/index/jsonGetTranslatedStrings/language/' + lang;
+        var url = 'index.php/Default/index/jsonGetTranslatedStrings/language/' + lang;
         var param = { url: url };
         phpr.DataStore.addStore(param);
         return phpr.DataStore.requestData(param).then(function () {

@@ -28,7 +28,7 @@ dojo.declare("phpr.Default.System.FrontendMessage", null, {
     _timeout: null,
 
     constructor: function() {
-        this.url = phpr.webpath + 'index.php/Default/index/jsonGetFrontendMessage';
+        this.url = 'index.php/Default/index/jsonGetFrontendMessage';
     },
 
     getFrontendMessage: function() {
@@ -93,7 +93,7 @@ dojo.declare("phpr.Default.System.FrontendMessage", null, {
         //    Disables all the frontend messages by calling the disableFrontendMessages action
         //    from the indexController
         this._disabled = true;
-        var url = phpr.webpath + 'index.php/Default/index/jsonDisableFrontendMessages';
+        var url = 'index.php/Default/index/jsonDisableFrontendMessages';
         phpr.send({
             url:       url
         }).then(dojo.hitch(this, function(data) {
@@ -128,7 +128,7 @@ dojo.declare("phpr.Default.System.FrontendMessage", null, {
         // Delete caches
         if (data.process == 'add' || data.process == 'delete' || data.process == 'edit') {
             // Delete all links of this module
-            var url = phpr.webpath + 'index.php/' + data.module;
+            var url = 'index.php/' + data.module;
             phpr.DataStore.deleteDataPartialString({url: url});
 
             // Delete all links related of this module
@@ -136,15 +136,15 @@ dojo.declare("phpr.Default.System.FrontendMessage", null, {
             phpr.DataStore.deleteDataPartialString({url: url});
 
             // Delete general tags
-            var url = phpr.webpath + 'index.php/Default/Tag/jsonGetTags';
+            var url = 'index.php/Default/Tag/jsonGetTags';
             phpr.DataStore.deleteData({url: url});
 
             if (data.module == 'Project') {
                 // Update for projects
-                var url = phpr.webpath + 'index.php/Default/index/jsonGetModulesPermission/nodeId/' + data.project;
+                var url = 'index.php/Default/index/jsonGetModulesPermission/nodeId/' + data.project;
                 phpr.DataStore.deleteData({url: url});
 
-                var url = phpr.webpath + 'index.php/Timecard';
+                var url = 'index.php/Timecard';
                 phpr.DataStore.deleteDataPartialString({url: url});
 
                 phpr.tree.updateData();

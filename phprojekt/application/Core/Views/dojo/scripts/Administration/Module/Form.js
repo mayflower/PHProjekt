@@ -51,7 +51,7 @@ dojo.declare("phpr.Module.Form", phpr.Core.DialogForm, {
 
     initData: function() {
         // Get all the active users
-        this._moduleDesignerUrl  = phpr.webpath + 'index.php/Core/moduleDesigner/jsonDetail/nodeId/1/id/' + this.id;
+        this._moduleDesignerUrl  = 'index.php/Core/moduleDesigner/jsonDetail/nodeId/1/id/' + this.id;
         this._initData.push({'url': this._moduleDesignerUrl});
     },
 
@@ -291,7 +291,7 @@ dojo.declare("phpr.Module.Form", phpr.Core.DialogForm, {
 
         this.setSubmitInProgress(true);
         phpr.send({
-            url:       phpr.webpath + 'index.php/Core/moduleDesigner/jsonSave/nodeId/1/id/' + this.id,
+            url:       'index.php/Core/moduleDesigner/jsonSave/nodeId/1/id/' + this.id,
             content:   this.sendData
         }).then(dojo.hitch(this, function(data) {
             if (data) {
@@ -323,7 +323,7 @@ dojo.declare("phpr.Module.Form", phpr.Core.DialogForm, {
 
     deleteForm: function() {
         phpr.send({
-            url:       phpr.webpath + 'index.php/Core/' + phpr.module.toLowerCase() + '/jsonDelete/id/' + this.id
+            url:       'index.php/Core/' + phpr.module.toLowerCase() + '/jsonDelete/id/' + this.id
         }).then(dojo.hitch(this, function(data) {
             new phpr.handleResponse('serverFeedback', data);
             if (data.type == 'success') {

@@ -22,11 +22,11 @@ dojo.provide("phpr.Core.Grid");
 
 dojo.declare("phpr.Core.Grid", phpr.Default.Grid, {
     setUrl:function() {
-        this.url = phpr.webpath + 'index.php/Core/' + this.main.module.toLowerCase() + '/jsonList/nodeId/1';
+        this.url = 'index.php/Core/' + this.main.module.toLowerCase() + '/jsonList/nodeId/1';
     },
 
     setGetExtraActionsUrl:function() {
-        this.getActionsUrl = phpr.webpath + 'index.php/Core/' + this.main.module.toLowerCase() + '/jsonGetExtraActions';
+        this.getActionsUrl = 'index.php/Core/' + this.main.module.toLowerCase() + '/jsonGetExtraActions';
     },
 
     useCheckbox:function() {

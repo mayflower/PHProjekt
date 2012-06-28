@@ -49,7 +49,7 @@ dojo.declare("phpr.Calendar2.ViewMonthList", phpr.Calendar2.DefaultView, {
     setUrl: function() {
         // Summary:
         //    Sets the url to get the data from
-        this.url = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonPeriodList/dateStart/' +
+        this.url = 'index.php/' + phpr.module + '/index/jsonPeriodList/dateStart/' +
             this._schedule[0][0].date + '/dateEnd/' + this._schedule[this._schedule.length - 1][6].date +
             '/userId/' + this.main.getActiveUser().id;
     },

@@ -63,7 +63,7 @@ dojo.declare("phpr.Timecard.Grid", phpr.Default.System.Component, {
         //    Set the url for getting the data
         // Description:
         //    Set the url for getting the data
-        this.url = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonMonthList/year/' + this._year +
+        this.url = 'index.php/' + phpr.module + '/index/jsonMonthList/year/' + this._year +
             '/month/' + (this._month + 1);
     },
 

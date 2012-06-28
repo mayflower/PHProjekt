@@ -603,7 +603,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
             label:     phpr.nls.get('Logout'),
             showLabel: true,
             onClick:   dojo.hitch(this, function() {
-                location = phpr.webpath + 'index.php/Login/logout';
+                location = 'index.php/Login/logout';
             })
         });
 
@@ -974,7 +974,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         //    The server return the found records and the function display it
         if (words.length >= 3) {
             // hide the suggestBox
-            var getDataUrl = phpr.webpath + 'index.php/Default/Search/jsonSearch';
+            var getDataUrl = 'index.php/Default/Search/jsonSearch';
             phpr.send({
                 url:       getDataUrl,
                 content:   {words: words, count: 10}
@@ -1024,7 +1024,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         //    The server return the found records and the function display it
         if (words.length >= 3) {
             this.searchButton.hideSuggest();
-            var getDataUrl   = phpr.webpath + 'index.php/Default/Search/jsonSearch';
+            var getDataUrl   = 'index.php/Default/Search/jsonSearch';
             var resultsTitle = phpr.nls.get('Search results');
             var content      = {words: words};
             this.showResults(getDataUrl, content, resultsTitle);
@@ -1036,7 +1036,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         //    This function reload the grid place with the result of the tag search
         // Description:
         //    The server return the found records and the function display it
-        var getDataUrl   = phpr.webpath + 'index.php/Default/Tag/jsonGetModulesByTag';
+        var getDataUrl   = 'index.php/Default/Tag/jsonGetModulesByTag';
         var resultsTitle = phpr.nls.get('Tag results');
         var content      = {tag: tag};
         this.showResults(getDataUrl, content, resultsTitle);
@@ -1084,7 +1084,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         //    Request to the server the languagues strings and change the current lang
         //    Call the reload function then
         phpr.language = language;
-        this._langUrl = phpr.webpath + 'index.php/Default/index/jsonGetTranslatedStrings/language/' + phpr.language;
+        this._langUrl = 'index.php/Default/index/jsonGetTranslatedStrings/language/' + phpr.language;
         phpr.DataStore.addStore({url: this._langUrl});
         phpr.DataStore.requestData({
             url: this._langUrl,
@@ -1130,7 +1130,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
             this.showHelp_part2(helpData, phpr.nls);
         } else {
             // If help is not available in current language, the default language is English
-            var defLangUrl = phpr.webpath + 'index.php/Default/index/jsonGetTranslatedStrings/language/en';
+            var defLangUrl = 'index.php/Default/index/jsonGetTranslatedStrings/language/en';
             phpr.DataStore.addStore({url: defLangUrl});
             phpr.DataStore.requestData({
                 url:         defLangUrl,
