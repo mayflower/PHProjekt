@@ -21,7 +21,7 @@
 dojo.provide("phpr.Module.Main");
 
 dojo.declare("phpr.Module.Main", phpr.Core.Main, {
-    constructor:function() {
+    constructor: function() {
         this.module = "Module";
         this.loadFunctions(this.module);
 
@@ -32,15 +32,15 @@ dojo.declare("phpr.Module.Main", phpr.Core.Main, {
         dojo.subscribe("Module.submitForm", this, "submitForm");
     },
 
-    customSetSubmoduleNavigation:function() {
+    customSetSubmoduleNavigation: function() {
         this.setNewEntry();
     },
 
-    openDialog:function() {
+    openDialog: function() {
         this.form.openDialog();
     },
 
-    submitForm:function() {
+    submitForm: function() {
         this.form.submitForm();
     }
 });
