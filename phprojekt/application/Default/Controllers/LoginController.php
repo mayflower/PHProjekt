@@ -95,7 +95,7 @@ class LoginController extends Zend_Controller_Action
                 $frontendMessage->setControllProcess(Phprojekt_Notification::LAST_ACTION_LOGIN);
                 $frontendMessage->saveFrontendMessage();
                 Default_Helpers_Upload::cleanUnusedFiles();
-                $this->_redirect($config->webpath . 'index.php' . $hash);
+                $this->_redirect('index.php' . $hash);
                 die();
             }
         } catch (Phprojekt_Auth_Exception $error) {
@@ -161,7 +161,7 @@ class LoginController extends Zend_Controller_Action
 
         Phprojekt_Auth::logout();
         $config = Phprojekt::getInstance()->getConfig();
-        $this->_redirect($config->webpath . 'index.php');
+        $this->_redirect('index.php');
         die();
     }
 }

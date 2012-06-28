@@ -92,7 +92,7 @@ class Core_UpgradeController extends Core_IndexController
 
         // TODO: Notify the user that we're happy
         $config = Phprojekt::getInstance()->getConfig();
-        $this->_redirect($config->webpath . '/index.php');
+        $this->_redirect('index.php');
     }
 
     /**

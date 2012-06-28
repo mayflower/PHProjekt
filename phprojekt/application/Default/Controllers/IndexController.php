@@ -1190,7 +1190,7 @@ class IndexController extends Zend_Controller_Action
         $sessionName   = 'Phprojekt_CsrfToken';
         $csrfNamespace = new Zend_Session_Namespace($sessionName);
         $config        = Phprojekt::getInstance()->getConfig();
-        $linkBegin     = $config->webpath . 'index.php/' . $this->getModuleName() . '/index/';
+        $linkBegin     = 'index.php/' . $this->getModuleName() . '/index/';
         $fieldId       = $this->getRequest()->getParam('fieldId', '');
 
         // Add all the extra parameters that have the original URL
