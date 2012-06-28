@@ -44,7 +44,6 @@ dojo.require("dojox.dtl.Inline");
 
 // Global vars
 var module           = null;
-var webpath          = null;
 var currentProjectId = null;
 var rootProjectId    = null;
 var userTags         = null;
@@ -772,7 +771,7 @@ phpr.handleError = function(url, type, message) {
     response.type = 'error';
 
     if (url) {
-        response.message = url.replace(phpr.webpath, "") + ': ';
+        response.message = url + ': ';
     } else {
         response.message = '';
     }

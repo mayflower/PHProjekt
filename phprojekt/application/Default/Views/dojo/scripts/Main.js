@@ -293,8 +293,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                 }
             }
         } else {
-            var subModuleUrl = phpr.webpath +
-                'index.php/Default/index/jsonGetModulesPermission/nodeId/' +
+            var subModuleUrl = 'index.php/Default/index/jsonGetModulesPermission/nodeId/' +
                 phpr.currentProjectId;
             phpr.DataStore.addStore({url: subModuleUrl});
             phpr.DataStore.requestData({
@@ -468,11 +467,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
 
         phpr.viewManager.getView().centerMainContent.set('content', gridBoxContainer);
         gridBoxContainer.startup();
-        var updateUrl = phpr.webpath +
-            'index.php/' +
-            phpr.module +
-            '/index/jsonSaveMultiple/nodeId/' +
-            phpr.currentProjectId;
+        var updateUrl = 'index.php/' + phpr.module + '/index/jsonSaveMultiple/nodeId/' + phpr.currentProjectId;
         this.grid = new this.gridWidget(
             updateUrl,
             this,
@@ -486,11 +481,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         //    Set and start the widgets of the module
         // Description:
         //    Set and start the widgets of the module
-        var updateUrl = phpr.webpath +
-            'index.php/' +
-            phpr.module +
-            '/index/jsonSaveMultiple/nodeId/' +
-            phpr.currentProjectId;
+        var updateUrl = 'index.php/' + phpr.module + '/index/jsonSaveMultiple/nodeId/' + phpr.currentProjectId;
         this.destroyGrid();
         var gridBoxContainer = new phpr.Default.System.TemplateWrapper({
             templateName: "phpr.Default.template.GridBox.html"
@@ -661,9 +652,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         // Description:
         //    When calling this function, the available Submodules for the current Module
         //    are received from the server and the Navigation is rendered accordingly
-        var subModuleUrl = phpr.webpath +
-            'index.php/Default/index/jsonGetModulesPermission/nodeId/' +
-            phpr.currentProjectId;
+        var subModuleUrl = 'index.php/Default/index/jsonGetModulesPermission/nodeId/' + phpr.currentProjectId;
         var createPermissions = false;
         phpr.DataStore.addStore({url: subModuleUrl});
         phpr.DataStore.requestData({

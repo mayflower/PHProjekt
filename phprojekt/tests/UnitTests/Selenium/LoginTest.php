@@ -45,7 +45,7 @@ class Selenium_LoginTest extends Selenium_SeleniumInit
     function testLogin()
     {
         // Open phprojekt document root and get redirected
-        $this->open($this->config->webpath);
+        $this->open('');
 
         $this->assertEquals("Login", $this->getTitle());
     }
@@ -53,7 +53,7 @@ class Selenium_LoginTest extends Selenium_SeleniumInit
     function testEmptyUsername()
     {
         // Open phprojekt document root and get redirected
-        $this->open($this->config->webpath);
+        $this->open('');
 
         // Check for empty username
         $this->type("password", "nothing");
@@ -69,7 +69,7 @@ class Selenium_LoginTest extends Selenium_SeleniumInit
     function testEmptyPassword()
     {
         // Open phprojekt document root and get redirected
-        $this->open($this->config->webpath);
+        $this->open('');
 
         // Check for empty password
         $this->type("username", "nothing");
@@ -85,7 +85,7 @@ class Selenium_LoginTest extends Selenium_SeleniumInit
     function testWrongCombination()
     {
         // Open phprojekt document root and get redirected
-        $this->open($this->config->webpath);
+        $this->open('');
         $this->type("username", "david");
         $this->type("password", "wrong");
 
@@ -102,7 +102,7 @@ class Selenium_LoginTest extends Selenium_SeleniumInit
     function testCorrectCombination()
     {
         // Open phprojekt document root and get redirected
-        $this->open($this->config->webpath);
+        $this->open('');
         $this->type("username", "david");
 
         // Actual login with correct data
@@ -110,6 +110,6 @@ class Selenium_LoginTest extends Selenium_SeleniumInit
         $this->click("//input[@value='Send']");
         $this->waitForPageToLoad("30000");
 
-        $this->assertEquals($this->_config->webpath . 'index.php', $this->getLocation());
+        $this->assertEquals('index.php', $this->getLocation());
     }
 }

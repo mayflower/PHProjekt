@@ -47,7 +47,6 @@ class LoginController extends Zend_Controller_Action
         $this->getResponse()->clearHeaders();
         $this->getResponse()->clearBody();
 
-        $this->view->webpath        = Phprojekt::getInstance()->getConfig()->webpath;
         $this->view->compressedDojo = (bool) Phprojekt::getInstance()->getConfig()->compressedDojo;
 
         $this->render('login');
@@ -80,7 +79,6 @@ class LoginController extends Zend_Controller_Action
         $keepLogged = ($keepLogged == 1) ? true : false;
         $loginServer = $this->getRequest()->getParam('domain', null);
 
-        $this->view->webpath        = Phprojekt::getInstance()->getConfig()->webpath;
         $this->view->compressedDojo = (bool) Phprojekt::getInstance()->getConfig()->compressedDojo;
 
         try {

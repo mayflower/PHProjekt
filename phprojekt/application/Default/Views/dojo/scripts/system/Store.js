@@ -103,9 +103,7 @@ dojo.declare("phpr.Default.System.Store.User", phpr.Default.System.Store, {
 
 dojo.declare("phpr.Default.System.Store.Module", phpr.Default.System.Store, {
     constructor: function(nodeId, id) {
-        this._url = phpr.webpath +
-            'index.php/Project/index/jsonGetModulesProjectRelation' +
-            '/nodeId/' + nodeId + '/id/' + id;
+        this._url = 'index.php/Project/index/jsonGetModulesProjectRelation' + '/nodeId/' + nodeId + '/id/' + id;
     },
 
     makeSelect: function() {
@@ -156,9 +154,7 @@ dojo.declare("phpr.Default.System.Store.Role", phpr.Default.System.Store, {
     _relationList: null,
 
     constructor: function(nodeId, id) {
-        this._url = phpr.webpath +
-            'index.php/Project/index/jsonGetProjectRoleUserRelation' +
-            '/nodeId/' + nodeId + '/id/' + id;
+        this._url = 'index.php/Project/index/jsonGetProjectRoleUserRelation' + '/nodeId/' + nodeId + '/id/' + id;
     },
 
     makeSelect: function() {

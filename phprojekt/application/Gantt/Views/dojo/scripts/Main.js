@@ -50,7 +50,6 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
         var content = new phpr.Default.System.TemplateWrapper({
             templateName: "phpr.Gantt.template.mainContent.html",
             templateData: {
-                webpath:                     phpr.webpath,
                 selectedProjectTimelineText: phpr.nls.get('Selected Project Timeline'),
                 projectPeriodHelp:           projectPeriodHelp
             }
@@ -140,7 +139,6 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
                 gantt:         this.gantt,
                 STEPPING:      this.gantt.STEPPING,
                 width:         width + 4,
-                webpath:       phpr.webpath
             });
 
             dijit.byId('ganttObject').container = this.gantt;

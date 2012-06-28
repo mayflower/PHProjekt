@@ -86,7 +86,7 @@ class Selenium_SeleniumInit extends PHPUnit_Extensions_SeleniumTestCase
         $this->setAutoStop(false);
         $this->config = Phprojekt::getInstance()->getConfig();
         $this->verificationErrors = array();
-        $this->setBrowserUrl($this->config->webpath);
+        $this->setBrowserUrl('');
     }
 
     function login()

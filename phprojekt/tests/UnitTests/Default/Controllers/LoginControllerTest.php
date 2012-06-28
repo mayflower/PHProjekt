@@ -50,7 +50,7 @@ class Phprojekt_LoginController_Test extends FrontInit
     public function testLoginIndexAction()
     {
         $this->request->setActionName('index');
-        $this->request->setBaseUrl($this->config->webpath . 'index.php');
+        $this->request->setBaseUrl('index.php');
         $this->request->setPathInfo('Login/index');
         $this->request->setRequestUri('/Login/index');
         $response = $this->getResponse();

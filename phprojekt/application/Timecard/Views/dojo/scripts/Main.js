@@ -55,8 +55,7 @@ dojo.declare("phpr.Timecard.Store", null, {
 
     _setUrls: function() {
         this._favoritesUrl = 'index.php/Timecard/index/jsonGetFavoritesProjects';
-        this._url = phpr.webpath +
-                    'index.php/Timecard/index/jsonGetRunningBookings/' +
+        this._url = 'index.php/Timecard/index/jsonGetRunningBookings/' +
                     'year/' + this._date.getFullYear() +
                     '/month/' + (this._date.getMonth() + 1) +
                     '/date/' + this._date.getDate()

@@ -50,7 +50,6 @@ class Core_UpgradeController extends Core_IndexController
             $config->language
         );
 
-        $this->view->webPath        = $config->webpath;
         $this->view->language       = $language;
         $this->view->compressedDojo = (bool) $config->compressedDojo;
         $this->view->frontendMsg    = (bool) $config->frontendMessages;

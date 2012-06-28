@@ -138,7 +138,6 @@ dojo.declare("phpr.Module.Form", phpr.Core.DialogForm, {
             tabs[t].name = phpr.nls.get(tabs[t].name);
         }
         this.render(["phpr.Core.Module.template", "moduleDesigner.html"], this._dialog.containerNode, {
-            webpath:     phpr.webpath,
             tableText:   phpr.nls.get('Database'),
             formText:    phpr.nls.get('Form'),
             listText:    phpr.nls.get('Grid'),

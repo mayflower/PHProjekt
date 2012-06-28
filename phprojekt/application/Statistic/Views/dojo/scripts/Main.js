@@ -41,7 +41,6 @@ dojo.declare("phpr.Statistic.Main", phpr.Default.Main, {
         var content = new phpr.Default.System.TemplateWrapper({
             templateName: "phpr.Statistic.template.mainContent.html",
             templateData: {
-                webpath:            phpr.webpath,
                 selectedPeriodText: phpr.nls.get('Selected Statistic Period'),
                 selectedPeriodHelp: phpr.nls.get('Choose here the period for the statistics to be calculated.')
             }
