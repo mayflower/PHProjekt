@@ -184,10 +184,10 @@ dojo.declare("phpr.Calendar2.ViewMonthList", phpr.Calendar2.DefaultView, {
                 for (var p in content[event].confirmationStatuses) {
                     var status = content[event].confirmationStatuses[p];
                     if (1 == status) { // Pending
-                        warning = '<img src="' + phpr.webpath + '/css/themes/phprojekt/images/help.gif"' + ' title="' +
+                        warning = '<img src="css/themes/phprojekt/images/help.gif"' + ' title="' +
                             phpr.nls.get('Some participants have not accepted yet.') + '"/>';
                     } else if (3 == status) { //Rejected
-                        warning = '<img src="' + phpr.webpath + '/css/themes/phprojekt/images/warning.png"' +
+                        warning = '<img src="css/themes/phprojekt/images/warning.png"' +
                             ' title="' + phpr.nls.get('Some participants have rejected your invitation.') + '"/>';
                         // Break to prevent warning from being overwritten if
                         // someone after this participant is pending.
@@ -198,7 +198,7 @@ dojo.declare("phpr.Calendar2.ViewMonthList", phpr.Calendar2.DefaultView, {
                 // We're just invited. Let's remind the user if we didn't
                 // respond yet.
                 if (content[event].confirmationStatus == 1) {
-                    warning = '<img src="' + phpr.webpath + '/css/themes/phprojekt/images/help.gif"' + ' title="' +
+                    warning = '<img src="css/themes/phprojekt/images/help.gif"' + ' title="' +
                         phpr.nls.get('You did not respond to this invitation yet.') + '"/>';
                 }
             }
