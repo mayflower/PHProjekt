@@ -1575,7 +1575,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
         // Summary:
         //    Isolated code for easy customization, this function returns the URL to be called for the requested action.
 
-        return phpr.webpath + 'index.php/' + phpr.module + '/index/' + action +
+        return 'index.php/' + phpr.module + '/index/' + action +
             '/nodeId/' + phpr.currentProjectId + '/' + idUrl + '/' + ids;
     },
 

@@ -54,6 +54,6 @@ dojo.declare("phpr.Core.Grid", phpr.Default.Grid, {
     getDoActionUrl:function(action, idUrl, ids) {
         // Summary:
         //    Custom getDoActionUrl for Core
-        return phpr.webpath + 'index.php/Core/' + phpr.module.toLowerCase() + '/' + action + '/' + idUrl + '/' + ids;
+        return 'index.php/Core/' + phpr.module.toLowerCase() + '/' + action + '/' + idUrl + '/' + ids;
     }
 });

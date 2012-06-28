@@ -1341,7 +1341,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
                             if (fieldWidget) {
                                 fieldWidget.set('value', value);
                                 dojo.byId('filesIframe_files').contentDocument.location.href =
-                                    phpr.webpath + 'index.php/Default/File/fileForm/moduleName/' +
+                                    'index.php/Default/File/fileForm/moduleName/' +
                                     phpr.module + '/id/' + this.id + '/field/' +
                                     field + '/value/' + value;
                                 dojo.addClass(dojo.byId(displayfield), "highlightChanges");
@@ -1389,7 +1389,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
     },
 
     getUploadIframePath: function(itemid) {
-        return phpr.webpath + 'index.php/' + phpr.module + '/index/fileForm' +
+        return 'index.php/' + phpr.module + '/index/fileForm' +
             '/nodeId/' + phpr.currentProjectId + '/id/' + this.id + '/field/' +
             itemid + '/csrfToken/' + phpr.csrfToken;
     }

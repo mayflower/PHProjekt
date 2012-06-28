@@ -428,7 +428,7 @@ dojo.declare("phpr.Default.SubModule.Form", phpr.Default.Form, {
     },
 
     getUploadIframePath: function(itemid) {
-        return phpr.webpath + 'index.php/' +
+        return 'index.php/' +
             this.main.module + '/index/fileForm' +
             '/nodeId/' + phpr.currentProjectId +
             '/id/' + this.id + '/field/' + itemid +

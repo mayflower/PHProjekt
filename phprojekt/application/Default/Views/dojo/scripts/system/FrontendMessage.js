@@ -183,7 +183,7 @@ dojo.declare("phpr.Default.System.FrontendMessage", null, {
 
         switch (data.process) {
             case 'add':
-                template = "<br /><a href='" + phpr.webpath + "index.php#" +
+                template = "<br /><a href='" + "index.php#" +
                     data.module + "," + data.projectId + "id," + data.itemId +
                     "'><i>" + phpr.nls.get(data.module, data.module) +
                     "</i>: <b>" + data.user + "</b> " + data.description +
@@ -197,7 +197,7 @@ dojo.declare("phpr.Default.System.FrontendMessage", null, {
                     data.project + "</b></i>.<br />&nbsp;";
                 break;
             case 'edit':
-                template = "<br /><a href='" + phpr.webpath + "index.php#" +
+                template = "<br /><a href='" + "index.php#" +
                     data.module + "," + data.projectId + "id," + data.itemId +
                     "'><i>" + phpr.nls.get(data.module, data.module) +
                     "</i>: <b>" + data.user + "</b> " + data.description +
