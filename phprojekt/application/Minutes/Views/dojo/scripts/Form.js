@@ -123,7 +123,7 @@ dojo.declare("phpr.Minutes.Form", phpr.Default.DialogForm, {
 
             this.garbageCollector.addEvent(
                 dojo.connect(dijit.byId('minutesMailFormPreview'), 'onClick', dojo.hitch(this, function() {
-                    window.open(phpr.webpath + 'index.php/Minutes/index/pdf/nodeId/' + phpr.currentProjectId +
+                    window.open('index.php/Minutes/index/pdf/nodeId/' + phpr.currentProjectId +
                         '/id/' + this.id + '/csrfToken/' + phpr.csrfToken, 'pdf');
                 })));
         }));

@@ -156,7 +156,7 @@ dojo.declare("phpr.Statistic.Main", phpr.Default.Main, {
         var start = dijit.byId("startDate").get('value');
         var end   = dijit.byId("endDate").get('value');
 
-        window.open(phpr.webpath + 'index.php/' + phpr.module + '/index/csvList'
+        window.open('index.php/' + phpr.module + '/index/csvList'
             + '/nodeId/' + phpr.currentProjectId
             + '/startDate/' + phpr.date.getIsoDate(start)
             + '/endDate/' + phpr.date.getIsoDate(end)

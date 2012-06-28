@@ -1428,7 +1428,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
         //    Open a new window in CSV mode
         // Description:
         //    Open a new window in CSV mode
-        window.open(phpr.webpath + 'index.php/' + phpr.module +
+        window.open('index.php/' + phpr.module +
                 '/index/csvList/nodeId/' + this.id +
                 '/csrfToken/' + phpr.csrfToken);
         return false;

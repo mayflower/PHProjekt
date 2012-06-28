@@ -105,7 +105,7 @@ dojo.declare("phpr.Calendar2.ViewWeekList", phpr.Calendar2.DefaultView, {
     exportData: function() {
         // Summary:
         //    Opens a new window in CSV mode
-        window.open(phpr.webpath + 'index.php/' + phpr.module + '/index/csvPeriodList/nodeId/1/dateStart/' +
+        window.open('index.php/' + phpr.module + '/index/csvPeriodList/nodeId/1/dateStart/' +
                 this._weekDays[0] + '/dateEnd/' + this._weekDays[6] + '/csrfToken/' + phpr.csrfToken);
 
         return false;

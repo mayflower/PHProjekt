@@ -98,7 +98,7 @@ dojo.declare("phpr.Calendar2.ViewMonthList", phpr.Calendar2.DefaultView, {
         dateTemp.setDate(daysInMonth);
         var lastDayMonth = phpr.date.getIsoDate(dateTemp);
 
-        window.open(phpr.webpath + 'index.php/' + phpr.module + '/index/csvPeriodList/nodeId/1/dateStart/' +
+        window.open('index.php/' + phpr.module + '/index/csvPeriodList/nodeId/1/dateStart/' +
             firstDayMonth + '/dateEnd/' + lastDayMonth + '/csrfToken/' + phpr.csrfToken);
 
         return false;

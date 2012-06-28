@@ -298,7 +298,7 @@ dojo.declare("phpr.Module.Form", phpr.Core.DialogForm, {
                 new phpr.handleResponse('serverFeedback', data);
                 if (data.type == 'success') {
                     if (data.id) {
-                        phpr.loadJsFile(phpr.webpath + 'index.php/js/module/name/' + this.sendData.name +
+                        phpr.loadJsFile('index.php/js/module/name/' + this.sendData.name +
                             '/csrfToken/' + phpr.csrfToken);
                     }
                     this.publish("updateCacheData");
