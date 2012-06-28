@@ -4,9 +4,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" />
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
     <title>PHProjekt</title>
-    <link rel="favicon" href="<?php echo $this->webpath ?>img/favicon.ico" />
-    <link rel="shortcut icon" href="<?php echo $this->webpath ?>img/favicon.ico" />
-    <link href="<?php echo $this->webpath; ?>min/min/?g=phprojekt" rel="stylesheet" type="text/css" />
+    <link rel="favicon" href="img/favicon.ico" />
+    <link rel="shortcut icon" href="img/favicon.ico" />
+    <link href="min/min/?g=phprojekt" rel="stylesheet" type="text/css" />
 
     <script type="text/javascript">
         var djConfig = {isDebug: false, parseOnLoad: true, bindEncoding: "utf-8",
@@ -16,24 +16,24 @@
     if (true === $this->isLoggedIn) {
         if ($this->compressedDojo) {
         ?>
-            <script type="text/javascript" src="<?php echo $this->webpath; ?>dojo/release/dojo/dojo/dojo.js"></script>
-            <script type="text/javascript" src="<?php echo $this->webpath; ?>dojo/release/dojo/dojo/phprojekt.js"></script>
+            <script type="text/javascript" src="dojo/release/dojo/dojo/dojo.js"></script>
+            <script type="text/javascript" src="dojo/release/dojo/dojo/phprojekt.js"></script>
         <?php
         } else {
         ?>
-            <script type="text/javascript" src="<?php echo $this->webpath; ?>dojo/release/dojo/dojo/dojo.js.uncompressed.js"></script>
-            <script type="text/javascript" src="<?php echo $this->webpath; ?>dojo/release/dojo/dojo/phprojekt.js.uncompressed.js"></script>
+            <script type="text/javascript" src="dojo/release/dojo/dojo/dojo.js.uncompressed.js"></script>
+            <script type="text/javascript" src="dojo/release/dojo/dojo/phprojekt.js.uncompressed.js"></script>
         <?php
         }
         ?>
         <script type="text/javascript"
-            src="<?php echo $this->webpath; ?>index.php/js/index/csrfToken/<?php echo Phprojekt::createCsrfToken(); ?>">
+            src="index.php/js/index/csrfToken/<?php echo Phprojekt::createCsrfToken(); ?>">
         </script>
     <?php
     } else {
     ?>
-        <script type="text/javascript" src="<?php echo $this->webpath; ?>dojo/release/dojo/dojo/dojo.js"></script>
-        <script type="text/javascript" src="<?php echo $this->webpath; ?>dojo/release/dojo/dojo/login.js"></script>
+        <script type="text/javascript" src="dojo/release/dojo/dojo/dojo.js"></script>
+        <script type="text/javascript" src="dojo/release/dojo/dojo/login.js"></script>
         <script type="text/javascript">
             dojo.require("dojo.parser");
             dojo.require("dijit.layout.BorderContainer");
@@ -73,7 +73,7 @@
     ?>
     <script type="text/javascript">
         dojo.addOnLoad(function() {
-            var main = new phpr.Main("<?php echo $this->webpath; ?>", 1, '<?php echo $this->language; ?>');
+            var main = new phpr.Main("", 1, '<?php echo $this->language; ?>');
             <?php
             if ($this->frontendMsg) {
             ?>

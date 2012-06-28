@@ -1,15 +1,15 @@
 <html>
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
     <title>PHProjekt</title>
-    <link rel="favicon" href="<?php echo $this->webpath ?>img/favicon.ico" type="image/x-icon" ></link>
-    <link rel="shortcut icon" href="<?php echo $this->webpath ?>img/favicon.ico" type="image/x-icon" ></link>
-    <link href="<?php echo $this->webpath; ?>min/min/?g=login" rel="stylesheet" type="text/css" />
+    <link rel="favicon" href="img/favicon.ico" type="image/x-icon" ></link>
+    <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon" ></link>
+    <link href="min/min/?g=login" rel="stylesheet" type="text/css" />
     <script type="text/javascript">
         var djConfig = {isDebug: false, parseOnLoad: true, bindEncoding: "utf-8",
                         locale: 'en', useCommentedJson: true};
     </script>
-    <script type="text/javascript" src="<?php echo $this->webpath; ?>dojo/release/dojo/dojo/dojo.js"></script>
-    <script type="text/javascript" src="<?php echo $this->webpath; ?>dojo/release/dojo/dojo/login.js"></script>
+    <script type="text/javascript" src="dojo/release/dojo/dojo/dojo.js"></script>
+    <script type="text/javascript" src="dojo/release/dojo/dojo/login.js"></script>
     <script type="text/javascript">
         dojo.require("dijit.layout.BorderContainer");
         dojo.require("dijit.layout.ContentPane");
@@ -39,7 +39,7 @@
         <div class="loadingMiddleInner">
         <!-- Main Content -->
         <form dojoType="dijit.form.Form"  name="loginForm" method="post"
-        action="<?php echo $this->webpath; ?>index.php/login/login">
+        action="index.php/login/login">
             <input dojoType="dijit.form.TextBox" id="hash" type="hidden" name="hash" value="" />
             <table width="100%" align="center" class="form">
             <col class="col1" />
