@@ -71,9 +71,9 @@ class Calendar2_CaldavController extends IndexController
     public function indexAction()
     {
         // Backends
-        $authBackend = new WebDAV_Helper_Auth();
-        $principalBackend = new Calendar2_CalDAV_PrincipalBackend();
-        $calendarBackend = new Calendar2_CalDAV_CalendarBackend();
+        $authBackend      = new WebDAV_Helper_Auth();
+        $principalBackend = new Phprojekt_CalDAV_PrincipalBackend();
+        $calendarBackend  = new Calendar2_CalDAV_CalendarBackend();
 
         // Directory tree
         $tree = array(
