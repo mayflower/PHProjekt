@@ -225,7 +225,10 @@ class Timecard_CalDAV_CalendarBackend extends Sabre_CalDAV_Backend_Abstract
      */
     public function createCalendarObject($calendarId, $objectUri, $calendarData)
     {
-        throw new Sabre_DAV_Exception_NotImplemented('to be written');
+        $vcalendar = Sabre_VObject_Reader::read($calendarData);
+        $timecard  = new Timecard_Models_Timecard();
+        $timecard->fromVObject($vcalendar->vevent);
+        $timecard->save();
     }
 
     /**

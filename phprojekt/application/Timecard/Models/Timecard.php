@@ -444,4 +444,61 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
             return false;
         }
     }
+
+    public function fromVObject(Sabre_VObject_Component $vevent)
+    {
+        if (strtolower($vevent->name) !== 'vevent') {
+            throw new Exception(
+                "Invalid type of vobject_component passed to Calendar2_Models_Calendar2::fromVobject ({$vevent->name})"
+            );
+        }
+
+        if (isset($vevent->SUMMARY)) {
+            $this->notes = $vevent->SUMMARY;
+        }
+        if (isset($vevent->DESCRIPTION)) {
+            if ($this->notes) {
+                $this->notes .= "\n";
+            }
+            $this->notes .= $vevent->DESCRIPTION;
+        }
+
+        $utc          = new DateTimezone('UTC');
+        $timezone     = null;
+        $userTimeZone = Phprojekt_User_User::getUserDateTimeZone();
+        if ('Z' === substr($vevent->dtstart->value, -1)) {
+            $timezone = $utc;
+        } else if (!is_null($vevent->dtstart['tzid'])) {
+            $timezone = new DateTimeZone($vevent->dtstart['tzid']->value);
+        } else {
+            $timezone = $userTimeZone;
+        }
+
+        // We can't use ->setTimezone with the timezones returned by getUserDateTimeZone, as these are non-standard
+        // timezones. Unless we start storing correct timezones, we can't directly set the user timezone, so we go to
+        // UTC and convert to usertime from there. Because utcToUser returns a unix timestamp, but ActiveRecords expects
+        // a "Y-m-d H:i:s" timestamp, we have to go through Datetime again.
+        $start = new Datetime($vevent->dtstart->value, $timezone);
+        $start->setTimezone($utc);
+        $startTs = Phprojekt_Converter_Time::utcToUser($start->format('Y-m-d H:i:s'));
+        $start = new Datetime('@' . $startTs);
+        $end   = new Datetime($vevent->dtend->value, $timezone);
+        $end->setTimezone($utc);
+        $endTs = Phprojekt_Converter_Time::utcToUser($end->format('Y-m-d H:i:s'));
+        $end   = new Datetime('@' . $endTs);
+
+        $this->minutes = floor(($endTs - $startTs) / 60);
+
+        if ($start->diff($end)->invert) {
+            throw new Sabre_DAV_Exception_BadRequest('Start must be before End');
+        }
+
+        $this->startDatetime = $start->format('Y-m-d H:i:s');
+        if ($start->format('z') == $end->format('z')) {
+            // Same day
+            $this->endTime = $end->format('H:i:s');
+        } else {
+            $this->endTime = '23:59:00';
+        }
+    }
 }
