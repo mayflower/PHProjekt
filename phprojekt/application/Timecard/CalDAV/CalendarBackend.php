@@ -257,6 +257,13 @@ class Timecard_CalDAV_CalendarBackend extends Sabre_CalDAV_Backend_Abstract
      */
     public function deleteCalendarObject($calendarId, $objectUri)
     {
-        throw new Sabre_DAV_Exception_NotImplemented('to be written');
+        $timecard = new Timecard_Models_Timecard();
+        $timecard = $timecard->find($objectUri);
+
+        if (!$timecard) {
+            throw new Sabre_DAV_Exception_NotFound("Timecard entry with id $objectUri not found");
+        }
+
+        $timecard->delete();
     }
 }
