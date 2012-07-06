@@ -169,7 +169,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
         // Description:
         //    Draw the tags
         // Get the module tags
-        this._tagUrl  = 'index.php/Default/Tag/jsonGetTags';
+        this._tagUrl = 'index.php/Default/Tag/jsonGetTags';
         phpr.DataStore.addStore({url: this._tagUrl});
         phpr.DataStore.requestData({
             url: this._tagUrl,

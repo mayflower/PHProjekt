@@ -47,8 +47,7 @@ dojo.declare("phpr.Project.FormBasicData", phpr.Project.Form, {
         this._initData.push({'store': this.moduleStore});
 
         // Get the tags
-        this._tagUrl  = 'index.php/Default/Tag/jsonGetTagsByModule/moduleName/' + phpr.module +
-                        '/id/' + this.id;
+        this._tagUrl = 'index.php/Default/Tag/jsonGetTagsByModule/moduleName/' + phpr.module + '/id/' + this.id;
         this._initData.push({'url': this._tagUrl});
     },
 

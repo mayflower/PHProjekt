@@ -448,8 +448,8 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
         }
         sendData['projects[]'] = projects;
         phpr.send({
-            url:       'index.php/Gantt/index/jsonSave/nodeId/' + phpr.currentProjectId,
-            content:   sendData
+            url:    'index.php/Gantt/index/jsonSave/nodeId/' + phpr.currentProjectId,
+            content: sendData
         }).then(dojo.hitch(this, function(data) {
             if (data) {
                 new phpr.handleResponse('serverFeedback', data);

@@ -447,7 +447,6 @@ class Phprojekt
             $this->_dieWithInternalServerError();
         }
 
-        // Set tmpPath and applicationPath
         if (!defined('PHPR_TEMP_PATH')) {
             define('PHPR_TEMP_PATH', $this->_config->tmpPath);
         }
