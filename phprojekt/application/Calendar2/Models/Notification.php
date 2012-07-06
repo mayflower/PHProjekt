@@ -79,9 +79,7 @@ class Calendar2_Models_Notification extends Phprojekt_Notification
         if ($this->_model->recurrenceId) {
             $params['occurrence'] = $this->_model->recurrenceId;
         }
-        $request = new Zend_Controller_Request_Http();
-        $bodyParams['url'] = $request->getScheme() . '://' . $request->getHttpHost()
-                . $request->getBasePath() . '/index.php#' . http_build_query($params);
+        $bodyParams['url'] = 'index.php#' . http_build_query($params);
 
         return $bodyParams;
     }

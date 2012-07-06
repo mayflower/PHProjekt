@@ -688,8 +688,7 @@ class Phprojekt_Auth extends Zend_Auth
     private static function _setCookies($hash, $userId, $expires)
     {
         // Set cookies
-        $request          = new Zend_Controller_Request_Http();
-        $completePath     = $request->getScheme() . '://' . $request->getHttpHost() . $request->getBasePath() . '/';
+        $completePath     = Phprojekt::getInstance()->getConfig()->webpath;
         $partialPathBegin = strpos($completePath, "/", 8);
         $partialPath      = substr($completePath, $partialPathBegin);
         $cookieHash       = self::COOKIES_PREFIX . self::LOGGED_TOKEN . '.hash';
