@@ -447,6 +447,11 @@ class Phprojekt
             $this->_dieWithInternalServerError();
         }
 
+        if (empty($this->_config->webpath)) {
+            $response               = new Zend_Controller_Request_Http();
+            $this->_config->webpath = $response->getScheme() . '://' . $response->getHttpHost()
+                . $response->getBasePath() . '/';
+        }
         if (!defined('PHPR_TEMP_PATH')) {
             define('PHPR_TEMP_PATH', $this->_config->tmpPath);
         }
