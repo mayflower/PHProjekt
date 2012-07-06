@@ -19,7 +19,6 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @version    Release: 6.1.0
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 
@@ -34,7 +33,6 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @version    Release: 6.1.0
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 class JsController extends IndexController
@@ -172,7 +170,9 @@ class JsController extends IndexController
         $scripttext .= $this->_getModuleScripts(PHPR_USER_CORE_PATH, $scripts, $module);
 
         $scripttext .= '
-            this.' . $module . ' = new phpr.' . $module . '.Main();
+            phpr.pageManager.register(
+                new phpr.' . $module . '.Main()
+            );
         ';
 
         $this->_send($this->_collectTemplates() . $scripttext);
@@ -339,8 +339,8 @@ class JsController extends IndexController
         $output = "";
         $files = scandir($path);
         foreach ($files as $file) {
-            if ($file != '.'  && $file != '..' && $file != 'Default'
-                    && is_dir($path . '/' . $file . '/Views')) {
+            if ($file != '.'  && $file != '..' && $file != 'Default' &&
+                    !Phprojekt::getInstance()->isBlockedModule($file) && is_dir($path . '/' . $file . '/Views')) {
                 if (is_dir($path . $file . '/Views/dojo/scripts/')) {
                     $scripts = scandir($path . $file . '/Views/dojo/scripts/');
                 } else {

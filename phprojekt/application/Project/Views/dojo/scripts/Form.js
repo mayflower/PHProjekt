@@ -15,7 +15,6 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @version    Release: 6.1.0
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 
@@ -68,7 +67,7 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
 
         var currentUser  = data[0].rights[phpr.currentUserId] ? phpr.currentUserId : 0;
         var users        = [];
-        var userList     = this.userStore.getList();
+        var userList     = phpr.userStore.getList();
         var relationList = this.roleStore.getRelationList();
 
         // Make an array with the users expect the current one

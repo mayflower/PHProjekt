@@ -18,7 +18,6 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @version    Release: 6.1.0
  * @author     David Soria Parra <soria_parra@mayflower.de>
  */
 
@@ -32,7 +31,6 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @version    Release: 6.1.0
  * @author     David Soria Parra <soria_parra@mayflower.de>
  */
 final class Default_Helpers_Save
@@ -222,7 +220,7 @@ final class Default_Helpers_Save
                 $rights[$userId] = Phprojekt_Acl::ALL;
             } else if (!$model->hasRight($userId, Phprojekt_Acl::WRITE)) {
                 throw new Zend_Controller_Action_Exception(
-                    'You do not have the necessary wrte right',
+                    'You do not have the necessary write right',
                     403
                 );
             }

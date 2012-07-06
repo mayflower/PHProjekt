@@ -18,7 +18,6 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @version    Release: 6.1.0
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 
@@ -32,7 +31,6 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @version    Release: 6.1.0
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 class Phprojekt
@@ -50,7 +48,7 @@ class Phprojekt
     /**
      * The third part of the version number.
      */
-    const VERSION_RELEASE = 2;
+    const VERSION_RELEASE = 3;
 
     /**
      * The extra part of the version number.
@@ -118,6 +116,13 @@ class Phprojekt
      * @var Zend_View
      */
     protected $_view;
+
+    /**
+     * Array of blocked Modules.
+     *
+     * @var Array
+     */
+    protected $_blockedModules = array("Calendar");
 
     /**
      * Returns the current version of PHProjekt.
@@ -1016,6 +1021,18 @@ class Phprojekt
 
         return array('requirements'    => $requirements,
                      'recommendations' => $recommendations);
+    }
+
+    /**
+     * Tests whether the prodived module is blocked.
+     *
+     * @param string $name  Module name to test.
+     *
+     * @return bool     True if the given module is blocked
+     */
+    public function isBlockedModule($name)
+    {
+        return in_array($name, $this->_blockedModules);
     }
 
     private function _dieWithInternalServerError()

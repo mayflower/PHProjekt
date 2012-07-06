@@ -15,7 +15,6 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @version    Release: 6.1.0
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 
@@ -298,19 +297,7 @@ dojo.declare("phpr.Module.Form", phpr.Core.DialogForm, {
             if (data) {
                 new phpr.handleResponse('serverFeedback', data);
                 if (data.type == 'success') {
-                    return phpr.send({
-                        url: phpr.webpath + 'index.php/Core/module/jsonSave/nodeId/1/id/' + this.id,
-                        content:   this.sendData
-                    });
-                } else {
-                    this.setSubmitInProgress(false);
-                }
-            }
-        })).then(dojo.hitch(this, function(data) {
-            if (data) {
-                new phpr.handleResponse('serverFeedback', data);
-                if (data.type == 'success') {
-                    if (!this.id) {
+                    if (data.id) {
                         phpr.loadJsFile(phpr.webpath + 'index.php/js/module/name/' + this.sendData.name +
                             '/csrfToken/' + phpr.csrfToken);
                     }
@@ -321,6 +308,7 @@ dojo.declare("phpr.Module.Form", phpr.Core.DialogForm, {
                         url:         phpr.globalModuleUrl
                     }).then(dojo.hitch(this, function() {
                         this.setSubmitInProgress(false);
+                        this.main.setGlobalModulesNavigation();
                         phpr.pageManager.modifyCurrentState(
                             { moduleName: "Module", id: undefined },
                             { forceModuleReload: true }
@@ -346,7 +334,10 @@ dojo.declare("phpr.Module.Form", phpr.Core.DialogForm, {
                     url:         phpr.globalModuleUrl
                 }).then(dojo.hitch(this, function() {
                     this.main.setGlobalModulesNavigation();
-                    this.publish("setUrlHash", [phpr.parentmodule, null, [phpr.module]]);
+                    phpr.pageManager.modifyCurrentState(
+                        { moduleName: "Module", id: undefined },
+                        { forceModuleReload: true }
+                    );
                 }));
             }
         }));
