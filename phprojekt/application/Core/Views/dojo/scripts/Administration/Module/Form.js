@@ -98,8 +98,7 @@ dojo.declare("phpr.Module.Form", phpr.Core.DialogForm, {
         var jsonDesignerData = dojo.toJson(designerData.definition);
 
         this.formdata[1].push(
-            this.fieldTemplate.hiddenFieldRender('Designer Data', 'designerData', jsonDesignerData, true, false)
-        );
+            this.fieldTemplate.hiddenFieldRender('Designer Data', 'designerData', jsonDesignerData, true, false));
     },
 
     setPermissions: function(data) {
@@ -155,7 +154,7 @@ dojo.declare("phpr.Module.Form", phpr.Core.DialogForm, {
         parent._showChild(dijit.byId(parent.containerNode.children[0].id));
 
         dijit.byId('moduleDesignerTarget').startup();
-        var parent = dijit.byId('moduleDesignerEditor');
+        parent = dijit.byId('moduleDesignerEditor');
         parent._showChild(dijit.byId(parent.containerNode.children[0].id));
 
         this._dialog.show();
@@ -187,7 +186,7 @@ dojo.declare("phpr.Module.Form", phpr.Core.DialogForm, {
 
                 formPosition++;
                 data[i].formPosition  = formPosition;
-                data[i].formTab       = parseInt(tabs[j].id);
+                data[i].formTab       = parseInt(tabs[j].id, 10);
                 data[i].formColumns   = 1;
                 data[i].formRegexp    = null;
                 data[i].listAlign     = 'center';
