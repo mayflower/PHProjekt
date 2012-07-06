@@ -51,7 +51,7 @@ dojo.declare("phpr.Module.Form", phpr.Core.DialogForm, {
 
     initData: function() {
         // Get all the active users
-        this._moduleDesignerUrl  = 'index.php/Core/moduleDesigner/jsonDetail/nodeId/1/id/' + this.id;
+        this._moduleDesignerUrl = 'index.php/Core/moduleDesigner/jsonDetail/nodeId/1/id/' + this.id;
         this._initData.push({'url': this._moduleDesignerUrl});
     },
 
@@ -290,8 +290,8 @@ dojo.declare("phpr.Module.Form", phpr.Core.DialogForm, {
 
         this.setSubmitInProgress(true);
         phpr.send({
-            url:       'index.php/Core/moduleDesigner/jsonSave/nodeId/1/id/' + this.id,
-            content:   this.sendData
+            url:     'index.php/Core/moduleDesigner/jsonSave/nodeId/1/id/' + this.id,
+            content: this.sendData
         }).then(dojo.hitch(this, function(data) {
             if (data) {
                 new phpr.handleResponse('serverFeedback', data);
@@ -304,7 +304,7 @@ dojo.declare("phpr.Module.Form", phpr.Core.DialogForm, {
                     phpr.DataStore.deleteData({url: phpr.globalModuleUrl});
                     phpr.DataStore.addStore({url: phpr.globalModuleUrl});
                     phpr.DataStore.requestData({
-                        url:         phpr.globalModuleUrl
+                        url: phpr.globalModuleUrl
                     }).then(dojo.hitch(this, function() {
                         this.setSubmitInProgress(false);
                         this.main.setGlobalModulesNavigation();
@@ -322,7 +322,7 @@ dojo.declare("phpr.Module.Form", phpr.Core.DialogForm, {
 
     deleteForm: function() {
         phpr.send({
-            url:       'index.php/Core/' + phpr.module.toLowerCase() + '/jsonDelete/id/' + this.id
+            url: 'index.php/Core/' + phpr.module.toLowerCase() + '/jsonDelete/id/' + this.id
         }).then(dojo.hitch(this, function(data) {
             new phpr.handleResponse('serverFeedback', data);
             if (data.type == 'success') {
@@ -330,7 +330,7 @@ dojo.declare("phpr.Module.Form", phpr.Core.DialogForm, {
                 phpr.DataStore.deleteData({url: phpr.globalModuleUrl});
                 phpr.DataStore.addStore({url: phpr.globalModuleUrl});
                 phpr.DataStore.requestData({
-                    url:         phpr.globalModuleUrl
+                    url: phpr.globalModuleUrl
                 }).then(dojo.hitch(this, function() {
                     this.main.setGlobalModulesNavigation();
                     phpr.pageManager.modifyCurrentState(
