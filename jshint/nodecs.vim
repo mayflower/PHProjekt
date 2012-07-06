@@ -1,3 +1,12 @@
+if exists('loaded_phprojekt_jshint_nodecs')
+    finish
+endif
+let loaded_phprojekt_jshint_nodecs = 1
+
+if !executable('node')
+    finish
+endif
+
 let s:nodecs_command='node ' . expand("<sfile>:p:h") . '/hintcli.js '
 
 function! RunNodecs()
