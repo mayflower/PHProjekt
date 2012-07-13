@@ -111,7 +111,10 @@ class Timecard_CalDAV_CalendarBackend extends Sabre_CalDAV_Backend_Abstract
     public function getCalendarObjects($calendarId)
     {
         $timecards = Phprojekt::getInstance()->getDb()->select()
-            ->from(array('t' => 'timecard'), array('id', 'start_datetime', 'end_time', 'notes'))
+            ->from(
+                array('t' => 'timecard'),
+                array('id', 'start_datetime', 'end_time', 'notes', 'project_id', 'module_id')
+            )
             ->joinLeft(array('p' => 'project'), 'p.id = t.project_id', array('title'))
             ->joinLeft(array('m' => 'module'), 'm.id = t.module_id', array('label'))
             ->where('t.owner_id = ?', Phprojekt_Auth_Proxy::getEffectiveUserId())
@@ -147,7 +150,10 @@ class Timecard_CalDAV_CalendarBackend extends Sabre_CalDAV_Backend_Abstract
     public function getCalendarObject($calendarId, $objectUri)
     {
         $entry = Phprojekt::getInstance()->getDb()->select()
-            ->from(array('t' => 'timecard'), array('id', 'start_datetime', 'end_time', 'notes', 'module_id'))
+            ->from(
+                array('t' => 'timecard'),
+                array('id', 'start_datetime', 'end_time', 'notes', 'module_id', 'project_id')
+            )
             ->joinLeft(array('p' => 'project'), 'p.id = t.project_id', array('title'))
             ->joinLeft(array('m' => 'module'), 'm.id = t.module_id', array('label'))
             ->where('t.owner_id = ?', Phprojekt_Auth_Proxy::getEffectiveUserId())
@@ -180,10 +186,14 @@ class Timecard_CalDAV_CalendarBackend extends Sabre_CalDAV_Backend_Abstract
     private function _getDataForEntry(array $entry)
     {
         $v = new Sabre_VObject_Component('vevent');
-        $v->add('summary', $entry['title']);
+        if (1 == $entry['project_id']) {
+            $v->add('summary', Phprojekt::getInstance()->translate('Unassigned'));
+        } else {
+            $v->add('summary', $entry['title']);
+        }
 
         $notes = trim($entry['notes']);
-        if ($entry['module_id'] != 1) {
+        if (!is_null($entry['module_id'])) {
             if ($notes) {
                 $notes .= "\n";
             }
