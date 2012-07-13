@@ -51,6 +51,18 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
     protected $_validate = null;
 
     /**
+     * Overwrite save to set the uri if it's not already set.
+     */
+    public function save()
+    {
+        parent::save();
+        //TODO: Generate a proper url.
+        if (empty($this->uri)) {
+            $this->uri = $this->id;
+            parent::save();
+        }
+    }
+    /**
      * Constructor initializes additional Infomanager.
      *
      * @param array $db Configuration for Zend_Db_Table.
@@ -319,7 +331,6 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
         return array('data' => $datas);
     }
 
-
     /**
      * Return an array with all the bookings in the day
      *
@@ -500,5 +511,17 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
         } else {
             $this->endTime = '23:59:00';
         }
+    }
+
+    /**
+     * Retrieves the timecard entry with the given uri
+     */
+    public function findByUri($uri)
+    {
+        $fetch = $this->fetchAll(Phprojekt::getInstance()->getDb()->quoteInto('uri = ?', $uri));
+        if (!$fetch) {
+            return $fetch;
+        }
+        return $fetch[0];
     }
 }

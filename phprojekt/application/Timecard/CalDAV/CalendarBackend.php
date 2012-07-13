@@ -113,7 +113,7 @@ class Timecard_CalDAV_CalendarBackend extends Sabre_CalDAV_Backend_Abstract
         $timecards = Phprojekt::getInstance()->getDb()->select()
             ->from(
                 array('t' => 'timecard'),
-                array('id', 'start_datetime', 'end_time', 'notes', 'project_id', 'module_id')
+                array('id', 'start_datetime', 'end_time', 'notes', 'uri', 'project_id', 'module_id')
             )
             ->joinLeft(array('p' => 'project'), 'p.id = t.project_id', array('title'))
             ->joinLeft(array('m' => 'module'), 'm.id = t.module_id', array('label'))
@@ -127,7 +127,7 @@ class Timecard_CalDAV_CalendarBackend extends Sabre_CalDAV_Backend_Abstract
         foreach ($timecards as $entry) {
             $ret[] = array(
                 'id'           => $entry['id'],
-                'uri'          => $entry['id'],
+                'uri'          => $entry['uri'],
                 'lastmodified' => $now,
                 'calendarid'   => $calendarId,
                 'calendardata' => $this->_getDataForEntry($entry)
@@ -152,16 +152,16 @@ class Timecard_CalDAV_CalendarBackend extends Sabre_CalDAV_Backend_Abstract
         $entry = Phprojekt::getInstance()->getDb()->select()
             ->from(
                 array('t' => 'timecard'),
-                array('id', 'start_datetime', 'end_time', 'notes', 'module_id', 'project_id')
+                array('id', 'start_datetime', 'end_time', 'notes', 'module_id', 'uri', 'project_id')
             )
             ->joinLeft(array('p' => 'project'), 'p.id = t.project_id', array('title'))
             ->joinLeft(array('m' => 'module'), 'm.id = t.module_id', array('label'))
             ->where('t.owner_id = ?', Phprojekt_Auth_Proxy::getEffectiveUserId())
-            ->where('t.id = ?', $objectUri)
+            ->where('t.uri = ?', $objectUri)
             ->query()->fetch();
 
         if (!$entry) {
-            throw new Sabre_DAV_Exception_NotFound("Timecard entry with id $objectUri not found");
+            throw new Sabre_DAV_Exception_NotFound("Timecard entry with uri $objectUri not found");
         }
 
         $now = new Datetime();
@@ -169,7 +169,7 @@ class Timecard_CalDAV_CalendarBackend extends Sabre_CalDAV_Backend_Abstract
 
         return array(
             'id'           => $entry['id'],
-            'uri'          => $entry['id'],
+            'uri'          => $entry['uri'],
             'lastmodified' => $now,
             'calendarid'   => $calendarId,
             'calendardata' => $this->_getDataForEntry($entry)
@@ -238,6 +238,7 @@ class Timecard_CalDAV_CalendarBackend extends Sabre_CalDAV_Backend_Abstract
         $vcalendar = Sabre_VObject_Reader::read($calendarData);
         $timecard  = new Timecard_Models_Timecard();
         $timecard->fromVObject($vcalendar->vevent);
+        $timecard->uri       = $objectUri;
         $timecard->save();
     }
 
@@ -271,10 +272,10 @@ class Timecard_CalDAV_CalendarBackend extends Sabre_CalDAV_Backend_Abstract
     public function deleteCalendarObject($calendarId, $objectUri)
     {
         $timecard = new Timecard_Models_Timecard();
-        $timecard = $timecard->find($objectUri);
+        $timecard = $timecard->findByUri($objectUri);
 
         if (!$timecard) {
-            throw new Sabre_DAV_Exception_NotFound("Timecard entry with id $objectUri not found");
+            throw new Sabre_DAV_Exception_NotFound("Timecard entry with uri $objectUri not found");
         }
 
         $timecard->delete();
