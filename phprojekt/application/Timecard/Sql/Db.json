@@ -61,6 +61,20 @@
             ]
         }
     }
+},
+
+"6.1.4":
+{
+    "structure":
+    {
+        "timecard":
+        {
+            "add":
+            {
+                "uri": {"type": "varchar", "notNull": "true"}
+            }
+        }
+    }
 }
 
 }
