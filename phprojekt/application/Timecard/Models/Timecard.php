@@ -51,10 +51,14 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
     protected $_validate = null;
 
     /**
-     * Overwrite save to set the uri if it's not already set.
+     * Overwrite save to set the uri if it's not already set and recalculate the minutes.
      */
     public function save()
     {
+        // Prevent http://jira.opensource.mayflower.de/jira/browse/PHPROJEKT-450
+        if (is_null($this->notes)) {
+            $this->notes = '';
+        }
         parent::save();
         //TODO: Generate a proper url.
         if (empty($this->uri)) {
