@@ -258,7 +258,20 @@ class Timecard_CalDAV_CalendarBackend extends Sabre_CalDAV_Backend_Abstract
      */
     public function updateCalendarObject($calendarId, $objectUri, $calendarData)
     {
-        throw new Sabre_DAV_Exception_NotImplemented('to be written');
+        $vcalendar = Sabre_VObject_Reader::read($calendarData);
+        $timecard = new Timecard_Models_Timecard();
+        $timecard = $timecard->findByUri($objectUri);
+
+        if (!$timecard) {
+            throw new Sabre_DAV_Exception_NotFound("Timecard entry with uri $objectUri not found");
+        }
+
+        if ($timecard->ownerId != Phprojekt_Auth_Proxy::getEffectiveUserId()) {
+            throw new Sabre_DAV_Exception_Forbidden("You are not allowed to modify this entry");
+        }
+
+        $timecard->fromVObject($vcalendar->vevent);
+        $timecard->save();
     }
 
     /**

@@ -61,7 +61,6 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
         }
 
         $start = new Datetime($this->startDatetime);
-        Phprojekt::getInstance()->getLog()->debug(substr($this->startDatetime, 0, 11) . $this->endTime);
         $end   = new Datetime(substr($this->startDatetime, 0, 11) . $this->endTime);
         $this->minutes = floor (($end->getTimestamp() - $start->getTimestamp()) / 60);
 
@@ -474,8 +473,20 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
             );
         }
 
-        if (isset($vevent->SUMMARY)) {
-            $this->notes = $vevent->SUMMARY;
+        if (1 == $this->projectId) {
+            $projectName = Phprojekt::getInstance()->translate('Unassigned');
+        } else if ($this->projectId) {
+            $project = new Project_Models_Project();
+            $project = $project->find($this->projectId);
+
+            $projectName = $project ? $project->title : '';
+        } else {
+            $projectName = '';
+        }
+
+        $this->notes = '';
+        if (isset($vevent->SUMMARY) && $vevent->SUMMARY != $projectName) {
+            $this->notes .= $vevent->SUMMARY;
         }
         if (isset($vevent->DESCRIPTION)) {
             if ($this->notes) {
