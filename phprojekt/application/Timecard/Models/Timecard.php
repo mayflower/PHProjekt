@@ -59,6 +59,12 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
         if (is_null($this->notes)) {
             $this->notes = '';
         }
+
+        $start = new Datetime($this->startDatetime);
+        Phprojekt::getInstance()->getLog()->debug(substr($this->startDatetime, 0, 11) . $this->endTime);
+        $end   = new Datetime(substr($this->startDatetime, 0, 11) . $this->endTime);
+        $this->minutes = floor (($end->getTimestamp() - $start->getTimestamp()) / 60);
+
         parent::save();
         //TODO: Generate a proper url.
         if (empty($this->uri)) {
