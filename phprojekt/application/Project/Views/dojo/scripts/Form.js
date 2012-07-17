@@ -277,11 +277,11 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
 
     _buildPathFromTreeData: function(data) {
         var path = "";
-        var hirarchy = phpr.tree.getProjectHirarchyArray(this.id);
-        var l = hirarchy.length;
+        var hierarchy = phpr.tree.getProjectHierarchyArray(this.id);
+        var l = hierarchy.length;
 
         for (var i = 0; i < l; i++) {
-            var segment = hirarchy[i].name[0];
+            var segment = hierarchy[i].name[0];
             if (segment.indexOf('/') !== -1) {
                 throw new Error(phpr.nls.get("There must be no slashes in project names for WebDAV to work.", "Project"));
             } else {
