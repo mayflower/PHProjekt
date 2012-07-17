@@ -278,6 +278,8 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
     _buildPathFromTreeData: function(data) {
         var path = "";
         var hierarchy = phpr.tree.getProjectHierarchyArray(this.id);
+        // Remove the toplevel item as the root project corresponds to /
+        hierarchy.shift();
         var l = hierarchy.length;
 
         for (var i = 0; i < l; i++) {
