@@ -71,7 +71,8 @@
         {
             "add":
             {
-                "uri": {"type": "varchar", "notNull": "true"}
+                "uri": {"type": "varchar", "notNull": "true"},
+                "uid": {"type": "varchar", "notNull": "true"}
             }
         }
     }

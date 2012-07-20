@@ -72,8 +72,12 @@ class Timecard_Migration extends Phprojekt_Migration_Abstract
         $this->_db = $db;
 
         if (Phprojekt::compareVersion($currentVersion, '6.1.4') < 0) {
+            $request  = new Zend_Controller_Request_Http();
+            $uidSuffix = "@phprojekt6-" . $request->getHttpHost();
             $this->parseDbFile('Timecard');
-            Phprojekt::getInstance()->getDB()->query('UPDATE timecard SET uri = id');
+            Phprojekt::getInstance()->getDB()->query(
+                "UPDATE timecard SET uri = id, uid = CONCAT(UUID(), \"{$uidSuffix}\");"
+            );
             // This is mysql-only. Not sure if this is the ultimate way to go here.
             Phprojekt::getInstance()->getDB()->query('ALTER TABLE timecard ADD UNIQUE (uri)');
         }
