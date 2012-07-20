@@ -519,8 +519,6 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
         $endTs = Phprojekt_Converter_Time::utcToUser($end->format('Y-m-d H:i:s'));
         $end   = new Datetime('@' . $endTs);
 
-        $this->minutes = floor(($endTs - $startTs) / 60);
-
         if ($start->diff($end)->invert) {
             throw new Sabre_DAV_Exception_BadRequest('Start must be before End');
         }
