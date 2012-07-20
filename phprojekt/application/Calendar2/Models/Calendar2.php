@@ -139,7 +139,7 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
         // This is needed to make fields read-only if we're not the owner.
         $this->_information = new Calendar2_Models_CalendarInformation();
 
-        $this->_generateUid();
+        $this->uid = Phprojekt::generateUniqueIdentifier();
 
         // Default values
         $this->visibility = self::VISIBILITY_PUBLIC;
@@ -255,7 +255,7 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
             // http://jira.opensource.mayflower.de/jira/browse/PHPROJEKT-298
             // As they don't belong together anymore, we also need to set a new uri.
             if ($new->rrule) {
-                $new->_generateUid();
+                $this->uid = Phprojekt::generateUniqueIdentifier();
                 $new->uri = $new->uid;
             }
 
@@ -1325,22 +1325,4 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
         return $this->id;
     }
 
-    /**
-     * Generate a unique uid for this event as recommended in rfc
-     */
-    private function _generateUid()
-    {
-        // UID generation method taken from rfc 5545
-        $this->uid = self::generateUniqueIdentifier();
-    }
-
-    /**
-     * Generates a unique identifier, usable for example as a uri or uid.
-     *
-     * @return string
-     */
-    public static function generateUniqueIdentifier()
-    {
-        return rand() . '-' . time() . '-' . getMyPid() . '@' . php_uname('n');
-    }
 }

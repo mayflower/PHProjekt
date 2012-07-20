@@ -1034,6 +1034,16 @@ class Phprojekt
         return in_array($name, $this->_blockedModules);
     }
 
+    /**
+     * Generates a unique identifier, usable for example as a uri or uid.
+     *
+     * @return string
+     */
+    public static function generateUniqueIdentifier()
+    {
+        return rand() . '-' . time() . '-' . getMyPid() . '@' . php_uname('n');
+    }
+
     private function _dieWithInternalServerError()
     {
         $response = new Zend_Controller_Response_Http();
