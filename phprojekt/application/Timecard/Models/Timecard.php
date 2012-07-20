@@ -64,6 +64,10 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
         $end   = new Datetime(substr($this->startDatetime, 0, 11) . $this->endTime);
         $this->minutes = floor (($end->getTimestamp() - $start->getTimestamp()) / 60);
 
+        if (empty($this->uid)) {
+            $this->uid = Phprojekt::generateUniqueIdentifier();
+        }
+
         parent::save();
         //TODO: Generate a proper url.
         if (empty($this->uri)) {
@@ -494,6 +498,8 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
             }
             $this->notes .= $vevent->DESCRIPTION;
         }
+
+        $this->uid = $vevent->uid;
 
         $utc          = new DateTimezone('UTC');
         $timezone     = null;
