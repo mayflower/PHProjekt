@@ -68,12 +68,11 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
             $this->uid = Phprojekt::generateUniqueIdentifier();
         }
 
-        parent::save();
-        //TODO: Generate a proper url.
         if (empty($this->uri)) {
-            $this->uri = $this->id;
-            parent::save();
+            $this->uri = $this->uid;
         }
+
+        parent::save();
     }
     /**
      * Constructor initializes additional Infomanager.
