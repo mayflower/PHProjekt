@@ -113,7 +113,7 @@ class Timecard_CalDAV_CalendarBackend extends Sabre_CalDAV_Backend_Abstract
         $timecards = Phprojekt::getInstance()->getDb()->select()
             ->from(
                 array('t' => 'timecard'),
-                array('id', 'start_datetime', 'end_time', 'notes', 'uri', 'project_id', 'module_id')
+                array('id', 'start_datetime', 'end_time', 'notes', 'uri', 'uid', 'project_id', 'module_id')
             )
             ->joinLeft(array('p' => 'project'), 'p.id = t.project_id', array('title'))
             ->joinLeft(array('m' => 'module'), 'm.id = t.module_id', array('label'))
@@ -152,7 +152,7 @@ class Timecard_CalDAV_CalendarBackend extends Sabre_CalDAV_Backend_Abstract
         $entry = Phprojekt::getInstance()->getDb()->select()
             ->from(
                 array('t' => 'timecard'),
-                array('id', 'start_datetime', 'end_time', 'notes', 'module_id', 'uri', 'project_id')
+                array('id', 'start_datetime', 'end_time', 'notes', 'module_id', 'uri', 'uid', 'project_id')
             )
             ->joinLeft(array('p' => 'project'), 'p.id = t.project_id', array('title'))
             ->joinLeft(array('m' => 'module'), 'm.id = t.module_id', array('label'))
@@ -212,7 +212,7 @@ class Timecard_CalDAV_CalendarBackend extends Sabre_CalDAV_Backend_Abstract
         $v->add('dtstart', $start->format('Ymd\THis\Z'));
         $v->add('dtend', $end->format('Ymd\THis\Z'));
 
-        $v->add('uid', 'phprojekt-timecard-entry' . $entry['id']);
+        $v->add('uid', 'phprojekt-timecard-entry' . $entry['uid']);
 
         $calendarData = new Sabre_VObject_Component('vcalendar');
         $calendarData->add('version', '2.0');
