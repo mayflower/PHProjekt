@@ -21,7 +21,7 @@
     <module id="1" name="Project" label="Project" save_type="0" version="6.1.0-dev" active="1"/>
     <module id="2" name="Todo" label="Todo" save_type="0" version="6.0.0" active="1"/>
     <module id="3" name="Note" label="Note" save_type="0" version="6.0.0" active="1"/>
-    <module id="4" name="Timecard" label="Timecard" save_type="1" version="6.0.0" active="1"/>
+    <module id="4" name="Timecard" label="Timecard" save_type="1" version="6.1.4" active="1"/>
     <module id="5" name="Gantt" label="Gantt" save_type="0" version="6.0.0" active="1"/>
     <module id="6" name="Filemanager" label="Filemanager" save_type="0" version="6.0.0" active="1"/>
     <module id="7" name="Statistic" label="Statistic" save_type="0" version="6.0.0" active="1"/>
