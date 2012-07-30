@@ -209,7 +209,7 @@ dojo.declare("phpr.Default.System.PageManager", null, {
             return false;
         }
 
-        var path = phpr.tree.getProjectHirarchyArray(pid);
+        var path = phpr.tree.getProjectHierarchyArray(pid);
         if (path.length === 0) {
             return false;
         }
