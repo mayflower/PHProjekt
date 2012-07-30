@@ -72,7 +72,7 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
             $this->uri = $this->uid;
         }
 
-        parent::save();
+        return parent::save();
     }
     /**
      * Constructor initializes additional Infomanager.
