@@ -452,4 +452,56 @@ HERE
         $this->assertEquals('2000-01-01 08:00:00', $tc->startDatetime);
         $this->assertEquals('12:00:00', $tc->endTime);
     }
+
+    public function testFromVObjectSettingProjectViaId()
+    {
+        $tc = new Timecard_Models_Timecard();
+        $tc->fromVObject(
+            Sabre_VObject_Reader::read(<<<HERE
+BEGIN:VEVENT
+UID:461092315540@example.com
+SUMMARY:6
+DTSTART:20000101T080000
+DTEND:20000101T120000
+END:VEVENT
+HERE
+            )
+        );
+        $this->assertEquals(6, $tc->projectId);
+    }
+
+    public function testFromVObjectSettingProjectViaNonexistantId()
+    {
+        $tc = new Timecard_Models_Timecard();
+        $tc->fromVObject(
+            Sabre_VObject_Reader::read(<<<HERE
+BEGIN:VEVENT
+UID:461092315540@example.com
+SUMMARY:123456789
+DTSTART:20000101T080000
+DTEND:20000101T120000
+END:VEVENT
+HERE
+            )
+        );
+        $this->assertEquals(null, $tc->projectId);
+        $this->assertStringStartsWith('123456789', $tc->notes);
+    }
+
+    public function testFromVObjectSettingProjectViaName()
+    {
+        $tc = new Timecard_Models_Timecard();
+        $tc->fromVObject(
+            Sabre_VObject_Reader::read(<<<HERE
+BEGIN:VEVENT
+UID:461092315540@example.com
+SUMMARY:Sub Sub Project 2
+DTSTART:20000101T080000
+DTEND:20000101T120000
+END:VEVENT
+HERE
+            )
+        );
+        $this->assertEquals(7, $tc->projectId);
+    }
 }

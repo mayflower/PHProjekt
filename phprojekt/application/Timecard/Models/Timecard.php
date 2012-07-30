@@ -502,8 +502,18 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
 
     private function parseVEventSummary($summary)
     {
-        if (isset($summary) && $summary != $this->assignedProjectString()) {
-            $this->notes .= $summary;
+        if (is_numeric($summary) && $summary > 0) {
+            $where = Phprojekt::getInstance()->getDb()->quoteInto('id = ?', intval($summary));
+        } else {
+            $where = Phprojekt::getInstance()->getDb()->quoteInto('title = ?', $summary);
+        }
+
+        $project  = new Project_Models_Project();
+        $projects = $project->fetchAll($where);
+        if ($projects) {
+            $this->projectId = $projects[0]->id;
+        } else {
+            $this->addParagraphToNotes($summary);
         }
     }
 
