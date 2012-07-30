@@ -468,45 +468,50 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
         }
     }
 
-    public function fromVObject(Sabre_VObject_Component $vevent)
+    public function fromVObject(Sabre_VObject_Component $vobject)
     {
-        if (strtolower($vevent->name) !== 'vevent') {
+        if (strtolower($vobject->name) !== 'vevent') {
             throw new InvalidArgumentException(
-                "Invalid type of vobject_component passed to Calendar2_Models_Calendar2::fromVobject ({$vevent->name})"
+                "Invalid type of vobject_component passed to Calendar2_Models_Calendar2::fromVobject ({$vobject->name})"
             );
         }
+        $this->fromVEvent($vobject);
+    }
 
-        if (1 == $this->projectId) {
-            $projectName = Phprojekt::getInstance()->translate('Unassigned');
-        } else if ($this->projectId) {
-            $project = new Project_Models_Project();
-            $project = $project->find($this->projectId);
-
-            $projectName = $project ? $project->title : '';
-        } else {
-            $projectName = '';
-        }
-
+    private function fromVEvent(Sabre_VObject_Component $vevent)
+    {
         $this->notes = '';
-        if (isset($vevent->SUMMARY) && $vevent->SUMMARY != $projectName) {
-            $this->notes .= $vevent->SUMMARY;
-        }
+
+        $this->parseVEventSummary($vevent->SUMMARY);
         if (isset($vevent->DESCRIPTION)) {
-            if ($this->notes) {
-                $this->notes .= "\n";
-            }
-            $this->notes .= $vevent->DESCRIPTION;
+            $this->addParagraphToNotes($vevent->DESCRIPTION);
         }
 
         $this->uid = $vevent->uid;
 
+        $this->applyICalendarTimes(
+            $vevent->dtstart->value,
+            $vevent->dtend->value,
+            $vevent->dtstart['tzid'] ? $vevent->dtstart['tzid']->value : null
+        );
+    }
+
+    private function parseVEventSummary($summary)
+    {
+        if (isset($summary) && $summary != $this->assignedProjectString()) {
+            $this->notes .= $summary;
+        }
+    }
+
+    private function applyICalendarTimes($start, $end, $timezoneID = null)
+    {
         $utc          = new DateTimezone('UTC');
         $timezone     = null;
         $userTimeZone = Phprojekt_User_User::getUserDateTimeZone();
-        if ('Z' === substr($vevent->dtstart->value, -1)) {
+        if ('Z' === substr($start, -1)) {
             $timezone = $utc;
-        } else if (!is_null($vevent->dtstart['tzid'])) {
-            $timezone = new DateTimeZone($vevent->dtstart['tzid']->value);
+        } else if (!is_null($timezoneID)) {
+            $timezone = new DateTimeZone($timezoneID);
         } else {
             $timezone = $userTimeZone;
         }
@@ -515,11 +520,11 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
         // timezones. Unless we start storing correct timezones, we can't directly set the user timezone, so we go to
         // UTC and convert to usertime from there. Because utcToUser returns a unix timestamp, but ActiveRecords expects
         // a "Y-m-d H:i:s" timestamp, we have to go through Datetime again.
-        $start = new Datetime($vevent->dtstart->value, $timezone);
+        $start = new Datetime($start, $timezone);
         $start->setTimezone($utc);
         $startTs = Phprojekt_Converter_Time::utcToUser($start->format('Y-m-d H:i:s'));
         $start = new Datetime('@' . $startTs);
-        $end   = new Datetime($vevent->dtend->value, $timezone);
+        $end   = new Datetime($end, $timezone);
         $end->setTimezone($utc);
         $endTs = Phprojekt_Converter_Time::utcToUser($end->format('Y-m-d H:i:s'));
         $end   = new Datetime('@' . $endTs);
@@ -535,6 +540,14 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
         } else {
             $this->endTime = '23:59:00';
         }
+    }
+
+    private function addParagraphToNotes($string)
+    {
+        if ($this->notes) {
+            $this->notes .= "\n";
+        }
+        $this->notes .= $string;
     }
 
     /**
