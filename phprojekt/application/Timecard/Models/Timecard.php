@@ -72,6 +72,10 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
             $this->uri = $this->uid;
         }
 
+        if (!$this->projectId) {
+            $this->projectId = 1;
+        }
+
         return parent::save();
     }
     /**
