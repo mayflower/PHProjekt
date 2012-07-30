@@ -189,7 +189,7 @@ class Timecard_CalDAV_CalendarBackend extends Sabre_CalDAV_Backend_Abstract
         if (1 == $entry['project_id']) {
             $v->add('summary', Phprojekt::getInstance()->translate('Unassigned'));
         } else {
-            $v->add('summary', $entry['title']);
+            $v->add('summary', $entry['title'] . ' [' . $entry['project_id'] . ']');
         }
 
         $notes = trim($entry['notes']);
