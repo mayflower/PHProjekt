@@ -482,7 +482,7 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
     {
         $this->notes = '';
 
-        $this->parseVEventSummary($vevent->SUMMARY);
+        $this->parseVEventSummary($vevent->SUMMARY->value);
         if (isset($vevent->DESCRIPTION)) {
             $this->addParagraphToNotes($vevent->DESCRIPTION);
         }
