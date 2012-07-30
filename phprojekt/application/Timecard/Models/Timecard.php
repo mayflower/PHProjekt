@@ -471,7 +471,7 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
     public function fromVObject(Sabre_VObject_Component $vevent)
     {
         if (strtolower($vevent->name) !== 'vevent') {
-            throw new Exception(
+            throw new InvalidArgumentException(
                 "Invalid type of vobject_component passed to Calendar2_Models_Calendar2::fromVobject ({$vevent->name})"
             );
         }

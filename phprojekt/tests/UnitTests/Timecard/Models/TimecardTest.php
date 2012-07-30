@@ -321,4 +321,11 @@ class Timecard_Models_Timecard_Test extends DatabaseTest
         $order         = Phprojekt_ModelInformation_Default::ORDERING_FORM;
         $this->assertEquals($expected, $timecardModel->getInformation()->getFieldDefinition($order));
     }
+
+    public function testFromVObjectFailsOnWrongType()
+    {
+        $timecard = new Timecard_Models_Timecard();
+        $this->setExpectedException('InvalidArgumentException');
+        $timecard->fromVObject(new Sabre_VObject_Component('vcalendar'));
+    }
 }
