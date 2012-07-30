@@ -328,4 +328,128 @@ class Timecard_Models_Timecard_Test extends DatabaseTest
         $this->setExpectedException('InvalidArgumentException');
         $timecard->fromVObject(new Sabre_VObject_Component('vcalendar'));
     }
+
+    private function timecardFromTestVEvent()
+    {
+        $tc = new Timecard_Models_Timecard();
+        $tc->fromVObject(
+            Sabre_VObject_Reader::read(<<<HERE
+BEGIN:VEVENT
+UID:461092315540@example.com
+SUMMARY:a summary
+DESCRIPTION:This is a nice description
+DTSTART:20000101T080000Z
+DTEND:20000101T120000Z
+END:VEVENT
+HERE
+            )
+        );
+        return $tc;
+    }
+
+    public function testFromVObjectPutsSummaryInNotes()
+    {
+        $this->assertStringStartsWith('a summary', $this->timecardFromTestVEvent()->notes);
+    }
+
+    public function testFromVObjectUsesDescription()
+    {
+        $this->assertStringEndsWith('This is a nice description', $this->timecardFromTestVEvent()->notes);
+    }
+
+    public function testFromVObjectUsesUid()
+    {
+        $this->assertEquals('461092315540@example.com', $this->timecardFromTestVEvent()->uid);
+    }
+
+    // Usertime is +1
+    public function testFromVObjectUsesDTStartWithZ()
+    {
+        $this->assertEquals('2000-01-01 09:00:00', $this->timecardFromTestVEvent()->startDatetime);
+    }
+
+    public function testFromVObjectUsesDTEndWithZ()
+    {
+        $this->assertEquals('13:00:00', $this->timecardFromTestVEvent()->endTime);
+    }
+
+    private function timecardFromTestVEventWithTzId()
+    {
+        $tc = new Timecard_Models_Timecard();
+        $tc->fromVObject(
+            Sabre_VObject_Reader::read(<<<HERE
+BEGIN:VEVENT
+UID:461092315540@example.com
+SUMMARY:a summary
+DTSTART;TZID=America/New_York:20000101T080000
+DTEND;TZID=America/New_York:20000101T120000
+END:VEVENT
+HERE
+            )
+        );
+        return $tc;
+    }
+
+    public function testFromVObjectUsesDTStartWithTzId()
+    {
+        $this->assertEquals('2000-01-01 14:00:00', $this->timecardFromTestVEventWithTzId()->startDatetime);
+    }
+
+    public function testFromVObjectUsesDTEndWithTzId()
+    {
+        $this->assertEquals('18:00:00', $this->timecardFromTestVEventWithTzId()->endTime);
+    }
+
+    public function testFromVObjectWithEndOnAnotherDay()
+    {
+        $tc = new Timecard_Models_Timecard();
+        $tc->fromVObject(
+            Sabre_VObject_Reader::read(<<<HERE
+BEGIN:VEVENT
+UID:461092315540@example.com
+SUMMARY:a summary
+DTSTART:20000101T080000Z
+DTEND:20000102T120000Z
+END:VEVENT
+HERE
+            )
+        );
+        $this->assertEquals('2000-01-01 09:00:00', $tc->startDatetime);
+        $this->assertEquals('23:59:00', $tc->endTime);
+    }
+
+    public function testFromVObjectWithEndBeforeStart()
+    {
+        $tc = new Timecard_Models_Timecard();
+        $this->setExpectedException('Sabre_DAV_Exception_BadRequest');
+        $tc->fromVObject(
+            Sabre_VObject_Reader::read(<<<HERE
+BEGIN:VEVENT
+UID:461092315540@example.com
+SUMMARY:a summary
+DTSTART:20000101T080000Z
+DTEND:20000101T060000Z
+END:VEVENT
+HERE
+            )
+        );
+    }
+
+    public function testFromVObjectWithLocalTime()
+    {
+        $tc = new Timecard_Models_Timecard();
+        $tc->fromVObject(
+            Sabre_VObject_Reader::read(<<<HERE
+BEGIN:VEVENT
+UID:461092315540@example.com
+SUMMARY:a summary
+DTSTART:20000101T080000
+DTEND:20000101T120000
+END:VEVENT
+HERE
+            )
+        );
+        $this->assertEquals('2000-01-01 08:00:00', $tc->startDatetime);
+        $this->assertEquals('12:00:00', $tc->endTime);
+    }
 }
