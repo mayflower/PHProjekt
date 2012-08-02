@@ -48,12 +48,12 @@ class Phprojekt
     /**
      * The third part of the version number.
      */
-    const VERSION_RELEASE = 3;
+    const VERSION_RELEASE = 4;
 
     /**
      * The extra part of the version number.
      */
-    const VERSION_EXTRA = null;
+    const VERSION_EXTRA = 'RC';
 
     /**
      * Name of the Registry for current project.
