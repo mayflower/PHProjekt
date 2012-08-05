@@ -339,7 +339,7 @@ class Phprojekt_DbParser
     }
 
     /**
-     * Delete all the version lower than the current module version.
+     * Delete all the versions lower than the current module version.
      *
      * @param string $module Current module of the data.
      * @param array  $data   Array with all the version and data for parse.
