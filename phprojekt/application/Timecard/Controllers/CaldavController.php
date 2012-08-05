@@ -14,10 +14,10 @@
  * @category   PHProjekt
  * @package    Application
  * @subpackage Timecard
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
+ * @copyright  Copyright (c) 2012 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
- * @since      File available since Release 6.1
+ * @since      File available since Release 6.1.4
  * @author     Simon Kohlmeyer <simon.kohlmeyer@mayflower.de>
  */
 require_once 'Sabre.autoload.php';
@@ -28,10 +28,10 @@ require_once 'Sabre.autoload.php';
  * @category   PHProjekt
  * @package    Application
  * @subpackage Timecard
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
+ * @copyright  Copyright (c) 2012 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
- * @since      File available since Release 6.1
+ * @since      File available since Release 6.1.4
  * @author     Simon Kohlmeyer <simon.kohlmeyer@mayflower.de>
  */
 class Timecard_CaldavController extends IndexController
