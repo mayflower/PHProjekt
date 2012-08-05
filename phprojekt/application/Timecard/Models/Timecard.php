@@ -60,8 +60,8 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
             $this->notes = '';
         }
 
-        $start = new Datetime($this->startDatetime);
-        $end   = new Datetime(substr($this->startDatetime, 0, 11) . $this->endTime);
+        $start         = new Datetime($this->startDatetime);
+        $end           = new Datetime(substr($this->startDatetime, 0, 11) . $this->endTime);
         $this->minutes = floor (($end->getTimestamp() - $start->getTimestamp()) / 60);
 
         if (empty($this->uid)) {
