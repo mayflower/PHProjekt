@@ -50,8 +50,9 @@ class Timecard_CalDAV_CalendarBackend extends Sabre_CalDAV_Backend_Abstract
     public function getCalendarsForUser($principalUri)
     {
         // We have exactly one calendar per principal.
-        $user = new Phprojekt_User_User();
-        $user = $user->findByUsername(preg_filter('|.*principals/([^/]+)$|', '$1', $principalUri));
+        $user     = new Phprojekt_User_User();
+        $username = preg_filter('|.*principals/([^/]+)$|', '$1', $principalUri);
+        $user     = $user->findByUsername($username);
         if (is_null($user)) {
             throw new Exception("principal not found under $principalUri when retrieving calendars for $username");
         }
