@@ -70,11 +70,11 @@ class Timecard_Migration extends Phprojekt_Migration_Abstract
     {
         date_default_timezone_set('utc');
         $this->_db = $db;
+        $this->parseDbFile('Timecard');
 
         if (Phprojekt::compareVersion($currentVersion, '6.1.4') < 0) {
             $request  = new Zend_Controller_Request_Http();
             $uidSuffix = "@phprojekt6-" . $request->getHttpHost();
-            $this->parseDbFile('Timecard');
             Phprojekt::getInstance()->getDB()->query(
                 "UPDATE timecard SET uri = id, uid = CONCAT(UUID(), \"{$uidSuffix}\");"
             );
