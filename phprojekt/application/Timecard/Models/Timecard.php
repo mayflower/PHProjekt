@@ -571,7 +571,7 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
     {
         $fetch = $this->fetchAll(Phprojekt::getInstance()->getDb()->quoteInto('uri = ?', $uri));
         if (!$fetch) {
-            return $fetch;
+            return false;
         }
         return $fetch[0];
     }
