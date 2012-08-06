@@ -616,4 +616,22 @@ HERE
         );
         $this->assertEquals('foo', $tc->notes);
     }
+
+    public function testFromVObjectPrefersIdOverName()
+    {
+        $tc = new Timecard_Models_Timecard();
+        $tc->fromVObject(
+            Sabre_VObject_Reader::read(<<<HERE
+BEGIN:VEVENT
+UID:461092315540@example.com
+SUMMARY:Sub Sub Project 2 [2]
+DESCRIPTION:foo
+DTSTART:20000101T080000
+DTEND:20000101T120000
+END:VEVENT
+HERE
+            )
+        );
+        $this->assertEquals(2, $tc->projectId);
+    }
 }
