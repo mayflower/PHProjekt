@@ -492,10 +492,10 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
 
         $this->parseVEventSummary($vevent->SUMMARY->value);
         if (isset($vevent->DESCRIPTION)) {
-            $this->addParagraphToNotes($vevent->DESCRIPTION);
+            $this->addParagraphToNotes($vevent->DESCRIPTION->value);
         }
 
-        $this->uid = $vevent->uid;
+        $this->uid = $vevent->uid->value;
 
         $this->applyICalendarTimes(
             $vevent->dtstart->value,
