@@ -514,7 +514,12 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
         if (is_numeric($summary) && $summary > 0) {
             $where = Phprojekt::getInstance()->getDb()->quoteInto('id = ?', intval($summary));
         } else {
-            $where = Phprojekt::getInstance()->getDb()->quoteInto('title = ?', $summary);
+            $matches = array();
+            if (preg_match("/\[(\d+)\]/", $summary, $matches)) {
+                $where = Phprojekt::getInstance()->getDb()->quoteInto('id = ?', intval($matches[1]));
+            } else {
+                $where = Phprojekt::getInstance()->getDb()->quoteInto('title = ?', $summary);
+            }
         }
 
         $project  = new Project_Models_Project();
