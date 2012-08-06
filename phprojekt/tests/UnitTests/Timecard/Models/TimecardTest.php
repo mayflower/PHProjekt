@@ -504,4 +504,116 @@ HERE
         );
         $this->assertEquals(7, $tc->projectId);
     }
+
+    public function testSettingProjectIdViaSummary()
+    {
+        $tc = new Timecard_Models_Timecard();
+        $tc->fromVObject(
+            Sabre_VObject_Reader::read(<<<HERE
+BEGIN:VEVENT
+UID:461092315540@example.com
+SUMMARY:7
+DESCRIPTION:foo
+DTSTART:20000101T080000
+DTEND:20000101T120000
+END:VEVENT
+HERE
+            )
+        );
+        $this->assertEquals(7, $tc->projectId);
+    }
+
+    public function testFromVObjecAddsSummaryToNotes()
+    {
+        $tc = new Timecard_Models_Timecard();
+        $tc->fromVObject(
+            Sabre_VObject_Reader::read(<<<HERE
+BEGIN:VEVENT
+UID:461092315540@example.com
+SUMMARY:a nice summary here
+DESCRIPTION:foo
+DTSTART:20000101T080000
+DTEND:20000101T120000
+END:VEVENT
+HERE
+            )
+        );
+        $this->assertEquals("a nice summary here\nfoo", $tc->notes);
+    }
+
+    public function testFromVObjectDoesntAddCurrentProjectNameToNotes()
+    {
+        $tc = new Timecard_Models_Timecard();
+        $tc->projectId = 7;
+        $tc->fromVObject(
+            Sabre_VObject_Reader::read(<<<HERE
+BEGIN:VEVENT
+UID:461092315540@example.com
+SUMMARY:Sub Sub Project 2 [7]
+DESCRIPTION:foo
+DTSTART:20000101T080000
+DTEND:20000101T120000
+END:VEVENT
+HERE
+            )
+        );
+        $this->assertEquals('foo', $tc->notes);
+    }
+
+    public function testFromVObjectRemovesOldNotes()
+    {
+        $tc = new Timecard_Models_Timecard();
+        $tc->notes = 'notes';
+        $tc->fromVObject(
+            Sabre_VObject_Reader::read(<<<HERE
+BEGIN:VEVENT
+UID:461092315540@example.com
+SUMMARY:something
+DESCRIPTION:foo
+DTSTART:20000101T080000
+DTEND:20000101T120000
+END:VEVENT
+HERE
+            )
+        );
+        $this->assertEquals("something\nfoo", $tc->notes);
+    }
+
+    public function testFromVObjectRecognizesUnassigned()
+    {
+        $tc = new Timecard_Models_Timecard();
+        $tc->projectId = 7;
+        $tc->fromVObject(
+            Sabre_VObject_Reader::read(<<<HERE
+BEGIN:VEVENT
+UID:461092315540@example.com
+SUMMARY:Unassigned
+DESCRIPTION:foo
+DTSTART:20000101T080000
+DTEND:20000101T120000
+END:VEVENT
+HERE
+            )
+        );
+        $this->assertEquals(1, $tc->projectId);
+    }
+
+    public function testFromVObjectDoesntAddUnassignedToNotes()
+    {
+        $tc = new Timecard_Models_Timecard();
+        $tc->projectId = 1;
+        $tc->fromVObject(
+            Sabre_VObject_Reader::read(<<<HERE
+BEGIN:VEVENT
+UID:461092315540@example.com
+SUMMARY:Unassigned
+DESCRIPTION:foo
+DTSTART:20000101T080000
+DTEND:20000101T120000
+END:VEVENT
+HERE
+            )
+        );
+        $this->assertEquals('foo', $tc->notes);
+    }
 }
