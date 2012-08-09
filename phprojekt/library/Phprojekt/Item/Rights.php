@@ -216,7 +216,7 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
         $data['module_id'] = Phprojekt_Module::getId('Project');
         $data['item_id']   = 1;
         $data['user_id']   = (int) $userId;
-        $data['access']    = (int) Phprojekt_Acl::WRITE | Phprojekt_Acl::CREATE;
+        $data['access']    = (int) Phprojekt_Acl::WRITE | Phprojekt_Acl::CREATE | Phprojekt_Acl::READ;
         $this->insert($data);
     }
 
