@@ -52,7 +52,6 @@ dojo.declare("phpr.Default.loadingOverlay", phpr.Default.System.Component, {
             var domBox = dojo.marginBox(node);
             var template =  phpr.fillTemplate("phpr.Default.template.loadingOverlay.html",
                 {
-                    webpath: phpr.webpath,
                     message: this._message
                 });
 

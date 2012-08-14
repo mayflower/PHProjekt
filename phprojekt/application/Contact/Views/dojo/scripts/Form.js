@@ -42,7 +42,7 @@ dojo.declare("phpr.Contact.Form", phpr.Default.DialogForm, {
 
         this.setSubmitInProgress(true);
         phpr.send({
-            url: phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSave/nodeId/' + phpr.currentProjectId +
+            url: 'index.php/' + phpr.module + '/index/jsonSave/nodeId/' + phpr.currentProjectId +
                 '/id/' + this.id,
             content:   this.sendData
         }).then(dojo.hitch(this, function(data) {
@@ -62,7 +62,7 @@ dojo.declare("phpr.Contact.Form", phpr.Default.DialogForm, {
 
     deleteForm: function() {
         phpr.send({
-            url:       phpr.webpath + 'index.php/' + phpr.module + '/index/jsonDelete/id/' + this.id
+            url: 'index.php/' + phpr.module + '/index/jsonDelete/id/' + this.id
         }).then(dojo.hitch(this, function(data) {
             if (data) {
                 new phpr.handleResponse('serverFeedback', data);

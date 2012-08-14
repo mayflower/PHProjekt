@@ -3,9 +3,9 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
     <title>PHProjekt</title>
-    <link rel="shortcut icon" href="<?php echo $this->webPath; ?>img/favicon.ico" type="image/x-icon" />
-    <link rel="stylesheet" type="text/css" href="<?php echo $this->webPath; ?>min/min/?g=phprojekt" />
-    <script type="text/javascript" src="<?php echo $this->webPath; ?>dojo/dojo/dojo.js"></script>
+    <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" type="text/css" href="min/min/?g=phprojekt" />
+    <script type="text/javascript" src="dojo/dojo/dojo.js"></script>
     <script type="text/javascript">
         dojo.require('dojo.parser');
         dojo.require('dijit.layout.BorderContainer');
@@ -71,10 +71,10 @@
     <!-- Top Bar menu -->
     <div dojoType="dijit.layout.ContentPane" region="top" id="header" class="header"
     style="height: 55px; overflow: hidden;">
-        <img class="left" src="<?php echo $this->webPath; ?>img/logo.png" title="PHProjekt 6" />
+        <img class="left" src="img/logo.png" title="PHProjekt 6" />
         <div id="loadingIcon" class="loadingIcon" class="right align-right"
         style="margin-top: 5px; margin-bottom: 5px; display: none;">
-            <img class="left" src="<?php echo $this->webPath; ?>img/ajax-loader.gif" title="Loading" />
+            <img class="left" src="img/ajax-loader.gif" title="Loading" />
         </div>
     </div>
 
@@ -98,7 +98,7 @@ HERE
 );
                 ?>
                 <br/>
-                    <a href="<?php echo $this->webPath; ?>index.php/Login/logout">
+                    <a href="index.php/Login/logout">
                         <?php echo $p->translate('Logout'); ?>
                     </a>
             </p>
