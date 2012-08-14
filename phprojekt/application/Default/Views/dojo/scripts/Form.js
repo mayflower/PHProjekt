@@ -179,8 +179,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         this._initData.push({'url': this._accessUrl});
 
         // Get the tags
-        this._tagUrl  = 'index.php/Default/Tag/jsonGetTagsByModule/moduleName/' +
-            phpr.module + '/id/' + this.id;
+        this._tagUrl = 'index.php/Default/Tag/jsonGetTagsByModule/moduleName/' + phpr.module + '/id/' + this.id;
         this._initData.push({'url': this._tagUrl});
     },
 
