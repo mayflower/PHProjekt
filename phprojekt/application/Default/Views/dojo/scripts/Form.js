@@ -179,7 +179,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         this._initData.push({'url': this._accessUrl});
 
         // Get the tags
-        this._tagUrl  = phpr.webpath + 'index.php/Default/Tag/jsonGetTagsByModule/moduleName/' +
+        this._tagUrl = phpr.webpath + 'index.php/Default/Tag/jsonGetTagsByModule/moduleName/' +
             phpr.module + '/id/' + this.id;
         this._initData.push({'url': this._tagUrl});
     },
@@ -1075,7 +1075,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         var pid = phpr.currentProjectId;
 
         phpr.send({
-            url:       phpr.webpath + 'index.php/' + phpr.module + '/index/jsonDelete/id/' + this.id
+            url: phpr.webpath + 'index.php/' + phpr.module + '/index/jsonDelete/id/' + this.id
         }).then(dojo.hitch(this, function(data) {
             if (data) {
                 new phpr.handleResponse('serverFeedback', data);
