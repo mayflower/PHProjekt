@@ -237,9 +237,8 @@ class Timecard_CalDAV_CalendarBackend extends Sabre_CalDAV_Backend_Abstract
     public function createCalendarObject($calendarId, $objectUri, $calendarData)
     {
         $vcalendar = Sabre_VObject_Reader::read($calendarData);
-        $timecard  = new Timecard_Models_Timecard();
+        $timecard  = Tiumecard_Models_VObjectReader::read($vcalendar->vevent);
 
-        $timecard->fromVObject($vcalendar->vevent);
         $timecard->projectId = 1;
         $timecard->ownerId   = Phprojekt_Auth_Proxy::getEffectiveUserId();
         $timecard->uri       = $objectUri;
@@ -272,7 +271,7 @@ class Timecard_CalDAV_CalendarBackend extends Sabre_CalDAV_Backend_Abstract
             throw new Sabre_DAV_Exception_Forbidden("You are not allowed to modify this entry");
         }
 
-        $timecard->fromVObject($vcalendar->vevent);
+        $timecard = Timecard_Models_VObjectReader::readBasedOnExistingTimecard($timecard, $vcalendar->vevent);
         $timecard->save();
     }
 
