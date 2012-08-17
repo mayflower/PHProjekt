@@ -37,6 +37,8 @@
  */
 class Project_Migration extends Phprojekt_Migration_Abstract
 {
+    protected $_db;
+
     /**
      * Return the current module version.
      *
@@ -46,7 +48,7 @@ class Project_Migration extends Phprojekt_Migration_Abstract
      */
     public function getCurrentModuleVersion()
     {
-        return '6.1.0-dev';
+        return '6.1.5';
     }
 
     /**
@@ -61,10 +63,37 @@ class Project_Migration extends Phprojekt_Migration_Abstract
      */
     public function upgrade($currentVersion, Zend_Db_Adapter_Abstract $db)
     {
+        $this->_db = $db;
+
         if (is_null($currentVersion)
                 || Phprojekt::compareVersion($currentVersion, '6.1.0-dev') < 0) {
             $this->parseDbFile('Project');
             Phprojekt::getInstance()->getCache()->clean(Zend_Cache::CLEANING_MODE_ALL);
         }
+        if (Phprojekt::compareVersion($currentVersion, '6.1.5') < 0) {
+            $this->_renameProjectsWithSameTitle();
+            $this->_makeTitleParentUniqueIndex();
+        }
+    }
+
+    private function _renameProjectsWithSameTitle()
+    {
+        $this->_db->query(<<<HERE
+UPDATE project AS p
+JOIN (
+    SELECT title, project_id
+    FROM project
+    GROUP BY title, project_id
+    HAVING COUNT(title) > 1
+) AS c
+  ON p.title = c.title AND p.project_id = c.project_id
+SET p.title = CONCAT(p.title, ' (', p.id, ')')
+HERE
+);
+    }
+
+    private function _makeTitleParentUniqueIndex()
+    {
+        $this->_db->query('ALTER TABLE project ADD UNIQUE INDEX (title, project_id)');
     }
 }
