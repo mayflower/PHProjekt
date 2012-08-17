@@ -14,65 +14,56 @@
  * @category   PHProjekt
  * @package    Application
  * @subpackage WebDAV
- * @copyright  Copyright (c) 2011 Mayflower GmbH (http://www.mayflower.de)
+ * @copyright  Copyright (c) 2012 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
- * @since      File available since Release 6.1
+ * @since      File available since Release 6.1.5
  * @author     Simon Kohlmeyer <simon.kohlmeyer@mayflower.de>
  */
 
 /**
  * WebDAV collection model.
  *
- * A directory in the webdav structure. Maps to a project.
+ * A directory containing all subprojects for a specific project.
  *
  * @category   PHProjekt
  * @package    Application
  * @subpackage WebDAV
- * @copyright  Copyright (c) 2011 Mayflower GmbH (http://www.mayflower.de)
+ * @copyright  Copyright (c) 2012 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
- * @since      File available since Release 6.1
+ * @since      File available since Release 6.1.5
  * @author     Simon Kohlmeyer <simon.kohlmeyer@mayflower.de>
  */
-class WebDAV_Models_ProjectDirectory extends Sabre_DAV_Collection
+class WebDAV_Models_SubprojectsDirectory extends Sabre_DAV_Collection
 {
-    protected $_project;
+    protected $_subprojects;
 
-    /**
-     * Constructor
-     *
-     * @param Project_Models_Project $project The project that this object represents.
-     */
     public function __construct(Project_Models_Project $project)
     {
-        $this->_project = $project;
+        $this->_subprojects = $project->getTree()->getChildren();
     }
 
-    /**
-     * Retrieves the child node with this specific name.
-     *
-     * @param string $name The name of the child node to get.
-     */
     public function getChild($name)
     {
-        if (WebDAV_Constants::SUBPROJECTS_NAME === $name) {
-            return new WebDAV_Models_SubprojectsDirectory($this->_project);
-        } elseif (WebDAV_Constants::FILEMANAGERS_NAME === $name) {
-            return new WebDAV_Models_FilemanagersDirectory($this->_project);
+        foreach ($this->_subprojects as $sub) {
+            if ($sub->title == $name) {
+                return new WebDAV_Models_ProjectDirectory($sub->getActiveRecord());
+            }
         }
 
         throw new Sabre_DAV_Exception_NotFound('Directory not found: ' . $name);
     }
 
-    /**
-     * Checks if a child with the given name exists.
-     *
-     * @param string $name The name of the child.
-     */
     public function childExists($name)
     {
-        return in_array($name, array(WebDAV_Constants::SUBPROJECTS_NAME, WebDAV_Constants::FILEMANAGERS_NAME));
+        foreach ($this->_subprojects as $sub) {
+            if ($sub->title == $name) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function createFile($name, $data = NULL)
@@ -89,15 +80,16 @@ class WebDAV_Models_ProjectDirectory extends Sabre_DAV_Collection
 
     public function getName()
     {
-        return $this->_project->title;
+        return WebDAV_Constants::SUBPROJECTS_NAME;
     }
 
     public function getChildren()
     {
-        return array(
-            new WebDAV_Models_SubprojectsDirectory($this->_project),
-            new WebDAV_Models_FilemanagersDirectory($this->_project)
-        );
-    }
+        $children = array();
+        foreach ($this->_subprojects as $sub) {
+            $children[] = new WebDAV_Models_ProjectDirectory($sub->getActiveRecord());
+        }
 
+        return $children;
+    }
 }
