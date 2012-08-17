@@ -38,7 +38,7 @@ abstract class PHProjekt_Extension_Abstract {
     }
 
     /**
-     * Return the extension api version to use. Current is 6.0.1.
+     * Return the extension api version to use. Current is 6.1.0.
      *
      * @return string The version.
      */
