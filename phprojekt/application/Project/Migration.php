@@ -46,7 +46,7 @@ class Project_Migration extends Phprojekt_Migration_Abstract
      */
     public function getCurrentModuleVersion()
     {
-        return '6.1.0-dev';
+        return '6.1.5';
     }
 
     /**
@@ -66,5 +66,30 @@ class Project_Migration extends Phprojekt_Migration_Abstract
             $this->parseDbFile('Project');
             Phprojekt::getInstance()->getCache()->clean(Zend_Cache::CLEANING_MODE_ALL);
         }
+        if (Phprojekt::comareVersion($currentVersion, '6.1.5') < 0) {
+            $this->_renameProjectsWithSameTitle();
+            $this->_makeTitleParentUniqueIndex();
+        }
+    }
+
+    private function _renameFilemanagersWithSameTitle()
+    {
+        $this->_db->query(<<<HERE
+UPDATE project AS p
+JOIN (
+    SELECT title, title, project_id
+    FROM project
+    GROUP BY title, project_id
+    HAVING COUNT(title) > 1
+) AS c
+  ON p.title = c.title AND p.project_id = c.project_id
+SET p.title = CONCAT(p.title, ' (', p.id, ')')
+HERE
+);
+    }
+
+    private function _makeTitleUniqueIndex()
+    {
+        $this->_db->query('ALTER TABLE project ADD UNIQUE INDEX (title, project_id)');
     }
 }
