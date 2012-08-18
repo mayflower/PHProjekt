@@ -163,22 +163,6 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
         }
     },
 
-    showTags: function() {
-        // Summary:
-        //    Draw the tags
-        // Description:
-        //    Draw the tags
-        // Get the module tags
-        this._tagUrl = 'index.php/Default/Tag/jsonGetTags';
-        phpr.DataStore.addStore({url: this._tagUrl});
-        phpr.DataStore.requestData({
-            url: this._tagUrl,
-            processData: dojo.hitch(this, function(reqData) {
-                this.publish("drawTagsBox", [reqData.data]);
-            })
-        });
-    },
-
     useIdInGrid: function() {
         // Summary:
         //    Draw the ID on the grid
@@ -1153,9 +1137,6 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
         // Filters
         this.setFilterButton(meta);
         this.manageFilters();
-
-        // Draw the tags
-        this.showTags();
     },
 
     saveGridScroll: function() {

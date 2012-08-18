@@ -207,7 +207,6 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         dojo.subscribe(module + ".reload", this, "reload");
         dojo.subscribe(module + ".openForm", this, "openForm");
         dojo.subscribe(module + ".showSearchResults", this, "showSearchResults");
-        dojo.subscribe(module + ".showTagsResults", this, "showTagsResults");
         dojo.subscribe(module + ".updateCacheData", this, "updateCacheData");
         dojo.subscribe(module + ".loadResult", this, "loadResult");
         dojo.subscribe(module + ".setLanguage", this, "setLanguage");
@@ -1018,17 +1017,6 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
             var content      = {words: words};
             this.showResults(getDataUrl, content, resultsTitle);
         }
-    },
-
-    showTagsResults: function(/*String*/tag) {
-        // Summary:
-        //    This function reload the grid place with the result of the tag search
-        // Description:
-        //    The server return the found records and the function display it
-        var getDataUrl   = 'index.php/Default/Tag/jsonGetModulesByTag';
-        var resultsTitle = phpr.nls.get('Tag results');
-        var content      = {tag: tag};
-        this.showResults(getDataUrl, content, resultsTitle);
     },
 
     showResults: function(/*String*/getDataUrl, /*Object*/content, /*String*/resultsTitle) {

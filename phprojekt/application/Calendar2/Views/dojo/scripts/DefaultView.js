@@ -111,9 +111,6 @@ dojo.declare("phpr.Calendar2.DefaultView", phpr.Default.System.Component, {
         }
         this._widthHourColumn = 7;
 
-        // Draw the tags
-        this.showTags();
-
         this.afterConstructor();
     },
 
@@ -123,16 +120,6 @@ dojo.declare("phpr.Calendar2.DefaultView", phpr.Default.System.Component, {
         // Description:
         //    If there is something that must be done before executing the most of sentences of 'constructor' function,
         //    inherit this function and put it inside it.
-    },
-
-    showTags: function() {
-        // Summary:
-        //    Draws the tags
-        this._tagUrl = 'index.php/Default/Tag/jsonGetTags'; // Get the module tags
-        phpr.DataStore.addStore({url: this._tagUrl});
-        phpr.DataStore.requestData({url: this._tagUrl, processData: dojo.hitch(this, function() {
-            this.publish("drawTagsBox", [phpr.DataStore.getData({url: this._tagUrl})]);
-        })});
     },
 
     setExportButton: function(meta) {
