@@ -37,6 +37,7 @@
  */
 class Project_Migration extends Phprojekt_Migration_Abstract
 {
+    protected $_db;
     /**
      * Return the current module version.
      *
@@ -46,7 +47,48 @@ class Project_Migration extends Phprojekt_Migration_Abstract
      */
     public function getCurrentModuleVersion()
     {
-        return '6.1.0-dev';
+        return '6.1.4';
+    }
+
+    public function onVersionStep($oldVersion, $newVersion) {
+        if ($newVersion === "6.1.4") {
+            $select = $this->_db->select();
+            $select->from(
+                array('m' => 'tags_modules'),
+                array('m.module_id', 'm.item_id', 't.id')
+            );
+            $select->join(
+                array('u' => 'tags_users'),
+                'u.id = m.tag_user_id'
+            );
+            $select->join(
+                array('t' => 'tags'),
+                't.id = u.tag_id'
+            );
+            $select->group(array('m.module_id', 'm.item_id', 't.id'));
+
+            $rows = $this->_db->fetchAll($select);
+            if (count($rows) > 0) {
+                $insertrows = array();
+
+                foreach ($rows as $row) {
+                    $insertrows[] = '(' .
+                        implode(',', array(
+                            $this->_db->quote($row['module_id']),
+                            $this->_db->quote($row['item_id']),
+                            $this->_db->quote($row['id'])
+                        )) .
+                        ')';
+                }
+
+                $query = 'INSERT INTO ' .
+                    $this->_db->quoteIdentifier('tags_modules_items') .
+                    '( module_id, item_id, tag_id ) VALUES ' .
+                    implode(',', $insertrows);
+
+                $this->_db->query($query);
+            }
+        }
     }
 
     /**
@@ -62,9 +104,23 @@ class Project_Migration extends Phprojekt_Migration_Abstract
     public function upgrade($currentVersion, Zend_Db_Adapter_Abstract $db)
     {
         if (is_null($currentVersion)
-                || Phprojekt::compareVersion($currentVersion, '6.1.0-dev') < 0) {
-            $this->parseDbFile('Project');
-            Phprojekt::getInstance()->getCache()->clean(Zend_Cache::CLEANING_MODE_ALL);
+            || Phprojekt::compareVersion($currentVersion, '6.1.4') < 0)
+        {
+            $obj =& $this;
+            $this->_db = $db;
+            $stepWrapper = function ($oldVersion, $newVersion) use ($obj) {
+                $obj->onVersionStep($oldVersion, $newVersion);
+            };
+
+            $dbParser = new Phprojekt_DbParser(
+                array('useExtraData' => false),
+                Phprojekt::getInstance()->getDb()
+            );
+            $dbParser->parseSingleModuleData('Project', null,  $stepWrapper);
+
+            Phprojekt::getInstance()->getCache()->clean(
+                Zend_Cache::CLEANING_MODE_ALL
+            );
         }
     }
 }

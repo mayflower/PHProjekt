@@ -338,7 +338,8 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
                 $db->quoteInto('calendar2_id = ?', $this->id)
             );
 
-            Phprojekt_Tags::getInstance()->deleteTagsByItem(
+            $tag = new Phprojekt_Tags();
+            $tag->deleteTagsByItem(
                 Phprojekt_Module::getId('Calendar2'),
                 $this->id
             );
@@ -1297,11 +1298,11 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
      */
     private function _saveToNewRow()
     {
-        $tagsObject = Phprojekt_Tags::getInstance();
+        $tagsObject = new Phprojekt_Tags();
         $moduleId = Phprojekt_Module::getId('Calendar2');
         $tags = array();
         foreach ($tagsObject->getTagsByModule($moduleId, $this->id) as $val) {
-            $tags[] = $val['string'];
+            $tags[] = $val;
         }
 
         $this->_fetchParticipantData();

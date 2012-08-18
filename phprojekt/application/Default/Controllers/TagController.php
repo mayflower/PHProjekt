@@ -89,7 +89,7 @@ class TagController extends IndexController
      */
     public function jsonGetTagsByModuleAction()
     {
-        $tagObj = Phprojekt_Tags::getInstance();
+        $tagObj = new Phprojekt_Tags();
 
         $id        = (int) $this->getRequest()->getParam('id', 0);
         $limit     = (int) $this->getRequest()->getParam('limit', 0);
@@ -168,7 +168,7 @@ class TagController extends IndexController
      */
     public function jsonSaveTagsAction()
     {
-        $tagObj = Phprojekt_Tags::getInstance();
+        $tagObj = new Phprojekt_Tags();
         $id     = (int) $this->getRequest()->getParam('id');
         $string = (string) $this->getRequest()->getParam('string', '');
 
@@ -217,7 +217,7 @@ class TagController extends IndexController
      */
     public function jsonDeleteTagsAction()
     {
-        $tagObj = Phprojekt_Tags::getInstance();
+        $tagObj = new Phprojekt_Tags();
         $id     = (int) $this->getRequest()->getParam('id');
 
         if (empty($id)) {
