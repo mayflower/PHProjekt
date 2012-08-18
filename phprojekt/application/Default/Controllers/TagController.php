@@ -38,35 +38,6 @@
 class TagController extends IndexController
 {
     /**
-     * Returns an array with tags order by number of ocurrences.
-     *
-     * Returns the metadata of the fieds and the data itself with:
-     * <pre>
-     *  - string => The tag.
-     *  - count  => Number of ocurrences.
-     * </pre>
-     * Also the number of rows is returned.
-     *
-     * OPTIONAL request parameters:
-     * <pre>
-     *  - integer <b>limit</b> Number of results.
-     * </pre>
-     *
-     * The return is in JSON format.
-     *
-     * @return void
-     */
-    public function jsonGetTagsAction()
-    {
-        $tagObj = Phprojekt_Tags::getInstance();
-        $limit  = (int) $this->getRequest()->getParam('limit', 0);
-        $tags   = $tagObj->getTags($limit);
-        $fields = $tagObj->getFieldDefinition();
-
-        Phprojekt_Converter_Json::echoConvert($tags, $fields);
-    }
-
-    /**
      * Returns an array with tags for one item.
      *
      * Returns the metadata of the fieds and the data itself with:
@@ -104,40 +75,6 @@ class TagController extends IndexController
         $fields = $tagObj->getFieldDefinition();
 
         Phprojekt_Converter_Json::echoConvert($tags, $fields);
-    }
-
-    /**
-     * Search for a tag.
-     *
-     * Returns an array with all the modules with the tag, with:
-     * <pre>
-     *  - id            => id of the item found.
-     *  - moduleId      => id of the module.
-     *  - moduleName    => Name of the module.
-     *  - moduleLabel   => Display for the module.
-     *  - firstDisplay  => Firts display for the item (Ej. title).
-     *  - secondDisplay => Second display for the item (Ej. notes).
-     *  - projectId     => Parent project id of the item.
-     * </pre>
-     *
-     * OPTIONAL request parameters:
-     * <pre>
-     *  - integer <b>tag</b>   Tag to search.
-     *  - integer <b>limit</b> Number of results.
-     * </pre>
-     *
-     * The return is in JSON format.
-     *
-     * @return void
-     */
-    public function jsonGetModulesByTagAction()
-    {
-        $tagObj = Phprojekt_Tags::getInstance();
-        $tag    = (string) $this->getRequest()->getParam('tag', '');
-        $limit  = (int) $this->getRequest()->getParam('limit', 0);
-        $tags   = $tagObj->getModulesByTag($tag, $limit);
-
-        Phprojekt_Converter_Json::echoConvert($tags);
     }
 
     /**

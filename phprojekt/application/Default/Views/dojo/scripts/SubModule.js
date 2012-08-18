@@ -256,9 +256,6 @@ dojo.declare("phpr.Default.SubModule.Grid", phpr.Default.Grid, {
     },
 
     manageFilters: function() {
-    },
-
-    showTags: function() {
     }
 });
 
