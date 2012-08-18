@@ -132,10 +132,6 @@ class Phprojekt_Tags
                             $allowedIds[] = $itemId;
                         }
                     } catch (Zend_Exception $e) {
-                        Phprojekt::getInstance()->getLog()->debug(
-                            "Model for \"$moduleName\" not found, removing $moduleId/$itemId from tags"
-                        );
-                        $this->_tagsTableMapper->deleteTagsForModuleItem($moduleId, $itemId);
                     }
                 }
 
