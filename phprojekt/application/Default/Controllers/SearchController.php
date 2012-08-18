@@ -72,7 +72,15 @@ class SearchController extends IndexController
         $offset = (int) $this->getRequest()->getParam('start', null);
 
         $search  = new Phprojekt_Search();
-        $results = $search->search($words, $count);
+        $tags    = new Phprojekt_Tags();
+
+        $searchresults = $search->search($words, $count);
+        $tagresults    = $tags->search($words, $count);
+
+        $results = array(
+            'search' => $searchresults,
+            'tags' => $tagresults
+        );
 
         Phprojekt_Converter_Json::echoConvert($results);
     }

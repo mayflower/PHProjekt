@@ -49,21 +49,14 @@ dojo.declare("phpr.Default.SearchContentMixin", phpr.Default.System.DefaultViewC
         this.view.clear = dojo.hitch(this, "clear");
     },
     destroyMixin: function() {
-        this.clear();
-        this._clearCenterMainContent();
-        delete this.view.clear;
-        delete this.view.defaultMainContent;
+        this.inherited(arguments);
         delete this.view.resultsTitleBox;
-        delete this.view.detailsBox;
     },
     update: function(config) {
         this.inherited(arguments);
+        phpr.pageManager.getActiveModule().cleanPage();
         this.clear();
         this._renderSearchResults(config || {});
-    },
-    clear: function() {
-        this._clearCenterMainContent();
-        return this.view;
     },
     _renderSearchResults: function(config) {
         // Create our container layout
@@ -89,19 +82,32 @@ dojo.declare("phpr.Default.SearchContentMixin", phpr.Default.System.DefaultViewC
             }
 
             // append each result to the results list of the module
-            results[modulesData.moduleLabel].push(
-                new phpr.Default.System.TemplateWrapper({
-                    templateName: "phpr.Default.template.results.results.html",
-                    templateData: {
-                        id:            modulesData.id,
-                        moduleId:      modulesData.modulesId,
-                        moduleName:    modulesData.moduleName,
-                        projectId:     modulesData.projectId,
-                        firstDisplay:  modulesData.firstDisplay,
-                        secondDisplay: modulesData.secondDisplay,
-                        resultType:    "tag"
-                    }
-                }));
+            var widget = new phpr.Default.System.TemplateWrapper({
+                templateName: "phpr.Default.template.results.results.html",
+                templateData: {
+                    id:            modulesData.id,
+                    moduleId:      modulesData.modulesId,
+                    moduleName:    modulesData.moduleName,
+                    projectId:     modulesData.projectId,
+                    firstDisplay:  modulesData.firstDisplay,
+                    secondDisplay: modulesData.secondDisplay,
+                    resultType:    "tag"
+                }
+            });
+
+            dojo.connect(
+                widget.linkNode,
+                "click",
+                dojo.hitch(
+                    this,
+                    function(moduleName, itemId, projectId) {
+                        var module = phpr.pageManager.getModule(moduleName);
+                        module.loadResult(itemId, moduleName, projectId);
+                    },
+                    modulesData.moduleName, modulesData.id, modulesData.projectId)
+            );
+
+            results[modulesData.moduleLabel].push(widget);
         }
 
         for (var i in results) {
@@ -254,7 +260,8 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         phpr.pageManager.modifyCurrentState({
             moduleName: module,
             id: id,
-            projectId: projectId
+            projectId: projectId,
+            search: undefined
         }, {
             forceModuleReload: true
         });
@@ -967,25 +974,28 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                 url:       getDataUrl,
                 content:   {words: words, count: 10}
             }).then(dojo.hitch(this, function(data) {
-                if (data) {
+                if (data && data.search && data.tags) {
                     var search        = [];
                     var results       = {};
                     var index         = 0;
 
-                    for (var i = 0; i < data.length; i++) {
-                        modulesData = data[i];
-                        if (!results[modulesData.moduleLabel]) {
-                            results[modulesData.moduleLabel] = [];
+                    var addSearchResult = function(item) {
+                        if (!results[item.moduleLabel]) {
+                            results[item.moduleLabel] = [];
                         }
-                        results[modulesData.moduleLabel].push({
-                            id :           modulesData.id,
-                            moduleName:    modulesData.moduleName,
-                            projectId:     modulesData.projectId,
-                            firstDisplay:  modulesData.firstDisplay,
-                            secondDisplay: modulesData.secondDisplay,
+                        results[item.moduleLabel].push({
+                            id :           item.id,
+                            moduleName:    item.moduleName,
+                            projectId:     item.projectId,
+                            firstDisplay:  item.firstDisplay,
+                            secondDisplay: item.secondDisplay,
                             resultType:    "search"
                         });
-                    }
+                    };
+
+                    dojo.forEach(data.search, addSearchResult);
+                    dojo.forEach(data.tags, addSearchResult);
+
                     var moduleLabel = '';
                     for (var i in results) {
                         moduleLabel = i;
@@ -1013,8 +1023,12 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         if (words.length >= 3) {
             this.searchButton.hideSuggest();
             var getDataUrl   = 'index.php/Default/Search/jsonSearch';
-            var resultsTitle = phpr.nls.get('Search results');
+            var resultsTitle = phpr.nls.get('Search results for:') + ' ' + words;
             var content      = {words: words};
+            phpr.pageManager.modifyCurrentState(
+                { search: words },
+                { noAction: true }
+            );
             this.showResults(getDataUrl, content, resultsTitle);
         }
     },
@@ -1036,8 +1050,9 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                 phpr.Default.System.DefaultView,
                 phpr.Default.SearchContentMixin,
                 {
+                    blank: true,
                     resultsTitle: resultsTitle,
-                    results: data
+                    results: [].concat(data.search, data.tags)
                 }
             );
         }));
