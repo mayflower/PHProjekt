@@ -194,7 +194,7 @@ class Phprojekt_DbParser
      *
      * @return void
      */
-    public function parseSingleModuleData($module, $coreDirectory = null)
+    public function parseSingleModuleData($module, $coreDirectory = null, $versionStepCallback = null)
     {
         if (null === $coreDirectory) {
             $coreDirectory = PHPR_CORE_PATH;
@@ -224,7 +224,7 @@ class Phprojekt_DbParser
             }
         }
         if (!empty($data)) {
-            $this->_parseData($data, $module);
+            $this->_parseData($data, $module, $versionStepCallback);
         }
     }
 
@@ -239,7 +239,7 @@ class Phprojekt_DbParser
      *
      * @return void
      */
-    private function _parseData($data, $module)
+    private function _parseData($data, $module, $versionStepCallback = null)
     {
         $data          = $this->_getVersionsForProcess($module, $this->_sortData($data));
         $moduleVersion = $this->_getModuleVersion($module);
@@ -268,10 +268,15 @@ class Phprojekt_DbParser
                     $this->_processData($this->_convertSpecialValues($content['extraData'], 0));
                 }
                 $this->_messages[$module]['finish'] = 'Done';
+
+                if (is_callable($versionStepCallback )) {
+                    $versionStepCallback($moduleVersion, $version);
+                }
             } else {
                 $this->_messages[$module]['finish'] = 'Already installed';
             }
             $this->_setModuleVersion($module, $version);
+            $moduleVersion = $version;
         }
     }
 
