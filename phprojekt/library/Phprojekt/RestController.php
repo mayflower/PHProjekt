@@ -83,8 +83,9 @@ abstract class Phprojekt_RestController extends Zend_Rest_Controller
         if ($recursive) {
             $tree = new Phprojekt_Tree_Node_Database(new Project_Models_Project(), $projectId);
             $tree->setup();
-            $records     = $tree->getRecordsFor($model, $count, $start, $this->getFilterWhere(), $sort);
-            $recordCount = $tree->getRecordsCount($model);
+            $where       = $this->getFilterWhere();
+            $records     = $tree->getRecordsFor($model, $count, $start, $where, $sort);
+            $recordCount = $tree->getRecordsCount($model, $where);
         } else {
             if (!empty($projectId) && $model->hasField('projectId')) {
                 $where  = Phprojekt::getInstance()->getDb()->quoteInto('project_id = ?', (int) $projectId);
@@ -174,7 +175,7 @@ abstract class Phprojekt_RestController extends Zend_Rest_Controller
         $filters = Zend_Json_Decoder::decode($filters);
 
         if (!empty($filters)) {
-            $filterClass = new Phprojekt_Filter($this->getModelObject(), $where);
+            $filterClass = new Phprojekt_Filter($this->newModelObject(), $where);
             foreach ($filters as $filter) {
                 list($filterOperator, $filterField, $filterRule, $filterValue) = $filter;
                 $filterOperator = Cleaner::sanitize('alpha', $filterOperator, null);
