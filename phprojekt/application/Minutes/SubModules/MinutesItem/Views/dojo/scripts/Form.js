@@ -22,7 +22,7 @@ dojo.provide("phpr.MinutesItem.Form");
 
 dojo.declare("phpr.MinutesItem.Form", phpr.Default.SubModule.Form, {
     initData: function() {
-        this._itemsUrl = phpr.webpath + 'index.php/MinutesItem/index/jsonListItemSortOrder/minutesId/' +
+        this._itemsUrl = 'index.php/MinutesItem/index/jsonListItemSortOrder/minutesId/' +
             this.main.parentId;
         this._initData.push({'url': this._itemsUrl});
     },

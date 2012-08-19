@@ -62,8 +62,7 @@ class Phprojekt_ExtensionsPlugin extends Zend_Controller_Plugin_Abstract
                 $r = Zend_Controller_Action_HelperBroker::getStaticHelper(
                     'redirector'
                 );
-                $url = Phprojekt::getInstance()->getConfig()->webpath
-                        . 'index.php/Core/Upgrade/index/csrfToken/'
+                $url = 'index.php/Core/Upgrade/index/csrfToken/'
                         . Phprojekt::createCsrfToken();
                 $r->gotoUrl($url);
             }

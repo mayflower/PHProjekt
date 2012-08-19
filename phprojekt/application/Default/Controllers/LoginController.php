@@ -47,7 +47,6 @@ class LoginController extends Zend_Controller_Action
         $this->getResponse()->clearHeaders();
         $this->getResponse()->clearBody();
 
-        $this->view->webpath        = Phprojekt::getInstance()->getConfig()->webpath;
         $this->view->compressedDojo = (bool) Phprojekt::getInstance()->getConfig()->compressedDojo;
 
         $this->render('login');
@@ -80,7 +79,6 @@ class LoginController extends Zend_Controller_Action
         $keepLogged = ($keepLogged == 1) ? true : false;
         $loginServer = $this->getRequest()->getParam('domain', null);
 
-        $this->view->webpath        = Phprojekt::getInstance()->getConfig()->webpath;
         $this->view->compressedDojo = (bool) Phprojekt::getInstance()->getConfig()->compressedDojo;
 
         try {
@@ -95,7 +93,7 @@ class LoginController extends Zend_Controller_Action
                 $frontendMessage->setControllProcess(Phprojekt_Notification::LAST_ACTION_LOGIN);
                 $frontendMessage->saveFrontendMessage();
                 Default_Helpers_Upload::cleanUnusedFiles();
-                $this->_redirect($config->webpath . 'index.php' . $hash);
+                $this->_redirect('../../index.php' . $hash);
                 die();
             }
         } catch (Phprojekt_Auth_Exception $error) {
@@ -161,7 +159,7 @@ class LoginController extends Zend_Controller_Action
 
         Phprojekt_Auth::logout();
         $config = Phprojekt::getInstance()->getConfig();
-        $this->_redirect($config->webpath . 'index.php');
+        $this->_redirect('../../index.php');
         die();
     }
 }

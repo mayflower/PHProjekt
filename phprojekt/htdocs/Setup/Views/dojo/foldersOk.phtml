@@ -16,7 +16,7 @@ style="width: auto;">
         <button dojoType="dijit.form.Button" baseClass="positive" type="button" iconClass="tick"
         onClick="
         phprSend({
-            url:       '<?php echo $this->webPath; ?>' + 'setup.php/index/jsonTablesForm',
+            url:       'setup.php/index/jsonTablesForm',
             onSuccess: dojo.hitch(this, function(data) {
                 dijit.byId('formContent').attr('content', data.template);
                 changeStep(4, 5);

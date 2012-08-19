@@ -50,7 +50,6 @@ class Core_UpgradeController extends Core_IndexController
             $config->language
         );
 
-        $this->view->webPath        = $config->webpath;
         $this->view->language       = $language;
         $this->view->compressedDojo = (bool) $config->compressedDojo;
         $this->view->frontendMsg    = (bool) $config->frontendMessages;
@@ -92,7 +91,7 @@ class Core_UpgradeController extends Core_IndexController
 
         // TODO: Notify the user that we're happy
         $config = Phprojekt::getInstance()->getConfig();
-        $this->_redirect($config->webpath . '/index.php');
+        $this->_redirect('index.php');
     }
 
     /**

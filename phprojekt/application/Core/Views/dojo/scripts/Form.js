@@ -30,10 +30,10 @@ dojo.declare("phpr.Core.Form", phpr.Default.Form, {
             (this.main.action && this.main.isSystemModule(this.main.action)) ||
             (!this.main.action && this.main.isSystemModule(this.main.module))
            ) {
-            this._url = phpr.webpath + 'index.php/Core/' + this.main.module.toLowerCase() + '/jsonDetail/nodeId/1/id/' +
+            this._url = 'index.php/Core/' + this.main.module.toLowerCase() + '/jsonDetail/nodeId/1/id/' +
                 this.id;
         } else {
-            this._url = phpr.webpath + 'index.php/Core/' + this.main.module.toLowerCase() + '/jsonDetail/nodeId/1/' +
+            this._url = 'index.php/Core/' + this.main.module.toLowerCase() + '/jsonDetail/nodeId/1/' +
                 'moduleName/' + this.main.action;
         }
     },
@@ -77,11 +77,11 @@ dojo.declare("phpr.Core.Form", phpr.Default.Form, {
         if ((this.main.action && this.main.isSystemModule(this.main.action)) ||
             (!this.main.action && this.main.isSystemModule(this.main.module))
            ) {
-            url = phpr.webpath + 'index.php/Core/' + this.main.module.toLowerCase() + '/jsonSave/nodeId/1/id/' + this.id;
+            url = 'index.php/Core/' + this.main.module.toLowerCase() + '/jsonSave/nodeId/1/id/' + this.id;
 
             moduleName = this.main.module;
         } else {
-            url = phpr.webpath + 'index.php/Core/' + this.main.module.toLowerCase() +
+            url = 'index.php/Core/' + this.main.module.toLowerCase() +
                 '/jsonSave/nodeId/1/moduleName/' + this.main.action;
 
             moduleName = this.main.action;
@@ -116,7 +116,7 @@ dojo.declare("phpr.Core.Form", phpr.Default.Form, {
 
     deleteForm: function() {
         phpr.send({
-            url: phpr.webpath + 'index.php/Core/' + this.main.action.toLowerCase() + '/jsonDelete/id/' + this.id
+            url: 'index.php/Core/' + this.main.action.toLowerCase() + '/jsonDelete/id/' + this.id
         }).then(dojo.hitch(this, function(data) {
             if (data) {
                 new phpr.handleResponse('serverFeedback', data);

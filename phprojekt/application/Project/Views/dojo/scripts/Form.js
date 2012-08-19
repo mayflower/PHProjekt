@@ -235,7 +235,7 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
         // Description:
         //    Add a tab with the webdav url of the project
 
-        var url = phpr.webpath + 'index.php/Project/index/jsonTree';
+        var url = 'index.php/Project/index/jsonTree';
         var that = this;
         phpr.DataStore.addStore({ url: url });
         return phpr.DataStore.requestData({ url: url}).then(
@@ -252,7 +252,7 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
 
                     try {
                         path = that._buildPathFromTreeData(data.items);
-                        url = phpr.webpath + "index.php/WebDAV/index/index/" + path;
+                        url = "index.php/WebDAV/index/index/" + path;
                     } catch (e) {
                         error = true;
                         errorMessage = e.message;
@@ -311,7 +311,7 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
     updateData: function() {
         this.inherited(arguments);
 
-        var subModuleUrl = phpr.webpath + 'index.php/Default/index/jsonGetModulesPermission/nodeId/' + this.id;
+        var subModuleUrl = 'index.php/Default/index/jsonGetModulesPermission/nodeId/' + this.id;
         phpr.DataStore.deleteData({url: subModuleUrl});
         this.moduleStore.update();
         this.roleStore.update();

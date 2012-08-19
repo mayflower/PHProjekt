@@ -173,7 +173,7 @@ dojo.declare("phpr.Core.Main", phpr.Default.Main, {
         if (this.isSystemModule(state.action)) {
             phpr.pageManager.modifyCurrentState({ action: undefined, moduleName: state.action });
         } else if (this.isSystemModule(module)) {
-            var updateUrl = phpr.webpath + 'index.php/Core/' + module.toLowerCase() + '/jsonSaveMultiple/nodeId/1';
+            var updateUrl = 'index.php/Core/' + module.toLowerCase() + '/jsonSaveMultiple/nodeId/1';
             var view = phpr.viewManager.useDefaultView({blank: true}).clear();
             this.grid = new this.gridWidget(updateUrl, this, phpr.currentProjectId, view.centerMainContent);
         } else {
@@ -200,7 +200,7 @@ dojo.declare("phpr.Core.Main", phpr.Default.Main, {
         } else {
             parentModule = this.module;
         }
-        var subModuleUrl = phpr.webpath + 'index.php/Core/' + parentModule.toLowerCase() + '/jsonGetModules';
+        var subModuleUrl = 'index.php/Core/' + parentModule.toLowerCase() + '/jsonGetModules';
         var self         = this;
 
         phpr.DataStore.addStore({url: subModuleUrl});

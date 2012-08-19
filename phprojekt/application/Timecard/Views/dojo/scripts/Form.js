@@ -44,7 +44,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Default.System.Component, {
         //    This function receives the form data from the server and renders the corresponding form
         this.main          = main;
         this.id            = 0;
-        this._url          = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonDetail/nodeId/1/id/' + this.id;
+        this._url          = 'index.php/' + phpr.module + '/index/jsonDetail/nodeId/1/id/' + this.id;
 
         this._dayView = new phpr.Default.System.TemplateWrapper({
             templateName: "phpr.Timecard.template.dayView.html",
@@ -119,7 +119,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Default.System.Component, {
         //    Render the Day View
         // Description:
         //    Render the Day View
-        this._bookUrl = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonDayList/date/' + this._date;
+        this._bookUrl = 'index.php/' + phpr.module + '/index/jsonDayList/date/' + this._date;
         phpr.DataStore.addStore({url: this._bookUrl});
         phpr.DataStore.requestData({url: this._bookUrl, processData: dojo.hitch(this, function(reqData) {
             var data = reqData.data;
@@ -216,7 +216,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Default.System.Component, {
         //    Render the form and the favorites
         id = id || 0;
 
-        this._url = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonDetail/nodeId/1/id/' + id;
+        this._url = 'index.php/' + phpr.module + '/index/jsonDetail/nodeId/1/id/' + id;
 
         phpr.DataStore.addStore({url: this._url});
         var dlist = new dojo.DeferredList([
@@ -328,7 +328,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Default.System.Component, {
         }
 
         phpr.send({
-            url: phpr.webpath + 'index.php/Timecard/index/jsonSave/nodeId/1/id/' + id,
+            url: 'index.php/Timecard/index/jsonSave/nodeId/1/id/' + id,
             content: this.sendData
         }).then(dojo.hitch(this, function(data) {
             if (data) {
@@ -348,7 +348,7 @@ dojo.declare("phpr.Timecard.Form", phpr.Default.System.Component, {
         // Description:
         //    Delete a bookinh and reload the views
         phpr.send({
-            url: phpr.webpath + 'index.php/' + phpr.module + '/index/jsonDelete/id/' + id
+            url: 'index.php/' + phpr.module + '/index/jsonDelete/id/' + id
         }).then(dojo.hitch(this, function(data) {
             if (data) {
                 new phpr.handleResponse('serverFeedback', data);
