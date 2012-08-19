@@ -221,9 +221,9 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
      * @param int    $offset The initial offset. null for no offset. Optional.
      * @param string $where  A clause to narrow down matching objects. Optional.
      */
-    public function getRecordsFor(Phprojekt_ActiveRecord_Abstract $model, $count = null, $offset = null, $where = null,
-            $sort = null)
-    {
+    public function getRecordsFor(
+        Phprojekt_ActiveRecord_Abstract $model, $count = null, $offset = null, $where = null, $sort = null
+    ) {
         $projectIds = array_keys($this->_index);
         if (count($projectIds) == 0) {
             return array();

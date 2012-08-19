@@ -126,7 +126,7 @@ abstract class Phprojekt_RestController extends Zend_Rest_Controller
     public function putAction()
     {
         if (!$id = $this->_getParam('id', false)) {
-            throw new Zend_Controller_Action_Exception('No id given', 400);
+            throw new Zend_Controller_Action_Exception('No id given', 422);
         }
 
         $item = Zend_Json::decode($this->getRequest()->getRawBody());
@@ -135,7 +135,7 @@ abstract class Phprojekt_RestController extends Zend_Rest_Controller
         }
 
         if ($item['id'] !== $id) {
-            throw new Zend_Controller_Action_Exception('Can not alter the id of existing items', 422);
+            throw new Zend_Controller_Action_Exception('Can not alter the id of existing items', 501);
         }
         unset($item['id']);
 
