@@ -347,10 +347,9 @@ class Minutes_IndexController extends IndexController
             /* @var $userModel Phprojekt_User_User */
             $userModel = new Phprojekt_User_User();
             $userList  = $userModel->fetchAll(sprintf('id IN (%s)', implode(',', $idList)));
-            $setting   = new Phprojekt_Setting();
             /* @var $record Phprojekt_User_User */
             foreach ($userList as $record) {
-                $address = $setting->getSetting('email', (int) $record->id);
+                $address = $record->getSetting('email');
 
                 if ($validator->isValid($address)) {
                     $userMailList[] = array('mail' => $address,
