@@ -268,7 +268,6 @@ class IndexController extends Zend_Controller_Action
     {
         $language = Phprojekt_User_User::getSetting("language", Phprojekt::getInstance()->getConfig()->language);
 
-        $this->view->webpath        = Phprojekt::getInstance()->getConfig()->webpath;
         $this->view->language       = $language;
         $this->view->compressedDojo = (bool) Phprojekt::getInstance()->getConfig()->compressedDojo;
         $this->view->frontendMsg    = (bool) Phprojekt::getInstance()->getConfig()->frontendMessages;
@@ -1229,7 +1228,7 @@ class IndexController extends Zend_Controller_Action
         $sessionName   = 'Phprojekt_CsrfToken';
         $csrfNamespace = new Zend_Session_Namespace($sessionName);
         $config        = Phprojekt::getInstance()->getConfig();
-        $linkBegin     = $config->webpath . 'index.php/' . $this->getModuleName() . '/index/';
+        $linkBegin     = 'index.php/' . $this->getModuleName() . '/index/';
         $fieldId       = $this->getRequest()->getParam('fieldId', '');
 
         // Add all the extra parameters that have the original URL
@@ -1242,7 +1241,6 @@ class IndexController extends Zend_Controller_Action
             }
         }
 
-        $this->view->webpath        = $config->webpath;
         $this->view->compressedDojo = (bool) $config->compressedDojo;
         $this->view->formPath       = $linkBegin . 'fileUpload/' . $linkData;
         $this->view->downloadLink   = '';

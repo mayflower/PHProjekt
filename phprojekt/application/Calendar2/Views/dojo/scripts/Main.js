@@ -203,7 +203,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         phpr.viewManager.getView().buttonRow.set('content', '');
         this.setNewEntry();
         var dateString = phpr.date.getIsoDate(this._date);
-        var updateUrl  = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSaveMultiple/nodeId/' +
+        var updateUrl  = 'index.php/' + phpr.module + '/index/jsonSaveMultiple/nodeId/' +
             phpr.currentProjectId + '/userId/' + this.getActiveUser().id;
         this.dayListSelf = new this.dayListSelfWidget(updateUrl, phpr.currentProjectId, dateString, null, this);
         this._addListToGarbageCollector(this.dayListSelf);
@@ -219,7 +219,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         if (this._usersSelected.length > 0) {
             this.setNewEntry();
             var dateString = phpr.date.getIsoDate(this._date);
-            var updateUrl  = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSaveMultiple/nodeId/' +
+            var updateUrl  = 'index.php/' + phpr.module + '/index/jsonSaveMultiple/nodeId/' +
                 phpr.currentProjectId + '/userId/' + this.getActiveUser().id;
             this.dayListSelect = new this.dayListSelectWidget(updateUrl, phpr.currentProjectId, dateString,
                     this._usersSelected, this);
@@ -238,7 +238,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         phpr.viewManager.getView().buttonRow.set('content', '');
         this.setNewEntry();
         var dateString = phpr.date.getIsoDate(this._date);
-        var updateUrl  = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSaveMultiple/nodeId/' +
+        var updateUrl  = 'index.php/' + phpr.module + '/index/jsonSaveMultiple/nodeId/' +
             phpr.currentProjectId + '/userId/' + this.getActiveUser().id;
         this.weekList = new this.weekListWidget(updateUrl, phpr.currentProjectId, dateString, null, this);
         this._addListToGarbageCollector(this.weekList);

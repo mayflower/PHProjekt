@@ -82,7 +82,7 @@ dojo.declare("phpr.Default.System.Store.User", phpr.Default.System.Store, {
         if (!projectId) {
             projectId = phpr.currentProjectId;
         }
-        this._url = phpr.webpath + 'index.php/Core/user/jsonGetUsers/nodeId/' + projectId;
+        this._url = 'index.php/Core/user/jsonGetUsers/nodeId/' + projectId;
     },
 
     makeSelect: function() {
@@ -103,9 +103,7 @@ dojo.declare("phpr.Default.System.Store.User", phpr.Default.System.Store, {
 
 dojo.declare("phpr.Default.System.Store.Module", phpr.Default.System.Store, {
     constructor: function(nodeId, id) {
-        this._url = phpr.webpath +
-            'index.php/Project/index/jsonGetModulesProjectRelation' +
-            '/nodeId/' + nodeId + '/id/' + id;
+        this._url = 'index.php/Project/index/jsonGetModulesProjectRelation' + '/nodeId/' + nodeId + '/id/' + id;
     },
 
     makeSelect: function() {
@@ -134,7 +132,7 @@ dojo.declare("phpr.Default.System.ProxyableStore", phpr.Default.System.Store, {
         if (!projectId) {
             projectId = phpr.currentProjectId;
         }
-        this._url = phpr.webpath + 'index.php/Core/user/jsonGetProxyableUsers/nodeId/' + projectId;
+        this._url = 'index.php/Core/user/jsonGetProxyableUsers/nodeId/' + projectId;
     },
 
     makeSelect: function() {
@@ -156,9 +154,7 @@ dojo.declare("phpr.Default.System.Store.Role", phpr.Default.System.Store, {
     _relationList: null,
 
     constructor: function(nodeId, id) {
-        this._url = phpr.webpath +
-            'index.php/Project/index/jsonGetProjectRoleUserRelation' +
-            '/nodeId/' + nodeId + '/id/' + id;
+        this._url = 'index.php/Project/index/jsonGetProjectRoleUserRelation' + '/nodeId/' + nodeId + '/id/' + id;
     },
 
     makeSelect: function() {
@@ -187,7 +183,7 @@ dojo.declare("phpr.Default.System.Store.Role", phpr.Default.System.Store, {
 
 dojo.declare("phpr.Default.System.Store.RoleModuleAccess", phpr.Default.System.Store, {
     constructor: function(id) {
-        this._url = phpr.webpath + 'index.php/Core/role/jsonGetModulesAccess/id/' + id;
+        this._url = 'index.php/Core/role/jsonGetModulesAccess/id/' + id;
     },
 
     makeSelect: function() {
@@ -211,7 +207,7 @@ dojo.declare("phpr.Default.System.Store.RoleModuleAccess", phpr.Default.System.S
 
 dojo.declare("phpr.Default.System.Store.Tab", phpr.Default.System.Store, {
     constructor: function(id) {
-        this._url = phpr.webpath + 'index.php/Core/tab/jsonList/nodeId/1';
+        this._url = 'index.php/Core/tab/jsonList/nodeId/1';
     },
 
     makeSelect: function() {
@@ -232,7 +228,7 @@ dojo.declare("phpr.Default.System.Store.Tab", phpr.Default.System.Store, {
 
 dojo.declare("phpr.Default.System.Store.Config", phpr.Default.System.Store, {
     constructor: function(id) {
-        this._url = phpr.webpath + 'index.php/Default/index/jsonGetConfigurations/';
+        this._url = 'index.php/Default/index/jsonGetConfigurations/';
     },
 
     makeSelect: function() {

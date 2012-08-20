@@ -51,7 +51,7 @@ dojo.declare("phpr.Calendar2.ViewCaldav", null, {
     },
 
     _setUrls: function() {
-        var prefix = phpr.webpath + 'index.php/Calendar2/caldav/index/';
+        var prefix = 'index.php/Calendar2/caldav/index/';
         this._url = prefix + 'calendars/' + phpr.config.currentUserName + '/default/';
         this._iosUrl = prefix + 'principals/' + phpr.config.currentUserName + '/';
     }

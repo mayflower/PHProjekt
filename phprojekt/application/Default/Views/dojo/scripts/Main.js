@@ -293,8 +293,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                 }
             }
         } else {
-            var subModuleUrl = phpr.webpath +
-                'index.php/Default/index/jsonGetModulesPermission/nodeId/' +
+            var subModuleUrl = 'index.php/Default/index/jsonGetModulesPermission/nodeId/' +
                 phpr.currentProjectId;
             phpr.DataStore.addStore({url: subModuleUrl});
             phpr.DataStore.requestData({
@@ -468,11 +467,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
 
         phpr.viewManager.getView().centerMainContent.set('content', gridBoxContainer);
         gridBoxContainer.startup();
-        var updateUrl = phpr.webpath +
-            'index.php/' +
-            phpr.module +
-            '/index/jsonSaveMultiple/nodeId/' +
-            phpr.currentProjectId;
+        var updateUrl = 'index.php/' + phpr.module + '/index/jsonSaveMultiple/nodeId/' + phpr.currentProjectId;
         this.grid = new this.gridWidget(
             updateUrl,
             this,
@@ -486,11 +481,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         //    Set and start the widgets of the module
         // Description:
         //    Set and start the widgets of the module
-        var updateUrl = phpr.webpath +
-            'index.php/' +
-            phpr.module +
-            '/index/jsonSaveMultiple/nodeId/' +
-            phpr.currentProjectId;
+        var updateUrl = 'index.php/' + phpr.module + '/index/jsonSaveMultiple/nodeId/' + phpr.currentProjectId;
         this.destroyGrid();
         var gridBoxContainer = new phpr.Default.System.TemplateWrapper({
             templateName: "phpr.Default.template.GridBox.html"
@@ -603,7 +594,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
             label:     phpr.nls.get('Logout'),
             showLabel: true,
             onClick:   dojo.hitch(this, function() {
-                location = phpr.webpath + 'index.php/Login/logout';
+                location = 'index.php/Login/logout';
             })
         });
 
@@ -661,9 +652,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         // Description:
         //    When calling this function, the available Submodules for the current Module
         //    are received from the server and the Navigation is rendered accordingly
-        var subModuleUrl = phpr.webpath +
-            'index.php/Default/index/jsonGetModulesPermission/nodeId/' +
-            phpr.currentProjectId;
+        var subModuleUrl = 'index.php/Default/index/jsonGetModulesPermission/nodeId/' + phpr.currentProjectId;
         var createPermissions = false;
         phpr.DataStore.addStore({url: subModuleUrl});
         phpr.DataStore.requestData({
@@ -974,7 +963,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         //    The server return the found records and the function display it
         if (words.length >= 3) {
             // hide the suggestBox
-            var getDataUrl = phpr.webpath + 'index.php/Default/Search/jsonSearch';
+            var getDataUrl = 'index.php/Default/Search/jsonSearch';
             phpr.send({
                 url:       getDataUrl,
                 content:   {words: words, count: 10}
@@ -1024,7 +1013,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         //    The server return the found records and the function display it
         if (words.length >= 3) {
             this.searchButton.hideSuggest();
-            var getDataUrl   = phpr.webpath + 'index.php/Default/Search/jsonSearch';
+            var getDataUrl   = 'index.php/Default/Search/jsonSearch';
             var resultsTitle = phpr.nls.get('Search results');
             var content      = {words: words};
             this.showResults(getDataUrl, content, resultsTitle);
@@ -1036,7 +1025,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         //    This function reload the grid place with the result of the tag search
         // Description:
         //    The server return the found records and the function display it
-        var getDataUrl   = phpr.webpath + 'index.php/Default/Tag/jsonGetModulesByTag';
+        var getDataUrl   = 'index.php/Default/Tag/jsonGetModulesByTag';
         var resultsTitle = phpr.nls.get('Tag results');
         var content      = {tag: tag};
         this.showResults(getDataUrl, content, resultsTitle);
@@ -1084,7 +1073,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         //    Request to the server the languagues strings and change the current lang
         //    Call the reload function then
         phpr.language = language;
-        this._langUrl = phpr.webpath + 'index.php/Default/index/jsonGetTranslatedStrings/language/' + phpr.language;
+        this._langUrl = 'index.php/Default/index/jsonGetTranslatedStrings/language/' + phpr.language;
         phpr.DataStore.addStore({url: this._langUrl});
         phpr.DataStore.requestData({
             url: this._langUrl,
@@ -1130,7 +1119,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
             this.showHelp_part2(helpData, phpr.nls);
         } else {
             // If help is not available in current language, the default language is English
-            var defLangUrl = phpr.webpath + 'index.php/Default/index/jsonGetTranslatedStrings/language/en';
+            var defLangUrl = 'index.php/Default/index/jsonGetTranslatedStrings/language/en';
             phpr.DataStore.addStore({url: defLangUrl});
             phpr.DataStore.requestData({
                 url:         defLangUrl,

@@ -34,7 +34,7 @@ dojo.declare("phpr.Calendar2.ViewDayListSelect", phpr.Calendar2.DefaultView, {
         // Summary:
         // Request header data
         var users           = this.users.join(",");
-        this._headerDataUrl = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonGetSpecificUsers/users/' + users;
+        this._headerDataUrl = 'index.php/' + phpr.module + '/index/jsonGetSpecificUsers/users/' + users;
         phpr.DataStore.addStore({url: this._headerDataUrl, noCache: true});
         phpr.DataStore.requestData({url: this._headerDataUrl, processData: dojo.hitch(this, "onLoadedHeader")});
     },
@@ -52,7 +52,7 @@ dojo.declare("phpr.Calendar2.ViewDayListSelect", phpr.Calendar2.DefaultView, {
         // Description:
         //    Sets the url for get the data from
         var users = this.users.join(",");
-        this.url  = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonDayListSelect/date/' + this._date +
+        this.url  = 'index.php/' + phpr.module + '/index/jsonDayListSelect/date/' + this._date +
             '/users/' + users;
     },
 
@@ -109,7 +109,7 @@ dojo.declare("phpr.Calendar2.ViewDayListSelect", phpr.Calendar2.DefaultView, {
         // Summary:
         //    Open a new window in CSV mode
         var users = this.users.join(",");
-        window.open(phpr.webpath + 'index.php/' + phpr.module + '/index/csvDayListSelect/nodeId/1/date/' + this._date +
+        window.open('index.php/' + phpr.module + '/index/csvDayListSelect/nodeId/1/date/' + this._date +
             '/users/' + users + '/csrfToken/' + phpr.csrfToken);
 
         return false;
