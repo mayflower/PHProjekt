@@ -5,6 +5,7 @@ php:
 env:
     - P6_TEST_CONFIG=configuration-travis.php
 before_script:
+    - pyrus channel-discover pear.symfony.com
     - pyrus install --force phpunit/DbUnit
     - phpenv rehash
     - mysql -u root -e 'create database `phprojekt-test-memory`'
