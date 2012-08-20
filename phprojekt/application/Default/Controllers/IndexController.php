@@ -261,7 +261,10 @@ class IndexController extends Zend_Controller_Action
      */
     public function indexAction()
     {
-        $language = Phprojekt_User_User::getSetting("language", Phprojekt::getInstance()->getConfig()->language);
+        $language = Phprojekt_Auth::getRealUser()->getSetting(
+            "language",
+            Phprojekt::getInstance()->getConfig()->language
+        );
 
         $this->view->language       = $language;
         $this->view->compressedDojo = (bool) Phprojekt::getInstance()->getConfig()->compressedDojo;

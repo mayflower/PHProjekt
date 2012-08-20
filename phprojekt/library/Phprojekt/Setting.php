@@ -168,7 +168,7 @@ class Phprojekt_Setting extends Phprojekt_ActiveRecord_Abstract
     {
         $toReturn = null;
         if (!$userId) {
-            $userId = Phprojekt_Auth::getUserId();
+            $userId = Phprojekt_Auth_Proxy::getEffectiveUserId();
         }
 
         $namespace = new Zend_Session_Namespace(self::IDENTIFIER . $userId);

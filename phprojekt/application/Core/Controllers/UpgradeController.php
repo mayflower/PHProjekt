@@ -45,10 +45,7 @@ class Core_UpgradeController extends Core_IndexController
     public function indexAction()
     {
         $config = Phprojekt::getInstance()->getConfig();
-        $language = Phprojekt_User_User::getSetting(
-            "language",
-            $config->language
-        );
+        $language = Phprojekt_Auth::getRealUser()->getSetting("language", $config->language);
 
         $this->view->language       = $language;
         $this->view->compressedDojo = (bool) $config->compressedDojo;
