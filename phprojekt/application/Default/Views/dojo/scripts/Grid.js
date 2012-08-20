@@ -153,7 +153,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
     getRestUrl: function() {
         // Summary:
         //    Get the url of the rest api to use
-        return phpr.webpath + 'index.php/' + this.main.module + '/' + this.main.module + '/';
+        return 'index.php/' + this.main.module + '/' + this.main.module + '/';
     },
 
     showTags: function() {
@@ -162,7 +162,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
         // Description:
         //    Draw the tags
         // Get the module tags
-        this._tagUrl  = phpr.webpath + 'index.php/Default/Tag/jsonGetTags';
+        this._tagUrl = 'index.php/Default/Tag/jsonGetTags';
         phpr.DataStore.addStore({url: this._tagUrl});
         phpr.DataStore.requestData({
             url: this._tagUrl,
@@ -1343,7 +1343,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
         //    Open a new window in CSV mode
         // Description:
         //    Open a new window in CSV mode
-        window.open(phpr.webpath + 'index.php/' + this.main.module +
+        window.open('index.php/' + this.main.module +
                 '/index/csvList/nodeId/' + this.id +
                 '/csrfToken/' + phpr.csrfToken);
         return false;
@@ -1352,7 +1352,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
     setGetExtraActionsUrl: function() {
         // Summary:
         //    Sets the url where to get the grid actions data from
-        this.getActionsUrl = phpr.webpath + 'index.php/' + this.main.module + '/index/jsonGetExtraActions';
+        this.getActionsUrl = 'index.php/' + this.main.module + '/index/jsonGetExtraActions';
     },
 
     itemsCheck: function(state) {
@@ -1486,7 +1486,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
         // Summary:
         //    Isolated code for easy customization, this function returns the URL to be called for the requested action.
 
-        return phpr.webpath + 'index.php/' + this.main.module + '/index/' + action +
+        return 'index.php/' + this.main.module + '/index/' + action +
             '/nodeId/' + phpr.currentProjectId + '/' + idUrl + '/' + ids;
     },
 
