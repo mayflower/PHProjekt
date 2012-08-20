@@ -45,7 +45,7 @@ class Core_UpgradeController extends Core_IndexController
     public function indexAction()
     {
         $config = Phprojekt::getInstance()->getConfig();
-        $language = Phprojekt_Auth_Proxy::getEffectiveUser()->getSetting("language", $config->language);
+        $language = Phprojekt_Auth::getRealUser()->getSetting("language", $config->language);
 
         $this->view->webPath        = $config->webpath;
         $this->view->language       = $language;
