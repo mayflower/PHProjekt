@@ -41,7 +41,6 @@ dojo.declare("phpr.Statistic.Main", phpr.Default.Main, {
         var content = new phpr.Default.System.TemplateWrapper({
             templateName: "phpr.Statistic.template.mainContent.html",
             templateData: {
-                webpath:            phpr.webpath,
                 selectedPeriodText: phpr.nls.get('Selected Statistic Period'),
                 selectedPeriodHelp: phpr.nls.get('Choose here the period for the statistics to be calculated.')
             }
@@ -82,7 +81,7 @@ dojo.declare("phpr.Statistic.Main", phpr.Default.Main, {
         dijit.byId("startDate").set('value', new Date(start.getFullYear(), start.getMonth(), start.getDate()));
         dijit.byId("endDate").set('value', new Date(end.getFullYear(), end.getMonth(), end.getDate()));
 
-        this._url = phpr.webpath + 'index.php/Statistic/index/jsonGetStatistic'
+        this._url = 'index.php/Statistic/index/jsonGetStatistic'
             + '/nodeId/' + phpr.currentProjectId
             + '/startDate/' + phpr.date.getIsoDate(start)
             + '/endDate/' + phpr.date.getIsoDate(end);
@@ -156,7 +155,7 @@ dojo.declare("phpr.Statistic.Main", phpr.Default.Main, {
         var start = dijit.byId("startDate").get('value');
         var end   = dijit.byId("endDate").get('value');
 
-        window.open(phpr.webpath + 'index.php/' + phpr.module + '/index/csvList'
+        window.open('index.php/' + phpr.module + '/index/csvList'
             + '/nodeId/' + phpr.currentProjectId
             + '/startDate/' + phpr.date.getIsoDate(start)
             + '/endDate/' + phpr.date.getIsoDate(end)

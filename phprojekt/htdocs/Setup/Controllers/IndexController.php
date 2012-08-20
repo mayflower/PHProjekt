@@ -66,9 +66,7 @@ class IndexController extends Zend_Controller_Action
 
         $front    = Zend_Controller_Front::getInstance();
         $response = $front->getRequest();
-        $webPath  = $response->getScheme() . '://' . $response->getHttpHost() . $response->getBasePath() . '/';
 
-        $this->view->webPath = $webPath;
         $this->view->message = array();
         $this->view->success = "";
         $this->view->error   = array();

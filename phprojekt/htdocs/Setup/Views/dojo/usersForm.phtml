@@ -98,7 +98,7 @@ style="width: auto;">
         <button dojoType="dijit.form.Button" baseClass="positive" type="button" iconClass="tick"
         onClick="
         phprSend({
-            url:       '<?php echo $this->webPath; ?>' + 'setup.php/index/jsonUsersSetup',
+            url:       'setup.php/index/jsonUsersSetup',
             content:   dijit.byId('installForm').attr('value'),
             onSuccess: dojo.hitch(this, function(data) {
                 if (data.type != 'error') {
