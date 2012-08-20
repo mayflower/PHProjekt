@@ -35,7 +35,7 @@ dojo.declare("phpr.MetadataStore", null, {
                 this._cache[module] = {};
             }
             this._cache[module][projectId] = {};
-            var url = phpr.webpath + "index.php/" + module + "/index/metadata";
+            var url = "index.php/" + module + "/index/metadata";
             var def = dojo.xhrGet({
                 url: url,
                 content: {

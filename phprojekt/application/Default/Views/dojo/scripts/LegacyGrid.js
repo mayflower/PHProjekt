@@ -158,7 +158,7 @@ dojo.declare("phpr.Default.LegacyGrid", phpr.Default.System.Component, {
         //    Set the url for getting the data
         // Description:
         //    Set the url for getting the data
-        this.url = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonList/nodeId/' + this.id;
+        this.url = 'index.php/' + phpr.module + '/index/jsonList/nodeId/' + this.id;
         for (var key in this.extraParams) {
             this.url += '/' + key + '/' + this.extraParams[key];
         }
@@ -170,7 +170,7 @@ dojo.declare("phpr.Default.LegacyGrid", phpr.Default.System.Component, {
         // Description:
         //    Draw the tags
         // Get the module tags
-        this._tagUrl  = phpr.webpath + 'index.php/Default/Tag/jsonGetTags';
+        this._tagUrl  = 'index.php/Default/Tag/jsonGetTags';
         phpr.DataStore.addStore({url: this._tagUrl});
         phpr.DataStore.requestData({
             url: this._tagUrl,
@@ -1429,7 +1429,7 @@ dojo.declare("phpr.Default.LegacyGrid", phpr.Default.System.Component, {
         //    Open a new window in CSV mode
         // Description:
         //    Open a new window in CSV mode
-        window.open(phpr.webpath + 'index.php/' + phpr.module +
+        window.open('index.php/' + phpr.module +
                 '/index/csvList/nodeId/' + this.id +
                 '/csrfToken/' + phpr.csrfToken);
         return false;
@@ -1447,7 +1447,7 @@ dojo.declare("phpr.Default.LegacyGrid", phpr.Default.System.Component, {
     setGetExtraActionsUrl: function() {
         // Summary:
         //    Sets the url where to get the grid actions data from
-        this.getActionsUrl = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonGetExtraActions';
+        this.getActionsUrl = 'index.php/' + phpr.module + '/index/jsonGetExtraActions';
     },
 
     itemsCheck: function(state) {
@@ -1576,7 +1576,7 @@ dojo.declare("phpr.Default.LegacyGrid", phpr.Default.System.Component, {
         // Summary:
         //    Isolated code for easy customization, this function returns the URL to be called for the requested action.
 
-        return phpr.webpath + 'index.php/' + phpr.module + '/index/' + action +
+        return 'index.php/' + phpr.module + '/index/' + action +
             '/nodeId/' + phpr.currentProjectId + '/' + idUrl + '/' + ids;
     },
 
