@@ -41,66 +41,6 @@ class Core_ModuleController extends Core_IndexController
     const CAN_NOT_DELETE_SYSTEM_MODULE = "You can not delete system modules";
 
     /**
-     * Saves a module.
-     *
-     * If the request parameter "id" is null or 0, the function will add a new module,
-     * if the "id" is an existing module, the function will update it.
-     *
-     * The save action will try also to copy files into the application folder
-     * if the module is a new one.
-     *
-     * OPTIONAL request parameters:
-     * <pre>
-     *  - integer <b>id</b>                      id of the module to save.
-     *  - string  <b>name</b>                    Name of the module.
-     *  - string  <b>label</b>                   Display of the module.
-     *  - mixed   <b>all other module fields</b> All the fields values to save.
-     * </pre>
-     *
-     * If there is an error, the save will return a Zend_Controller_Action_Exception,
-     * if not, it returns a string in JSON format with:
-     * <pre>
-     *  - type    => 'success'.
-     *  - message => Success message.
-     *  - id      => Id of the module.
-     * </pre>
-     *
-     * @throws Zend_Controller_Action_Exception On error in the action save.
-     *
-     * @return void
-     */
-    public function jsonSaveAction()
-    {
-        $id = (int) $this->getRequest()->getParam('id');
-        $this->setCurrentProjectId();
-
-        if (empty($id)) {
-            $model   = $this->getModelObject();
-            $message = Phprojekt::getInstance()->translate('The module was added correctly');
-        } else {
-            $model   = $this->getModelObject()->find($id);
-            $message = Phprojekt::getInstance()->translate('The module was edited correctly');
-        }
-
-        // Set the hidden name to name or label
-        // use ucfirst and delete spaces
-        $module = Cleaner::sanitize('alnum', $this->getRequest()->getParam('name', null));
-        if (empty($module)) {
-            $module = Cleaner::sanitize('alnum', $this->getRequest()->getParam('label', null));
-        }
-        $module = ucfirst(str_replace(" ", "", $module));
-        $this->getRequest()->setParam('name', $module);
-
-        $model->saveModule($this->getRequest()->getParams());
-
-        $return = array('type'    => 'success',
-                        'message' => $message,
-                        'id'      => $model->id);
-
-        Phprojekt_Converter_Json::echoConvert($return);
-    }
-
-    /**
      * Returns all global modules.
      *
      * Returns a list of all the global modules with:

@@ -34,6 +34,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
 
     sendData:           {},
     formdata:           [],
+    userStore:          null,
     _url:               null,
     _writePermissions:  true,
     _deletePermissions: false,
@@ -128,7 +129,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         //    Set the url for get the data
         // Description:
         //    Set the url for get the data
-        this._url = phpr.webpath + 'index.php/' + phpr.module +
+        this._url = 'index.php/' + phpr.module +
             '/index/jsonDetail/nodeId/' + phpr.currentProjectId + '/id/' + this.id;
     },
 
@@ -173,17 +174,12 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         //    Each module can overwrite this function for load the own data
 
         // Get the rights for other users
-        this._accessUrl = phpr.webpath + 'index.php/' + phpr.module +
+        this._accessUrl = 'index.php/' + phpr.module +
             '/index/jsonGetUsersRights' + '/nodeId/' + phpr.currentProjectId + '/id/' + this.id;
         this._initData.push({'url': this._accessUrl});
 
-        // Get all the active users
-        this.userStore = new phpr.Default.System.Store.User();
-        this._initData.push({'store': this.userStore});
-
         // Get the tags
-        this._tagUrl  = phpr.webpath + 'index.php/Default/Tag/jsonGetTagsByModule/moduleName/' +
-            phpr.module + '/id/' + this.id;
+        this._tagUrl = 'index.php/Default/Tag/jsonGetTagsByModule/moduleName/' + phpr.module + '/id/' + this.id;
         this._initData.push({'url': this._tagUrl});
     },
 
@@ -197,7 +193,8 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
             return;
         }
 
-        var userList      = this.userStore.getList();
+        // use an eventual override, if there is no local userStore, use the global
+        var userList      = this.userStore ? this.userStore.getList() : phpr.userStore.getList();
         var accessContent = phpr.DataStore.getData({url: this._accessUrl});
         var currentUser   = data[0].rights[phpr.currentUserId] ? phpr.currentUserId : 0;
         var users         = [];
@@ -1014,7 +1011,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         var pid = phpr.currentProjectId;
 
         phpr.send({
-            url: phpr.webpath + 'index.php/' + phpr.module +
+            url: 'index.php/' + phpr.module +
             '/index/jsonSave/nodeId/' + pid +
             '/id/' + this.id,
             content:   this.sendData
@@ -1026,7 +1023,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
                         this.id = data.id;
                     }
                     return phpr.send({
-                        url: phpr.webpath + 'index.php/Default/Tag/jsonSaveTags/moduleName/' +
+                        url: 'index.php/Default/Tag/jsonSaveTags/moduleName/' +
                         phpr.module + '/id/' + this.id,
                         content: this.sendData
                     });
@@ -1077,13 +1074,13 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         var pid = phpr.currentProjectId;
 
         phpr.send({
-            url:       phpr.webpath + 'index.php/' + phpr.module + '/index/jsonDelete/id/' + this.id
+            url:       'index.php/' + phpr.module + '/index/jsonDelete/id/' + this.id
         }).then(dojo.hitch(this, function(data) {
             if (data) {
                 new phpr.handleResponse('serverFeedback', data);
                 if (data.type == 'success') {
                     return phpr.send({
-                        url: phpr.webpath + 'index.php/Default/Tag/jsonDeleteTags/moduleName/' +
+                        url: 'index.php/Default/Tag/jsonDeleteTags/moduleName/' +
                         phpr.module + '/id/' + this.id
                     });
                 }
@@ -1137,7 +1134,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         //    This function renders the history data
         if (this.id > 0 && this._historyContent !== null) {
             this._historyContent.historyContent.set('content', '');
-            this._historyUrl = phpr.webpath + 'index.php/Core/history/jsonList/nodeId/1/moduleName/' +
+            this._historyUrl = 'index.php/Core/history/jsonList/nodeId/1/moduleName/' +
                 phpr.module + '/itemId/' + this.id;
             phpr.DataStore.addStore({'url': this._historyUrl, 'noCache': true});
             phpr.DataStore.requestData({'url': this._historyUrl}).then(dojo.hitch(this,
@@ -1166,8 +1163,8 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
         //    This function collect and process the history data
         // Description:
         //    This function collect and process the history data
-        var history     = phpr.DataStore.getData({url: this._historyUrl});
-        var userList    = this.userStore.getList();
+        var history = phpr.DataStore.getData({url: this._historyUrl});
+        var userList = this.userStore ? this.userStore.getList() : phpr.userStore.getList();
         var historyData = [];
         var userDisplay = [];
         var row         = 0;
@@ -1343,7 +1340,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
                             if (fieldWidget) {
                                 fieldWidget.set('value', value);
                                 dojo.byId('filesIframe_files').contentDocument.location.href =
-                                    phpr.webpath + 'index.php/Default/File/fileForm/moduleName/' +
+                                    'index.php/Default/File/fileForm/moduleName/' +
                                     phpr.module + '/id/' + this.id + '/field/' +
                                     field + '/value/' + value;
                                 dojo.addClass(dojo.byId(displayfield), "highlightChanges");
@@ -1391,7 +1388,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
     },
 
     getUploadIframePath: function(itemid) {
-        return phpr.webpath + 'index.php/' + phpr.module + '/index/fileForm' +
+        return 'index.php/' + phpr.module + '/index/fileForm' +
             '/nodeId/' + phpr.currentProjectId + '/id/' + this.id + '/field/' +
             itemid + '/csrfToken/' + phpr.csrfToken;
     }

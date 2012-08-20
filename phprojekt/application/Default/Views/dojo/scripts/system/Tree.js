@@ -121,7 +121,7 @@ dojo.declare("phpr.Default.System.Tree", phpr.Default.System.Component, {
         //    Set the url for get the tree
         // Description:
         //    Set the url for get the tree
-        this._url = phpr.webpath + 'index.php/Project/index/jsonTree';
+        this._url = 'index.php/Project/index/jsonTree';
     },
 
     setId: function(id) {
@@ -256,7 +256,7 @@ dojo.declare("phpr.Default.System.Tree", phpr.Default.System.Component, {
         var projects = [];
 
         if (!phpr.isGlobalModule(phpr.module) && (phpr.treeLastProjectSelected != phpr.currentProjectId || phpr.currentProjectId == 1)) {
-            var projects = this.getProjectHirarchyArray(phpr.currentProjectId);
+            var projects = this.getProjectHierarchyArray(phpr.currentProjectId);
         }
 
         phpr.BreadCrumb.setProjects(projects);
@@ -264,7 +264,7 @@ dojo.declare("phpr.Default.System.Tree", phpr.Default.System.Component, {
         phpr.BreadCrumb.draw();
     },
 
-    getProjectHirarchyArray: function(itemId) {
+    getProjectHierarchyArray: function(itemId) {
         var ret = [];
         var item;
 
@@ -282,7 +282,7 @@ dojo.declare("phpr.Default.System.Tree", phpr.Default.System.Component, {
         }
 
         if (item.parent[0]) {
-            ret = this.getProjectHirarchyArray(item.parent[0]);
+            ret = this.getProjectHierarchyArray(item.parent[0]);
         }
 
         ret.push({

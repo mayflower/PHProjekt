@@ -295,7 +295,6 @@ dojo.declare("phpr.Default.System.DefaultView", phpr.Default.System.View, {
     constructor: function() {
         this.templateString = phpr.fillTemplate("phpr.Default.template.main.html",
             {
-                webpath: phpr.webpath,
                 currentModule: phpr.module
             });
     },

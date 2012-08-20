@@ -47,6 +47,11 @@ class Phprojekt_Module
     const TYPE_MIX    = 2; // Mix Under a project AND global.
 
     /**
+     * Cache ID
+     */
+    const CACHE_ID = 'Phprojekt_Module_Module___getCachedIds';
+
+    /**
      * Saves the cache for our module entries, to minimize database lookups.
      *
      * @var array
@@ -73,7 +78,7 @@ class Phprojekt_Module
         }
 
         $cache = Phprojekt::getInstance()->getCache();
-        if ((self::$_cache = $cache->load('Phprojekt_Module_Module___getCachedIds')) === false) {
+        if ((self::$_cache = $cache->load(self::CACHE_ID)) === false) {
             // cache miss
             $db     = Phprojekt::getInstance()->getDb();
             $select = $db->select()
@@ -192,5 +197,17 @@ class Phprojekt_Module
     public static function saveTypeIsGlobal($id)
     {
         return (self::getSaveType($id) == self::TYPE_GLOBAL);
+    }
+
+    /**
+     * Removes the cached data.
+     *
+     * @return void
+     */
+    public static function clearCache()
+    {
+        Phprojekt::getInstance()->getCache()->load(self::CACHE_ID);
+        Phprojekt::getInstance()->getCache()->clean(Zend_Cache::CLEANING_MODE_ALL);
+        self::$_cache = null;
     }
 }

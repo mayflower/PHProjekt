@@ -27,7 +27,7 @@ dojo.declare("phpr.Todo.Form", phpr.Default.DialogForm, {
         var data = phpr.DataStore.getData({url: this._url});
         if (data.length > 0 && data[0]['id'] == 0) {
             dojo.connect(dijit.byId('projectId'), 'onChange', null, function() {
-                var url = phpr.webpath + 'index.php/Project/index/jsonDetail/'
+                var url = 'index.php/Project/index/jsonDetail/'
                         + 'nodeId/1/id/' + dijit.byId('projectId').value;
                 phpr.DataStore.addStore({url: url});
                 start = dijit.byId('startDate');

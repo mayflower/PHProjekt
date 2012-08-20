@@ -277,7 +277,7 @@ class Phprojekt_Notification
         $bodyParams['moduleTable'] = $this->_model->getModelName();
 
         // Url
-        $url = Phprojekt::getInstance()->getConfig()->webpath . "index.php#" . $this->_model->getModelName();
+        $url = "index.php#" . $this->_model->getModelName();
         if (Phprojekt_Module::saveTypeIsNormal(Phprojekt_Module::getId($this->_model->getModelName()))) {
             $url .= "," . $this->_model->projectId;
         }

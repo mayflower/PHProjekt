@@ -54,14 +54,13 @@ dojo.declare("phpr.Timecard.Store", null, {
     },
 
     _setUrls: function() {
-        this._favoritesUrl = phpr.webpath + 'index.php/Timecard/index/jsonGetFavoritesProjects';
-        this._url = phpr.webpath +
-                    'index.php/Timecard/index/jsonGetRunningBookings/' +
+        this._favoritesUrl = 'index.php/Timecard/index/jsonGetFavoritesProjects';
+        this._url = 'index.php/Timecard/index/jsonGetRunningBookings/' +
                     'year/' + this._date.getFullYear() +
                     '/month/' + (this._date.getMonth() + 1) +
                     '/date/' + this._date.getDate()
                                 ;
-        this._detailsUrl = phpr.webpath + 'index.php/Timecard/index/jsonDetail/nodeId/1/id/0';
+        this._detailsUrl = 'index.php/Timecard/index/jsonDetail/nodeId/1/id/0';
     },
 
     _onDataLoaded: function(data) {
@@ -202,7 +201,7 @@ dojo.declare("phpr.Timecard.Store", null, {
         };
 
         phpr.send({
-            url: phpr.webpath + 'index.php/Timecard/index/jsonSave/nodeId/1/id/0',
+            url: 'index.php/Timecard/index/jsonSave/nodeId/1/id/0',
             content: data
         }).then(dojo.hitch(this, function(data) {
             if (data) {
@@ -228,7 +227,7 @@ dojo.declare("phpr.Timecard.Store", null, {
         };
 
         phpr.send({
-            url: phpr.webpath + 'index.php/Timecard/index/jsonSave/nodeId/1/id/' + this._runningBooking.id,
+            url: 'index.php/Timecard/index/jsonSave/nodeId/1/id/' + this._runningBooking.id,
             content: data
         }).then(dojo.hitch(this, function(data) {
             if (data) {
@@ -255,7 +254,7 @@ dojo.declare("phpr.Timecard.Store", null, {
         };
 
         phpr.send({
-            url:     phpr.webpath + 'index.php/Timecard/index/jsonFavoritesSave',
+            url:     'index.php/Timecard/index/jsonFavoritesSave',
             content: sendData
         }).then(dojo.hitch(this, function(data) {
             if (data) {

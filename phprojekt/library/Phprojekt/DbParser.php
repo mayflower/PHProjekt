@@ -339,8 +339,7 @@ class Phprojekt_DbParser
     }
 
     /**
-     * Delete all the version higher than the current one
-     * and the version lower than the current module version.
+     * Delete all the versions lower than the current module version.
      *
      * @param string $module Current module of the data.
      * @param array  $data   Array with all the version and data for parse.
@@ -349,12 +348,10 @@ class Phprojekt_DbParser
      */
     private function _getVersionsForProcess($module, $data)
     {
-        $current       = Phprojekt::getVersion();
         $moduleVersion = $this->_getModuleVersion($module);
 
         foreach (array_keys($data) as $version) {
-            if (Phprojekt::compareVersion($moduleVersion, $version) > 0 ||
-                Phprojekt::compareVersion($current, $version) < 0) {
+            if (Phprojekt::compareVersion($moduleVersion, $version) > 0) {
                 unset($data[$version]);
             }
         }

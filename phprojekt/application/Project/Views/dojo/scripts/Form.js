@@ -67,7 +67,7 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
 
         var currentUser  = data[0].rights[phpr.currentUserId] ? phpr.currentUserId : 0;
         var users        = [];
-        var userList     = this.userStore.getList();
+        var userList     = phpr.userStore.getList();
         var relationList = this.roleStore.getRelationList();
 
         // Make an array with the users expect the current one
@@ -235,7 +235,7 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
         // Description:
         //    Add a tab with the webdav url of the project
 
-        var url = phpr.webpath + 'index.php/Project/index/jsonTree';
+        var url = 'index.php/Project/index/jsonTree';
         var that = this;
         phpr.DataStore.addStore({ url: url });
         return phpr.DataStore.requestData({ url: url}).then(
@@ -252,7 +252,7 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
 
                     try {
                         path = that._buildPathFromTreeData(data.items);
-                        url = phpr.webpath + "index.php/WebDAV/index/index/" + path;
+                        url = "index.php/WebDAV/index/index/" + path;
                     } catch (e) {
                         error = true;
                         errorMessage = e.message;
@@ -277,11 +277,13 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
 
     _buildPathFromTreeData: function(data) {
         var path = "";
-        var hirarchy = phpr.tree.getProjectHirarchyArray(this.id);
-        var l = hirarchy.length;
+        var hierarchy = phpr.tree.getProjectHierarchyArray(this.id);
+        // Remove the toplevel item as the root project corresponds to /
+        hierarchy.shift();
+        var l = hierarchy.length;
 
         for (var i = 0; i < l; i++) {
-            var segment = hirarchy[i].name[0];
+            var segment = hierarchy[i].name[0];
             if (segment.indexOf('/') !== -1) {
                 throw new Error(phpr.nls.get("There must be no slashes in project names for WebDAV to work.", "Project"));
             } else {
@@ -309,7 +311,7 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
     updateData: function() {
         this.inherited(arguments);
 
-        var subModuleUrl = phpr.webpath + 'index.php/Default/index/jsonGetModulesPermission/nodeId/' + this.id;
+        var subModuleUrl = 'index.php/Default/index/jsonGetModulesPermission/nodeId/' + this.id;
         phpr.DataStore.deleteData({url: subModuleUrl});
         this.moduleStore.update();
         this.roleStore.update();

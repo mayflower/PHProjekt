@@ -36,12 +36,8 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.DialogForm, {
     _FRMWIDG_RECURRENCE: 2,
 
     initData: function() {
-        // Get all the active users
-        this.userStore = new phpr.Default.System.Store.User();
-        this._initData.push({'store': this.userStore});
-
         // Get the tags
-        this._tagUrl = phpr.webpath + 'index.php/Default/Tag/jsonGetTagsByModule/moduleName/' + phpr.module + '/id/' +
+        this._tagUrl = 'index.php/Default/Tag/jsonGetTagsByModule/moduleName/' + phpr.module + '/id/' +
             this.id;
         this._initData.push({'url': this._tagUrl});
     },
@@ -227,7 +223,7 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.DialogForm, {
         //    Participants tab
         // Description:
         //    Display all the users for add into the event
-        var userList       = this.userStore.getList();
+        var userList       = phpr.userStore.getList();
         var currentUser    = data[0].rights[phpr.currentUserId] ? phpr.currentUserId : 0;
         var participantIds = data[0].participants;
         var participants   = [];
@@ -371,7 +367,7 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.DialogForm, {
         dojo.attr(cell, 'title', phpr.nls.get('Checking availability...'));
 
         phpr.send({
-            url: phpr.webpath + 'index.php/Calendar2/Index/jsonCheckAvailability',
+            url: 'index.php/Calendar2/Index/jsonCheckAvailability',
             content: {
                 user:  userId,
                 start: dojo.byId('start').value,
@@ -508,7 +504,7 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.DialogForm, {
         this.sendData.multipleParticipants = this._multipleParticipants;
 
         phpr.send({
-            url: phpr.webpath + 'index.php/' + phpr.module + '/index/jsonDelete/id/' + this.id + '/occurrence/' +
+            url: 'index.php/' + phpr.module + '/index/jsonDelete/id/' + this.id + '/occurrence/' +
                     this._originalData.occurrence,
             content:   this.sendData
         }).then(dojo.hitch(this, function(data) {
@@ -584,9 +580,9 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.DialogForm, {
         //    This function deletes the cache of the 3 urls for the ids stored in _updateCacheIds
         for (var idPos in this._updateCacheIds) {
             var id         = this._updateCacheIds[idPos];
-            var url        = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonDetail/nodeId/1/id/' + id;
-            var relatedUrl = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonGetRelatedData/id/' + id;
-            var tagUrl     = phpr.webpath + 'index.php/Default/Tag/jsonGetTagsByModule/moduleName/' + phpr.module +
+            var url        = 'index.php/' + phpr.module + '/index/jsonDetail/nodeId/1/id/' + id;
+            var relatedUrl = 'index.php/' + phpr.module + '/index/jsonGetRelatedData/id/' + id;
+            var tagUrl     = 'index.php/Default/Tag/jsonGetTagsByModule/moduleName/' + phpr.module +
                 '/id/' + id;
             phpr.DataStore.deleteData({url: url});
             phpr.DataStore.deleteData({url: relatedUrl});
@@ -595,7 +591,7 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.DialogForm, {
     },
 
     setUrl: function(params) {
-        this._url = phpr.webpath + 'index.php/' + phpr.module + '/index/jsonDetail/nodeId/' +
+        this._url = 'index.php/' + phpr.module + '/index/jsonDetail/nodeId/' +
             phpr.currentProjectId + '/id/' + this.id + '/occurrence/' + params.recurrenceId +
             '/userId/' + this.main.getActiveUser().id;
     },
@@ -617,7 +613,7 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.DialogForm, {
 
         this.setSubmitInProgress(true);
         phpr.send({
-            url: phpr.webpath + 'index.php/' + phpr.module + '/index/jsonSave/nodeId/' + phpr.currentProjectId +
+            url: 'index.php/' + phpr.module + '/index/jsonSave/nodeId/' + phpr.currentProjectId +
                 '/id/' + this.id + '/occurrence/' + this._originalData.occurrence +
                 '/userId/' + this.main.getActiveUser().id,
             content:   this.sendData
@@ -626,7 +622,7 @@ dojo.declare("phpr.Calendar2.Form", phpr.Default.DialogForm, {
             if (data.type == 'success') {
                 this.id = data.id;
                 return phpr.send({
-                    url: phpr.webpath + 'index.php/Default/Tag/jsonSaveTags/moduleName/' + phpr.module + '/id/' +
+                    url: 'index.php/Default/Tag/jsonSaveTags/moduleName/' + phpr.module + '/id/' +
                         this.id,
                     content:   this.sendData
                 });

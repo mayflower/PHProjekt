@@ -93,7 +93,7 @@ dojo.declare("phpr.Default.TutorialOverlay", phpr.Default.System.Component, {
 
     _setTutorialDisplayed: function(value) {
         phpr.send({
-            url: phpr.webpath + 'index.php/Default/index/jsonSetTutorialDisplayed',
+            url: 'index.php/Default/index/jsonSetTutorialDisplayed',
             content: { displayed: (value ? "true" : "false") }
         });
     },

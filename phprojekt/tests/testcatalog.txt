@@ -57,6 +57,9 @@ clear phprojekt_private folder
     - test whether dynamic module load works
     - test whether new global modules work correctly
     - test whether new normal modules work correctly
+    - test if items are searchable correctly (e.g. after modification only by new data)
+  - test module modification in module manager
+    - test whether the modified module still works correctly
   - test module deletion in module manager
   - test whether administration for user, roles, tabs and general works
   - test whether appropriate help is displayed for the active module

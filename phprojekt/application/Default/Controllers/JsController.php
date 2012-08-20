@@ -91,8 +91,7 @@ class JsController extends IndexController
 
         $scripttext .= '
             dojo.declare("phpr.Main", null, {
-                constructor:function(/*String*/webpath, /*Int*/rootProjectId, /*String*/language) {
-                    phpr.webpath          = webpath;
+                constructor:function(/*Int*/rootProjectId, /*String*/language) {
                     phpr.DefaultModule    = "Project";
                     phpr.viewManager      = new phpr.Default.System.ViewManager();
                     phpr.pageManager      = new phpr.Default.System.PageManager();
@@ -113,7 +112,7 @@ class JsController extends IndexController
                     phpr.tree             = new phpr.Default.System.Tree();
                     phpr.regExpForFilter  = new phpr.regExpForFilter();
                     phpr.garbageCollector = new phpr.Default.System.GarbageCollector();
-                    phpr.globalModuleUrl  = webpath + "index.php/Core/module/jsonGetGlobalModules";
+                    phpr.globalModuleUrl  = "index.php/Core/module/jsonGetGlobalModules";
                     phpr.tutorialAnchors = {};
         ';
 
@@ -169,7 +168,9 @@ class JsController extends IndexController
         $scripttext .= $this->_getModuleScripts(PHPR_USER_CORE_PATH, $scripts, $module);
 
         $scripttext .= '
-            this.' . $module . ' = new phpr.' . $module . '.Main();
+            phpr.pageManager.register(
+                new phpr.' . $module . '.Main()
+            );
         ';
 
         $this->_send($this->_collectTemplates() . $scripttext);
