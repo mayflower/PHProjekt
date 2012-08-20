@@ -40,7 +40,7 @@ include ("serverFeedback.phtml");
             <button dojoType="dijit.form.Button" baseClass="positive" type="button" iconClass="tick"
             onClick="
             phprSend({
-                url:       '<?php echo $this->webPath; ?>' + 'setup.php/index/jsonFoldersSetup',
+                url:       'setup.php/index/jsonFoldersSetup',
                 content:   dijit.byId('installForm').attr('value'),
                 onSuccess: dojo.hitch(this, function(data) {
                     if (data.type == 'confirm') {
@@ -73,7 +73,7 @@ style="display: none;">
             onClick="
             dijit.byId('confirmationCheck').attr('value', 1);
             phprSend({
-                url:       '<?php echo $this->webPath; ?>' + 'setup.php/index/jsonFoldersSetup',
+                url:       'setup.php/index/jsonFoldersSetup',
                 content:   dijit.byId('installForm').attr('value'),
                 onSuccess: dojo.hitch(this, function(data) {
                     if (data.type != 'error') {

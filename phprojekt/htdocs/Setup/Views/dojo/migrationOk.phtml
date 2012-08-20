@@ -17,7 +17,7 @@ Please, provide the path to the config.inc.php file of your old PHProjekt 5.x.<b
     </li>
     <li>
         <b>If you want to know more about the migration routine, please read the
-        <a href="#" onclick="window.open('<?php echo $this->webPath; ?>Setup/Docs/Migration.html', 'Migration',
+        <a href="#" onclick="window.open(Setup/Docs/Migration.html', 'Migration',
         'status=0,menubar=0,resizable=1,top=200px,left=400px,width=700px,height=600px,scrollbars=1,addressbar=0');
         return false;">Migration</a> file.</b>
     </li>
@@ -38,7 +38,7 @@ style="width: auto;">
         <button dojoType="dijit.form.Button" baseClass="positive" type="button" iconClass="tick"
         onClick="
         phprSend({
-            url:       '<?php echo $this->webPath; ?>' + 'setup.php/index/jsonFinish',
+            url:       'setup.php/index/jsonFinish',
             onSuccess: dojo.hitch(this, function(data) {
                 dijit.byId('formContent').attr('content', data.template);
                 changeStep(6, 7);

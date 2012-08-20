@@ -137,7 +137,6 @@ abstract class FrontInit extends DatabaseTest
         }
 
         Zend_Registry::set('view', $view);
-        $view->webPath = $this->config->webpath;
 
         $this->front->setModuleControllerDirectoryName('Controllers');
         $this->front->addModuleDirectory(PHPR_CORE_PATH);
@@ -157,7 +156,7 @@ abstract class FrontInit extends DatabaseTest
      */
     public function setRequestUrl($url)
     {
-        $this->request->setBaseUrl($this->config->webpath . 'index.php/'. $url);
+        $this->request->setBaseUrl('index.php/'. $url);
         $this->request->setPathInfo('/' . $url);
         $this->request->setRequestUri('/' . $url);
 

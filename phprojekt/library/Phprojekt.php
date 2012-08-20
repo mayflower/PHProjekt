@@ -447,18 +447,10 @@ class Phprojekt
             $this->_dieWithInternalServerError();
         }
 
-        // Set webpath, tmpPath and applicationPath
         if (empty($this->_config->webpath)) {
             $response               = new Zend_Controller_Request_Http();
             $this->_config->webpath = $response->getScheme() . '://' . $response->getHttpHost()
                 . $response->getBasePath() . '/';
-            $this->_config->basepath = $response->getBasePath() . '/';
-        }
-        if (!defined('PHPR_ROOT_WEB_PATH')) {
-            define('PHPR_ROOT_WEB_PATH', $this->_config->webpath . 'index.php/');
-        }
-        if (!defined('PHPR_ROOT_WEB_BASE_PATH')) {
-            define('PHPR_ROOT_WEB_BASE_PATH', $this->_config->basepath . 'index.php/');
         }
         if (!defined('PHPR_TEMP_PATH')) {
             define('PHPR_TEMP_PATH', $this->_config->tmpPath);
@@ -1055,10 +1047,8 @@ class Phprojekt
 
     private function _redirectToSetupAndDie()
     {
-        $request  = new Zend_Controller_Request_Http();
-        $webPath  = $request->getScheme() . '://' . $request->getHttpHost() . $request->getBasePath() . '/';
         $response = new Zend_Controller_Response_Http();
-        $response->setRedirect($webPath . 'setup.php');
+        $response->setRedirect('setup.php');
         $response->setBody('No configuration file found, redirecting to setup.');
         $response->sendResponse();
         die();
