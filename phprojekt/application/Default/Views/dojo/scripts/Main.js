@@ -975,22 +975,29 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                 content:   {words: words, count: 10}
             }).then(dojo.hitch(this, function(data) {
                 if (data && data.search && data.tags) {
-                    var search        = [];
-                    var results       = {};
-                    var index         = 0;
+                    var search = [];
+                    var results = {};
+                    var index = 0;
+                    var labelIdMap = {};
 
                     var addSearchResult = function(item) {
-                        if (!results[item.moduleLabel]) {
-                            results[item.moduleLabel] = [];
+                        var moduleLabel = item.moduleLabel;
+                        var itemId = item.id;
+                        if (!results[moduleLabel]) {
+                            results[moduleLabel] = [];
+                            labelIdMap[moduleLabel] = {};
                         }
-                        results[item.moduleLabel].push({
-                            id :           item.id,
-                            moduleName:    item.moduleName,
-                            projectId:     item.projectId,
-                            firstDisplay:  item.firstDisplay,
-                            secondDisplay: item.secondDisplay,
-                            resultType:    "search"
-                        });
+                        if (!labelIdMap[moduleLabel][itemId]) {
+                            results[moduleLabel].push({
+                                id :           itemId,
+                                moduleName:    item.moduleName,
+                                projectId:     item.projectId,
+                                firstDisplay:  item.firstDisplay,
+                                secondDisplay: item.secondDisplay,
+                                resultType:    "search"
+                            });
+                            labelIdMap[moduleLabel][itemId] = 1;
+                        }
                     };
 
                     dojo.forEach(data.search, addSearchResult);
