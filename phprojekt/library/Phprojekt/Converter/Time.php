@@ -69,7 +69,7 @@ class Phprojekt_Converter_Time
      */
     public static function convert($value, $side)
     {
-        $timeZone = Phprojekt_User_User::getSetting("timeZone", 'UTC');
+        $timeZone = Phprojekt_Auth_Proxy::getEffectiveUser()->getSetting("timeZone", 'UTC');
         if (strstr($timeZone, "_")) {
             list ($hours, $minutes) = explode("_", $timeZone);
         } else {

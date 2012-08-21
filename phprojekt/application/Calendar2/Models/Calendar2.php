@@ -449,11 +449,11 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
     }
 
     /**
-     * Returns the count of the calendar2 objects matching the given sql clause.
+     * Returns the count of objects matching the given sql clause
      *
-     * @param string $where A SQL-where-clause limiting the result set
+     * @param string $where The sql where-clause
      *
-     * @return int
+     * @return int Count of matching entries
      */
     public function count($where = null) {
         return Phprojekt_ActiveRecord_Abstract::count($where);
@@ -859,6 +859,13 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
     }
 
     /**
+     * Dummy in order to make activerecord think that a recurrence field exists.
+     */
+    public function setRecurrence()
+    {
+    }
+
+    /**
      * Returns a Calendar2_Helper_Rrule object initialized with this objects
      * start date, recurrence rule and excluded ocurrences.
      *
@@ -913,17 +920,9 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
      */
     public function copy()
     {
-        $m = new Calendar2_Models_Calendar2();
-        $m->find($this->id);
-
-        // use _data to bypass __set
-        foreach ($this->_data as $k => $v) {
-            $m->_data[$k] = $v;
-        }
-        $m->_participantData     = $this->_participantData;
-        $m->_participantDataInDb = $this->_participantDataInDb;
-        $m->_isFirst             = $this->_isFirst;
-        $m->_originalStart       = $this->_originalStart;
+        $m            = clone $this;
+        $m->_data     = $this->_data;
+        $m->_storedId = $this->_storedId;
 
         return $m;
     }

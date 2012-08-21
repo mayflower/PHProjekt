@@ -75,7 +75,7 @@ class Calendar2_Caldav_CalendarBackend_Test extends FrontInit
 
         $this->_reset();
 
-        $tzOffset = (int) Phprojekt_User_User::getSetting('timeZone', '0');
+        $tzOffset = (int) Phprojekt_Auth_Proxy::getEffectiveUser()->getSetting('timeZone', '0');
         $hour = 8 - $tzOffset;
         $hour = sprintf('%02d', $hour);
         $this->setRequestUrl("Calendar2/index/jsonSave/nodeId/1/id/{$firstId}/occurrence/2011-12-03%20{$hour}:00:00");

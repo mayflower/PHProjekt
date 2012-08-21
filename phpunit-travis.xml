@@ -1,0 +1,33 @@
+<phpunit
+    bootstrap="phprojekt/tests/UnitTests/Bootstrap.php"
+    convertErrorsToExceptions="true"
+    convertNoticesToExceptions="true"
+    convertWarningsToExceptions="true"
+    strict="true">
+
+    <php>
+        <includePath>phprojekt/tests/UnitTests/</includePath>
+        <env name="P6_TEST_CONFIG" value="phprojekt/tests/UnitTests/configuration-travis.php"/>
+    </php>
+
+    <testsuites>
+        <testsuite name="Phprojekt Test Suite">
+            <directory>phprojekt/tests/UnitTests</directory>
+
+            <exclude>phprojekt/tests/UnitTests/Note</exclude>
+            <exclude>phprojekt/tests/UnitTests/Helpdesk</exclude>
+            <exclude>phprojekt/tests/UnitTests/History</exclude>
+            <exclude>phprojekt/tests/UnitTests/Module</exclude>
+            <exclude>phprojekt/tests/UnitTests/Minutes</exclude>
+            <exclude>phprojekt/tests/UnitTests/Selenium</exclude>
+        </testsuite>
+    </testsuites>
+
+    <filter>
+        <whitelist>
+            <directory>application</directory>
+            <directory>phprojekt/library/Phprojekt</directory>
+            <file>phprojekt/library/Phprojekt.php</file>
+        </whitelist>
+    </filter>
+</phpunit>

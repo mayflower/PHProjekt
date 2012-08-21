@@ -652,15 +652,6 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         return result;
     },
 
-    updateCacheData: function() {
-        // Summary:
-        //    Forces every widget of the page to update its data, by deleting its cache.
-
-        if (this.form) {
-            this.form.updateData();
-        }
-    },
-
     connectMouseScroll: function() {
         // Summary
         //    Makes the connection between the Grid event for Mouse Wheel Scroll, and the 'scrollDone' function
