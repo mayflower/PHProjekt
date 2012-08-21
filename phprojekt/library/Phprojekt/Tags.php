@@ -125,13 +125,12 @@ class Phprojekt_Tags
                 $allowedIds = array();
                 $moduleName = Phprojekt_Module::getModuleName($moduleId);
                 foreach ($itemIds as $itemId) {
-                    try {
-                        $model = Phprojekt_Loader::getModel($moduleName, $moduleName);
+                    $model = Phprojekt_Loader::getModel($moduleName, $moduleName);
+                    if ($model) {
                         $model = $model->find($itemId);
                         if (!empty($model)) {
                             $allowedIds[] = $itemId;
                         }
-                    } catch (Zend_Exception $e) {
                     }
                 }
 

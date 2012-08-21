@@ -180,16 +180,15 @@ class Phprojekt_Search_WordModule extends Zend_Db_Table_Abstract
                     break;
                 }
 
-                try {
-                    $moduleName = Phprojekt_Module::getModuleName($data['module_id']);
-                    $model = Phprojekt_Loader::getModel($moduleName, $moduleName);
+                $moduleName = Phprojekt_Module::getModuleName($data['module_id']);
+                $model = Phprojekt_Loader::getModel($moduleName, $moduleName);
 
+                if ($model) {
                     // Only fetch records with read access
                     $model = $model->find($data['item_id']);
                     if (!empty($model)) {
                         $result[$data['module_id'] . '-' . $data['item_id']] = $data;
                     }
-                } catch (Zend_Exception $e) {
                 }
             }
         }

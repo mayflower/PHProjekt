@@ -105,7 +105,7 @@ class Phprojekt_Loader extends Zend_Loader
      *
      * @param string $class The name of the class.
      *
-     * @return string|Zend_Exception Class name on success; Zend_Exception on failure.
+     * @return string|Zend_Exception Class name on success; false on failure.
      */
     public static function autoload($class)
     {
@@ -114,11 +114,8 @@ class Phprojekt_Loader extends Zend_Loader
             return $class;
         } catch (Zend_Exception $error) {
             Phprojekt::getInstance()->getLog()->warn($error->getMessage());
-            throw $error;
+            return false;
         }
-
-
-        throw new Zend_Exception("Class \"$class\" does not exist.");
     }
 
     /**
@@ -185,7 +182,8 @@ class Phprojekt_Loader extends Zend_Loader
         }
 
         $name = self::getModelClassname($module, $model);
-        return new $name();
+
+        return class_exists($name) ? new $name() : false;
     }
 
     /**
