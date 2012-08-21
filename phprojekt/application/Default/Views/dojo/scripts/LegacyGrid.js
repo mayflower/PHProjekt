@@ -15,7 +15,6 @@
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
  * @since      File available since Release 6.0
- * @version    Release: @package_version@
  * @author     Gustavo Solt <solt@mayflower.de>
  */
 
@@ -49,7 +48,7 @@ dojo.declare("phpr.Default.LegacyGrid", phpr.Default.System.Component, {
     _lastTime:     null,
     _active:       false,
     _doubleClickMaxTime: 750,
-    _gridActionContainer: null,
+    _gridComboAction: null,
 
     // gridFilters Widget
     gridFilters:   null,
@@ -100,10 +99,10 @@ dojo.declare("phpr.Default.LegacyGrid", phpr.Default.System.Component, {
         var getHashForCookie  = null;
 
         // Set cookies urls
-        if (phpr.isGlobalModule(phpr.module)) {
-            getHashForCookie = phpr.module;
+        if (phpr.isGlobalModule(this.main.module)) {
+            getHashForCookie = this.main.module;
         } else {
-            getHashForCookie = phpr.module + '.' + phpr.currentProjectId;
+            getHashForCookie = this.main.module + '.' + phpr.currentProjectId;
         }
         this._filterCookie     = getHashForCookie + '.filters';
         this._sortColumnCookie = getHashForCookie + ".grid.sortColumn";
@@ -162,22 +161,6 @@ dojo.declare("phpr.Default.LegacyGrid", phpr.Default.System.Component, {
         for (var key in this.extraParams) {
             this.url += '/' + key + '/' + this.extraParams[key];
         }
-    },
-
-    showTags: function() {
-        // Summary:
-        //    Draw the tags
-        // Description:
-        //    Draw the tags
-        // Get the module tags
-        this._tagUrl  = 'index.php/Default/Tag/jsonGetTags';
-        phpr.DataStore.addStore({url: this._tagUrl});
-        phpr.DataStore.requestData({
-            url: this._tagUrl,
-            processData: dojo.hitch(this, function(reqData) {
-                this.publish("drawTagsBox", [reqData.data]);
-            })
-        });
     },
 
     useIdInGrid: function() {
@@ -638,7 +621,7 @@ dojo.declare("phpr.Default.LegacyGrid", phpr.Default.System.Component, {
                     var filterform = new phpr.Default.System.TemplateWrapper({
                         templateName: "phpr.Default.template.filters.form.html",
                         templateData: {
-                            module:  phpr.module,
+                            module:  this.main.module,
                             andTxt:  phpr.nls.get("Filter_AND"),
                             orTxt:   phpr.nls.get("Filter_OR"),
                             okTxt:   phpr.nls.get("OK")
@@ -872,7 +855,7 @@ dojo.declare("phpr.Default.LegacyGrid", phpr.Default.System.Component, {
             if (this.gridFilters.filterFieldDiv.domNode.style.display == 'none') {
                 if (this.filterField.length > 0) {
                     var fieldSelect = '<select name="filterField" dojoType="phpr.FilteringSelect" ' +
-                        'autocomplete="false" onchange="dojo.publish(\'' + phpr.module + '.gridProxy\', ' +
+                        'autocomplete="false" onchange="dojo.publish(\'' + this.main.module + '.gridProxy\', ' +
                         '[\'changeInputFilter\', this.value]); return false;">';
                     fieldSelect += '<option value=""></option>';
                     for (var i in this.filterField) {
@@ -935,7 +918,7 @@ dojo.declare("phpr.Default.LegacyGrid", phpr.Default.System.Component, {
                     }
                 }
                 html += phpr.fillTemplate("phpr.Default.template.filters.display.html", {
-                    module:   phpr.module,
+                    module:   this.main.module,
                     id:       i,
                     operator: operator,
                     field:    label,
@@ -1134,7 +1117,7 @@ dojo.declare("phpr.Default.LegacyGrid", phpr.Default.System.Component, {
                     }
                 });
 
-                this._gridActionContainer = content;
+                this._gridComboAction = content.gridComboAction;
                 this.grid.views.views[0].gridActions.set('content', content);
 
                 content.startup();
@@ -1154,9 +1137,6 @@ dojo.declare("phpr.Default.LegacyGrid", phpr.Default.System.Component, {
         // Filters
         this.setFilterButton(meta);
         this.manageFilters();
-
-        // Draw the tags
-        this.showTags();
     },
 
     saveGridScroll: function() {
@@ -1254,7 +1234,7 @@ dojo.declare("phpr.Default.LegacyGrid", phpr.Default.System.Component, {
                             var rowId = this.grid.store.getValue(item, 'id');
                             this.hideTooltip(e);
                             this._doubleClickTimer = null;
-                            this.getLinkForEdit(rowId);
+                            phpr.pageManager.modifyCurrentState({ id: rowId });
                         },
                         e
                     ),
@@ -1262,14 +1242,6 @@ dojo.declare("phpr.Default.LegacyGrid", phpr.Default.System.Component, {
                 );
             }
         }
-    },
-
-    getLinkForEdit: function(id) {
-        // Summary:
-        //    Return the link for open the form
-        // Description:
-        //    Return the link for open the form
-        phpr.pageManager.modifyCurrentState({ id: id });
     },
 
     checkCanEdit: function(inCell, inRowIndex) {
@@ -1506,7 +1478,7 @@ dojo.declare("phpr.Default.LegacyGrid", phpr.Default.System.Component, {
             }
             if (ids.length > 0) {
                 var idsSend = ids.join(',');
-                var select = this._gridActionContainer.gridComboAction;
+                var select = this._gridComboAction;
                 var key     = select.value;
                 if (key !== null) {
                     var temp   = key.split('|');
@@ -1526,7 +1498,7 @@ dojo.declare("phpr.Default.LegacyGrid", phpr.Default.System.Component, {
                 }
                 select = null;// avoid cyclic ref
             } else {
-                dojo.byId("gridComboAction").selectedIndex = 0;
+                this._gridComboAction.selectedIndex = 0;
             }
         }
     },
@@ -1568,7 +1540,7 @@ dojo.declare("phpr.Default.LegacyGrid", phpr.Default.System.Component, {
         }
 
         if (this.useCheckbox()) {
-            dojo.byId("gridComboAction").selectedIndex = 0;
+            this._gridComboAction.selectedIndex = 0;
         }
     },
 
@@ -1576,7 +1548,7 @@ dojo.declare("phpr.Default.LegacyGrid", phpr.Default.System.Component, {
         // Summary:
         //    Isolated code for easy customization, this function returns the URL to be called for the requested action.
 
-        return 'index.php/' + phpr.module + '/index/' + action +
+        return 'index.php/' + this.main.module + '/index/' + action +
             '/nodeId/' + phpr.currentProjectId + '/' + idUrl + '/' + ids;
     },
 
