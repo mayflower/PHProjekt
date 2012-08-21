@@ -20,5 +20,5 @@
 
 dojo.provide("phpr.Statistic.Grid");
 
-dojo.declare("phpr.Statistic.Grid", phpr.Default.Grid, {
+dojo.declare("phpr.Statistic.Grid", phpr.Default.LegacyGrid, {
 });

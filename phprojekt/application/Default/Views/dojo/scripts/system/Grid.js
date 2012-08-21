@@ -70,6 +70,15 @@ phpr.Default.System.Grid.formatIcon = function(value) {
     return '<div class="' + data[0] + '" title="' + data[1] + '"></div>';
 };
 
+dojo.declare("phpr.Default.System.Grid.cells.NonSubmittingCheckbox", dojox.grid.cells.Bool, {
+    alwaysEditing: false,
+    formatter: function() {
+        return this.formatEditing();
+    },
+    applyStaticValue: function() {
+    }
+});
+
 dojo.declare("phpr.Default.System.Grid.cells.Percentage", dojox.grid.cells._Widget, {
     // summary:
     //    Redefine the function to return the correct value
@@ -296,6 +305,7 @@ dojo.declare("phpr.Default.System.Grid.cells.Textarea", phpr.Default.System.Grid
 });
 
 dojo.declare("phpr.Default.System.Grid.cells.Time", dojox.grid.cells._Widget, {
+    widgetClass: dijit.form.TimeTextBox,
     setValue: function(inRowIndex, inValue) {
         inValue = phpr.date.getIsoTime(inValue);
         if (this.widget && this.widget.setValue) {
@@ -305,19 +315,39 @@ dojo.declare("phpr.Default.System.Grid.cells.Time", dojox.grid.cells._Widget, {
         }
     },
 
+    getWidgetProps: function(time) {
+        return dojo.mixin(
+            this.inherited(arguments),
+            {value: phpr.date.isoTimeTojsDate(time)}
+        );
+    },
+
     getValue: function(inRowIndex) {
         var value = this.widget.get('value');
+        value = dojo.locale.parse(value, {selector: "time"});
         return phpr.date.getIsoTime(value);
     },
 
     format: function(inRowIndex, inItem) {
-        var f,
-            i = this.grid.edit.info, d = this.get ? this.get(inRowIndex, inItem) : (this.value || this.defaultValue);
-        if (this.editable && (this.alwaysEditing || (i.rowIndex == inRowIndex && i.cell == this))) {
-            var d = phpr.date.getIsoTime(d);
+        if (inItem === null) {
+            return this.defaultValue;
+        }
+
+        var i = this.grid.edit.info,
+            d = this.get ? this.get(inRowIndex, inItem) : (this.value || this.defaultValue);
+        if (this.editable &&
+                (this.alwaysEditing ||
+                    (i.rowIndex == inRowIndex && i.cell == this)
+                )
+           ) {
+            d = phpr.date.getIsoTime(d);
             return this.formatEditing(d, inRowIndex);
         } else {
-            return phpr.date.getIsoTime(d);
+            d = phpr.date.isoTimeTojsDate(d);
+            if (d !== undefined) {
+                d = dojo.date.locale.format(d, {selector: "time"});
+            }
+            return d;
         }
     }
 });
