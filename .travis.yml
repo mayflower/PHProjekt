@@ -11,4 +11,4 @@ before_script:
     - mysql -u root -e 'create database `phprojekt-test-memory`'
     - mysql -u root phprojekt-test-memory < phprojekt/tests/test_database_memory.sql
 script:
-    - cd phprojekt/tests/UnitTests && phpunit AllTests.php
+    - phpunit -c phpunit-travis.xml

@@ -51,18 +51,6 @@ class Phprojekt_Dispatcher extends Zend_Controller_Dispatcher_Standard
      */
     protected function _formatName($unformatted, $isAction = false)
     {
-        // Preserve directories
-        if (!$isAction) {
-            $segments = explode($this->getPathDelimiter(), $unformatted);
-        } else {
-            $segments = (array) $unformatted;
-        }
-
-        foreach ($segments as $segment) {
-            $segment = str_replace($this->getWordDelimiter(), ' ', $segment);
-            $segment = preg_replace('/[^a-z0-9 ]/', '', $segment);
-        }
-
-        return implode('_', $segments);
+        return $unformatted;
     }
 }
