@@ -51,14 +51,12 @@ class Calendar2_CalDAV_PrincipalBackend implements Sabre_DAVACL_IPrincipalBacken
         if (is_null($user)) {
             throw new Exception("Principal not found for path $path");
         }
-        $setting = new Phprojekt_Setting();
-        $setting->setModule('User');
 
         return array(
             'id'                => $user->id,
             'uri'               => "principals/{$user->username}",
             '{DAV:}displayname' => $user->username,
-            '{http://sabredav.org/ns}email-address' => $setting->getSetting('email', $user->id)
+            '{http://sabredav.org/ns}email-address' => $user->getSetting('email')
         );
     }
 

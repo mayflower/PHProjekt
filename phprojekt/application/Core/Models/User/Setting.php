@@ -150,14 +150,12 @@ class Core_Models_User_Setting extends Phprojekt_ModelInformation_Default
     public function validateSettings($params)
     {
         $message = null;
-        $setting = new Phprojekt_Setting();
-        $setting->setModule('User');
 
         // Passwords
         $confirmPassValue = (isset($params['confirmValue'])) ? $params['confirmValue'] : null;
         $oldPassValue     = (isset($params['oldValue'])) ? $params['oldValue'] : null;
         $newPassValue     = $params['password'];
-        $currentPassValue = $setting->getSetting('password');
+        $currentPassValue = Phprojekt_Auth::getRealUser()->getSetting('password');
 
         $isInSettings       = !array_key_exists('id', $params);
         $isNew              = !$isInSettings && $params['id'] == 0;
@@ -209,10 +207,8 @@ class Core_Models_User_Setting extends Phprojekt_ModelInformation_Default
         if (!$userId) {
             $userId = Phprojekt_Auth::getUserId();
         }
-        $setting = new Phprojekt_Setting();
-        $setting->setModule('User');
         if (empty($params['password'])) {
-            $password = $setting->getSetting('password', $userId);
+            $password = Phprojekt_Auth::getRealUser()->getSetting('password', $userId);
         } else {
             $password = Phprojekt_Auth::cryptString($params['password']);
         }
