@@ -1545,6 +1545,7 @@ dojo.declare("phpr.Calendar2.DefaultView", phpr.Default.System.Component, {
                     this._schedule[row][column] = [];
                 }
 
+                hour = ("" + hour).length === 1 ? "0" + hour : hour;
                 this._schedule[row].hour = phpr.date.getIsoTime(hour + ':' + minute);
 
                 var tmp = (row / 2);

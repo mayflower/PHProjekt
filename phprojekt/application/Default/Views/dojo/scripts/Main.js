@@ -1061,7 +1061,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
     updateCacheData: function() {
         // Summary:
         //    Forces every widget of the page to update its data, by deleting its cache.
-        if (this.grid) {
+        if (this.grid && this.grid.updateData) {
             this.grid.updateData();
         }
         if (this.form) {
