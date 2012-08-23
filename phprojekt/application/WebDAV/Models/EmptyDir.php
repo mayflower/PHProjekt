@@ -36,7 +36,7 @@ require_once 'SabreDAV/lib/Sabre/VObject/includes.php';
  * @since      File available since Release 6.1
  * @author     Simon Kohlmeyer <simon.kohlmeyer@mayflower.de>
  */
-class WebDAV_Models_EmptyDir extends Sabre_DAV_Directory
+class WebDAV_Models_EmptyDir extends Sabre_DAV_Collection
 {
     public function construct()
     {

@@ -16,6 +16,8 @@
         save_type="0" version="6.0.0" active="1" />
     <module id="3" name="Calendar2" label="Calendar" save_type="1"
         version="6.1.0-dev" active="1"/>
+    <module id="4" name="Filemanager" label="Filemanager" save_type="1"
+        version="6.1.5" active="1"/>
     <project_module_permissions
         module_id="1" project_id="1" />
     <project_module_permissions

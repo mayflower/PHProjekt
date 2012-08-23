@@ -23,7 +23,7 @@
     <module id="3" name="Note" label="Note" save_type="0" version="6.0.0" active="1"/>
     <module id="4" name="Timecard" label="Timecard" save_type="1" version="6.0.0" active="1"/>
     <module id="5" name="Gantt" label="Gantt" save_type="0" version="6.0.0" active="1"/>
-    <module id="6" name="Filemanager" label="Filemanager" save_type="0" version="6.0.0" active="1"/>
+    <module id="6" name="Filemanager" label="Filemanager" save_type="0" version="6.1.5" active="1"/>
     <module id="7" name="Statistic" label="Statistic" save_type="0" version="6.0.0" active="1"/>
     <module id="8" name="Contact" label="Contact" save_type="1" version="6.0.0" active="1"/>
     <module id="9" name="Helpdesk" label="Helpdesk" save_type="0" version="6.0.0" active="1"/>
