@@ -20,7 +20,7 @@
  * @since      File available since Release 6.1
  * @author     Simon Kohlmeyer <simon.kohlmeyer@mayflower.de>
  */
-require_once 'SabreDAV/lib/Sabre/VObject/includes.php';
+require_once 'Sabre.autoload.php';
 
 /**
  * WebDAV collection model.
