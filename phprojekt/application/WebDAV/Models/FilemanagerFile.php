@@ -63,7 +63,6 @@ class WebDAV_Models_FilemanagerFile extends Sabre_DAV_FS_File
 
         $this->_filemanager->files = $filestring;
         $this->_filemanager->save();
-        parent::delete();
     }
 
     public function setName($name)
