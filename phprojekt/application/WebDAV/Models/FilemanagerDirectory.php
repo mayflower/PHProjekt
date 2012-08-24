@@ -84,16 +84,16 @@ class WebDAV_Models_FilemanagerDirectory extends Sabre_DAV_Collection
 
     public function createFile($name, $data = NULL)
     {
-        $md5name = md5(mt_rand() . time());
-        $newPath = Phprojekt::getInstance()->getConfig()->uploadPath . '/' . $md5name;
+        $hash = md5(mt_rand() . time());
+        $newPath = Phprojekt::getInstance()->getConfig()->uploadPath . '/' . $hash;
         if (false === file_put_contents($newPath, $data)) {
-            throw new Exception('saving failed');
+            throw new Phprojekt_Exception_IOException('saving failed');
         }
 
         if (!empty($this->_filemanager->files)) {
             $this->_filemanager->files .= '||';
         }
-        $this->_filemanager->files .= $md5name . '|' . $name;
+        $this->_filemanager->files .= $hash . '|' . $name;
 
         try {
             $this->_filemanager->save();
