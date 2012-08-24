@@ -38,10 +38,6 @@ require_once 'Sabre.autoload.php';
  */
 class WebDAV_Models_EmptyDir extends Sabre_DAV_Collection
 {
-    public function construct()
-    {
-    }
-
     public function getName()
     {
         return "Empty";
