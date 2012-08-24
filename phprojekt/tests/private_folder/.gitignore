@@ -1,0 +1,4 @@
+tmp/zendCache/*
+upload/*
+logs/*
+tmp/*
