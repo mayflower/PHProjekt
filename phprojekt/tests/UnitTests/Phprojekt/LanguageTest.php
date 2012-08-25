@@ -50,8 +50,8 @@ class Phprojekt_LanguageTest extends PHPUnit_Framework_TestCase
         $string = $lang->translate('Delete');
         $this->assertEquals('Borrar', $string);
 
-        $string = $lang->translate('stringNotTranslated');
-        $this->assertEquals('stringNotTranslated', $string);
+        $string = $lang->translate('untranslated');
+        $this->assertEquals('untranslated', $string);
 
         $string = $lang->translate('Delete', 'Default', 'en');
         $this->assertEquals('Delete', $string);
