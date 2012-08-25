@@ -144,7 +144,10 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
                         if (!isset($this->_translate[$locale]['Default'])) {
                             $this->_translate[$locale]['Default'] = array();
                         }
-                        $this->_translate[$locale]['Default'] = array_merge($this->_translate[$locale]['Default'], $lang);
+                        $this->_translate[$locale]['Default'] = array_merge(
+                            $this->_translate[$locale]['Default'],
+                            $lang
+                        );
                         $this->_langLoaded[$locale] = 1;
                     }
                 }
@@ -227,7 +230,8 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
                             }
                             $this->_langLoaded[$locale] = 1;
                             $this->_translate[$locale][$subModule] = array_merge(
-                                $this->_translate[$locale][$subModule], $lang);
+                                $this->_translate[$locale][$subModule], $lang
+                            );
                         }
                     } else if ($module == 'Core') {
                         $subCoreFiles = scandir(PHPR_CORE_PATH . '/' . $module . '/SubModules/' . $subModule);
@@ -243,7 +247,8 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
                                         }
                                         $this->_langLoaded[$locale] = 1;
                                         $this->_translate[$locale][$subCoreModule] = array_merge(
-                                            $this->_translate[$locale][$subCoreModule], $lang);
+                                            $this->_translate[$locale][$subCoreModule], $lang
+                                        );
                                     }
                                 }
                             }

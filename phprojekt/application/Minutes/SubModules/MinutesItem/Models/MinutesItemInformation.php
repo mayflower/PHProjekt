@@ -100,7 +100,7 @@ class Minutes_SubModules_MinutesItem_Models_MinutesItemInformation extends Phpro
      */
     protected function _getUserIdList()
     {
-        if (array() === self::$_userIdList) {
+        if (empty(self::$_userIdList)) {
             /* @var $user Phprojekt_User_User */
             $user  = new Phprojekt_User_User();
             $users = $user->getAllowedUsers();
