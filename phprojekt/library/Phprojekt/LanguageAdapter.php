@@ -112,7 +112,7 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
      * where $key is the string to be translated and $value is the translated string.
      *
      * Since is not nessesary load the file in each request,
-     * we use sessions for save the langs translations.
+     * we use the cache to save the langs translations.
      * And also have an array with the already loaded languages for not load a same file two times.
      *
      * @param string             $data    Path to the default translation file.
