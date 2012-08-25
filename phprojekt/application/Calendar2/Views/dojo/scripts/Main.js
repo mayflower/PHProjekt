@@ -90,6 +90,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
     _resizeConnection:    null,
     _actionPending:       false,
     _dateWheelChanged:    false, // Whether the current date has just changed using the mouse wheel
+    _activeUser: null,
     weekList: null,
     monthList: null,
     cladavView: null,
@@ -125,8 +126,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         this.monthListWidget = phpr.Calendar2.ViewMonthList;
         this.caldavViewWidget = phpr.Calendar2.ViewCaldav;
         this.formWidget = phpr.Calendar2.Form;
-
-        this.setActiveUser(null);
+        this.userStore = new phpr.Default.System.Store.User();
     },
 
     destroy: function() {
@@ -144,7 +144,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
     setWidgets: function() {
         // Summary:
         //   Custom setWidgets for calendar
-        phpr.userStore.fetch(
+        this.userStore.fetch(
             dojo.hitch(this, function() {
                 if (this.getActiveUser() === null) {
                     this.setActiveUser(this._getCurrentUser());
@@ -162,7 +162,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
     },
 
     _getCurrentUser: function() {
-        var userList = phpr.userStore.getList();
+        var userList = this.userStore.getList();
         for (var i in userList) {
             if (userList[i].id == phpr.currentUserId) {
                 return userList[i];
@@ -408,13 +408,14 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         var newstate = dojo.clone(this.state);
         newstate.action = "dayListSelect";
         phpr.pageManager.changeState(newstate, {noAction: true});
-        this.selectorRender();
+        this.userStore = new phpr.Default.System.Store.User();
+        this.userStore.fetch(dojo.hitch(this, "selectorRender"));
     },
 
     selectorRender: function() {
         // Summary:
         //    Called after receiving the users list from the DB. Shows the user selection window for the group view.
-        this._userList = phpr.userStore.getList();
+        this._userList = this.userStore.getList();
 
         var view = phpr.viewManager.getView();
 
@@ -829,7 +830,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
     },
 
     _getUserById: function(id) {
-        var userList = phpr.userStore.getList();
+        var userList = this.userStore.getList();
         for (var i in userList) {
             if (userList[i].id == id) {
                 return userList[i];

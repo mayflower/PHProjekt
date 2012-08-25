@@ -17,11 +17,11 @@ database.params.password    = "phprojekt"
 
 [general]
 
-applicationDir       = "../../"
+applicationDir       = "phprojekt/"
 
-tmpPath            = "../private_folder/tmp/"
-applicationPath    = "../private_folder/application/"
-log.debug.filename = "../private_folder/logs/debug.log"
+tmpPath            = "phprojekt/tests/private_folder/tmp/"
+applicationPath    = "phprojekt/tests/private_folder/application/"
+log.debug.filename = "phprojekt/tests/private_folder/logs/debug.log"
 
 itemsPerPage         = 3;
 userDisplayFormat    = 0
