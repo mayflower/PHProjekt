@@ -309,7 +309,7 @@ class Phprojekt
             throw new Phprojekt_PublishedException("Project with id $projectId not found.");
         }
 
-        Zend_Registry::set(self::CURRENT_PROJECT, (int) $projectId);
+        Zend_Registry::set(self::CURRENT_PROJECT, $project);
     }
 
     /**
@@ -318,6 +318,16 @@ class Phprojekt
      * @return integer Current project ID.
      */
     public static function getCurrentProjectId()
+    {
+        return Zend_Registry::get(self::CURRENT_PROJECT)->id;
+    }
+
+    /**
+     * Return the current project.
+     *
+     * @return Phprojekt_Models_Project Current project
+     */
+    public static function getCurrentProject()
     {
         return Zend_Registry::get(self::CURRENT_PROJECT);
     }
