@@ -159,11 +159,16 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
             $select   = $database->select();
 
             $select->from(array('t' => $table), array())
-                   ->join(array('tt' => $table),
-                       sprintf('t.id = %d AND (tt.path like CONCAT(t.path, t.id, "/%%") OR tt.id = t.id)', (int) $this->_requestedId),
-                       '*')
-                   ->order('path')
-                   ->order('id');
+                ->join(
+                    array('tt' => $table),
+                    sprintf(
+                        't.id = %d AND (tt.path like CONCAT(t.path, t.id, "/%%") OR tt.id = t.id)',
+                        (int) $this->_requestedId
+                    ),
+                    '*'
+                )
+               ->order('path')
+               ->order('id');
 
             if (null !== $filter) {
                 $filter->filter($select, 'tt');
@@ -390,8 +395,9 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
     public function delete()
     {
         if (null === $this->id) {
-            throw new Phprojekt_Tree_Node_Exception('Node not received or stored'
-                . ' from/to the database yet');
+            throw new Phprojekt_Tree_Node_Exception(
+                'Node not received or stored from/to the database yet'
+            );
         }
 
         if ($this->id == 1) {
@@ -588,8 +594,10 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
      */
     public function getIterator()
     {
-        return new RecursiveIteratorIterator(new Phprojekt_Tree_Node_Iterator($this),
-            RecursiveIteratorIterator::SELF_FIRST);
+        return new RecursiveIteratorIterator(
+            new Phprojekt_Tree_Node_Iterator($this),
+            RecursiveIteratorIterator::SELF_FIRST
+        );
     }
 
     /**
