@@ -40,11 +40,6 @@
 class Phprojekt_Tree_Node_Database implements IteratorAggregate
 {
     /**
-     * Name for use with the cache.
-     */
-    const CACHE_NAME = 'Phprojekt_Tree_Node_Database_setup';
-
-    /**
      * The char that separates a tree path in the database.
      * It should not be edited, if you don't initialize a complete empty tree, as no conversion is done.
      */
@@ -156,7 +151,6 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
             throw new Phprojekt_Tree_Node_Exception('You have to set a requested treeid in the constructor');
         }
 
-        $cache = Phprojekt::getInstance()->getCache();
         if ($this->_requestedId == 0) {
             return $this;
         } else {
@@ -199,7 +193,6 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
             }
 
             $object = $this;
-            $cache->save($this, self::CACHE_NAME);
 
             // Delete the session for re-calculate the rights
             $sessionName     = 'Phprojekt_Tree_Node_Database-applyRights';
@@ -359,7 +352,6 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
                 $node->_activeRecord->projectId = (int) $this->id;
                 $node->_activeRecord->path      = sprintf('%s%s%s', $this->path, $this->id, self::NODE_SEPARATOR);
                 $node->_activeRecord->save();
-                self::deleteCache();
             }
 
             $node->setParentNode($this);
@@ -412,7 +404,6 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
         $children = $this->getChildren();
         $this->_deleteChildren($children);
         $this->_initialize();
-        self::deleteCache();
     }
 
     /**
@@ -432,7 +423,6 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
             $this->getActiveRecord()->projectId = (int) $node->id;
             $node = $this->_rebuildPaths($this, $node->path . $node->id . self::NODE_SEPARATOR);
             $node->getActiveRecord()->save();
-            self::deleteCache();
         }
 
         $this->_parentNode = $node;
@@ -458,7 +448,6 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
 
                 $this->getRootNode()->_index[$child->id] = $node->_children[$id];
                 $node->_children[$id]->getActiveRecord()->parentSave();
-                self::deleteCache();
             }
         }
 
@@ -681,16 +670,5 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
     public function hasField($field)
     {
         return $this->getActiveRecord()->hasField($field);
-    }
-
-    /**
-     * Delete the tree cache.
-     *
-     * @return void;
-     */
-    public static function deleteCache()
-    {
-        $cache = Phprojekt::getInstance()->getCache();
-        $cache->remove(self::CACHE_NAME);
     }
 }
