@@ -1,7 +1,5 @@
 <?php
 /**
- * Default REST Controller.
- *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 3 as published by the Free Software Foundation
@@ -11,30 +9,12 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
- * @category   PHProjekt
- * @package    Application
- * @subpackage Default
  * @copyright  Copyright (c) 2012 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.1
- * @version    Release: @package_version@
- * @author     David Soria Parra <soria_parra@mayflower.de>
- * @author     Simon Kohlmeyer <simon.kohlmeyer@mayflower.de>
  */
 
 /**
  * Default REST Controller.
- *
- * @category   PHProjekt
- * @package    Application
- * @subpackage Default
- * @copyright  Copyright (c) 2012 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.1
- * @version    Release: @package_version@
- * @author     Simon Kohlmeyer <simon.kohlmeyer@mayflower.de>
  */
 abstract class Phprojekt_RestController extends Zend_Rest_Controller
 {

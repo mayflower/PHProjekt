@@ -1,7 +1,5 @@
 <?php
 /**
- * Calendar2 model class.
- *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 3 as published by the Free Software Foundation
@@ -11,14 +9,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details
  *
- * @category   PHProjekt
- * @package    Application
- * @subpackage Calendar2
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.1
- * @author     Simon Kohlmeyer <simon.kohlmeyer@mayflower.de>
  */
 require_once 'Sabre.autoload.php';
 
@@ -26,15 +18,6 @@ require_once 'Sabre.autoload.php';
  * Calendar2 model class.
  *
  * An object of this class corresponds to a series of objects.
- *
- * @category   PHProjekt
- * @package    Application
- * @subpackage Calendar2
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.1
- * @author     Simon Kohlmeyer <simon.kohlmeyer@mayflower.de>
  */
 class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
 {

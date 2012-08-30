@@ -1,9 +1,5 @@
 <?php
 /**
- * An own class loader that reads the class files from the
- * /application directory or from the Zend library directory depending
- * on the name of the class.
- *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 3 as published by the Free Software Foundation
@@ -13,29 +9,14 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
- * @category   PHProjekt
- * @package    Phprojekt
- * @subpackage Core
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
- * @author     David Soria Parra <soria_parra@mayflower.de>
  */
 
 /**
  * An own class loader that reads the class files from the
  * /application directory or from the Zend library directory depending
  * on the name of the class.
- *
- * @category   PHProjekt
- * @package    Phprojekt
- * @subpackage Core
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
- * @author     David Soria Parra <soria_parra@mayflower.de>
  */
 class Phprojekt_Loader extends Zend_Loader
 {

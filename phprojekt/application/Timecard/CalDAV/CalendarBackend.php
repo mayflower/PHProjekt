@@ -1,7 +1,5 @@
 <?php
 /**
- * Timecard Caldav Calendarbackend
- *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 3 as published by the Free Software Foundation
@@ -11,29 +9,14 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
- * @category   PHProjekt
- * @package    Application
- * @subpackage Timecard
  * @copyright  Copyright (c) 2012 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.1.2
- * @author     Simon Kohlmeyer <simon.kohlmeyer@mayflower.de>
  */
 
 /**
  * Timecard Caldav Calendarbackend
  *
  * This class implements a calendar backend for sabredav
- *
- * @category   PHProjekt
- * @package    Application
- * @subpackage Timecard
- * @copyright  Copyright (c) 2012 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.1.2
- * @author     Simon Kohlmeyer <simon.kohlmeyer@mayflower.de>
  */
 class Timecard_CalDAV_CalendarBackend extends Sabre_CalDAV_Backend_Abstract
 {

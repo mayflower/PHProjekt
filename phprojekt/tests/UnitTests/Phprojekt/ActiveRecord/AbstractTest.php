@@ -1,7 +1,5 @@
 <?php
 /**
- * Unit test
- *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 3 as published by the Free Software Foundation
@@ -11,14 +9,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
- * @category   PHProjekt
- * @package    UnitTests
- * @subpackage Phprojekt
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
- * @author     David Soria Parra <soria_parra@mayflower.de>
  */
 
 require_once 'PHPUnit/Framework/TestCase.php';
@@ -41,14 +33,6 @@ class Phprojekt_HmabtmTest extends Phprojekt_ActiveRecord_Abstract
 /**
  * Tests for active records
  *
- * @category   PHProjekt
- * @package    UnitTests
- * @subpackage Phprojekt
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
- * @author     David Soria Parra <soria_parra@mayflower.de>
  * @group      phprojekt
  * @group      activerecord
  * @group      phprojekt-activerecord
@@ -64,9 +48,6 @@ class Phprojekt_ActiveRecord_AbstractTest extends DatabaseTest
         return $this->createFlatXMLDataSet(dirname(__FILE__) . '/data.xml');
     }
 
-    /**
-     *
-     */
     public function testFetchAllWithJoins()
     {
         $project  = new Phprojekt_Project(array('db' => $this->sharedFixture));
@@ -86,9 +67,6 @@ class Phprojekt_ActiveRecord_AbstractTest extends DatabaseTest
         $this->assertEquals(5, count($projects));
     }
 
-    /**
-     *
-     */
     public function testCreateHasManyAndBelongsToMany()
     {
         $this->markTestIncomplete("functionality has to be reimplemented");
@@ -100,9 +78,6 @@ class Phprojekt_ActiveRecord_AbstractTest extends DatabaseTest
        $this->assertEquals('module_instance', $instance->getTableName());
     }
 
-    /*
-     *
-     */
     public function testDeleteHasManyAndBelongsToMany()
     {
         $authNamespace = new Zend_Session_Namespace('Phprojekt_Auth-login');
@@ -131,9 +106,6 @@ class Phprojekt_ActiveRecord_AbstractTest extends DatabaseTest
         $authNamespace->userId = $keepUser;
     }
 
-    /**
-     *
-     */
     public function testCreateProjectWithHasMany()
     {
         try {
@@ -270,9 +242,6 @@ class Phprojekt_ActiveRecord_AbstractTest extends DatabaseTest
         $this->assertTrue($instance->save());
     }
 
-    /**
-     *
-     */
     public function testDeleteProject ()
     {
         try {

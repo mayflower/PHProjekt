@@ -1,9 +1,5 @@
 <?php
 /**
- * Meta information about the Calendar2 model. Acts as a layer over database
- * manager to filter readonly fields to yes if the event is from other
- * participant.
- *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 3 as published by the Free Software Foundation
@@ -13,29 +9,14 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
- * @category   PHProjekt
- * @package    Application
- * @subpackage Calendar2
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.1
- * @author     Gustavo Solt <solt@mayflower.de>
  */
 
 /**
  * Meta information about the Calendar2 model. Acts as a layer over database
  * manager to filter readonly fields to yes if the event is from other
  * participant.
- *
- * @category   PHProjekt
- * @package    Application
- * @subpackage Calendar
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.1
- * @author     Gustavo Solt <solt@mayflower.de>
  */
 class Calendar2_Models_CalendarInformation extends Phprojekt_ModelInformation_Default
 {

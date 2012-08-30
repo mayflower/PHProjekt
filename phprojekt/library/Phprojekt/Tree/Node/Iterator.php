@@ -1,13 +1,5 @@
 <?php
 /**
- * Tree node iterator.
- *
- * Iterates over a set of tree nodes.
- * You can use foreach statements to iterate over a tree and its child nodes.
- * As it impelements a recursive iterator, the tree node iterator always iterates over
- * the children nodes.
- * See PHP-SPL for more information about the Iterator interfaces in PHP 5.2.x and above.
- *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 3 as published by the Free Software Foundation
@@ -17,14 +9,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
- * @category   PHProjekt
- * @package    Phprojekt
- * @subpackage Tree
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
- * @author     David Soria Parra <david.soria_parra@mayflower.de>
  */
 
 /**
@@ -35,15 +21,6 @@
  * As it impelements a recursive iterator, the tree node iterator always iterates over
  * the children nodes.
  * See PHP-SPL for more information about the Iterator interfaces in PHP 5.2.x and above.
- *
- * @category   PHProjekt
- * @package    Phprojekt
- * @subpackage Tree
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
- * @author     David Soria Parra <david.soria_parra@mayflower.de>
  */
 class Phprojekt_Tree_Node_Iterator implements RecursiveIterator
 {
