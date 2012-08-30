@@ -1,6 +1,6 @@
 <?php
 /**
- * Filemanager Migration
+ * Timecard Migration
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -13,32 +13,36 @@
  *
  * @category   PHProjekt
  * @package    Application
- * @subpackage Filemanager
+ * @subpackage Timecard
  * @copyright  Copyright (c) 2012 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
- * @since      File available since Release 6.1.5
+ * @since      File available since Release 6.1.3
  * @author     Simon Kohlmeyer <simon.kohlmeyer@mayflower.de>
  */
 
 /**
- * Filemanager Migration
+ * Timecard Migration
  *
- * This is used to install the Cal2 tables and Convert the Calendar1 data to the
- * new format.
+ * Migration routines for the timecard module.
  *
  * @category   PHProjekt
  * @package    Application
- * @subpackage Filemanager
+ * @subpackage Timecard
  * @copyright  Copyright (c) 2012 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
- * @since      File available since Release 6.1.5
+ * @since      File available since Release 6.1.3
  * @author     Simon Kohlmeyer <simon.kohlmeyer@mayflower.de>
  */
-class Filemanager_Migration extends Phprojekt_Migration_Abstract
+class Timecard_Migration extends Phprojekt_Migration_Abstract
 {
-    private $_db;
+    /**
+     * The database on which to migrate
+     *
+     * @var Zend_Db_Adapter_Abstract
+     */
+    protected $_db;
 
     /**
      * Return the current module version.
@@ -49,7 +53,7 @@ class Filemanager_Migration extends Phprojekt_Migration_Abstract
      */
     public function getCurrentModuleVersion()
     {
-        return '6.1.5';
+        return '6.1.4';
     }
 
     /**
@@ -64,34 +68,19 @@ class Filemanager_Migration extends Phprojekt_Migration_Abstract
      */
     public function upgrade($currentVersion, Zend_Db_Adapter_Abstract $db)
     {
+        date_default_timezone_set('utc');
         $this->_db = $db;
+        $this->parseDbFile('Timecard');
 
-        if (Phprojekt::compareVersion($currentVersion, '6.1.5') < 0) {
-            $this->parseDbFile('Filemanager');
-            Phprojekt::getInstance()->getCache()->clean(Zend_Cache::CLEANING_MODE_ALL);
-            $this->_renameFilemanagersWithSameTitle();
-            $this->_makeTitleProjectUniqueIndex();
+        if (Phprojekt::compareVersion($currentVersion, '6.1.4') < 0) {
+            $request  = new Zend_Controller_Request_Http();
+            $uidSuffix = "@phprojekt6-" . $request->getHttpHost();
+            Phprojekt::getInstance()->getDB()->query(
+                "UPDATE timecard SET uri = id, uid = CONCAT(UUID(), \"{$uidSuffix}\");"
+            );
+            // This is mysql-only. Not sure if this is the ultimate way to go here.
+            Phprojekt::getInstance()->getDB()->query('ALTER TABLE timecard ADD UNIQUE (uri)');
         }
     }
 
-    private function _renameFilemanagersWithSameTitle()
-    {
-        $this->_db->query(<<<HERE
-UPDATE filemanager AS f
-JOIN (
-    SELECT title, project_id
-    FROM filemanager
-    GROUP BY title, project_id
-    HAVING COUNT(title) > 1
-) AS c
-  ON f.title = c.title AND f.project_id = c.project_id
-SET f.title = CONCAT(f.title, ' (', f.id, ')')
-HERE
-);
-    }
-
-    private function _makeTitleProjectUniqueIndex()
-    {
-        $this->_db->query('ALTER TABLE filemanager ADD UNIQUE INDEX (title, project_id)');
-    }
 }

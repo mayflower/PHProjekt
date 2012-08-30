@@ -162,7 +162,8 @@ CREATE TABLE `filemanager` (
   `comments` varchar(255) DEFAULT NULL,
   `project_id` int(11) NOT NULL,
   `files` varchar(255) NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `title` (`title`, `project_id`)
 ) ENGINE=MEMORY AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -656,6 +657,8 @@ CREATE TABLE `timecard` (
   `notes` varchar(255) DEFAULT NULL,
   `module_id` int(11) DEFAULT '1',
   `item_id` int(11) DEFAULT NULL,
+  `uri` varchar(255) NOT NULL,
+  `uid` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MEMORY AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
