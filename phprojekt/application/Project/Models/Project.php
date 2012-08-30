@@ -137,7 +137,6 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
     public function parentSave()
     {
         $result = parent::parentSave();
-        Phprojekt_Tree_Node_Database::deleteCache();
 
         return $result;
     }
@@ -150,7 +149,6 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
     public function save()
     {
         $result = parent::save();
-        Phprojekt_Tree_Node_Database::deleteCache();
 
         return $result;
     }
@@ -163,7 +161,6 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
     public function delete()
     {
         parent::delete();
-        Phprojekt_Tree_Node_Database::deleteCache();
     }
 
     /**
