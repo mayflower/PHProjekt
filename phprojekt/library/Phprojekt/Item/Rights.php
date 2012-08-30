@@ -1,8 +1,5 @@
 <?php
 /**
- * This class manage the rights for each item per user.
- * Return and save the rights using the moduleId-itemId relation.
- *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 3 as published by the Free Software Foundation

@@ -1,10 +1,5 @@
 <?php
 /**
- * Class for get the words from a file.
- *
- * The class provide the functions for read different type of files
- * and get all the words for save.
- *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 3 as published by the Free Software Foundation

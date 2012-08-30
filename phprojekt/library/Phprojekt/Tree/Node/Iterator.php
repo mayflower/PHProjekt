@@ -1,13 +1,5 @@
 <?php
 /**
- * Tree node iterator.
- *
- * Iterates over a set of tree nodes.
- * You can use foreach statements to iterate over a tree and its child nodes.
- * As it impelements a recursive iterator, the tree node iterator always iterates over
- * the children nodes.
- * See PHP-SPL for more information about the Iterator interfaces in PHP 5.2.x and above.
- *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 3 as published by the Free Software Foundation

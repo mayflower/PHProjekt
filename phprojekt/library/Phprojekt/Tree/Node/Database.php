@@ -1,9 +1,5 @@
 <?php
 /**
- * Tree class.
- *
- * Represents an node of a tree and provides iterator abilities.
- *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 3 as published by the Free Software Foundation

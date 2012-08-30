@@ -1,10 +1,5 @@
 <?php
 /**
- * Class for manage the words-module relation.
- *
- * The class provide the functions for save/delete/search
- * the words - module relation in the SearchWordsModule table.
- *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 3 as published by the Free Software Foundation

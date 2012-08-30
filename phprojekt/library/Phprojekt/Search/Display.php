@@ -1,9 +1,5 @@
 <?php
 /**
- * Display Searchs class.
- *
- * The class provide the functions for display the item data of the results.
- *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 3 as published by the Free Software Foundation

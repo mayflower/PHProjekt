@@ -1,7 +1,5 @@
 <?php
 /**
- * Represents a module in PHProjekt and coordinates it's mapping to a database.
- *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 3 as published by the Free Software Foundation

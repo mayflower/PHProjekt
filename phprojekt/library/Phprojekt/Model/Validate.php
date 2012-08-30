@@ -1,7 +1,5 @@
 <?php
 /**
- * Class for valid the data of each field.
- *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 3 as published by the Free Software Foundation

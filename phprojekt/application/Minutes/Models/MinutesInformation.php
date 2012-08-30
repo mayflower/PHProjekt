@@ -1,8 +1,5 @@
 <?php
 /**
- * Meta information about the Minutes model. Acts as a layer over
- * database manager to filter readonly fields to yes if minutes is final.
- *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 3 as published by the Free Software Foundation

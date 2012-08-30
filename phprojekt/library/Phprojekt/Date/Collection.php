@@ -1,8 +1,5 @@
 <?php
 /**
- * Class to hold a collection of dates.
- * These dates can also be automatically calculated from a iCal-rrule.
- *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 3 as published by the Free Software Foundation

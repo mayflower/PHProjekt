@@ -1,7 +1,5 @@
 <?php
 /**
- * Convert a value for save in the table, and get it for the api.
- *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 3 as published by the Free Software Foundation

@@ -1,9 +1,5 @@
 <?php
 /**
- * Manage tabs-module relations.
- *
- * The class return the tab on each module ID.
- *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 3 as published by the Free Software Foundation

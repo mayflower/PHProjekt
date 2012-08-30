@@ -1,9 +1,5 @@
 <?php
 /**
- * Meta information about the Calendar2 model. Acts as a layer over database
- * manager to filter readonly fields to yes if the event is from other
- * participant.
- *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 3 as published by the Free Software Foundation

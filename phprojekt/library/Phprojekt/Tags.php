@@ -1,9 +1,5 @@
 <?php
 /**
- * Tags class.
- *
- * The class provide the functions for manage tags per user.
- *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 3 as published by the Free Software Foundation

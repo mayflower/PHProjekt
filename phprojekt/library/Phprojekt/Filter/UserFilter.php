@@ -1,10 +1,5 @@
 <?php
 /**
- * Filter by for columns that is defined by a user.
- *
- * Represents a where user where clause filter and provides
- * furthermore chaining abilities from the abstract.
- *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 3 as published by the Free Software Foundation

@@ -1,9 +1,5 @@
 <?php
 /**
- * An own class loader that reads the class files from the
- * /application directory or from the Zend library directory depending
- * on the name of the class.
- *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 3 as published by the Free Software Foundation

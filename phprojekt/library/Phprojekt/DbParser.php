@@ -1,7 +1,5 @@
 <?php
 /**
- * DbParser Class for process the json db data.
- *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 3 as published by the Free Software Foundation
