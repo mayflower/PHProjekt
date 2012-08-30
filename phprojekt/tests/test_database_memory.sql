@@ -162,7 +162,8 @@ CREATE TABLE `filemanager` (
   `comments` varchar(255) DEFAULT NULL,
   `project_id` int(11) NOT NULL,
   `files` varchar(255) NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `title` (`title`, `project_id`)
 ) ENGINE=MEMORY AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 

@@ -18,12 +18,12 @@
     <user id="2" username="Marie"
         firstname="Luise Marie" lastname="" status="A" admin="0" />
 
-    <module id="1" name="Project" label="Project" save_type="0" version="6.1.0-dev" active="1"/>
+    <module id="1" name="Project" label="Project" save_type="0" version="6.1.5" active="1"/>
     <module id="2" name="Todo" label="Todo" save_type="0" version="6.0.0" active="1"/>
     <module id="3" name="Note" label="Note" save_type="0" version="6.0.0" active="1"/>
     <module id="4" name="Timecard" label="Timecard" save_type="1" version="6.1.4" active="1"/>
     <module id="5" name="Gantt" label="Gantt" save_type="0" version="6.0.0" active="1"/>
-    <module id="6" name="Filemanager" label="Filemanager" save_type="0" version="6.0.0" active="1"/>
+    <module id="6" name="Filemanager" label="Filemanager" save_type="0" version="6.1.5" active="1"/>
     <module id="7" name="Statistic" label="Statistic" save_type="0" version="6.0.0" active="1"/>
     <module id="8" name="Contact" label="Contact" save_type="1" version="6.0.0" active="1"/>
     <module id="9" name="Helpdesk" label="Helpdesk" save_type="0" version="6.0.0" active="1"/>
@@ -291,7 +291,7 @@
         is_unique="0" />
     <filemanager id="1" owner_id="1" title="Test" project_id="1"
         comments="Foobar" files="966f9bfa01ec4a2a3fa6282bb8fa8d56|articles.txt" />
-    <filemanager id="2" owner_id="1" title="Test" project_id="1"
+    <filemanager id="2" owner_id="1" title="Other Test" project_id="1"
         comments="einself" files="deadbeef01ec4a2a3fa6282bb8fa8d56|articles.txt" />
     <item_rights
         module_id="7" item_id="1" user_id="1" access="255" />
