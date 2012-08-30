@@ -321,4 +321,5 @@ class Timecard_Models_Timecard_Test extends DatabaseTest
         $order         = Phprojekt_ModelInformation_Default::ORDERING_FORM;
         $this->assertEquals($expected, $timecardModel->getInformation()->getFieldDefinition($order));
     }
+
 }

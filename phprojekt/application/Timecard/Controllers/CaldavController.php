@@ -1,6 +1,6 @@
 <?php
 /**
- * Calendar2 Module CalDAV Controller.
+ * Timecard Module CalDAV Controller.
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -13,28 +13,28 @@
  *
  * @category   PHProjekt
  * @package    Application
- * @subpackage Calendar2
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
+ * @subpackage Timecard
+ * @copyright  Copyright (c) 2012 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
- * @since      File available since Release 6.1
+ * @since      File available since Release 6.1.4
  * @author     Simon Kohlmeyer <simon.kohlmeyer@mayflower.de>
  */
 require_once 'Sabre.autoload.php';
 
 /**
- * Calendar2 Module CalDAV Controller.
+ * Timecard Module CalDAV Controller.
  *
  * @category   PHProjekt
  * @package    Application
- * @subpackage Calendar2
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
+ * @subpackage Timecard
+ * @copyright  Copyright (c) 2012 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
- * @since      File available since Release 6.1
+ * @since      File available since Release 6.1.4
  * @author     Simon Kohlmeyer <simon.kohlmeyer@mayflower.de>
  */
-class Calendar2_CaldavController extends IndexController
+class Timecard_CaldavController extends IndexController
 {
     /**
      * Overwrite preDispatch from the indexController.
@@ -73,7 +73,7 @@ class Calendar2_CaldavController extends IndexController
         // Backends
         $authBackend      = new WebDAV_Helper_Auth();
         $principalBackend = new Phprojekt_CalDAV_PrincipalBackend();
-        $calendarBackend  = new Calendar2_CalDAV_CalendarBackend();
+        $calendarBackend  = new Timecard_CalDAV_CalendarBackend();
 
         // Directory tree
         $tree = array(
@@ -82,10 +82,10 @@ class Calendar2_CaldavController extends IndexController
         );
         $server = new Sabre_DAV_Server($tree);
 
-        $server->setBaseUri('/index.php/Calendar2/caldav/index');
+        $server->setBaseUri('/index.php/Timecard/caldav/index');
 
         // Authentication plugin
-        $authPlugin = new Sabre_DAV_Auth_Plugin($authBackend, 'CalDAV');
+        $authPlugin = new Sabre_DAV_Auth_Plugin($authBackend, 'Timecard');
         $server->addPlugin($authPlugin);
 
         // CalDAV plugin
