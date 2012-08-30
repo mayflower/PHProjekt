@@ -11,29 +11,15 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
- * @category   PHProjekt
- * @package    Phprojekt
- * @subpackage Rest
  * @copyright  Copyright (c) 2012 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.1
- * @version    Release: @package_version@
- * @author     Simon Kohlmeyer <simon.kohlmeyer@mayflower.de>
  */
 
 /**
  * Extend Zend_Rest_Route to fit PHProjekt's module system.
  *
- * @category   PHProjekt
- * @package    Phprojekt
- * @subpackage Module
  * @copyright  Copyright (c) 2012 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.1
- * @version    Release: @package_version@
- * @author     Simon Kohlmeyer <simon.kohlmeyer@mayflower.de>
  */
 class Phprojekt_RestRoute extends Zend_Rest_Route
 {

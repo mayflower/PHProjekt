@@ -11,14 +11,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
- * @category   PHProjekt
- * @package    Application
- * @subpackage Timecard
  * @copyright  Copyright (c) 2012 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.1.2
- * @author     Simon Kohlmeyer <simon.kohlmeyer@mayflower.de>
  */
 
 /**
@@ -26,14 +20,8 @@
  *
  * This class implements a calendar backend for sabredav
  *
- * @category   PHProjekt
- * @package    Application
- * @subpackage Timecard
  * @copyright  Copyright (c) 2012 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.1.2
- * @author     Simon Kohlmeyer <simon.kohlmeyer@mayflower.de>
  */
 class Timecard_CalDAV_CalendarBackend extends Sabre_CalDAV_Backend_Abstract
 {

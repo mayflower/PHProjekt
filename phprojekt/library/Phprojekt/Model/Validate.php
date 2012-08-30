@@ -11,28 +11,16 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
- * @category   PHProjekt
- * @package    Phprojekt
- * @subpackage Model
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
- * @author     Gustavao Solt <solt@mayflower.de>
  */
 
 /**
  * This class recive some fields, the data and one class for check,
  * and will validate each field deppend on the type and other restrictions.
  *
- * @category   PHProjekt
- * @package    Phprojekt
- * @subpackage Model
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
- * @author     Gustavao Solt <solt@mayflower.de>
  */
 class Phprojekt_Model_Validate
 {

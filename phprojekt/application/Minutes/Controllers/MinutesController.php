@@ -11,27 +11,15 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
- * @category   PHProjekt
- * @package    Application
- * @subpackage Minutes
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.1.2
- * @author     Reno Reckling <reno.reckling@mayflower.de>
  */
 
 /**
  * Minutes Module Controller.
  *
- * @category   PHProjekt
- * @package    Application
- * @subpackage Minutes
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.1.2
- * @author     Reno Reckling <reno.reckling@mayflower.de>
  */
 class Minutes_MinutesController extends Phprojekt_RestController
 {

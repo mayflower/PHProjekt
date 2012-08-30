@@ -11,14 +11,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
- * @category   PHProjekt
- * @package    Phprojekt
- * @subpackage Model
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
- * @author     Eduardo Polidor <polidor@mayflower.de>
  */
 
 /**
@@ -26,14 +20,8 @@
  * All core components that donnot deal with a specific interface should use this interface
  * to interact with an object.
  *
- * @category   PHProjekt
- * @package    Phprojekt
- * @subpackage Model
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
- * @author     Eduardo Polidor <polidor@mayflower.de>
  */
 interface Phprojekt_Model_Interface extends Iterator
 {

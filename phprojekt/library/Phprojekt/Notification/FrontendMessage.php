@@ -11,27 +11,15 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
- * @category   PHProjekt
- * @package    Phprojekt
- * @subpackage Notification
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
- * @author     Martin Ruprecht <martin.ruprecht@mayflower.de>
  */
 
 /**
  * Notification Frontend Message class.
  *
- * @category   PHProjekt
- * @package    Phprojekt
- * @subpackage Notification
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
- * @author     Martin Ruprecht <martin.ruprecht@mayflower.de>
  */
 class Phprojekt_Notification_FrontendMessage extends Phprojekt_ActiveRecord_Abstract
 {

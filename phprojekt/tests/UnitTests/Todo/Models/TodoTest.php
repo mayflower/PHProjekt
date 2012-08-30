@@ -11,28 +11,16 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
- * @category   PHProjekt
- * @package    UnitTests
- * @subpackage Todo
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
- * @author     Mariano La Penna <mariano.lapenna@mayflower.de>
  */
 
 
 /**
  * Tests Todo Model class
  *
- * @category   PHProjekt
- * @package    UnitTests
- * @subpackage Todo
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
- * @author     Mariano La Penna <mariano.lapenna@mayflower.de>
  * @group      todo
  * @group      model
  * @group      todo-model

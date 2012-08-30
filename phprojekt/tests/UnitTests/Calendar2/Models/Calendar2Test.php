@@ -11,15 +11,9 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
- * @category   PHProjekt
- * @package    UnitTests
- * @subpackage Calendar2
  * @copyright  Copyright (c) 2011 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.1
  * @version    Release: 6.1.0
- * @author     Simon Kohlmeyer <simon.kohlmeyer@mayflower.de>
  */
 
 require_once 'Sabre.autoload.php';
@@ -27,15 +21,9 @@ require_once 'Sabre.autoload.php';
 /**
  * Tests Calendar2 Model
  *
- * @category   PHProjekt
- * @package    UnitTests
- * @subpackage Calendar2
  * @copyright  Copyright (c) 2011 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.1
  * @version    Release: 6.1.0
- * @author     Simon Kohlmeyer <simon.kohlmeyer@mayflower.de>
  * @group      calendar
  * @group      calendar2
  * @group      model

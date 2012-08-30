@@ -11,28 +11,16 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
- * @category   PHProjekt
- * @package    UnitTests
- * @subpackage Phprojekt
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
- * @author     Eduardo Polidor <polidor@mayflower.de>
  */
 
 
 /**
  * Tests Converter class
  *
- * @category   PHProjekt
- * @package    UnitTests
- * @subpackage Phprojekt
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
- * @author     Eduardo Polidor <polidor@mayflower.de>
  * @group      phprojekt
  * @group      converter
  * @group      json

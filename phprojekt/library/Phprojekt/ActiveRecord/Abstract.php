@@ -11,14 +11,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
- * @category   PHProjekt
- * @package    Phprojekt
- * @subpackage ActiveRecord
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
- * @author     David Soria Parra <soria_parra@mayflower.de>
  */
 
 /**
@@ -58,14 +52,8 @@
  *   A class is mapped to the database using the last part (after the last _)
  *   of the class name
  *
- * @category   PHProjekt
- * @package    Phprojekt
- * @subpackage ActiveRecord
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
- * @author     David Soria Parra <soria_parra@mayflower.de>
  */
 abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
 {
