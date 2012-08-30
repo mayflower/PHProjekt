@@ -1,6 +1,6 @@
 <?php
 /**
- * Project Migration
+ * Filemanager Migration
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -13,31 +13,32 @@
  *
  * @category   PHProjekt
  * @package    Application
- * @subpackage Project
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
+ * @subpackage Filemanager
+ * @copyright  Copyright (c) 2012 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
- * @since      File available since Release 6.1
- * @author     Reno Reckling <reno.reckling@mayflower.de>
+ * @since      File available since Release 6.1.5
+ * @author     Simon Kohlmeyer <simon.kohlmeyer@mayflower.de>
  */
 
 /**
- * Project Migration
+ * Filemanager Migration
  *
- * This is used to add the user_proxy table
+ * This is used to install the Cal2 tables and Convert the Calendar1 data to the
+ * new format.
  *
  * @category   PHProjekt
  * @package    Application
- * @subpackage Project
- * @copyright  Copyright (c) 2011 Mayflower GmbH (http://www.mayflower.de)
+ * @subpackage Filemanager
+ * @copyright  Copyright (c) 2012 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
- * @since      File available since Release 6.1.0
- * @author     Reno Reckling <reno.reckling@mayflower.de>
+ * @since      File available since Release 6.1.5
+ * @author     Simon Kohlmeyer <simon.kohlmeyer@mayflower.de>
  */
-class Project_Migration extends Phprojekt_Migration_Abstract
+class Filemanager_Migration extends Phprojekt_Migration_Abstract
 {
-    protected $_db;
+    private $_db;
 
     /**
      * Return the current module version.
@@ -65,35 +66,32 @@ class Project_Migration extends Phprojekt_Migration_Abstract
     {
         $this->_db = $db;
 
-        if (is_null($currentVersion)
-                || Phprojekt::compareVersion($currentVersion, '6.1.0-dev') < 0) {
-            $this->parseDbFile('Project');
-            Phprojekt::getInstance()->getCache()->clean(Zend_Cache::CLEANING_MODE_ALL);
-        }
         if (Phprojekt::compareVersion($currentVersion, '6.1.5') < 0) {
-            $this->_renameProjectsWithSameTitle();
-            $this->_makeTitleParentUniqueIndex();
+            $this->parseDbFile('Filemanager');
+            Phprojekt::getInstance()->getCache()->clean(Zend_Cache::CLEANING_MODE_ALL);
+            $this->_renameFilemanagersWithSameTitle();
+            $this->_makeTitleProjectUniqueIndex();
         }
     }
 
-    private function _renameProjectsWithSameTitle()
+    private function _renameFilemanagersWithSameTitle()
     {
         $this->_db->query(<<<HERE
-UPDATE project AS p
+UPDATE filemanager AS f
 JOIN (
     SELECT title, project_id
-    FROM project
+    FROM filemanager
     GROUP BY title, project_id
     HAVING COUNT(title) > 1
 ) AS c
-  ON p.title = c.title AND p.project_id = c.project_id
-SET p.title = CONCAT(p.title, ' (', p.id, ')')
+  ON f.title = c.title AND f.project_id = c.project_id
+SET f.title = CONCAT(f.title, ' (', f.id, ')')
 HERE
 );
     }
 
-    private function _makeTitleParentUniqueIndex()
+    private function _makeTitleProjectUniqueIndex()
     {
-        $this->_db->query('ALTER TABLE project ADD UNIQUE INDEX (title, project_id)');
+        $this->_db->query('ALTER TABLE filemanager ADD UNIQUE INDEX (title, project_id)');
     }
 }
