@@ -19,8 +19,6 @@
 /**
  * Tests Role class
  *
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  * @group      role
  * @group      model
  * @group      role-model

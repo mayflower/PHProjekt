@@ -19,9 +19,6 @@
 * Meta information about the Role model.
  *
  * The fields are hardcore.
- *
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  */
 class Phprojekt_Role_Information extends Phprojekt_ModelInformation_Default
 {

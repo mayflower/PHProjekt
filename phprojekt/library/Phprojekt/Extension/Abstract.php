@@ -17,9 +17,6 @@
 
 /**
  * Phprojekt Class for initialize the Zend Framework.
- *
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  */
 abstract class PHProjekt_Extension_Abstract {
     public function init() {

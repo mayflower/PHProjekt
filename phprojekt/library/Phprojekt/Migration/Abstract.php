@@ -26,9 +26,6 @@
  * More info about Extensions can be found in the files
  * library/Phprojekt/Extensions.php and
  * library/Phprojekt/Extension/Abstract.php.
- *
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  */
 abstract class Phprojekt_Migration_Abstract
 {

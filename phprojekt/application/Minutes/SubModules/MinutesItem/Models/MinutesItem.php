@@ -17,9 +17,6 @@
 
 /**
  * MinutesItem model class.
- *
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  */
 class Minutes_SubModules_MinutesItem_Models_MinutesItem extends Phprojekt_ActiveRecord_Abstract
     implements Phprojekt_Model_Interface

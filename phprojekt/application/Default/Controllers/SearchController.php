@@ -19,9 +19,6 @@
 /**
  * Search Controller.
  * The controller will get all the actions for return the search results.
- *
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  */
 class SearchController extends IndexController
 {

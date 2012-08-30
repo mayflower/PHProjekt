@@ -22,9 +22,6 @@
  * recurrence rule.
  *
  * The rrule format is defined in RFC 5545.
- *
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  */
 class Calendar2_Helper_Rrule
 {

@@ -17,9 +17,6 @@
 
 /**
  * A DBUnit test case framework.
- *
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  */
 abstract class DatabaseTest extends PHPUnit_Extensions_Database_TestCase {
     public function setUp () {

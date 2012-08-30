@@ -19,8 +19,6 @@
 /**
  * Tests Logs
  *
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  * @group      phprojekt
  * @group      log
  * @group      phprojekt-log
@@ -29,7 +27,6 @@ class Phprojekt_LogTest extends PHPUnit_Framework_TestCase
 {
     /**
      * Test wrong call
-     *
      */
     public function testWrongLog()
     {
@@ -42,7 +39,6 @@ class Phprojekt_LogTest extends PHPUnit_Framework_TestCase
 
     /**
      * Test wrong priority
-     *
      */
     public function testWrongPriority()
     {
@@ -55,7 +51,6 @@ class Phprojekt_LogTest extends PHPUnit_Framework_TestCase
 
     /**
      * Test wrong priority
-     *
      */
     public function testBiggestPriority()
     {
@@ -68,7 +63,6 @@ class Phprojekt_LogTest extends PHPUnit_Framework_TestCase
 
     /**
      * Normal cal
-     *
      */
     public function testLog()
     {

@@ -19,9 +19,6 @@
 /**
  * Filter provide a easy, chainable way to do pre filtering for databases.
  * It does the pre filtering by modifing a select statement.
- *
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  */
 abstract class Phprojekt_Filter_Abstract
 {

@@ -17,9 +17,6 @@
 
 /**
  * A generic interface to interact with ModelInformation.
- *
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  */
 interface Phprojekt_ModelInformation_Interface
 {

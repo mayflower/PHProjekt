@@ -17,9 +17,6 @@
 
 /**
  * Utility class to read Timecard models from SabreDAV VObjects.
- *
- * @copyright  Copyright (c) 2012 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  */
 class Timecard_Models_VObjectReader
 {

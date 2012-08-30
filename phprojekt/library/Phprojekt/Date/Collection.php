@@ -19,9 +19,6 @@
 /**
  * Class to hold a collection of dates.
  * These dates can also be automatically calculated from a iCal-rrule.
- *
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  */
 class Phprojekt_Date_Collection
 {

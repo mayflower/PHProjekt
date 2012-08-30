@@ -18,8 +18,6 @@
 /**
  * Tests Timecard Model VObjectReader class
  *
- * @copyright  Copyright (c) 2012 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  * @group      timecard
  * @group      model
  * @group      timecard-model

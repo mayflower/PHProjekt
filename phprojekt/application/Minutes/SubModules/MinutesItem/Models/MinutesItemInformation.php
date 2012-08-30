@@ -19,9 +19,6 @@
  * Meta information about the data provided by the MinutesItem model.
  *
  * The fields are hardcoded.
- *
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  */
 class Minutes_SubModules_MinutesItem_Models_MinutesItemInformation extends Phprojekt_ModelInformation_Default
 {

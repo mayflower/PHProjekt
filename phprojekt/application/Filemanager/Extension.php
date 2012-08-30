@@ -20,9 +20,6 @@
  *
  * This makes Filemanager_Migration available to the Phprojekt library through the
  * extension api.
- *
- * @copyright  Copyright (c) 2012 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  */
 
 class Filemanager_Extension extends Phprojekt_Extension_Abstract

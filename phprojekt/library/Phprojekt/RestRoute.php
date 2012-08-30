@@ -17,9 +17,6 @@
 
 /**
  * Extend Zend_Rest_Route to fit PHProjekt's module system.
- *
- * @copyright  Copyright (c) 2012 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  */
 class Phprojekt_RestRoute extends Zend_Rest_Route
 {

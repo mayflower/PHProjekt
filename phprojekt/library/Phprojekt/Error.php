@@ -28,9 +28,6 @@
  * When you get the errors, the array that contain it is deleted.
  * So you can add errors the times that you want,
  * but only get the errors one time.
- *
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  */
 class Phprojekt_Error
 {

@@ -19,9 +19,6 @@
 /**
  * Project-Role-User Relation.
  * Manage the relation between the Projects, the roles and the users.
- *
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  */
 class Project_Models_ProjectRoleUserPermissions extends Phprojekt_ActiveRecord_Abstract
 {

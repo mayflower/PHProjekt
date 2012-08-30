@@ -21,9 +21,6 @@
  * Tree class.
  *
  * Represents an node of a tree and provides iterator abilities.
- *
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  */
 class Phprojekt_Tree_Node_Database implements IteratorAggregate
 {

@@ -18,9 +18,6 @@
 /**
  * This class recive some fields, the data and one class for check,
  * and will validate each field deppend on the type and other restrictions.
- *
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  */
 class Phprojekt_Model_Validate
 {

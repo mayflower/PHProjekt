@@ -21,8 +21,6 @@ require_once 'Sabre.autoload.php';
 /**
  * Tests Calendar2 Model
  *
- * @copyright  Copyright (c) 2011 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  * @version    Release: 6.1.0
  * @group      calendar
  * @group      calendar2
@@ -99,7 +97,6 @@ HERE;
 
     /**
      * Test fromVObject with duration.
-     *
      */
     public function testFromVObjectWithDuration()
     {

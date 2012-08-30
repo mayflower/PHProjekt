@@ -20,9 +20,6 @@
  *
  * This is used to install the Cal2 tables and Convert the Calendar1 data to the
  * new format.
- *
- * @copyright  Copyright (c) 2012 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  */
 class Filemanager_Migration extends Phprojekt_Migration_Abstract
 {

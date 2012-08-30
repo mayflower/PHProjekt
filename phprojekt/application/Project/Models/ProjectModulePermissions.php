@@ -19,9 +19,6 @@
 /**
  * Project-Module Relation Model.
  * Manage the relation between the Projects and the active modules.
- *
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  */
 class Project_Models_ProjectModulePermissions extends Phprojekt_ActiveRecord_Abstract
 {

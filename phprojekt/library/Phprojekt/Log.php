@@ -39,9 +39,6 @@
  *
  * You can add in the configuration.php all of these types.
  * If the path to a log file is not defined, the class just drop the log.
- *
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  */
 class Phprojekt_Log extends Zend_Log
 {

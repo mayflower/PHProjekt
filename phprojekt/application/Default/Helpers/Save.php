@@ -17,9 +17,6 @@
 
 /**
  * Helper to save tree nodes and models.
- *
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  */
 final class Default_Helpers_Save
 {

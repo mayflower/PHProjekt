@@ -17,9 +17,6 @@
 
 /**
  * Role class.
- *
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  */
 class Phprojekt_Role_Role extends Phprojekt_ActiveRecord_Abstract implements Phprojekt_Model_Interface
 {

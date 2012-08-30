@@ -19,9 +19,6 @@
  * Calendar2 Time Helper
  *
  * Utility class that provides functions to handle Datetime and related objects.
- *
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  */
 class Calendar2_Helper_Time
 {

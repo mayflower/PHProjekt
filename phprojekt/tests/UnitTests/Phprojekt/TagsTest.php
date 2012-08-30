@@ -19,8 +19,6 @@
 /**
  * Tests for Tags
  *
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  * @group      phprojekt
  * @group      tags
  * @group      phprojekt-tags

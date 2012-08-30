@@ -19,9 +19,6 @@ require_once 'Sabre.autoload.php';
 
 /**
  * WebDAV Module Controller.
- *
- * @copyright  Copyright (c) 2011 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  */
 class WebDAV_IndexController extends IndexController
 {

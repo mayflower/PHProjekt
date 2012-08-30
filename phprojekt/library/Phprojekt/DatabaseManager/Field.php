@@ -17,9 +17,6 @@
 
 /**
  * Represent a field in an active record and hold additional information from the DatabaseManager.
- *
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  */
 class Phprojekt_DatabaseManager_Field
 {

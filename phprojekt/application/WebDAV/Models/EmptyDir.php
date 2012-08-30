@@ -20,9 +20,6 @@ require_once 'SabreDAV/lib/Sabre/VObject/includes.php';
  * WebDAV collection model.
  *
  * A dummy that serves as an empty, read-only directory.
- *
- * @copyright  Copyright (c) 2011 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  */
 class WebDAV_Models_EmptyDir extends Sabre_DAV_Directory
 {

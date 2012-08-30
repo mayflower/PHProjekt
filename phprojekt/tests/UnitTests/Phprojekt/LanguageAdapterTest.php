@@ -19,8 +19,6 @@
 /**
  * Tests for Language Adapter
  *
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  * @group      phprojekt
  * @group      language
  * @group      adapter

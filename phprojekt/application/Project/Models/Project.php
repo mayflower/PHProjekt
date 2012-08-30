@@ -20,9 +20,6 @@
  *
  * The class of each model return the data for show
  * on the list and the form view.
- *
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  */
 class Project_Models_Project extends Phprojekt_Item_Abstract
 {

@@ -18,8 +18,6 @@
 /**
  * Tests for Todo Index Controller
  *
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  * @group      todo
  * @group      controller
  * @group      todo-controller

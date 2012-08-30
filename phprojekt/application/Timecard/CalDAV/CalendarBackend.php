@@ -19,9 +19,6 @@
  * Timecard Caldav Calendarbackend
  *
  * This class implements a calendar backend for sabredav
- *
- * @copyright  Copyright (c) 2012 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  */
 class Timecard_CalDAV_CalendarBackend extends Sabre_CalDAV_Backend_Abstract
 {

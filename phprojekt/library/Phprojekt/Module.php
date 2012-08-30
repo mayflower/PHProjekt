@@ -17,9 +17,6 @@
 
 /**
  * Represents a module in PHProjekt and coordinates it's mapping to a database.
- *
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  */
 class Phprojekt_Module
 {

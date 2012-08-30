@@ -23,9 +23,6 @@
  *
  * The class provide the functions for manage the relation between
  * the user-tag relation and modules.
- *
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  */
 class Phprojekt_Tags_Modules extends Zend_Db_Table_Abstract
 {

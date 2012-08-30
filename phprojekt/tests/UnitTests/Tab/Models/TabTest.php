@@ -19,8 +19,6 @@
 /**
  * Tests Tab Model class
  *
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  * @group      tab
  * @group      model
  * @group      tab-model
@@ -29,7 +27,6 @@ class Phprojekt_TabModelTab_Test extends PHPUnit_Framework_TestCase
 {
     /**
      * Test valid method
-     *
      */
     public function testTabModelsTab()
     {

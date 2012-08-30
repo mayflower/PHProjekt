@@ -17,9 +17,6 @@
 
 /**
  * Convert a value for save in the table, and get it for the api.
- *
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  */
 class Phprojekt_Converter_Value
 {

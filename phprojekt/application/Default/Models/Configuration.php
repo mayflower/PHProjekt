@@ -16,9 +16,6 @@
  */
 /**
  * Connection to the global configuration table that stores administration settings.
- *
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  */
 class Default_Models_Configuration extends Phprojekt_ActiveRecord_Abstract
 {

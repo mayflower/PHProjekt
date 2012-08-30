@@ -17,9 +17,6 @@
 
 /**
  * Upgrade Controller.
- *
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  */
 class Core_UpgradeController extends Core_IndexController
 {
@@ -28,7 +25,6 @@ class Core_UpgradeController extends Core_IndexController
      *
      * If the user is an admin and we need upgrades, print a form.
      * Else, print a message depending on the situation.
-     *
      */
     public function indexAction()
     {

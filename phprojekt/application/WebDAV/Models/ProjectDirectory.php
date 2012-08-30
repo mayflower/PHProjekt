@@ -19,9 +19,6 @@
  * WebDAV collection model.
  *
  * A directory in the webdav structure. Maps to a project.
- *
- * @copyright  Copyright (c) 2011 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  */
 class WebDAV_Models_ProjectDirectory extends Sabre_DAV_Directory
 {

@@ -29,9 +29,6 @@
  * As it impelements a recursive iterator, the tree node iterator always iterates over
  * the children nodes.
  * See PHP-SPL for more information about the Iterator interfaces in PHP 5.2.x and above.
- *
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  */
 class Phprojekt_Tree_Node_Iterator implements RecursiveIterator
 {

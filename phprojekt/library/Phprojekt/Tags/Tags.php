@@ -21,9 +21,6 @@
  * Tags class.
  *
  * The class provide the functions for manage all the tags
- *
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  */
 class Phprojekt_Tags_Tags extends Zend_Db_Table_Abstract
 {

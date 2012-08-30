@@ -28,9 +28,6 @@
  * - When (timestamp).
  * - Where (Wich module).
  * - What (Wich action and wich field with old value and new value).
- *
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  */
 class Phprojekt_History extends Phprojekt_ActiveRecord_Abstract
 {

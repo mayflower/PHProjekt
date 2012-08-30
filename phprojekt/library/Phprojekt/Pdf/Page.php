@@ -20,9 +20,6 @@ require_once 'Zend/Pdf.php';
 
 /**
  * Phprojekt Class for PFD creation.
- *
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  */
 class Phprojekt_Pdf_Page extends Zend_Pdf_Page
 {

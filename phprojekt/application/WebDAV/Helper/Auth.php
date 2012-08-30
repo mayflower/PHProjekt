@@ -19,9 +19,6 @@
  * WebDAV Auth
  *
  * This class implements an authentication backend for sabredav
- *
- * @copyright  Copyright (c) 2011 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  */
 class WebDAV_Helper_Auth extends Sabre_DAV_Auth_Backend_AbstractBasic
 {

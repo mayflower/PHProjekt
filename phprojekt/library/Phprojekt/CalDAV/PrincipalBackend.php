@@ -19,9 +19,6 @@
  * Calendar2 Caldav Principal Backend
  *
  * This class implements a principal backend for sabredav
- *
- * @copyright  Copyright (c) 2012 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  */
 class Phprojekt_CalDAV_PrincipalBackend implements Sabre_DAVACL_IPrincipalBackend
 {

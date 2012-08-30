@@ -19,9 +19,6 @@
  * Parses a given String / Tree
  *
  * This class parses the usercreated filter to mysql conform statement
- *
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  */
 class Phprojekt_Filter_ParseTree
 {

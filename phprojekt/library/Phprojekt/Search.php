@@ -21,9 +21,6 @@
  * Search class.
  *
  * The class provide the functions for make a full text search.
- *
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  */
 class Phprojekt_Search
 {

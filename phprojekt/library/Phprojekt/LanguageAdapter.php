@@ -21,9 +21,6 @@
  *
  * The class is an extension of the Zend_Translate_Adapter that is an abstract class.
  * So we only must redefine the functions defined on the Original Adapter.
- *
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  */
 class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
 {

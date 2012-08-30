@@ -23,9 +23,6 @@
  * migration screen. This is because the check uses extensions, but must be done
  * before init is called, as the modules will assume that they have a current
  * database.
- *
- * @copyright  Copyright (c) 2011 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  */
 class Phprojekt_ExtensionsPlugin extends Zend_Controller_Plugin_Abstract
 {

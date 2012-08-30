@@ -20,9 +20,6 @@
  * PHProjekt lang files, we create an own Adapter for read these files.
  *
  * The class is an extension of the Zend_Translate and call the Phprojekt_LanguageAdapter.
- *
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  */
 class Phprojekt_Language extends Zend_Translate
 {

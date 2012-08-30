@@ -19,8 +19,6 @@
 /**
  * Tests for Database Nodes
  *
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  * @group      phprojekt
  * @group      treenode
  * @group      phprojekt-treenode

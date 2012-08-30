@@ -21,9 +21,6 @@
  * Class for manage the words on the Search.
  *
  * The class provide the functions for save/delete/search the words in the SearchWords table.
- *
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  */
 class Phprojekt_Search_Words extends Zend_Db_Table_Abstract
 {

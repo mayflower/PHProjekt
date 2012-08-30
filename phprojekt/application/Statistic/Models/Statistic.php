@@ -17,9 +17,6 @@
 
 /**
  * Statistic model class.
- *
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  */
 class Statistic_Models_Statistic
 {

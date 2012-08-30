@@ -17,9 +17,6 @@
 
 /**
  * Configurations for general stuff, applied to the system.
- *
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  */
 class Core_Models_General_Configuration extends Phprojekt_ModelInformation_Default
 {

@@ -17,9 +17,6 @@
 
 /**
  * A simple exception showing that something in setup the nodes went wrong.
- *
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  */
 class Phprojekt_Tree_Node_Exception extends Exception
 {

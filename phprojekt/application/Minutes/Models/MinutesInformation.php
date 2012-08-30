@@ -19,9 +19,6 @@
 /**
  * Meta information about the Minutes model. Acts as a layer over
  * database manager to filter readonly fields to yes if minutes is final.
- *
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  */
 class Minutes_Models_MinutesInformation extends Phprojekt_DatabaseManager
     implements Phprojekt_ModelInformation_Interface

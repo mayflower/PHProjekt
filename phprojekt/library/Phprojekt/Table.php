@@ -21,9 +21,6 @@
  * Table udpater for setup and database manager.
  *
  * The class provide the functions for create and alter tables on database.
- *
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  */
 class Phprojekt_Table
 {

@@ -18,9 +18,6 @@ require_once 'Sabre.autoload.php';
 
 /**
  * Calendar2 Module CalDAV Controller.
- *
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  */
 class Calendar2_CaldavController extends IndexController
 {

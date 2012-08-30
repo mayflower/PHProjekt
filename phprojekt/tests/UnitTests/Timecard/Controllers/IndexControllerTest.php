@@ -19,8 +19,6 @@
 /**
  * Tests for Index Controller
  *
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  * @group      timecard
  * @group      controller
  * @group      timecard-controller
@@ -176,7 +174,6 @@ class Timecard_IndexController_Test extends FrontInit
 
     /**
      * Test of json Save
-     *
      */
     public function testJsonSaveOverlapping()
     {
@@ -193,7 +190,6 @@ class Timecard_IndexController_Test extends FrontInit
 
     /**
      * Test of json Save
-     *
      */
     public function testJsonSaveJustStartOverlapping()
     {
@@ -209,7 +205,6 @@ class Timecard_IndexController_Test extends FrontInit
 
     /**
      * Test of json Save
-     *
      */
     public function testJsonSaveJustEndOverlapping()
     {

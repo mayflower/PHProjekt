@@ -17,9 +17,6 @@
 
 /**
  * Exception class for ActiveRecord pattern.
- *
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  */
 class Phprojekt_ActiveRecord_Exception extends Exception
 {

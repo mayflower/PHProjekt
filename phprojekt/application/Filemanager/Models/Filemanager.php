@@ -17,9 +17,6 @@
 
 /**
  * Filemanager model class.
- *
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  */
 class Filemanager_Models_Filemanager extends Phprojekt_Item_Abstract
 {

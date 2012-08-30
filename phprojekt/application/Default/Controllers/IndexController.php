@@ -24,9 +24,6 @@
  * The actions whose name starts with csv, returns the data in CSV format.
  * The controller calls the class model of the module, for process all the data.
  * </pre>
- *
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  */
 class IndexController extends Zend_Controller_Action
 {

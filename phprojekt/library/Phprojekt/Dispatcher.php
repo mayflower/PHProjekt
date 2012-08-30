@@ -17,9 +17,6 @@
 
 /**
  * Phprojekt own dispatcher.
- *
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  */
 class Phprojekt_Dispatcher extends Zend_Controller_Dispatcher_Standard
 {

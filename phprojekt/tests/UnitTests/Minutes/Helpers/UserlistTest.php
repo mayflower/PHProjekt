@@ -20,8 +20,6 @@
 /**
  * Tests for Minutes Userlist Helper
  *
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  * @version    Release: 6.1.0
  * @group      minutes
  * @group      helpers

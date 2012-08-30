@@ -35,8 +35,6 @@ class Phprojekt_HmabtmTest extends Phprojekt_ActiveRecord_Abstract
 /**
  * Tests for active records
  *
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  * @group      phprojekt
  * @group      activerecord
  * @group      phprojekt-activerecord
@@ -52,9 +50,6 @@ class Phprojekt_ActiveRecord_AbstractTest extends DatabaseTest
         return $this->createFlatXMLDataSet(dirname(__FILE__) . '/data.xml');
     }
 
-    /**
-     *
-     */
     public function testFetchAllWithJoins()
     {
         $project  = new Phprojekt_Project(array('db' => $this->sharedFixture));
@@ -74,9 +69,6 @@ class Phprojekt_ActiveRecord_AbstractTest extends DatabaseTest
         $this->assertEquals(5, count($projects));
     }
 
-    /**
-     *
-     */
     public function testCreateHasManyAndBelongsToMany()
     {
         $this->markTestIncomplete("functionality has to be reimplemented");
@@ -88,9 +80,6 @@ class Phprojekt_ActiveRecord_AbstractTest extends DatabaseTest
        $this->assertEquals('module_instance', $instance->getTableName());
     }
 
-    /*
-     *
-     */
     public function testDeleteHasManyAndBelongsToMany()
     {
         $authNamespace = new Zend_Session_Namespace('Phprojekt_Auth-login');
@@ -119,9 +108,6 @@ class Phprojekt_ActiveRecord_AbstractTest extends DatabaseTest
         $authNamespace->userId = $keepUser;
     }
 
-    /**
-     *
-     */
     public function testCreateProjectWithHasMany()
     {
         try {
@@ -258,9 +244,6 @@ class Phprojekt_ActiveRecord_AbstractTest extends DatabaseTest
         $this->assertTrue($instance->save());
     }
 
-    /**
-     *
-     */
     public function testDeleteProject ()
     {
         try {

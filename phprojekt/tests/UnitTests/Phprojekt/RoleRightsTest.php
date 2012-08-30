@@ -19,8 +19,6 @@
 /**
  * Tests for RoleRights
  *
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  * @group      phprojekt
  * @group      role
  * @group      rights
@@ -91,7 +89,6 @@ class Phprojekt_RoleRightsTest extends PHPUnit_Framework_TestCase
 
     /**
      * test whether right user is found.
-     *
      */
     public function testGetUser()
     {

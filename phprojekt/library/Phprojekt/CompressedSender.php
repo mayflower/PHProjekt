@@ -21,9 +21,6 @@
  * <pre>
  *  This class is a wrapper for a method of sending compressed data to the client.
  * </pre>
- *
- * @copyright  Copyright (c) 2011 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  */
 
 class Phprojekt_CompressedSender {

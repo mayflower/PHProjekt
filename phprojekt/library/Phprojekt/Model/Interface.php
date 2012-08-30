@@ -19,9 +19,6 @@
  * The model interface describes the smallest set of methods that must be provided by a model.
  * All core components that donnot deal with a specific interface should use this interface
  * to interact with an object.
- *
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  */
 interface Phprojekt_Model_Interface extends Iterator
 {

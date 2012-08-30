@@ -20,9 +20,6 @@ require_once 'Sabre.autoload.php';
  * Calendar2 model class.
  *
  * An object of this class corresponds to a series of objects.
- *
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  */
 class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
 {

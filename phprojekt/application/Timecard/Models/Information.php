@@ -24,9 +24,6 @@
  * is made from the given model.
  *
  * The fields are hardcore.
- *
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  */
 class Timecard_Models_Information extends Phprojekt_ModelInformation_Default
 {

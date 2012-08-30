@@ -21,9 +21,6 @@
  * Meta information about the Calendar2 model. Acts as a layer over database
  * manager to filter readonly fields to yes if the event is from other
  * participant.
- *
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  */
 class Calendar2_Models_CalendarInformation extends Phprojekt_ModelInformation_Default
 {

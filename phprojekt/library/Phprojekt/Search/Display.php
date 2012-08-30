@@ -21,9 +21,6 @@
  * Display Searchs class.
  *
  * The class provide the functions for display the item data of the results
- *
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  */
 class Phprojekt_Search_Display extends Zend_Db_Table_Abstract
 {

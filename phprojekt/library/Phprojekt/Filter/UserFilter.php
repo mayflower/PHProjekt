@@ -23,9 +23,6 @@
  *
  * Represents a where user where clause filter and provides
  * furthermore chaining abilities from the abstract.
- *
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  */
 class Phprojekt_Filter_UserFilter extends Phprojekt_Filter_Abstract
 {

@@ -19,9 +19,6 @@
  * Project Migration
  *
  * This is used to add the user_proxy table
- *
- * @copyright  Copyright (c) 2011 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  */
 class Project_Migration extends Phprojekt_Migration_Abstract
 {

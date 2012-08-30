@@ -51,9 +51,6 @@
  * Naming Convention:
  *   A class is mapped to the database using the last part (after the last _)
  *   of the class name
- *
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  */
 abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
 {

@@ -19,9 +19,6 @@
 /**
  * This class manage the rights for each item per user.
  * Return and save the rights using the moduleId-itemId relation.
- *
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  */
 class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
 {

@@ -23,9 +23,6 @@
  *
  * The class provide the functions for manage the relation between
  * tags and users.
- *
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  */
 class Phprojekt_Tags_Users extends Zend_Db_Table_Abstract
 {

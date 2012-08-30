@@ -20,9 +20,6 @@
  *
  * This makes Calendar2_Migration available to the Phprojekt library through the
  * extension api.
- *
- * @copyright  Copyright (c) 2011 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  */
 
 class Calendar2_Extension extends Phprojekt_Extension_Abstract

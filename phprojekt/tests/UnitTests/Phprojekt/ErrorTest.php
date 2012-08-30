@@ -19,8 +19,6 @@
 /**
  * Tests for Errors
  *
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  * @group      phprojekt
  * @group      error
  * @group      phprojekt-error
@@ -29,7 +27,6 @@ class Phprojekt_ErrorTest extends PHPUnit_Framework_TestCase
 {
     /**
      * Test for get errors
-     *
      */
     public function testErrors()
     {

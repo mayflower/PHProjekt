@@ -18,9 +18,6 @@
 /**
  * This Exception should be thrown by a Migration object after a failed upgrade
  * when the original state cannot be recovered.
- *
- * @copyright  Copyright (c) 2011 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  */
 class Phprojekt_Migration_IKilledTheDatabaseException extends Exception
 {

@@ -19,9 +19,6 @@
  * Calendar2 Notification class.
  *
  * This class extends PHProjekt's default notification class because of some special requirements for calendar2.
- *
- * @copyright  Copyright (c) 2011 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  */
 class Calendar2_Models_Notification extends Phprojekt_Notification
 {

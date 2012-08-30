@@ -21,9 +21,6 @@
  * An own class loader that reads the class files from the
  * /application directory or from the Zend library directory depending
  * on the name of the class.
- *
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  */
 class Phprojekt_Loader extends Zend_Loader
 {

@@ -31,8 +31,6 @@ class Customized_Project extends Project_Models_Project
 /**
  * Tests for items
  *
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  * @group      phprojekt
  * @group      item
  * @group      phprojekt-item

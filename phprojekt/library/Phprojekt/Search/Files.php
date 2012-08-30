@@ -23,9 +23,6 @@
  *
  * The class provide the functions for read different type of files
  * and get all the words for save.
- *
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
  */
 class Phprojekt_Search_Files
 {
