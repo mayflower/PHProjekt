@@ -76,7 +76,8 @@ class Filemanager_Migration extends Phprojekt_Migration_Abstract
 
     private function _renameFilemanagersWithSameTitle()
     {
-        $this->_db->query(<<<HERE
+        $this->_db->query(
+<<<HERE
 UPDATE filemanager AS f
 JOIN (
     SELECT title, project_id
