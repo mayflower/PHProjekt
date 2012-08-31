@@ -106,7 +106,7 @@ final class Default_Helpers_Upload
             $md5name                        = md5(mt_rand() . time());
             $addedFile                     = array(
                 'md5' => $md5name,
-                'name' => $_FILES['uploadedFile']['name']
+                'name' => self::_makeUniqueName($_FILES['uploadedFile']['name'], $files)
             );
             $_FILES['uploadedFile']['name'] = $md5name;
         }
@@ -133,6 +133,46 @@ final class Default_Helpers_Upload
 
         self::_setSessionFiles($files, $field);
         return $files;
+    }
+
+    private static function _makeUniqueName($name, $otherFiles)
+    {
+        if (!self::_nameExistsInFilesArray($name, $otherFiles)) {
+            return $name;
+        }
+
+        return $name . ' (' . self::_nextFreeFilenameIndex($name, $otherFiles) . ')';
+    }
+
+    private static function _nameExistsInFilesArray($name, $files)
+    {
+        foreach ($files as $entry) {
+            if ($entry['name'] === $name) {
+                return true;
+            }
+
+        }
+        return false;
+    }
+
+    private static function _nextFreeFilenameIndex($name, $otherFiles)
+    {
+        $relevant = array();
+        foreach ($otherFiles as $entry) {
+            if (stripos($entry['name'], $name . ' (') === 0) {
+                $relevant[] = $entry['name'];
+            }
+        }
+
+        $highestIndex = 0;
+        foreach ($relevant as $file) {
+            $matches = array();
+            if (preg_match('/\((\d+)\)$/', $file, $matches) === 1) {
+                $highestIndex = max($highestIndex, $matches[1]);
+            }
+        }
+
+        return $highestIndex + 1;
     }
 
     /**
