@@ -25,7 +25,7 @@
 
     <filter>
         <whitelist>
-            <directory>application</directory>
+            <directory>phprojekt/application</directory>
             <directory>phprojekt/library/Phprojekt</directory>
             <file>phprojekt/library/Phprojekt.php</file>
         </whitelist>

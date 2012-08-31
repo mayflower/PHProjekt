@@ -51,6 +51,38 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
     protected $_validate = null;
 
     /**
+     * Overwrite save to set the uri if it's not already set and recalculate the minutes.
+     */
+    public function save()
+    {
+        // Prevent http://jira.opensource.mayflower.de/jira/browse/PHPROJEKT-450
+        if (is_null($this->notes)) {
+            $this->notes = '';
+        }
+
+        if (empty($this->endTime)) {
+            $this->minutes = null;
+        } else {
+            $start         = new Datetime($this->startDatetime);
+            $end           = new Datetime(substr($this->startDatetime, 0, 11) . $this->endTime);
+            $this->minutes = floor (($end->getTimestamp() - $start->getTimestamp()) / 60);
+        }
+
+        if (empty($this->uid)) {
+            $this->uid = Phprojekt::generateUniqueIdentifier();
+        }
+
+        if (empty($this->uri)) {
+            $this->uri = $this->uid;
+        }
+
+        if (!$this->projectId) {
+            $this->projectId = 1;
+        }
+
+        return parent::save();
+    }
+    /**
      * Constructor initializes additional Infomanager.
      *
      * @param array $db Configuration for Zend_Db_Table.
@@ -319,7 +351,6 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
         return array('data' => $datas);
     }
 
-
     /**
      * Return an array with all the bookings in the day
      *
@@ -443,5 +474,17 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
         } else {
             return false;
         }
+    }
+
+    /**
+     * Retrieves the timecard entry with the given uri
+     */
+    public function findByUri($uri)
+    {
+        $fetch = $this->fetchAll(Phprojekt::getInstance()->getDb()->quoteInto('uri = ?', $uri));
+        if (!$fetch) {
+            return false;
+        }
+        return $fetch[0];
     }
 }

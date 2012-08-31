@@ -162,7 +162,8 @@ CREATE TABLE `filemanager` (
   `comments` text,
   `project_id` int(11) NOT NULL,
   `files` text NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `title` (`title`, `project_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -448,7 +449,8 @@ CREATE TABLE `project` (
   `hourly_wage_rate` varchar(10) DEFAULT NULL,
   `budget` varchar(10) DEFAULT NULL,
   `contact_id` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `title` (`title`, `project_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -655,6 +657,8 @@ CREATE TABLE `timecard` (
   `notes` text,
   `module_id` int(11) DEFAULT '1',
   `item_id` int(11) DEFAULT NULL,
+  `uri` varchar(255) NOT NULL,
+  `uid` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;

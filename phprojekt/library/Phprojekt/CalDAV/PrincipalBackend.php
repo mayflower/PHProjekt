@@ -1,6 +1,6 @@
 <?php
 /**
- * Calendar2 Caldav Principal Backend
+ * Caldav Principal Backend
  *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -12,30 +12,30 @@
  * Lesser General Public License for more details.
  *
  * @category   PHProjekt
- * @package    Application
- * @subpackage Calendar2
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
+ * @package    PHProjekt
+ * @subpackage CalDAV
+ * @copyright  Copyright (c) 2012 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
- * @since      File available since Release 6.1
+ * @since      File available since Release 6.1.2
  * @author     Simon Kohlmeyer <simon.kohlmeyer@mayflower.de>
  */
 
 /**
  * Calendar2 Caldav Principal Backend
  *
- * This class implements a principan backend for sabredav
+ * This class implements a principal backend for sabredav
  *
  * @category   PHProjekt
- * @package    Application
- * @subpackage Calendar2
- * @copyright  Copyright (c) 2011 Mayflower GmbH (http://www.mayflower.de)
+ * @package    PHProjekt
+ * @subpackage CalDAV
+ * @copyright  Copyright (c) 2012 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
  * @link       http://www.phprojekt.com
- * @since      File available since Release 6.1.0
+ * @since      File available since Release 6.1.2
  * @author     Simon Kohlmeyer <simon.kohlmeyer@mayflower.de>
  */
-class Calendar2_CalDAV_PrincipalBackend implements Sabre_DAVACL_IPrincipalBackend
+class Phprojekt_CalDAV_PrincipalBackend implements Sabre_DAVACL_IPrincipalBackend
 {
     public function getPrincipalsByPrefix($prefixPath)
     {
@@ -62,20 +62,17 @@ class Calendar2_CalDAV_PrincipalBackend implements Sabre_DAVACL_IPrincipalBacken
 
     public function getGroupMemberSet($principal)
     {
-        // TODO: Implement me
         throw new Exception('not implemented. $principal = ' . $principal);
     }
 
     public function getGroupMembership($principal)
     {
-        // TODO: Implement me
         return array();
     }
 
     public function setGroupMemberSet($principal, array $members)
     {
-        // TODO: Implement me
-        throw new Exception('not implemented3. $principal = ' . $principal);
+        throw new Exception('not implemented. $principal = ' . $principal);
     }
 
     public function updatePrincipal($path, $mutations)
