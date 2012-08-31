@@ -35,4 +35,34 @@
  */
 class Filemanager_Models_Filemanager extends Phprojekt_Item_Abstract
 {
+    public function recordValidate()
+    {
+        return parent::recordValidate() && $this->_validateFilenamesAreUnique();
+    }
+
+    private function _validateFilenamesAreUnique()
+    {
+        $fileEntries = explode('||', $this->files);
+
+        $nameFound = array();
+        foreach ($fileEntries as $entry) {
+            list($hash, $name) = explode('|', $entry, 2);
+            if (array_key_exists($name, $nameFound)) {
+                $this->_validate->error->addError(
+                    array(
+                        'field' => 'files',
+                        'label' => Phprojekt::getInstance()->translate('Upload'),
+                        'message' => Phprojekt::getInstance()->translate('Filenames must be unique, ')
+                                     . "\"$name\""
+                                     . Phprojekt::getInstance()->translate(' appears multiple times.')
+                    )
+                );
+                return false;
+            } else {
+                $nameFound[$name] = true;
+            }
+        }
+
+        return true;
+    }
 }
