@@ -1,7 +1,5 @@
 <?php
 /**
- * Default Controller.
- *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 3 as published by the Free Software Foundation
@@ -11,14 +9,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
- * @category   PHProjekt
- * @package    Application
- * @subpackage Default
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
- * @author     David Soria Parra <soria_parra@mayflower.de>
  */
 
 /**
@@ -30,15 +22,6 @@
  * The actions whose name starts with csv, returns the data in CSV format.
  * The controller calls the class model of the module, for process all the data.
  * </pre>
- *
- * @category   PHProjekt
- * @package    Application
- * @subpackage Default
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
- * @author     David Soria Parra <soria_parra@mayflower.de>
  */
 class IndexController extends Zend_Controller_Action
 {
@@ -412,10 +395,8 @@ class IndexController extends Zend_Controller_Action
      *
      * Each action defines in the array:
      * <pre>
-     *  - target: {@link TARGET_ACTION_MULTIPLE} or {@link TARGET_ACTION_SIMPLE}.
      *  - action: Name of the action that will process ids.
      *  - label:  Display for the action.
-     *  - mode:   {@link MODE_ACTION_XHR} or {@link MODE_ACTION_WINDOW}.
      *  - class:  Name of the class for display the icon.
      * </pre>
      *
@@ -909,10 +890,8 @@ class IndexController extends Zend_Controller_Action
      *
      * Each action defines in the array:
      * <pre>
-     *  - target: {@link TARGET_ACTION_MULTIPLE} or {@link TARGET_ACTION_SIMPLE}.
      *  - action: Name of the action that will process ids.
      *  - label:  Display for the action.
-     *  - mode:   {@link MODE_ACTION_XHR} or {@link MODE_ACTION_WINDOW}.
      *  - class:  Name of the class for display the icon.
      * </pre>
      *

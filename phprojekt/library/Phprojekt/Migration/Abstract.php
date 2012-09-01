@@ -1,8 +1,5 @@
 <?php
 /**
- * Provides modules with the possibility to perform upgrade actions on minor
- * version changes.
- *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 3 as published by the Free Software Foundation
@@ -12,14 +9,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
- * @category   PHProjekt
- * @package    Phprojekt
- * @subpackage Migration
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.1.0
- * @author     Simon Kohlmeyer <simon.kohlmeyer@mayflower.de>
  */
 
 /**
@@ -32,15 +23,6 @@
  * More info about Extensions can be found in the files
  * library/Phprojekt/Extensions.php and
  * library/Phprojekt/Extension/Abstract.php.
- *
- * @category   PHProjekt
- * @package    Phprojekt
- * @subpackage Migration
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.1.0
- * @author     Simon Kohlmeyer <simon.kohlmeyer@mayflower.de>
  */
 abstract class Phprojekt_Migration_Abstract
 {
