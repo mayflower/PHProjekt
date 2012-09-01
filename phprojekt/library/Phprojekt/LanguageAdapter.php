@@ -95,7 +95,7 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
      * where $key is the string to be translated and $value is the translated string.
      *
      * Since is not nessesary load the file in each request,
-     * we use sessions for save the langs translations.
+     * we use the cache to save the langs translations.
      * And also have an array with the already loaded languages for not load a same file two times.
      *
      * @param string             $data    Path to the default translation file.
@@ -501,10 +501,10 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
      */
     public static function getLanguageList()
     {
-        // Keep the list in the session
-        $sessionName           = 'Phprojekt_LanguageAdapter-getLanguageList';
-        $languageListNamespace = new Zend_Session_Namespace($sessionName);
-        if (!isset($languageListNamespace->list)) {
+        $cacheId = "Phprojekt_LanguageAdapter__getLanguageList";
+        $cache   = Phprojekt::getInstance()->getCache();
+
+        if (!$cache->test($cacheId)) {
             $reflect   = new ReflectionClass('Phprojekt_LanguageAdapter');
             $constants = $reflect->getConstants();
             $languages = array();
@@ -533,9 +533,11 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
                 }
             }
             asort($languages);
-            $languageListNamespace->list = $languages;
+            $cache->save($languages, $cacheId);
+        } else {
+            $languages = $cache->load($cacheId);
         }
 
-        return $languageListNamespace->list;
+        return $languages;
     }
 }

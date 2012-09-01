@@ -184,24 +184,6 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
             $where = sprintf('module_id = 1 AND item_id = %d AND user_id NOT IN (%s)', $projectId,
                 implode(",", $users));
             $itemRights->delete($where);
-
-            // Reset access by module-item-user
-            foreach ($users as $userId) {
-                // Reset cache
-                $sessionName = 'Phprojekt_Item_Rights-getItemRight' . '-1-' . $projectId . '-' . $userId;
-                $rightNamespace = new Zend_Session_Namespace($sessionName);
-                $rightNamespace->unsetAll();
-            }
-
-            // Reset access by module-item
-            $sessionName    = 'Phprojekt_Item_Rights-getUsersRights' . '-1-' . $projectId;
-            $rightNamespace = new Zend_Session_Namespace($sessionName);
-            $rightNamespace->unsetAll();
-
-            // Reset users by project
-            $sessionName = 'Phprojekt_User_User-getAllowedUsers' . '-' . $projectId;
-            $rightNamespace   = new Zend_Session_Namespace($sessionName);
-            $rightNamespace->unsetAll();
         }
     }
 
