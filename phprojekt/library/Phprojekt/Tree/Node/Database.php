@@ -179,11 +179,6 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
             }
 
             $object = $this;
-
-            // Delete the session for re-calculate the rights
-            $sessionName     = 'Phprojekt_Tree_Node_Database-applyRights';
-            $rightsNamespace = new Zend_Session_Namespace($sessionName);
-            $rightsNamespace->unsetAll();
         }
 
         return $this->applyRights($object);

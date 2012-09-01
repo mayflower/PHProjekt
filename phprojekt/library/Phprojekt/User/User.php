@@ -181,18 +181,6 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
      */
     public function save()
     {
-        // Reset users by project cache
-        $activeRecord = new Project_Models_Project();
-        $tree         = new Phprojekt_Tree_Node_Database($activeRecord, 1);
-        $tree         = $tree->setup();
-        foreach ($tree as $node) {
-            $sessionName = 'Phprojekt_User_User-getAllowedUsers' . '-' . (int) $node->id;
-            $namespace   = new Zend_Session_Namespace($sessionName);
-            if (isset($namespace->users)) {
-                $namespace->unsetAll();
-            }
-        }
-
         if ($this->id == 0) {
             if (parent::save()) {
                 // adding default values
@@ -393,21 +381,13 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
      */
     public function getAllowedUsers()
     {
-        // Cache the query
-        $sessionName    = 'Phprojekt_User_User-getAllowedUsers' . '-' . (int) Phprojekt::getCurrentProjectId();
-        $usersNamespace = new Zend_Session_Namespace($sessionName);
+        $where  = sprintf('status = %s', $this->getAdapter()->quote('A'));
+        $result = $this->fetchAll($where);
+        $values = array();
 
-        if (!isset($usersNamespace->users)) {
-            $where       = sprintf('status = %s', $this->getAdapter()->quote('A'));
-            $result      = $this->fetchAll($where);
-            $values      = array();
-            foreach ($result as $node) {
-                $values[] = array('id'   => (int) $node->id,
-                                  'name' => $node->displayName);
-            }
-            $usersNamespace->users = $values;
+        foreach ($result as $node) {
+            $values[] = array('id'   => (int) $node->id, 'name' => $node->displayName);
         }
-
-        return $usersNamespace->users;
+        return $values;
     }
 }
