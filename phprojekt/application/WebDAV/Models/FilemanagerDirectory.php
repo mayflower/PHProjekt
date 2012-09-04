@@ -82,6 +82,9 @@ class WebDAV_Models_FilemanagerDirectory extends Sabre_DAV_Collection
         return array_key_exists($name, $this->_files);
     }
 
+    /**
+     * Called when the user creates a new file in this directory.
+     */
     public function createFile($name, $data = NULL)
     {
         $hash = md5(mt_rand() . time());
@@ -104,6 +107,9 @@ class WebDAV_Models_FilemanagerDirectory extends Sabre_DAV_Collection
 
     }
 
+    /**
+     * Called when the user creates a new subdirectory of this directory.
+     */
     public function createDirectory($name)
     {
         throw new Sabre_DAV_Exception_NotImplemented(
@@ -111,11 +117,17 @@ class WebDAV_Models_FilemanagerDirectory extends Sabre_DAV_Collection
         );
     }
 
+    /**
+     * Returns the name of this directory.
+     */
     public function getName()
     {
         return $this->_filemanager->title;
     }
 
+    /**
+     * Returns all elements in this directory.
+     */
     public function getChildren()
     {
         $children = array();
@@ -125,12 +137,18 @@ class WebDAV_Models_FilemanagerDirectory extends Sabre_DAV_Collection
         return $children;
     }
 
+    /**
+     * Retnames this directory.
+     */
     public function setName($name)
     {
         $this->_filemanager->title = $name;
         $this->_filemanager->save();
     }
 
+    /**
+     * Deletes this directory.
+     */
     public function delete()
     {
         $this->_filemanager->delete();

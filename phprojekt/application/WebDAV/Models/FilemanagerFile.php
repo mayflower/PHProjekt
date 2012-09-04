@@ -41,6 +41,14 @@ class WebDAV_Models_FilemanagerFile extends Sabre_DAV_FS_File
     protected $_hash;
     protected $_filemanager;
 
+    /**
+     * Constructor
+     *
+     * @param string $name The name of the file to represent
+     * @param string $hash The md5 hash of the file to represent
+     * @param Filemanager_Models_Filemanager
+     *               $filemanager The filemanager object that the file is a part of.
+     */
     public function __construct($name, $hash, $filemanager)
     {
         $this->_name        = $name;
@@ -50,11 +58,17 @@ class WebDAV_Models_FilemanagerFile extends Sabre_DAV_FS_File
         parent::__construct(Phprojekt::getInstance()->getConfig()->uploadPath . '/' . $hash);
     }
 
+    /**
+     * Returns the name of this file.
+     */
     public function getName()
     {
         return $this->_name;
     }
 
+    /**
+     * Deletes this file.
+     */
     public function delete()
     {
         $filestring = $this->_filemanager->files;
@@ -65,6 +79,9 @@ class WebDAV_Models_FilemanagerFile extends Sabre_DAV_FS_File
         $this->_filemanager->save();
     }
 
+    /**
+     * Renames this file.
+     */
     public function setName($name)
     {
         $this->_filemanager->files = str_replace(

@@ -75,11 +75,17 @@ class WebDAV_Models_ProjectDirectory extends Sabre_DAV_Collection
         return in_array($name, array(WebDAV_Constants::SUBPROJECTS_NAME, WebDAV_Constants::FILEMANAGERS_NAME));
     }
 
+    /**
+     * Creates a file in this directory.
+     */
     public function createFile($name, $data = NULL)
     {
         throw new Sabre_DAV_Exception_NotImplemented('Files can only be created in Filemanager directories');
     }
 
+    /**
+     * Creates a subdirectory of this one.
+     */
     public function createDirectory($name)
     {
         throw new Sabre_DAV_Exception_NotImplemented(
@@ -87,11 +93,17 @@ class WebDAV_Models_ProjectDirectory extends Sabre_DAV_Collection
         );
     }
 
+    /**
+     * Returns the name of this directory.
+     */
     public function getName()
     {
         return $this->_project->title;
     }
 
+    /**
+     * Returns all elements in this directory.
+     */
     public function getChildren()
     {
         return array(
