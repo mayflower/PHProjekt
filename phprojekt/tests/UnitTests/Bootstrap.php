@@ -26,3 +26,4 @@ $authNamespace         = new Zend_Session_Namespace('Phprojekt_Auth-login');
 $authNamespace->userId = 1;
 $authNamespace->admin  = 1;
 
+Phprojekt::getInstance()->getDb()->query('SET sql_mode="STRICT_ALL_TABLES"');
