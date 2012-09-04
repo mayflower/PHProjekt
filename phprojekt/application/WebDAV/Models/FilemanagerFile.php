@@ -71,12 +71,9 @@ class WebDAV_Models_FilemanagerFile extends Sabre_DAV_FS_File
      */
     public function delete()
     {
-        $filestring = $this->_filemanager->files;
-        $filestring = str_replace($this->_hash . '|' . $this->_name, '', $filestring);
-        $filestring = str_replace('||||', '||', $filestring);
-
-        $this->_filemanager->files = $filestring;
-        $this->_filemanager->save();
+        $hashesToNames = $this->_getHashesToNames();
+        unset ($hashesToNames[$this->_hash]);
+        $this->_setHashesToNames($hashesToNames);
     }
 
     /**
@@ -84,12 +81,55 @@ class WebDAV_Models_FilemanagerFile extends Sabre_DAV_FS_File
      */
     public function setName($name)
     {
-        $this->_filemanager->files = str_replace(
-            $this->_hash . '|' . $this->_name,
-            $this->_hash . '|' . $name,
-            $this->_filemanager->files
-        );
-        $this->_filemanager->save();
+        $hashesToNames = $this->_getHashesToNames();
+        $hashesToNames[$this->_hash] = $name;
+        $this->_setHashesToNames($hashesToNames);
 
+        $this->_name = $name;
+
+    }
+
+    /**
+     * Returns the filemanager's files as an array with the hashes as keys and the names as values.
+     */
+    private function _getHashesToNames()
+    {
+        return self::_filesStringToHashNameMap($this->_filemanager->files);
+    }
+
+    /**
+     * Sets the filemanager's files to the given value.
+     *
+     * The structure is assumed to be like the one returned by _getHashesToNames.
+     */
+    private function _setHashesToNames($hashesToNamesMap)
+    {
+        $this->_filemanager->files = self::_hashNameMapToFilesString($hashesToNamesMap);
+        $this->_filemanager->save();
+    }
+
+    /**
+     * Converts our serialization format to a array of hashes to names.
+     */
+    private static function _filesStringToHashNameMap($string)
+    {
+        $ret = array();
+        foreach (explode('||', $string) as $entry) {
+            list($hash, $name) = explode('|', $entry, 2);
+            $ret[$hash] = $name;
+        }
+        return $ret;
+    }
+
+    /**
+     * Converts an array of hashes to names to our serialization format.
+     */
+    private static function _hashNameMapToFilesString($hashNames)
+    {
+        $entries = array();
+        foreach ($hashNames as $hash => $name) {
+            $entries[] = $hash . '|' . $name;
+        }
+        return implode('||', $entries);
     }
 }
