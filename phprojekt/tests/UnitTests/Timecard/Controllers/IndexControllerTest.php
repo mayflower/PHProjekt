@@ -28,7 +28,9 @@ class Timecard_IndexController_Test extends FrontInit
         return new PHPUnit_Extensions_Database_DataSet_CompositeDataSet(
             array(
                 $this->createFlatXMLDataSet(dirname(__FILE__) . '/../../common.xml'),
-                $this->createFlatXMLDataSet(dirname(__FILE__) . '/../data.xml')));
+                $this->createFlatXMLDataSet(dirname(__FILE__) . '/../data.xml')
+            )
+        );
     }
 
     /**

@@ -23,11 +23,14 @@
  */
 class Todo_Models_Todo_Test extends DatabaseTest
 {
-    protected function getDataSet() {
+    protected function getDataSet()
+    {
         return new PHPUnit_Extensions_Database_DataSet_CompositeDataSet(
             array(
                 $this->createFlatXMLDataSet(dirname(__FILE__) . '/../../common.xml'),
-                $this->createFlatXMLDataSet(dirname(__FILE__) . '/../data.xml')));
+                $this->createFlatXMLDataSet(dirname(__FILE__) . '/../data.xml')
+            )
+        );
     }
 
     /**

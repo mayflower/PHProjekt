@@ -35,7 +35,8 @@
  */
 class Statistic_IndexController_Test extends FrontInit
 {
-    protected function getDataSet() {
+    protected function getDataSet()
+    {
         return new PHPUnit_Extensions_Database_DataSet_CompositeDataSet(
             array(
                 $this->createFlatXMLDataSet(dirname(__FILE__) . '/../../common.xml'),

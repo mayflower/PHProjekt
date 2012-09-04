@@ -4,7 +4,7 @@ ini_set("magic_quotes_runtime", 0);
 ini_set("magic_quotes_sybase", 0);
 
 $config = "configuration.php";
-if(getenv('P6_TEST_CONFIG')) {
+if (getenv('P6_TEST_CONFIG')) {
     $config = getenv('P6_TEST_CONFIG');
 }
 
