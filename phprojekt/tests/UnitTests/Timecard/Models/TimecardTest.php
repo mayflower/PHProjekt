@@ -49,7 +49,7 @@ class Timecard_Models_Timecard_Test extends DatabaseTest
         $timecardModel->find(7);
         $this->assertEquals("2009-05-17 09:00:00", $timecardModel->startDatetime);
         $this->assertEquals("13:00:00", $timecardModel->endTime);
-        $this->assertEquals("0", $timecardModel->minutes);
+        $this->assertEquals("240", $timecardModel->minutes);
         $this->assertEquals("1", $timecardModel->projectId);
         $this->assertEquals("My note", $timecardModel->notes);
     }
