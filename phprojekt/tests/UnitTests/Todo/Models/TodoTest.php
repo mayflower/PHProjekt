@@ -41,7 +41,7 @@ class Todo_Models_Todo_Test extends DatabaseTest
         $todoModel = new Todo_Models_Todo();
         $todoModel->find(1);
         $response = $todoModel->getNotification()->getTo();
-        $expected = array();
+        $expected = array(2);
         $this->assertEquals($expected, $response);
 
         $todoModel->userId = 2;
