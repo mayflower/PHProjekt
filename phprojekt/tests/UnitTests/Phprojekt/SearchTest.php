@@ -40,7 +40,7 @@ class Phprojekt_SearchTest extends DatabaseTest
     public function testIndex()
     {
         $project = new Project_Models_Project(array('db' => $this->sharedFixture));
-        $project->title = 'CCÄC DDÖD TTÜT';
+        $project->title = 'CCÃ„C DDÃ–D TTÃœT';
         $project->path = '/1/';
         $project->ownerId = 1;
         $project->projectId = 1;
@@ -48,10 +48,10 @@ class Phprojekt_SearchTest extends DatabaseTest
         $project->saveRights(array(1 => 255, 2 => 255));
 
         $search = new Phprojekt_Search();
-        $result = $search->search('CCÄC');
+        $result = $search->search('CCÃ„C');
         $this->assertEquals(1, count($result));
 
-        $result = $search->search('CCÄC DDÖD');
+        $result = $search->search('CCÃ„C DDÃ–D');
         $this->assertEquals(1, count($result));
     }
 
@@ -78,7 +78,7 @@ class Phprojekt_SearchTest extends DatabaseTest
         $this->assertEquals(0, count($result));
 
         $search = new Phprojekt_Search();
-        $result = (array)$search->search('CÄ');
+        $result = (array)$search->search('CÃ„');
         $this->assertEquals(0, count($result));
     }
 
