@@ -4,7 +4,7 @@ ini_set("magic_quotes_runtime", 0);
 ini_set("magic_quotes_sybase", 0);
 
 $config = "configuration.php";
-if(getenv('P6_TEST_CONFIG')) {
+if (getenv('P6_TEST_CONFIG')) {
     $config = getenv('P6_TEST_CONFIG');
 }
 
@@ -26,3 +26,4 @@ $authNamespace         = new Zend_Session_Namespace('Phprojekt_Auth-login');
 $authNamespace->userId = 1;
 $authNamespace->admin  = 1;
 
+Phprojekt::getInstance()->getDb()->query('SET sql_mode="STRICT_ALL_TABLES"');
