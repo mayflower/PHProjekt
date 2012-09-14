@@ -174,7 +174,7 @@ class Phprojekt_Tags_TagsTableMapper
 
         $moduleItemTagMap = array();
 
-        /* Not we query the module-item pairs that have one of the tags that match the given searched tag.
+        /* We query the module-item pairs that have one of the tags that match the given searched tag.
          * We aggregate them by module->item->tagGroupListIdx so we are later able to determine which module-item
          * combination matched all the searched tags.
          */
