@@ -58,7 +58,7 @@ class Phprojekt_Tags_TagsTableMapper
         $ret  = array();
 
         foreach ($rows as $row) {
-            $ret[] = $row['word'];
+            $ret[] = $row;
         }
 
         return $ret;
