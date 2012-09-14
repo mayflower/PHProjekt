@@ -36,42 +36,14 @@ class Project_Migration extends Phprojekt_Migration_Abstract
 
     public function onVersionStep($oldVersion, $newVersion) {
         if ($newVersion === "6.1.4") {
-            $select = $this->_db->select();
-            $select->from(
-                array('m' => 'tags_modules'),
-                array('m.module_id', 'm.item_id', 't.id')
-            );
-            $select->join(
-                array('u' => 'tags_users'),
-                'u.id = m.tag_user_id'
-            );
-            $select->join(
-                array('t' => 'tags'),
-                't.id = u.tag_id'
-            );
-            $select->group(array('m.module_id', 'm.item_id', 't.id'));
-
-            $rows = $this->_db->fetchAll($select);
-            if (count($rows) > 0) {
-                $insertrows = array();
-
-                foreach ($rows as $row) {
-                    $insertrows[] = '(' .
-                        implode(',', array(
-                            $this->_db->quote($row['module_id']),
-                            $this->_db->quote($row['item_id']),
-                            $this->_db->quote($row['id'])
-                        )) .
-                        ')';
-                }
-
-                $query = 'INSERT INTO ' .
-                    $this->_db->quoteIdentifier('tags_modules_items') .
-                    '( module_id, item_id, tag_id ) VALUES ' .
-                    implode(',', $insertrows);
-
-                $this->_db->query($query);
-            }
+            $this->_db->query(<<<HERE
+INSERT INTO tags_modules_items (module_id, item_id, tag_id)
+    SELECT m.module_id, m.item_id, t.id FROM tags_modules AS m
+    JOIN tags_users AS u ON u.id = m.tag_user_id
+    JOIN tags AS t ON t.id = u.tag_id
+    GROUP BY m.module_id, m.item_id, t.id
+HERE
+);
         }
     }
 
