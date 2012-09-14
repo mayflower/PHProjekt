@@ -1,9 +1,5 @@
 <?php
 /**
- * Tags Table Mapper class.
- *
- * The class provide the functions for manage tags per user.
- *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 3 as published by the Free Software Foundation
@@ -13,29 +9,14 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
- * @category   PHProjekt
- * @package    Phprojekt
- * @subpackage Tags
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
+ * @copyright  Copyright (c) 2012 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.1.3
- * @author     Reno Reckling <reno.reckling@mayflower.de>
  */
 
 /**
- * Tags class.
+ * Tags Table Mapper class.
  *
- * The class provide the functions for manage tags per user.
- *
- * @category   PHProjekt
- * @package    Phprojekt
- * @subpackage Tags
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.1.3
- * @author     Reno Reckling <reno.reckling@mayflower.de>
+ * The class provide the functions to access the tags database tables.
  */
 class Phprojekt_Tags_TagsTableMapper
 {
