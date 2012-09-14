@@ -1,9 +1,5 @@
 <?php
 /**
- * Tree class.
- *
- * Represents an node of a tree and provides iterator abilities.
- *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 3 as published by the Free Software Foundation
@@ -13,37 +9,17 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
- * @category   PHProjekt
- * @package    Phprojekt
- * @subpackage Tree
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
- * @author     David Soria Parra <david.soria_parra@mayflower.de>
  */
 
 /**
  * Tree class.
  *
  * Represents an node of a tree and provides iterator abilities.
- *
- * @category   PHProjekt
- * @package    Phprojekt
- * @subpackage Tree
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
- * @author     David Soria Parra <david.soria_parra@mayflower.de>
  */
 class Phprojekt_Tree_Node_Database implements IteratorAggregate
 {
-    /**
-     * Name for use with the cache.
-     */
-    const CACHE_NAME = 'Phprojekt_Tree_Node_Database_setup';
-
     /**
      * The char that separates a tree path in the database.
      * It should not be edited, if you don't initialize a complete empty tree, as no conversion is done.
@@ -156,7 +132,6 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
             throw new Phprojekt_Tree_Node_Exception('You have to set a requested treeid in the constructor');
         }
 
-        $cache = Phprojekt::getInstance()->getCache();
         if ($this->_requestedId == 0) {
             return $this;
         } else {
@@ -165,11 +140,16 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
             $select   = $database->select();
 
             $select->from(array('t' => $table), array())
-                   ->join(array('tt' => $table),
-                       sprintf('t.id = %d AND (tt.path like CONCAT(t.path, t.id, "/%%") OR tt.id = t.id)', (int) $this->_requestedId),
-                       '*')
-                   ->order('path')
-                   ->order('id');
+                ->join(
+                    array('tt' => $table),
+                    sprintf(
+                        't.id = %d AND (tt.path like CONCAT(t.path, t.id, "/%%") OR tt.id = t.id)',
+                        (int) $this->_requestedId
+                    ),
+                    '*'
+                )
+               ->order('path')
+               ->order('id');
 
             if (null !== $filter) {
                 $filter->filter($select, 'tt');
@@ -199,12 +179,6 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
             }
 
             $object = $this;
-            $cache->save($this, self::CACHE_NAME);
-
-            // Delete the session for re-calculate the rights
-            $sessionName     = 'Phprojekt_Tree_Node_Database-applyRights';
-            $rightsNamespace = new Zend_Session_Namespace($sessionName);
-            $rightsNamespace->unsetAll();
         }
 
         return $this->applyRights($object);
@@ -359,7 +333,6 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
                 $node->_activeRecord->projectId = (int) $this->id;
                 $node->_activeRecord->path      = sprintf('%s%s%s', $this->path, $this->id, self::NODE_SEPARATOR);
                 $node->_activeRecord->save();
-                self::deleteCache();
             }
 
             $node->setParentNode($this);
@@ -398,8 +371,9 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
     public function delete()
     {
         if (null === $this->id) {
-            throw new Phprojekt_Tree_Node_Exception('Node not received or stored'
-                . ' from/to the database yet');
+            throw new Phprojekt_Tree_Node_Exception(
+                'Node not received or stored from/to the database yet'
+            );
         }
 
         if ($this->id == 1) {
@@ -412,7 +386,6 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
         $children = $this->getChildren();
         $this->_deleteChildren($children);
         $this->_initialize();
-        self::deleteCache();
     }
 
     /**
@@ -432,7 +405,6 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
             $this->getActiveRecord()->projectId = (int) $node->id;
             $node = $this->_rebuildPaths($this, $node->path . $node->id . self::NODE_SEPARATOR);
             $node->getActiveRecord()->save();
-            self::deleteCache();
         }
 
         $this->_parentNode = $node;
@@ -458,7 +430,6 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
 
                 $this->getRootNode()->_index[$child->id] = $node->_children[$id];
                 $node->_children[$id]->getActiveRecord()->parentSave();
-                self::deleteCache();
             }
         }
 
@@ -599,8 +570,10 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
      */
     public function getIterator()
     {
-        return new RecursiveIteratorIterator(new Phprojekt_Tree_Node_Iterator($this),
-            RecursiveIteratorIterator::SELF_FIRST);
+        return new RecursiveIteratorIterator(
+            new Phprojekt_Tree_Node_Iterator($this),
+            RecursiveIteratorIterator::SELF_FIRST
+        );
     }
 
     /**
@@ -681,16 +654,5 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
     public function hasField($field)
     {
         return $this->getActiveRecord()->hasField($field);
-    }
-
-    /**
-     * Delete the tree cache.
-     *
-     * @return void;
-     */
-    public static function deleteCache()
-    {
-        $cache = Phprojekt::getInstance()->getCache();
-        $cache->remove(self::CACHE_NAME);
     }
 }

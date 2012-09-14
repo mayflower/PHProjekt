@@ -1,7 +1,5 @@
 <?php
 /**
- * Phprojekt Class for initialize the Zend Framework.
- *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 3 as published by the Free Software Foundation
@@ -11,27 +9,12 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
- * @category   PHProjekt
- * @package    Phprojekt
- * @subpackage Core
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
- * @author     Gustavo Solt <solt@mayflower.de>
  */
 
 /**
  * Phprojekt Class for initialize the Zend Framework.
- *
- * @category   PHProjekt
- * @package    Phprojekt
- * @subpackage Core
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
- * @author     Gustavo Solt <solt@mayflower.de>
  */
 class Phprojekt
 {
@@ -304,7 +287,12 @@ class Phprojekt
      */
     public static function setCurrentProjectId($projectId)
     {
-        Zend_Registry::set(self::CURRENT_PROJECT, (int) $projectId);
+        $project = new Project_Models_Project();
+        if (!$project = $project->find($projectId)) {
+            throw new Phprojekt_PublishedException("Project with id $projectId not found.");
+        }
+
+        Zend_Registry::set(self::CURRENT_PROJECT, $project);
     }
 
     /**
@@ -313,6 +301,16 @@ class Phprojekt
      * @return integer Current project ID.
      */
     public static function getCurrentProjectId()
+    {
+        return Zend_Registry::get(self::CURRENT_PROJECT)->id;
+    }
+
+    /**
+     * Return the current project.
+     *
+     * @return Phprojekt_Models_Project Current project
+     */
+    public static function getCurrentProject()
     {
         return Zend_Registry::get(self::CURRENT_PROJECT);
     }
@@ -1025,6 +1023,16 @@ class Phprojekt
     public function isBlockedModule($name)
     {
         return in_array($name, $this->_blockedModules);
+    }
+
+    /**
+     * Generates a unique identifier, usable for example as a uri or uid.
+     *
+     * @return string
+     */
+    public static function generateUniqueIdentifier()
+    {
+        return rand() . '-' . time() . '-' . getMyPid() . '@' . php_uname('n');
     }
 
     private function _dieWithInternalServerError()

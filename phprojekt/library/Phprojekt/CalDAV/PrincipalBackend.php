@@ -1,7 +1,5 @@
 <?php
 /**
- * Calendar2 Caldav Principal Backend
- *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 3 as published by the Free Software Foundation
@@ -11,31 +9,16 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
- * @category   PHProjekt
- * @package    Application
- * @subpackage Calendar2
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
+ * @copyright  Copyright (c) 2012 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.1
- * @author     Simon Kohlmeyer <simon.kohlmeyer@mayflower.de>
  */
 
 /**
  * Calendar2 Caldav Principal Backend
  *
- * This class implements a principan backend for sabredav
- *
- * @category   PHProjekt
- * @package    Application
- * @subpackage Calendar2
- * @copyright  Copyright (c) 2011 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.1.0
- * @author     Simon Kohlmeyer <simon.kohlmeyer@mayflower.de>
+ * This class implements a principal backend for sabredav
  */
-class Calendar2_CalDAV_PrincipalBackend implements Sabre_DAVACL_IPrincipalBackend
+class Phprojekt_CalDAV_PrincipalBackend implements Sabre_DAVACL_IPrincipalBackend
 {
     public function getPrincipalsByPrefix($prefixPath)
     {
@@ -62,20 +45,17 @@ class Calendar2_CalDAV_PrincipalBackend implements Sabre_DAVACL_IPrincipalBacken
 
     public function getGroupMemberSet($principal)
     {
-        // TODO: Implement me
         throw new Exception('not implemented. $principal = ' . $principal);
     }
 
     public function getGroupMembership($principal)
     {
-        // TODO: Implement me
         return array();
     }
 
     public function setGroupMemberSet($principal, array $members)
     {
-        // TODO: Implement me
-        throw new Exception('not implemented3. $principal = ' . $principal);
+        throw new Exception('not implemented. $principal = ' . $principal);
     }
 
     public function updatePrincipal($path, $mutations)

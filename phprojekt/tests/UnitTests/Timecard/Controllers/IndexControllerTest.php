@@ -1,7 +1,5 @@
 <?php
 /**
- * Unit test
- *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 3 as published by the Free Software Foundation
@@ -11,28 +9,14 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
- * @category   PHProjekt
- * @package    UnitTests
- * @subpackage Timecard
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
- * @author     Gustavo Solt <solt@mayflower.de>
  */
 
 
 /**
  * Tests for Index Controller
  *
- * @category   PHProjekt
- * @package    UnitTests
- * @subpackage Timecard
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
- * @author     Gustavo Solt <solt@mayflower.de>
  * @group      timecard
  * @group      controller
  * @group      timecard-controller
@@ -44,7 +28,9 @@ class Timecard_IndexController_Test extends FrontInit
         return new PHPUnit_Extensions_Database_DataSet_CompositeDataSet(
             array(
                 $this->createFlatXMLDataSet(dirname(__FILE__) . '/../../common.xml'),
-                $this->createFlatXMLDataSet(dirname(__FILE__) . '/../data.xml')));
+                $this->createFlatXMLDataSet(dirname(__FILE__) . '/../data.xml')
+            )
+        );
     }
 
     /**
@@ -188,7 +174,6 @@ class Timecard_IndexController_Test extends FrontInit
 
     /**
      * Test of json Save
-     *
      */
     public function testJsonSaveOverlapping()
     {
@@ -205,7 +190,6 @@ class Timecard_IndexController_Test extends FrontInit
 
     /**
      * Test of json Save
-     *
      */
     public function testJsonSaveJustStartOverlapping()
     {
@@ -221,7 +205,6 @@ class Timecard_IndexController_Test extends FrontInit
 
     /**
      * Test of json Save
-     *
      */
     public function testJsonSaveJustEndOverlapping()
     {
@@ -316,7 +299,7 @@ class Timecard_IndexController_Test extends FrontInit
         $expected = '{"date":"2009-05-01","week":"5","sumInMinutes":0,"sumInHours":0,"openPeriod":0}';
         $this->assertContains($expected, $response);
 
-        $expected = '{"date":"2009-05-17","week":"0","sumInMinutes":120,"sumInHours":"02:00","openPeriod":0}';
+        $expected = '{"date":"2009-05-17","week":"0","sumInMinutes":360,"sumInHours":"06:00","openPeriod":0}';
         $this->assertContains($expected, $response);
 
         $expected = '{"date":"2009-05-31","week":"0","sumInMinutes":0,"sumInHours":0,"openPeriod":0}';
@@ -377,9 +360,11 @@ class Timecard_IndexController_Test extends FrontInit
         $this->request->setParam('month', '05');
         $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
-        $this->assertContains('"Start","End","Minutes","Project","Notes"'."\n"
-            .'"2009-05-17 09:00:00","13:00","0","PHProjekt","My note"'."\n"
-            .'"2009-05-17 14:00:00","18:00","120","PHProjekt","My note"'."\n", $response);
+        $this->assertContains(
+            '"Start","End","Minutes","Project","Notes"'."\n"
+            .'"2009-05-17 09:00:00","13:00","240","PHProjekt","My note"'."\n"
+            .'"2009-05-17 14:00:00","18:00","120","PHProjekt","My note"'."\n", $response
+        );
     }
 
     /**

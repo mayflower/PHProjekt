@@ -1,7 +1,5 @@
 <?php
 /**
- * Unit test
- *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 3 as published by the Free Software Foundation
@@ -11,39 +9,28 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
- * @category   PHProjekt
- * @package    UnitTests
- * @subpackage Todo
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
- * @author     Mariano La Penna <mariano.lapenna@mayflower.de>
  */
 
 
 /**
  * Tests Todo Model class
  *
- * @category   PHProjekt
- * @package    UnitTests
- * @subpackage Todo
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
- * @author     Mariano La Penna <mariano.lapenna@mayflower.de>
  * @group      todo
  * @group      model
  * @group      todo-model
  */
 class Todo_Models_Todo_Test extends DatabaseTest
 {
-    protected function getDataSet() {
+    protected function getDataSet()
+    {
         return new PHPUnit_Extensions_Database_DataSet_CompositeDataSet(
             array(
                 $this->createFlatXMLDataSet(dirname(__FILE__) . '/../../common.xml'),
-                $this->createFlatXMLDataSet(dirname(__FILE__) . '/../data.xml')));
+                $this->createFlatXMLDataSet(dirname(__FILE__) . '/../data.xml')
+            )
+        );
     }
 
     /**
@@ -54,7 +41,7 @@ class Todo_Models_Todo_Test extends DatabaseTest
         $todoModel = new Todo_Models_Todo();
         $todoModel->find(1);
         $response = $todoModel->getNotification()->getTo();
-        $expected = array();
+        $expected = array(2);
         $this->assertEquals($expected, $response);
 
         $todoModel->userId = 2;

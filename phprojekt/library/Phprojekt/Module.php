@@ -1,7 +1,5 @@
 <?php
 /**
- * Represents a module in PHProjekt and coordinates it's mapping to a database.
- *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 3 as published by the Free Software Foundation
@@ -11,27 +9,12 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
- * @category   PHProjekt
- * @package    Phprojekt
- * @subpackage Module
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
- * @author     David Soria Parra <soria_parra@mayflower.de>
  */
 
 /**
  * Represents a module in PHProjekt and coordinates it's mapping to a database.
- *
- * @category   PHProjekt
- * @package    Phprojekt
- * @subpackage Module
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
- * @author     David Soria Parra <soria_parra@mayflower.de>
  */
 class Phprojekt_Module
 {
@@ -73,12 +56,7 @@ class Phprojekt_Module
      */
     protected static function _getCachedIds()
     {
-        if (isset(self::$_cache) && null !== self::$_cache) {
-            return self::$_cache;
-        }
-
-        $cache = Phprojekt::getInstance()->getCache();
-        if ((self::$_cache = $cache->load(self::CACHE_ID)) === false) {
+        if (is_null(self::$_cache)) {
             // cache miss
             $db     = Phprojekt::getInstance()->getDb();
             $select = $db->select()
@@ -92,7 +70,6 @@ class Phprojekt_Module
                                                     'label'    => $row['label'],
                                                     'saveType' => $row['save_type']);
             }
-            $cache->save(self::$_cache);
         }
         return self::$_cache;
     }

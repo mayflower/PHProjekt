@@ -1,7 +1,5 @@
 <?php
 /**
- * Project Migration
- *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 3 as published by the Free Software Foundation
@@ -11,33 +9,19 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
- * @category   PHProjekt
- * @package    Application
- * @subpackage Project
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.1
- * @author     Reno Reckling <reno.reckling@mayflower.de>
  */
 
 /**
  * Project Migration
  *
  * This is used to add the user_proxy table
- *
- * @category   PHProjekt
- * @package    Application
- * @subpackage Project
- * @copyright  Copyright (c) 2011 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.1.0
- * @author     Reno Reckling <reno.reckling@mayflower.de>
  */
 class Project_Migration extends Phprojekt_Migration_Abstract
 {
     protected $_db;
+
     /**
      * Return the current module version.
      *
@@ -47,7 +31,7 @@ class Project_Migration extends Phprojekt_Migration_Abstract
      */
     public function getCurrentModuleVersion()
     {
-        return '6.1.4';
+        return '6.1.5';
     }
 
     public function onVersionStep($oldVersion, $newVersion) {
@@ -103,11 +87,12 @@ class Project_Migration extends Phprojekt_Migration_Abstract
      */
     public function upgrade($currentVersion, Zend_Db_Adapter_Abstract $db)
     {
+        $this->_db = $db;
+
         if (is_null($currentVersion)
             || Phprojekt::compareVersion($currentVersion, '6.1.4') < 0)
         {
             $obj =& $this;
-            $this->_db = $db;
             $stepWrapper = function ($oldVersion, $newVersion) use ($obj) {
                 $obj->onVersionStep($oldVersion, $newVersion);
             };
@@ -122,5 +107,30 @@ class Project_Migration extends Phprojekt_Migration_Abstract
                 Zend_Cache::CLEANING_MODE_ALL
             );
         }
+        if (Phprojekt::compareVersion($currentVersion, '6.1.5') < 0) {
+            $this->_renameProjectsWithSameTitle();
+            $this->_makeTitleParentUniqueIndex();
+        }
+    }
+
+    private function _renameProjectsWithSameTitle()
+    {
+        $this->_db->query(<<<HERE
+UPDATE project AS p
+JOIN (
+    SELECT title, project_id
+    FROM project
+    GROUP BY title, project_id
+    HAVING COUNT(title) > 1
+) AS c
+  ON p.title = c.title AND p.project_id = c.project_id
+SET p.title = CONCAT(p.title, ' (', p.id, ')')
+HERE
+);
+    }
+
+    private function _makeTitleParentUniqueIndex()
+    {
+        $this->_db->query('ALTER TABLE project ADD UNIQUE INDEX (title, project_id)');
     }
 }

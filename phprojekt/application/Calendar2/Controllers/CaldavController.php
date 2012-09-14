@@ -1,7 +1,5 @@
 <?php
 /**
- * Calendar2 Module CalDAV Controller.
- *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 3 as published by the Free Software Foundation
@@ -11,28 +9,13 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
- * @category   PHProjekt
- * @package    Application
- * @subpackage Calendar2
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.1
- * @author     Simon Kohlmeyer <simon.kohlmeyer@mayflower.de>
  */
 require_once 'Sabre.autoload.php';
 
 /**
  * Calendar2 Module CalDAV Controller.
- *
- * @category   PHProjekt
- * @package    Application
- * @subpackage Calendar2
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.1
- * @author     Simon Kohlmeyer <simon.kohlmeyer@mayflower.de>
  */
 class Calendar2_CaldavController extends IndexController
 {
@@ -55,11 +38,12 @@ class Calendar2_CaldavController extends IndexController
         try {
             if (array_key_exists('PHP_AUTH_USER', $_SERVER)) {
                 Phprojekt_Auth::login($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
+                $_SERVER['PHP_AUTH_USER'] = strtolower(Phprojekt_Auth::getRealUser()->username);
             }
         } catch (Phprojekt_Auth_Exception $e) {
             // We have to delete the stack trace here because we need to avoid logging the user's password.
             // This would be done because of Phprojekt_Auth::login($user, $password)
-            throw new Phprojekt_Auth_Exception($e->getMessage());
+            throw new Phprojekt_Auth_Exception($e->getMessage(), $e->getCode());
         }
     }
 
@@ -71,9 +55,9 @@ class Calendar2_CaldavController extends IndexController
     public function indexAction()
     {
         // Backends
-        $authBackend = new WebDAV_Helper_Auth();
-        $principalBackend = new Calendar2_CalDAV_PrincipalBackend();
-        $calendarBackend = new Calendar2_CalDAV_CalendarBackend();
+        $authBackend      = new WebDAV_Helper_Auth();
+        $principalBackend = new Phprojekt_CalDAV_PrincipalBackend();
+        $calendarBackend  = new Calendar2_CalDAV_CalendarBackend();
 
         // Directory tree
         $tree = array(

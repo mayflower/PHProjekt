@@ -1,7 +1,5 @@
 <?php
 /**
- * Project model class.
- *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 3 as published by the Free Software Foundation
@@ -11,14 +9,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
- * @category   PHProjekt
- * @package    Application
- * @subpackage Project
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
- * @author     Gustavo Solt <solt@mayflower.de>
  */
 
 /**
@@ -26,15 +18,6 @@
  *
  * The class of each model return the data for show
  * on the list and the form view.
- *
- * @category   PHProjekt
- * @package    Application
- * @subpackage Project
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
- * @author     Gustavo Solt <solt@mayflower.de>
  */
 class Project_Models_Project extends Phprojekt_Item_Abstract
 {
@@ -137,7 +120,6 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
     public function parentSave()
     {
         $result = parent::parentSave();
-        Phprojekt_Tree_Node_Database::deleteCache();
 
         return $result;
     }
@@ -150,7 +132,6 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
     public function save()
     {
         $result = parent::save();
-        Phprojekt_Tree_Node_Database::deleteCache();
 
         return $result;
     }
@@ -163,7 +144,6 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
     public function delete()
     {
         parent::delete();
-        Phprojekt_Tree_Node_Database::deleteCache();
     }
 
     /**
@@ -204,24 +184,6 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
             $where = sprintf('module_id = 1 AND item_id = %d AND user_id NOT IN (%s)', $projectId,
                 implode(",", $users));
             $itemRights->delete($where);
-
-            // Reset access by module-item-user
-            foreach ($users as $userId) {
-                // Reset cache
-                $sessionName = 'Phprojekt_Item_Rights-getItemRight' . '-1-' . $projectId . '-' . $userId;
-                $rightNamespace = new Zend_Session_Namespace($sessionName);
-                $rightNamespace->unsetAll();
-            }
-
-            // Reset access by module-item
-            $sessionName    = 'Phprojekt_Item_Rights-getUsersRights' . '-1-' . $projectId;
-            $rightNamespace = new Zend_Session_Namespace($sessionName);
-            $rightNamespace->unsetAll();
-
-            // Reset users by project
-            $sessionName = 'Phprojekt_User_User-getAllowedUsers' . '-' . $projectId;
-            $rightNamespace   = new Zend_Session_Namespace($sessionName);
-            $rightNamespace->unsetAll();
         }
     }
 
