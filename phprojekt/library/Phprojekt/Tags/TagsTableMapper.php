@@ -54,7 +54,8 @@ class Phprojekt_Tags_TagsTableMapper
         }
     }
 
-    public function getTagsForModuleItem($moduleId, $itemId, $limit = 0) {
+    public function getTagsForModuleItem($moduleId, $itemId, $limit = 0)
+    {
         $select = $this->_db->select()->from(
             array('t' => self::tagsTableName),
             array('word')
@@ -72,7 +73,7 @@ class Phprojekt_Tags_TagsTableMapper
             $select->limit($limit);
         }
 
-        $rows = $this->_db->fetchAll($select);
+        $rows = $this->_db->query($select)->fetchAll(Zend_Db::FETCH_COLUMN);
         $ret  = array();
 
         foreach ($rows as $row) {
@@ -82,9 +83,8 @@ class Phprojekt_Tags_TagsTableMapper
         return $ret;
     }
 
-    public function saveTagsForModuleItem(
-        $moduleId, $itemId, Array $tags = array()
-    ) {
+    public function saveTagsForModuleItem($moduleId, $itemId, Array $tags = array())
+    {
         $tags  = array_unique($tags);
         $idMap = $this->saveTagsAndReturnIdMap($tags);
 
@@ -98,11 +98,14 @@ class Phprojekt_Tags_TagsTableMapper
             $rows = array();
             foreach ($idMap as $tag => $id) {
                 $rows[] = '(' .
-                    implode(',', array(
-                        $this->_db->quote($moduleId),
-                        $this->_db->quote($itemId),
-                        $this->_db->quote($id)
-                    )) .
+                    implode(
+                        ',',
+                        array(
+                            $this->_db->quote($moduleId),
+                            $this->_db->quote($itemId),
+                            $this->_db->quote($id)
+                        )
+                    ) .
                     ')';
             }
 
