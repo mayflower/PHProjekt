@@ -170,10 +170,13 @@ class Phprojekt_DbParser
     /**
      * Parse the data of a single module.
      *
-     * @param string $module        The module
-     * @param string $coreDirectory The core directory. The module is assumed to
-     *                              live under $coreDirectory . '/' . $module.
-     *                              Defaults to PHPR_CORE_PATH if omitted.
+     * @param string $module                The module
+     * @param string $coreDirectory         The core directory. The module is assumed to
+     *                                      live under $coreDirectory . '/' . $module.
+     *                                      Defaults to PHPR_CORE_PATH if omitted.
+     * @param function $versionStepCallback A callback function that is called on every version increment.
+     *                                      It takes 2 arguments $oldVersion and $newVersion to mark the increment.
+     *                                      It should return nothing.
      *
      * @return void
      */
