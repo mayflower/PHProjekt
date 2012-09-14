@@ -178,8 +178,7 @@ class Phprojekt_Tags_TagsTableMapper
          * We aggregate them by module->item->tagGroupListIdx so we are later able to determine which module-item
          * combination matched all the searched tags.
          */
-        for ($i = 0; $i < count($tagGroupList); $i++) {
-            $ids    = $tagGroupList[$i];
+        foreach ($tagGroupList as $index => $ids) {
             $select = $this->_db->select()->from(self::tagsRelationTableName, array('module_id', 'item_id'));
             $select->where('tag_id IN (?)', $ids);
 
@@ -190,7 +189,7 @@ class Phprojekt_Tags_TagsTableMapper
                 if (!array_key_exists($moduleId, $moduleItemTagMap)) {
                     $moduleItemTagMap[$moduleId] = array();
                 }
-                $moduleItemTagMap[$moduleId][$itemId][] = $i;
+                $moduleItemTagMap[$moduleId][$itemId][] = $index;
             }
         }
 
