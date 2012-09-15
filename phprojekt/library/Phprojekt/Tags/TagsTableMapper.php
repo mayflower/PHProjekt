@@ -147,6 +147,9 @@ class Phprojekt_Tags_TagsTableMapper
         );
     }
 
+    /*
+     * This function searches for all module<->item pairs that match all given tags at the same time
+     */
     public function searchForProjectsWithTags(Array $tags = array(), $limit = 0)
     {
         if (count($tags) === 0) {
@@ -200,7 +203,13 @@ class Phprojekt_Tags_TagsTableMapper
             foreach ($itemList as $itemId => $tagList) {
                 /* This check is necessary because one module-item pair could match a given searched tag multiple times.
                  * This would result in the duplicate tagGroupList indexes in the tagList which will be stripped by the
-                 * array_intersect call.
+                 * array_intersect call. So we just remove the duplicate matches via array_intersect.
+                 * How it works:
+                 * For every item in the item list, we have a tagList containing all the tags that it matched.
+                 * We intersect this tagList with the tagGroupList which contains all possible tags.
+                 * The result will be a duplicate-free list of tags that occurr in tagGroupList as well as in tagList.
+                 * Then we check whether this list equals the list of all tag.
+                 * This means that all tags matched and we have a valid result.
                  */
                 if (array_keys($tagGroupList) == array_intersect(array_keys($tagGroupList), $tagList)) {
                     $ret[(int) $moduleId][] = (int) $itemId;
