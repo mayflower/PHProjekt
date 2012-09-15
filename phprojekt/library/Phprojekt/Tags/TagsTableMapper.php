@@ -193,8 +193,8 @@ class Phprojekt_Tags_TagsTableMapper
     }
 
     /* This function fetches all matching tags per searched word
-     * These are aggragated my searchword because so we are later able to query for the matches for each searched
-     * word.
+     * These are aggragated by searchword because we need to be able to query for the matches of each searched
+     * word later on.
      */
     private function getTagsForSearchWords(Array $words) {
         foreach ($words as $word) {
