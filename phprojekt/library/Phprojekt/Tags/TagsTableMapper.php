@@ -156,45 +156,9 @@ class Phprojekt_Tags_TagsTableMapper
             return array();
         }
 
-        $tagGroupList = array();
+        $tagGroupList = $this->getTagsForSearchWords($tags);
 
-        /* This loop fetches all matching tags per searched tag
-         * These are aggragated my searchword because so we are later able to query for the matches for each searched
-         * tag.
-         */
-        foreach ($tags as $tag) {
-            $select = $this->_db->select()->from(self::tagsTableName, array('id'));
-            $select->where('word LIKE ?', '%' . $tag . '%');
-            $tagids = $this->_db->fetchCol($select);
-
-            if (empty($tagids)) {
-                //no matching tags, we can stop here
-                return array();
-            } else {
-                $tagGroupList[] = $tagids;
-            }
-        }
-
-        $moduleItemTagMap = array();
-
-        /* We query the module-item pairs that have one of the tags that match the given searched tag.
-         * We aggregate them by module->item->tagGroupListIdx so we are later able to determine which module-item
-         * combination matched all the searched tags.
-         */
-        foreach ($tagGroupList as $index => $ids) {
-            $select = $this->_db->select()->from(self::tagsRelationTableName, array('module_id', 'item_id'));
-            $select->where('tag_id IN (?)', $ids);
-
-            $rows = $this->_db->fetchAll($select);
-            foreach ($rows as $row) {
-                $moduleId = $row['module_id'];
-                $itemId = $row['item_id'];
-                if (!array_key_exists($moduleId, $moduleItemTagMap)) {
-                    $moduleItemTagMap[$moduleId] = array();
-                }
-                $moduleItemTagMap[$moduleId][$itemId][] = $index;
-            }
-        }
+        $moduleItemTagMap = $this->getModuleItemPairsForTagGroups($tagGroupList);
 
         $ret  = array();
         $retCount = 0;
@@ -214,6 +178,10 @@ class Phprojekt_Tags_TagsTableMapper
                 if (array_keys($tagGroupList) == array_intersect(array_keys($tagGroupList), $tagList)) {
                     $ret[(int) $moduleId][] = (int) $itemId;
 
+                    /*
+                     * We limit here to make it easy to extract a subset of the results because the
+                     * output data format will make it hard to limit the number of entries at a later point in time.
+                     */
                     if (++$retCount >= $limit && $limit > 0) {
                         return $ret;
                     }
@@ -224,4 +192,50 @@ class Phprojekt_Tags_TagsTableMapper
         return $ret;
     }
 
+    /* This function fetches all matching tags per searched word
+     * These are aggragated my searchword because so we are later able to query for the matches for each searched
+     * word.
+     */
+    private function getTagsForSearchWords(Array $words) {
+        foreach ($words as $word) {
+            $select = $this->_db->select()->from(self::tagsTableName, array('id'));
+            $select->where('word LIKE ?', '%' . str_replace("%", "\%", $word) . '%');
+            $tagids = $this->_db->fetchCol($select);
+
+            if (empty($tagids)) {
+                //no matching tags, we can stop here
+                return array();
+            } else {
+                $tagGroupList[] = $tagids;
+            }
+        }
+
+        return $tagGroupList;
+    }
+
+    /* This function queries the module-item pairs that have one of the tags that match the given searched word.
+     * We aggregate them by module->item->tagGroupListIdx so we are later able to determine which module-item
+     * combination matched all the searched words.
+     * The tagGroupList format is [search word1->[matching tag1, ..], ..]
+     */
+    private function getModuleItemPairsForTagGroups($tagGroupList) {
+        $moduleItemTagMap = array();
+
+        foreach ($tagGroupList as $index => $ids) {
+            $select = $this->_db->select()->from(self::tagsRelationTableName, array('module_id', 'item_id'));
+            $select->where('tag_id IN (?)', $ids);
+
+            $rows = $this->_db->fetchAll($select);
+            foreach ($rows as $row) {
+                $moduleId = $row['module_id'];
+                $itemId = $row['item_id'];
+                if (!array_key_exists($moduleId, $moduleItemTagMap)) {
+                    $moduleItemTagMap[$moduleId] = array();
+                }
+                $moduleItemTagMap[$moduleId][$itemId][] = $index;
+            }
+        }
+
+        return $moduleItemTagMap;
+    }
 }
