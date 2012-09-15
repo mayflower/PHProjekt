@@ -9,7 +9,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
+ * @copyright  Copyright (c) 2012 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
  */
 
@@ -29,165 +29,150 @@ class Phprojekt_TagsTest extends DatabaseTest
         return $this->createFlatXMLDataSet(dirname(__FILE__) . '/data.xml');
     }
 
-    /**
-     * Test save
-     *
-     * @return void
-     */
-    public function testSaveTags()
-    {
-        // Test add
-        $tag = Phprojekt_Tags::getInstance();
-        $tag->saveTags(1, 1, 'This is a tag test');
-        $result = array(array('string' => 'test',
-                              'count'  => 1));
-
-        $this->assertContains(array('string' => 'test', 'count' => 1),
-            $tag->getTagsByModule(1, 1));
-        $this->assertContains(array('string' => 'tag', 'count' => 1),
-            $tag->getTagsByModule(1, 1));
-        $this->assertContains(array('string' => 'this', 'count' => 1),
-            $tag->getTagsByModule(1, 1));
-
-        // Test update
-        $tag->saveTags(1, 1, 'This is a tag');
-        $result = array(array('string' => 'this',
-                              'count'  => 1),
-                        array('string' => 'tag',
-                              'count'  => 1));
-        $this->assertContains(array('string' => 'this', 'count' => 1),
-            $tag->getTagsByModule(1, 1));
-        $this->assertContains(array('string' => 'tag', 'count' => 1),
-            $tag->getTagsByModule(1, 1));
+    public function testTagsByModule() {
+        $tag  = new Phprojekt_Tags();
+        $tags = $tag->getTagsByModule(1, 1);
+        $this->assertEquals(array("this"), $tags);
     }
 
-    /**
-     * Test get
-     *
-     * @return void
-     */
-    public function testGetTags()
-    {
-        $tag    = Phprojekt_Tags::getInstance();
-        $expected = array(
-            '0' => array(
-                'string' => 'this',
-                'count'  => 2
-            ),
-            '1' => array(
-                'string' => 'tag',
-                'count'  => 1
+    public function testTagsByModuleLimit() {
+        $tag  = new Phprojekt_Tags();
+        $tags = $tag->getTagsByModule(1, 6);
+        $this->assertEquals(count($tags), 2);
+
+        $tags = $tag->getTagsByModule(1, 6, 1);
+        $this->assertEquals(count($tags), 1);
+    }
+
+    public function testSearch() {
+        $tag  = new Phprojekt_Tags();
+        $tags = $tag->search("this");
+        $this->assertEquals(array(
+            array(
+                'id'            => 1,
+                'moduleId'      => 1,
+                'moduleName'    => 'Project',
+                'moduleLabel'   => 'Project',
+                'firstDisplay'  => 'Hallo Welt',
+                'secondDisplay' => null,
+                'projectId'     => 1
             )
-        );
-        $this->assertEquals($expected, $tag->getTags(3));
+        ), $tags);
+    }
 
-        $tag->saveTags(1, 2, 'This is other test');
-        $tag->saveTags(2, 1, 'This is other test for todo');
-        $expected = array(
+    public function testEmptySearch() {
+        $tag  = new Phprojekt_Tags();
+        $tags = $tag->search("");
+        $this->assertTrue(empty($tags));
+    }
+
+    public function testInvalidSearch() {
+        $tag  = new Phprojekt_Tags();
+        $tags = $tag->search("tag");
+        $this->assertTrue(empty($tags));
+    }
+
+    public function testLimitSearch() {
+        $tag  = new Phprojekt_Tags();
+
+        $tags = $tag->search("blafoo");
+        $this->assertEquals(count($tags), 2);
+
+        $tags = $tag->search("blafoo", 1);
+        $this->assertEquals(count($tags), 1);
+    }
+
+    public function testDeleteTagsByItem() {
+        $tag  = new Phprojekt_Tags();
+        $tag->deleteTagsByItem(1, 1);
+        $tags = $tag->getTagsByModule(1, 1);
+        $this->assertTrue(empty($tags));
+    }
+
+    public function testSaveTags() {
+        $tag  = new Phprojekt_Tags();
+        $tag->saveTags(1, 1, "love");
+
+        $tags = $tag->search("love");
+        $this->assertEquals(array(
             array(
-                'string' => 'this',
-                'count'  => 4
-            ),
-            array(
-                'string' => 'other',
-                'count'  => 2
-            ),
-            array(
-                'string' => 'test',
-                'count'  => 2
-            ),
-            array(
-                'string' => 'for',
-                'count'  => 1
-            ),
-            array(
-                'string' => 'tag',
-                'count'  => 1
-            ),
-            array(
-                'string' => 'todo',
-                'count'  => 1
+                'id'            => 1,
+                'moduleId'      => 1,
+                'moduleName'    => 'Project',
+                'moduleLabel'   => 'Project',
+                'firstDisplay'  => 'Hallo Welt',
+                'secondDisplay' => null,
+                'projectId'     => 1
             )
-        );
-        $this->assertEquals($expected, $tag->getTags(6));
+        ), $tags);
     }
 
-    /**
-     * Test get Modules
-     *
-     * @return void
-     */
-    public function testGetModulesByTag()
-    {
-        $tag    = Phprojekt_Tags::getInstance();
-        $result = array(
-                        '0' => array('id'            => 1,
-                                     'moduleId'      => 1,
-                                     'moduleName'    => 'Project',
-                                     'moduleLabel'   => 'Project',
-                                     'firstDisplay'  => 'Hallo Welt',
-                                     'secondDisplay' => '',
-                                     'projectId'     => 1),
-                        '1' => array('id'            => 6,
-                                     'moduleId'      => 1,
-                                     'moduleName'    => 'Project',
-                                     'moduleLabel'   => 'Project',
-                                     'firstDisplay'  => 'BWV 810 - II. Allemande',
-                                     'secondDisplay' => '',
-                                     'projectId'     => 5));
-        $this->assertEquals($result, $tag->getModulesByTag('this'));
+    public function testSaveMultipleTags() {
+        $tag  = new Phprojekt_Tags();
+        $tag->saveTags(1, 1, "love phprojekt");
+        $tag->saveTags(1, 2, "admire phprojekt");
 
-        // limit
-        $result = array(
-                        '0' => array('id'            => 1,
-                                     'moduleId'      => 1,
-                                     'moduleName'    => 'Project',
-                                     'moduleLabel'   => 'Project',
-                                     'firstDisplay'  => 'Hallo Welt',
-                                     'secondDisplay' => '',
-                                     'projectId'     => 1));
-        $this->assertEquals($result, $tag->getModulesByTag('this', 1));
+        $tags = $tag->search("love");
+        $this->assertEquals(array(
+            array(
+                'id'            => 1,
+                'moduleId'      => 1,
+                'moduleName'    => 'Project',
+                'moduleLabel'   => 'Project',
+                'firstDisplay'  => 'Hallo Welt',
+                'secondDisplay' => null,
+                'projectId'     => 1
+            )
+        ), $tags);
 
-        // None
-        $this->assertEquals(array(), $tag->getModulesByTag('', 2));
-        $this->assertEquals(array(), $tag->getModulesByTag('wordthatnotsaved', 2));
+        $tags = $tag->search("phprojekt");
+        $this->assertEquals(array(
+            array(
+                'id'            => 1,
+                'moduleId'      => 1,
+                'moduleName'    => 'Project',
+                'moduleLabel'   => 'Project',
+                'firstDisplay'  => 'Hallo Welt',
+                'secondDisplay' => null,
+                'projectId'     => 1
+            ),
+            array(
+                'id'            => 2,
+                'moduleId'      => 1,
+                'moduleName'    => 'Project',
+                'moduleLabel'   => 'Project',
+                'firstDisplay'  => '',
+                'secondDisplay' => '',
+                'projectId'     => 1
+            )
+        ), $tags);
+
+        $tags = $tag->search("admire phprojekt");
+        $this->assertEquals(array(
+            array(
+                'id'            => 2,
+                'moduleId'      => 1,
+                'moduleName'    => 'Project',
+                'moduleLabel'   => 'Project',
+                'firstDisplay'  => '',
+                'secondDisplay' => '',
+                'projectId'     => 1
+            )
+        ), $tags);
     }
 
-    /**
-     * Test get tags for a module
-     *
-     * @return void
-     */
-    public function testGetTagsByModule()
-    {
-        $tag    = Phprojekt_Tags::getInstance();
-        $result = array('0' => array('string' => 'this',
-                                     'count'  => 1),
-                        '1' => array('string' => 'tag',
-                                     'count'  => 1));
-        $this->assertEquals($result, $tag->getTagsByModule(1, 1));
-
-        // No  ID
-        $this->assertEquals(array(), $tag->getTagsByModule(1, 4));
-
-        // NO Module
-        $this->assertEquals(array(), $tag->getTagsByModule(200, 4));
-
-        // Limit
-        $result = array('0' => array('string' => 'this',
-                                     'count'  => 1));
-        $this->assertEquals($result, $tag->getTagsByModule(1, 1, 1));
-    }
-
-    /**
-     * Test get relations
-     *
-     * @return void
-     */
-    public function testGetRelationIdByModule()
-    {
-        $tag    = Phprojekt_Tags::getInstance();
-        $result = array('1', '3');
-        $this->assertEquals($result, $tag->getRelationIdByModule(1, 1));
+    public function testGetFieldDefinition() {
+        $tag  = new Phprojekt_Tags();
+        $fdef = $tag->getFieldDefinition();
+        $this->assertEquals(array(
+            array(
+                'key'   => 'string',
+                'label' => 'Tags'
+            ),
+            array (
+                'key'   => 'count',
+                'label' => 'Count'
+            )
+        ), $fdef);
     }
 }

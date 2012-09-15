@@ -174,13 +174,13 @@ class Phprojekt_Module_Module extends Phprojekt_ActiveRecord_Abstract implements
         $role->deleteModuleRelation($this->id);
 
         // Delete the items and tags
-        $tag   = Phprojekt_Tags::getInstance();
+        $tag   = new Phprojekt_Tags();
         $model = Phprojekt_Loader::getModel($this->name, $this->name);
         if ($model instanceof Phprojekt_ActiveRecord_Abstract) {
             $results = $model->fetchAll();
             if (is_array($results)) {
                 foreach ($results as $record) {
-                    $tag->deleteTagsByItem($this->id, $record->id);
+                    $tag->deleteTagsForModuleItem($this->id, $record->id);
                     // @todo: Improve the delete routine for modules with a lot of entries.
                     $record->delete();
                 }

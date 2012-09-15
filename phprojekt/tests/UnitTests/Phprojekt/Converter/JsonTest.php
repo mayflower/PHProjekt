@@ -83,16 +83,4 @@ class Phprojekt_Converter_JsonTest extends DatabaseTest
         $this->assertEquals($converted, $result);
     }
 
-    /**
-     * Test json convertion of tags
-     */
-    public function testConvertTags()
-    {
-        $tagObj    = Phprojekt_Tags::getInstance();
-        $tags      = $tagObj->getTags(1);
-        $fields    = $tagObj->getFieldDefinition();
-        $result    = Phprojekt_Converter_Json::convert($tags, $fields);
-        $converted = '{}&&({"metadata":[{"key":"string","label":"Tags"},{"key":"count","label":"Count"}],"data":[{"';
-        $this->assertEquals($converted, substr($result, 0, strlen($converted)));
-    }
 }

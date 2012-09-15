@@ -41,7 +41,7 @@ final class Default_Helpers_Delete
 
             // Delete related items
             $modules = $relations->getProjectModulePermissionsById($id);
-            $tag     = Phprojekt_Tags::getInstance();
+            $tag     = new Phprojekt_Tags();
             foreach ($modules['data'] as $moduleData) {
                 if ($moduleData['inProject']) {
                     $module = Phprojekt_Loader::getModel($moduleData['name'], $moduleData['name']);
