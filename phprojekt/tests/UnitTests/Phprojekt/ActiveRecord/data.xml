@@ -110,12 +110,6 @@
 
     <tags id="1" word="this" />
     <tags id="2" word="tag" />
-    <tags_modules tag_user_id="1" item_id="1" module_id="1" />
-    <tags_modules tag_user_id="2" item_id="6" module_id="1" />
-    <tags_modules tag_user_id="3" item_id="1" module_id="1" />
-    <tags_users id="1" user_id="1" tag_id="1" />
-    <tags_users id="2" user_id="1" tag_id="1" />
-    <tags_users id="3" user_id="1" tag_id="2" />
     <search_display module_id="1" item_id="1" project_id="1"
         first_display="Hallo Welt" />
     <search_display module_id="1" item_id="6" project_id="5"

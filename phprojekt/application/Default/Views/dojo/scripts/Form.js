@@ -1113,15 +1113,12 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
 
         if (this.id > 0) {
             for (var i = 0; i < currentTags.length; i++) {
-                value += currentTags[i].string;
+                value += currentTags[i];
                 if (i != currentTags.length - 1) {
-                    value += ', ';
+                    value += ' ';
                 }
             }
         }
-
-        // Draw the tags
-        this.publish("drawTagsBox", [currentTags]);
 
         return this.fieldTemplate.textFieldRender(meta[0].label, meta[0].key, value, 0, false, !this._writePermissions);
     },

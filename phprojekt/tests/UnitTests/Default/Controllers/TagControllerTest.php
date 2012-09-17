@@ -18,8 +18,7 @@
 /**
  * Tests for Tag Controller
  *
- * @version    Release: 6.1.0
- * @group      default
+ * @version    Release: 6.1.5
  * @group      controller
  * @group      default-controller
  */
@@ -30,38 +29,7 @@ class Phprojekt_TagController_Test extends FrontInit
     }
 
     /**
-     * Test of json get tags
-     */
-    public function testJsonGetTagsAction()
-    {
-        $this->setRequestUrl('Default/Tag/jsonGetTags/');
-        $this->request->setParam('nodeId', 1);
-        $this->request->setParam('limit', 2);
-        $response = FrontInit::phprJsonToArray($this->getResponse());
-        $expected = array(
-            'metadata' => array(
-                array(
-                    'key'   => 'string',
-                    'label' => 'Tags',
-                ),
-                array(
-                    'key'   => 'count',
-                    'label' => 'Count',
-                ),
-            ),
-            'data' => array(
-                array(
-                    'string' => 'this',
-                    'count'  => '3',
-                ),
-            ),
-            'numRows' => 1,
-        );
-        $this->assertEquals($expected, $response);
-    }
-
-    /**
-     * Test of GetModulesByTag
+     * Test of jsonSaveTagsAction
      */
     public function testJsonSaveTagsAction()
     {
@@ -70,21 +38,155 @@ class Phprojekt_TagController_Test extends FrontInit
         $this->request->setParam('string', 'test');
         $this->request->setParam('id', 1);
         $this->request->setParam('projectId', 1);
-        $this->getResponse();
+        $response = $this->getResponse();
+        $this->assertEquals('{}&&({"type":"success","message":"The Tags were added correctly","id":0})', $response);
+
+        $tag  = new Phprojekt_Tags();
+        $tags = $tag->search("test");
+        $this->assertEquals(array(
+            array(
+                'id'            => 1,
+                'moduleId'      => 1,
+                'moduleName'    => 'Project',
+                'moduleLabel'   => 'Project',
+                'firstDisplay'  => 'test',
+                'secondDisplay' => null,
+                'projectId'     => 1
+            )
+        ), $tags);
     }
 
     /**
-     * Test of GetModulesByTag
+     * Test of jsonSaveTagsAction
      */
-    public function testJsonGetModulesByTagAction()
+    public function testJsonSaveTagsActionMultiple()
     {
-        $this->setRequestUrl('Default/Tag/jsonGetModulesByTag/');
-        $this->request->setParam('nodeId', 1);
-        $this->request->setParam('tag', 'this');
-        $this->request->setParam('limit', 2);
+        $this->setRequestUrl('Default/Tag/jsonSaveTags/');
+        $this->request->setParam('moduleName', 'Project');
+        $this->request->setParam('string', 'test awesome');
+        $this->request->setParam('id', 1);
+        $this->request->setParam('projectId', 1);
         $response = $this->getResponse();
-        $expected = '{"id":1,"moduleId":1,"moduleName":"Project","moduleLabel":"Project","firstDisplay":"test",'
-            . '"secondDisplay":null,"projectId":1}';
-        $this->assertContains($expected, $response);
+        $this->assertEquals('{}&&({"type":"success","message":"The Tags were added correctly","id":0})', $response);
+
+        $tag = new Phprojekt_Tags();
+        $tags = $tag->search("test awesome");
+        $this->assertEquals(array(
+            array(
+                'id'            => 1,
+                'moduleId'      => 1,
+                'moduleName'    => 'Project',
+                'moduleLabel'   => 'Project',
+                'firstDisplay'  => 'test',
+                'secondDisplay' => null,
+                'projectId'     => 1
+            )
+        ), $tags);
     }
+
+    /**
+     * Test of jsonSaveTagsAction
+     */
+    public function testJsonSaveTagsActionInvalid()
+    {
+        $this->setExpectedException('Zend_Controller_Action_Exception');
+        $this->setRequestUrl('Default/Tag/jsonSaveTags/');
+        $this->request->setParam('moduleName', 'Project');
+        $this->request->setParam('string', 'test');
+        $this->request->setParam('projectId', 1);
+        $response = $this->getResponse();
+    }
+
+    /**
+     * Test of jsonDeleteTagsAction
+     */
+    public function testJsonDeleteTagsAction()
+    {
+        $tag = new Phprojekt_Tags();
+        $tags = $tag->search("this");
+        $this->assertEquals(array(
+            array(
+                'id'            => 2,
+                'moduleId'      => 1,
+                'moduleName'    => 'Project',
+                'moduleLabel'   => 'Project',
+                'firstDisplay'  => '',
+                'secondDisplay' => '',
+                'projectId'     => 1
+            )
+        ), $tags);
+
+        $this->setRequestUrl('Default/Tag/jsonDeleteTags/');
+        $this->request->setParam('moduleName', 'Project');
+        $this->request->setParam('id', 2);
+        $response = $this->getResponse();
+
+        $this->assertEquals('{}&&({"type":"success","message":"The Tags were deleted correctly","id":0})', $response);
+
+        $tags = $tag->search("this");
+        $this->assertTrue(empty($tags));
+    }
+
+    /**
+     * Test of jsonDeleteTagsAction
+     */
+    public function testJsonDeleteTagsActionInvalid()
+    {
+        $this->setExpectedException('Zend_Controller_Action_Exception');
+        $this->setRequestUrl('Default/Tag/jsonDeleteTags/');
+        $this->request->setParam('moduleName', 'Project');
+        $response = $this->getResponse();
+    }
+
+    /**
+     * Test of jsonGetTagsByModuleAction
+     */
+    public function testGetTagsByModuleAction()
+    {
+        $this->setRequestUrl('Default/Tag/jsonGetTagsByModule/');
+        $this->request->setParam('moduleName', 'Project');
+        $this->request->setParam('id', 2);
+        $response = FrontInit::phprJsonToArray($this->getResponse());
+
+        $this->assertEquals(array(
+            'metadata' => array(
+                array(
+                    'key'   => 'string',
+                    'label' => 'Tags'
+                ),
+                array(
+                    'key'   => 'count',
+                    'label' => 'Count'
+                )
+            ),
+            'data'     => array('this', 'fake'),
+            'numRows'  => 2
+        ), $response);
+    }
+
+    /**
+     * Test of jsonGetTagsByModuleAction
+     */
+    public function testGetTagsByModuleActionNoId()
+    {
+        $this->setRequestUrl('Default/Tag/jsonGetTagsByModule/');
+        $this->request->setParam('moduleName', 'Project');
+        $response = FrontInit::phprJsonToArray($this->getResponse());
+
+        $this->assertEquals(array(
+            'metadata' => array(
+                array(
+                    'key'   => 'string',
+                    'label' => 'Tags'
+                ),
+                array(
+                    'key'   => 'count',
+                    'label' => 'Count'
+                )
+            ),
+            'data'     => array(),
+            'numRows'  => 0
+        ), $response);
+    }
+
 }

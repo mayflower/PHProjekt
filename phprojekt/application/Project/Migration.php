@@ -34,6 +34,19 @@ class Project_Migration extends Phprojekt_Migration_Abstract
         return '6.1.5';
     }
 
+    public function onVersionStep($oldVersion, $newVersion) {
+        if ($newVersion === "6.1.4") {
+            $this->_db->query(<<<HERE
+INSERT INTO tags_modules_items (module_id, item_id, tag_id)
+    SELECT m.module_id, m.item_id, t.id FROM tags_modules AS m
+    JOIN tags_users AS u ON u.id = m.tag_user_id
+    JOIN tags AS t ON t.id = u.tag_id
+    GROUP BY m.module_id, m.item_id, t.id
+HERE
+);
+        }
+    }
+
     /**
      * Upgrade to the latest version.
      *
@@ -49,9 +62,22 @@ class Project_Migration extends Phprojekt_Migration_Abstract
         $this->_db = $db;
 
         if (is_null($currentVersion)
-                || Phprojekt::compareVersion($currentVersion, '6.1.0-dev') < 0) {
-            $this->parseDbFile('Project');
-            Phprojekt::getInstance()->getCache()->clean(Zend_Cache::CLEANING_MODE_ALL);
+            || Phprojekt::compareVersion($currentVersion, '6.1.4') < 0)
+        {
+            $obj =& $this;
+            $stepWrapper = function ($oldVersion, $newVersion) use ($obj) {
+                $obj->onVersionStep($oldVersion, $newVersion);
+            };
+
+            $dbParser = new Phprojekt_DbParser(
+                array('useExtraData' => false),
+                Phprojekt::getInstance()->getDb()
+            );
+            $dbParser->parseSingleModuleData('Project', null,  $stepWrapper);
+
+            Phprojekt::getInstance()->getCache()->clean(
+                Zend_Cache::CLEANING_MODE_ALL
+            );
         }
         if (Phprojekt::compareVersion($currentVersion, '6.1.5') < 0) {
             $this->_renameProjectsWithSameTitle();

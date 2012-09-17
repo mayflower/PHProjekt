@@ -182,8 +182,6 @@ dojo.declare("phpr.Default.System.PageManager", null, {
                 }
             } else if ("undefined" != typeof state.search) {
                 mod.showSearchResults(state.search || "");
-            } else if ("undefined" != typeof state.tag) {
-                mod.showTagsResults(state.tag || "");
             } else if ("undefined" != typeof state.action) {
                 // TODO: create better semantics for custom function calls
                 if (dojo.isFunction(mod.processActionFromUrlHash)) {

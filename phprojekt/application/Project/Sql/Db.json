@@ -30,6 +30,23 @@
             }
         }
     }
+},
+
+"6.1.4":
+{
+    "structure":
+    {
+        "tags_modules_items":
+        {
+            "create":
+            {
+                "id":        "default",
+                "tag_id":    {"type": "int", "notNull": "true"},
+                "module_id": {"type": "int", "notNull": "true"},
+                "item_id":   {"type": "int", "notNull": "true"}
+            }
+        }
+    }
 }
 
 }
