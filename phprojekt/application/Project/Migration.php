@@ -69,9 +69,7 @@ HERE
     {
         $this->_db = $db;
 
-        if (is_null($currentVersion)
-            || Phprojekt::compareVersion($currentVersion, '6.1.4') < 0)
-        {
+        if (is_null($currentVersion) || Phprojekt::compareVersion($currentVersion, '6.1.4') < 0) {
             $obj =& $this;
             $before = function ($oldVersion, $newVersion) use ($obj) {
                 $obj->beforeVersionStep($oldVersion, $newVersion);
