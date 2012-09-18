@@ -34,7 +34,8 @@ class Project_Migration extends Phprojekt_Migration_Abstract
         return '6.1.5';
     }
 
-    public function onVersionStep($oldVersion, $newVersion) {
+    public function afterVersionStep($oldVersion, $newVersion)
+    {
         if ($newVersion === "6.1.4") {
             $this->_db->query(<<<HERE
 INSERT INTO tags_modules_items (module_id, item_id, tag_id)
@@ -65,15 +66,15 @@ HERE
             || Phprojekt::compareVersion($currentVersion, '6.1.4') < 0)
         {
             $obj =& $this;
-            $stepWrapper = function ($oldVersion, $newVersion) use ($obj) {
-                $obj->onVersionStep($oldVersion, $newVersion);
+            $after = function ($oldVersion, $newVersion) use ($obj) {
+                $obj->afterVersionStep($oldVersion, $newVersion);
             };
 
             $dbParser = new Phprojekt_DbParser(
                 array('useExtraData' => false),
                 Phprojekt::getInstance()->getDb()
             );
-            $dbParser->parseSingleModuleData('Project', null,  $stepWrapper);
+            $dbParser->parseSingleModuleData('Project', null, array(after' => $after));
 
             Phprojekt::getInstance()->getCache()->clean(
                 Zend_Cache::CLEANING_MODE_ALL

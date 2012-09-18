@@ -170,17 +170,18 @@ class Phprojekt_DbParser
     /**
      * Parse the data of a single module.
      *
-     * @param string $module                The module
-     * @param string $coreDirectory         The core directory. The module is assumed to
-     *                                      live under $coreDirectory . '/' . $module.
-     *                                      Defaults to PHPR_CORE_PATH if omitted.
-     * @param function $versionStepCallback A callback function that is called on every version increment.
-     *                                      It takes 2 arguments $oldVersion and $newVersion to mark the increment.
-     *                                      It should return nothing.
+     * @param string $module              The module
+     * @param string $coreDirectory       The core directory. The module is assumed to
+     *                                    live under $coreDirectory . '/' . $module.
+     *                                    Defaults to PHPR_CORE_PATH if omitted.
+     * @param array $versionStepCallbacks May contain the keys 'before' and 'after.
+     *                                    Each can be a callback function that is called on every version increment.
+     *                                    It takes 2 arguments $oldVersion and $newVersion to mark the increment.
+     *                                    It should return nothing.
      *
      * @return void
      */
-    public function parseSingleModuleData($module, $coreDirectory = null, $versionStepCallback = null)
+    public function parseSingleModuleData($module, $coreDirectory = null, array $versionStepCallbacks = array())
     {
         if (null === $coreDirectory) {
             $coreDirectory = PHPR_CORE_PATH;
@@ -210,7 +211,7 @@ class Phprojekt_DbParser
             }
         }
         if (!empty($data)) {
-            $this->_parseData($data, $module, $versionStepCallback);
+            $this->_parseData($data, $module, $versionStepCallbacks);
         }
     }
 
@@ -220,15 +221,19 @@ class Phprojekt_DbParser
      *
      * Update the module with the new version.
      *
-     * @param array  $data   Array with all the version and data for parse.
-     * @param string $module Current module of the data.
+     * @param array  $data                 Array with all the version and data for parse.
+     * @param string $module               Current module of the data.
+     * @param array  $versionStepCallbacks See parseSingleModuleData documentation
      *
      * @return void
      */
-    private function _parseData($data, $module, $versionStepCallback = null)
+    private function _parseData($data, $module, array $versionStepCallbacks = array())
     {
-        $data          = $this->_getVersionsForProcess($module, $this->_sortData($data));
-        $moduleVersion = $this->_getModuleVersion($module);
+        $data           = $this->_getVersionsForProcess($module, $this->_sortData($data));
+        $moduleVersion  = $this->_getModuleVersion($module);
+        $beforeCallback = array_key_exists('before', $versionStepCallbacks) ? $versionStepCallbacks['before'] : null;
+        $afterCallback  = array_key_exists('after', $versionStepCallbacks) ? $versionStepCallbacks['after'] : null;
+
         foreach ($data as $version => $content) {
             if (!isset($this->_messages[$module])) {
                 $this->_messages[$module] = array();
@@ -236,6 +241,9 @@ class Phprojekt_DbParser
             $this->_messages[$module]['version'] = $version;
             // Only process the initialData if the module version is lower than the data version
             if (Phprojekt::compareVersion($moduleVersion, $version) < 0) {
+                if (is_callable($beforeCallback)) {
+                    $beforeCallback($moduleVersion, $version);
+                }
                 if (!isset($this->_messages[$module]['process'])) {
                     $this->_messages[$module]['process'] = array();
                 }
@@ -255,8 +263,8 @@ class Phprojekt_DbParser
                 }
                 $this->_messages[$module]['finish'] = 'Done';
 
-                if (is_callable($versionStepCallback )) {
-                    $versionStepCallback($moduleVersion, $version);
+                if (is_callable($afterCallback)) {
+                    $afterCallback($moduleVersion, $version);
                 }
             } else {
                 $this->_messages[$module]['finish'] = 'Already installed';
