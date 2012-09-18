@@ -402,6 +402,20 @@ class Phprojekt_DbParser
                             $this->_tableManager->deleteField($tableName, $field);
                         }
                         break;
+                    case 'createIndex':
+                        if (!array_key_exists('columns', $fields)) {
+                            throw new Exception('Mandatory entry "columns" not found.');
+                        }
+
+                        $options = array();
+                        if (array_key_exists('name', $fields)) {
+                            $options['name'] = $fields['name'];
+                        }
+                        if (array_key_exists('unique', $fields)) {
+                            $options['unique'] = $fields['unique'];
+                        }
+                        $this->_tableManager->createIndex($tableName, $fields['columns'], $options);
+                        break;
                 }
             }
         }
