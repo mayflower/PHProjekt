@@ -48,6 +48,13 @@ HERE
         }
     }
 
+    public function beforeVersionStep($oldVersion, $newVersion)
+    {
+        if ($newVersion === "6.1.5") {
+            $this->_renameProjectsWithSameTitle();
+        }
+    }
+
     /**
      * Upgrade to the latest version.
      *
@@ -66,6 +73,9 @@ HERE
             || Phprojekt::compareVersion($currentVersion, '6.1.4') < 0)
         {
             $obj =& $this;
+            $before = function ($oldVersion, $newVersion) use ($obj) {
+                $obj->beforeVersionStep($oldVersion, $newVersion);
+            };
             $after = function ($oldVersion, $newVersion) use ($obj) {
                 $obj->afterVersionStep($oldVersion, $newVersion);
             };
@@ -74,15 +84,11 @@ HERE
                 array('useExtraData' => false),
                 Phprojekt::getInstance()->getDb()
             );
-            $dbParser->parseSingleModuleData('Project', null, array(after' => $after));
+            $dbParser->parseSingleModuleData('Project', null, array('before' => $before, 'after' => $after));
 
             Phprojekt::getInstance()->getCache()->clean(
                 Zend_Cache::CLEANING_MODE_ALL
             );
-        }
-        if (Phprojekt::compareVersion($currentVersion, '6.1.5') < 0) {
-            $this->_renameProjectsWithSameTitle();
-            $this->_makeTitleParentUniqueIndex();
         }
     }
 
@@ -100,10 +106,5 @@ JOIN (
 SET p.title = CONCAT(p.title, ' (', p.id, ')')
 HERE
 );
-    }
-
-    private function _makeTitleParentUniqueIndex()
-    {
-        $this->_db->query('ALTER TABLE project ADD UNIQUE INDEX (title, project_id)');
     }
 }
