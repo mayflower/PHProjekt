@@ -50,10 +50,9 @@ class Filemanager_Migration extends Phprojekt_Migration_Abstract
         $this->_db = $db;
 
         if (Phprojekt::compareVersion($currentVersion, '6.1.5') < 0) {
+            $this->_renameFilemanagersWithSameTitle();
             $this->parseDbFile('Filemanager');
             Phprojekt::getInstance()->getCache()->clean(Zend_Cache::CLEANING_MODE_ALL);
-            $this->_renameFilemanagersWithSameTitle();
-            $this->_makeTitleProjectUniqueIndex();
         }
     }
 
@@ -71,10 +70,5 @@ JOIN (
 SET f.title = CONCAT(f.title, ' (', f.id, ')')
 HERE
 );
-    }
-
-    private function _makeTitleProjectUniqueIndex()
-    {
-        $this->_db->query('ALTER TABLE filemanager ADD UNIQUE INDEX (title, project_id)');
     }
 }
