@@ -62,25 +62,6 @@ dojo.declare("phpr.Project.Main", phpr.Default.Main, {
         this.form = new this.formBasicDataWidget(this, phpr.currentProjectId, phpr.module, {}, view.centerMainContent);
     },
 
-    openForm:function(id, module) {
-        // Summary:
-        //    This function opens a new Detail View
-        this.preOpenForm();
-
-        if (id == undefined || id == 0) {
-            var params          = new Array();
-            params['startDate'] = phpr.date.getIsoDate(new Date());
-        }
-
-        var view = phpr.viewManager.useDefaultView({blank: true});
-
-        if (!this.grid) {
-            this.reload();
-        }
-
-        this.form = new this.formWidget(this, id, module, params, null);
-    },
-
     updateCacheData:function() {
         phpr.tree.updateData();
         if (this.grid) {
