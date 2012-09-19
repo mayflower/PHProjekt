@@ -323,7 +323,7 @@ dojo.declare("phpr.Default.Field", phpr.Default.System.Component, {
                 label:    itemlabel,
                 labelfor: (itemdisabled) ? itemid + "_disabled" : itemid,
                 id:       (itemdisabled) ? itemid + "_disabled" : itemid,
-                value:    itemvalue,
+                value:    itemvalue || phpr.date.getIsoDate(new Date()),
                 required: itemrequired,
                 disabled: (itemdisabled) ? "disabled" : '',
                 tooltip:  this.getTooltip(itemhint)
