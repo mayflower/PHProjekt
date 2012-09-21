@@ -211,7 +211,7 @@ class IndexController extends Zend_Controller_Action
         // Skip initial request
         // and jsonGetConfigurations since is the action that returns
         // the valid token for use in the next request
-        if ($controller == 'index') {
+        if ($controller == 'index' || $controller == 'Upgrade') {
             if ($action == 'index' || $action == 'jsonGetConfigurations') {
                 return true;
             }

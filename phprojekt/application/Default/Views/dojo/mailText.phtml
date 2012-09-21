@@ -1,6 +1,6 @@
 <?php
 echo $this->title . ':' . $this->endOfLine;
-echo $this->url . $this->endOfLine;
+echo $this->serverUrl() . $this->baseUrl($this->url) . $this->endOfLine;
 echo $this->endOfLine;
 echo $this->currentData . ':' . $this->endOfLine;
 echo $this->endOfLine;
