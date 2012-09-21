@@ -1,7 +1,5 @@
 <?php
 /**
- * Helper to delete tree nodes and models.
- *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 3 as published by the Free Software Foundation
@@ -11,27 +9,12 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
- * @category   PHProjekt
- * @package    Application
- * @subpackage Default
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
- * @author     Gustavo Solt <solt@mayflower.de>
  */
 
 /**
  * Helper to delete tree nodes and models.
- *
- * @category   PHProjekt
- * @package    Application
- * @subpackage Default
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
- * @author     Gustavo Solt <solt@mayflower.de>
  */
 final class Default_Helpers_Delete
 {
@@ -58,7 +41,7 @@ final class Default_Helpers_Delete
 
             // Delete related items
             $modules = $relations->getProjectModulePermissionsById($id);
-            $tag     = Phprojekt_Tags::getInstance();
+            $tag     = new Phprojekt_Tags();
             foreach ($modules['data'] as $moduleData) {
                 if ($moduleData['inProject']) {
                     $module = Phprojekt_Loader::getModel($moduleData['name'], $moduleData['name']);

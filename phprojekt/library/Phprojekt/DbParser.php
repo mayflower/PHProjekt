@@ -1,7 +1,5 @@
 <?php
 /**
- * DbParser Class for process the json db data.
- *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 3 as published by the Free Software Foundation
@@ -11,27 +9,12 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
- * @category   PHProjekt
- * @package    Phprojekt
- * @subpackage Core
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
- * @author     Gustavo Solt <solt@mayflower.de>
  */
 
 /**
  * DbParser Class for process the json db data.
- *
- * @category   PHProjekt
- * @package    Phprojekt
- * @subpackage Core
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
- * @author     Gustavo Solt <solt@mayflower.de>
  */
 class Phprojekt_DbParser
 {
@@ -187,14 +170,17 @@ class Phprojekt_DbParser
     /**
      * Parse the data of a single module.
      *
-     * @param string $module        The module
-     * @param string $coreDirectory The core directory. The module is assumed to
-     *                              live under $coreDirectory . '/' . $module.
-     *                              Defaults to PHPR_CORE_PATH if omitted.
+     * @param string $module                The module
+     * @param string $coreDirectory         The core directory. The module is assumed to
+     *                                      live under $coreDirectory . '/' . $module.
+     *                                      Defaults to PHPR_CORE_PATH if omitted.
+     * @param function $versionStepCallback A callback function that is called on every version increment.
+     *                                      It takes 2 arguments $oldVersion and $newVersion to mark the increment.
+     *                                      It should return nothing.
      *
      * @return void
      */
-    public function parseSingleModuleData($module, $coreDirectory = null)
+    public function parseSingleModuleData($module, $coreDirectory = null, $versionStepCallback = null)
     {
         if (null === $coreDirectory) {
             $coreDirectory = PHPR_CORE_PATH;
@@ -224,7 +210,7 @@ class Phprojekt_DbParser
             }
         }
         if (!empty($data)) {
-            $this->_parseData($data, $module);
+            $this->_parseData($data, $module, $versionStepCallback);
         }
     }
 
@@ -239,7 +225,7 @@ class Phprojekt_DbParser
      *
      * @return void
      */
-    private function _parseData($data, $module)
+    private function _parseData($data, $module, $versionStepCallback = null)
     {
         $data          = $this->_getVersionsForProcess($module, $this->_sortData($data));
         $moduleVersion = $this->_getModuleVersion($module);
@@ -268,10 +254,15 @@ class Phprojekt_DbParser
                     $this->_processData($this->_convertSpecialValues($content['extraData'], 0));
                 }
                 $this->_messages[$module]['finish'] = 'Done';
+
+                if (is_callable($versionStepCallback )) {
+                    $versionStepCallback($moduleVersion, $version);
+                }
             } else {
                 $this->_messages[$module]['finish'] = 'Already installed';
             }
             $this->_setModuleVersion($module, $version);
+            $moduleVersion = $version;
         }
     }
 

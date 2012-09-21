@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.1.62, for pc-linux-gnu (x86_64)
+-- MySQL dump 10.13  Distrib 5.5.24, for debian-linux-gnu (i686)
 --
--- Host: localhost    Database: phprojekt_test
+-- Host: localhost    Database: phprojekt
 -- ------------------------------------------------------
--- Server version	5.1.62-log
+-- Server version	5.5.24-0ubuntu0.12.04.1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -66,11 +66,10 @@ DROP TABLE IF EXISTS `calendar2_user_relation`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `calendar2_user_relation` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
   `calendar2_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `confirmation_status` int(11) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`calendar2_id`,`user_id`)
 ) ENGINE=MEMORY AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -266,7 +265,7 @@ CREATE TABLE `history` (
   `action` varchar(50) NOT NULL,
   `datetime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=MEMORY AUTO_INCREMENT=152 DEFAULT CHARSET=utf8;
+) ENGINE=MEMORY DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -376,9 +375,8 @@ CREATE TABLE `module` (
   `save_type` int(1) NOT NULL DEFAULT '0',
   `version` varchar(20) DEFAULT NULL,
   `active` int(1) NOT NULL DEFAULT '1',
-  `dependence` varchar(255) NOT NULL DEFAULT 'Application',
   PRIMARY KEY (`id`)
-) ENGINE=MEMORY AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
+) ENGINE=MEMORY AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -394,7 +392,7 @@ CREATE TABLE `module_instance` (
   `module` varchar(255) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MEMORY AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=MEMORY AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -451,7 +449,7 @@ CREATE TABLE `project` (
   `budget` varchar(10) DEFAULT NULL,
   `contact_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MEMORY AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+) ENGINE=MEMORY AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -466,7 +464,7 @@ CREATE TABLE `project_module_permissions` (
   `module_id` int(11) NOT NULL,
   `project_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MEMORY AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=MEMORY AUTO_INCREMENT=29 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -482,7 +480,7 @@ CREATE TABLE `project_role_user_permissions` (
   `user_id` int(11) NOT NULL,
   `role_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MEMORY AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=MEMORY AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -497,7 +495,7 @@ CREATE TABLE `role` (
   `name` varchar(255) NOT NULL,
   `parent` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MEMORY AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=MEMORY AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -513,7 +511,7 @@ CREATE TABLE `role_module_permissions` (
   `module_id` int(11) NOT NULL,
   `access` int(3) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MEMORY AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=MEMORY AUTO_INCREMENT=37 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -560,7 +558,7 @@ CREATE TABLE `search_words` (
   `word` varchar(255) NOT NULL,
   `count` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MEMORY AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=MEMORY DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -605,39 +603,24 @@ DROP TABLE IF EXISTS `tags`;
 CREATE TABLE `tags` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `word` varchar(255) NOT NULL,
-  `crc32` bigint(20) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MEMORY AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `tags_modules`
+-- Table structure for table `tags_modules_items`
 --
 
-DROP TABLE IF EXISTS `tags_modules`;
+DROP TABLE IF EXISTS `tags_modules_items`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tags_modules` (
+CREATE TABLE `tags_modules_items` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `tag_id` int(11) NOT NULL,
   `module_id` int(11) NOT NULL,
   `item_id` int(11) NOT NULL,
-  `tag_user_id` int(11) NOT NULL,
-  PRIMARY KEY (`module_id`,`item_id`,`tag_user_id`)
-) ENGINE=MEMORY DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `tags_users`
---
-
-DROP TABLE IF EXISTS `tags_users`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tags_users` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_id` int(11) NOT NULL,
-  `tag_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MEMORY AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=MEMORY DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -660,7 +643,7 @@ CREATE TABLE `timecard` (
   `uri` varchar(255) NOT NULL,
   `uid` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MEMORY AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+) ENGINE=MEMORY DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -743,4 +726,4 @@ CREATE TABLE `user_proxy` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2012-05-14 12:10:30
+-- Dump completed on 2012-07-06 13:51:50

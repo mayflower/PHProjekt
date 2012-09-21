@@ -1,7 +1,5 @@
 <?php
 /**
- * Unit test
- *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 3 as published by the Free Software Foundation
@@ -23,35 +21,22 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
- * @category   PHProjekt
- * @package    UnitTests
- * @subpackage Statistic
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
- * @author     Gustavo Solt <solt@mayflower.de>
  */
 
 
 /**
  * Tests for Index Controller
  *
- * @category   PHProjekt
- * @package    UnitTests
- * @subpackage Statistic
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
- * @author     Gustavo Solt <solt@mayflower.de>
  * @group      statistic
  * @group      controller
  * @group      statistic-controller
  */
 class Statistic_IndexController_Test extends FrontInit
 {
-    protected function getDataSet() {
+    protected function getDataSet()
+    {
         return new PHPUnit_Extensions_Database_DataSet_CompositeDataSet(
             array(
                 $this->createFlatXMLDataSet(dirname(__FILE__) . '/../../common.xml'),
@@ -85,7 +70,7 @@ class Statistic_IndexController_Test extends FrontInit
                 ),
                 'rows' => array (
                     1 => array (
-                        1 => 120
+                        1 => 360
                     )
                 )
             )
@@ -123,12 +108,14 @@ class Statistic_IndexController_Test extends FrontInit
 
         $response = $this->getResponse();
 
-        $this->assertEquals('"Project","Test","Total"'."\n"
-            . '"PHProjekt","02:00","02:00"'."\n"
+        $this->assertEquals(
+            '"Project","Test","Total"'."\n"
+            . '"PHProjekt","06:00","06:00"'."\n"
             . '"Test Project","00:00","00:00"'."\n"
             . '"Sub Project","00:00","00:00"'."\n"
             . '"Sub Sub Project 1","00:00","00:00"'."\n"
             . '"Sub Sub Project 2","00:00","00:00"'."\n"
-            . '"Total","02:00","02:00"'."\n", $response);
+            . '"Total","06:00","06:00"'."\n", $response
+        );
     }
 }

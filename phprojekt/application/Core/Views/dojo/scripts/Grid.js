@@ -21,19 +21,19 @@
 dojo.provide("phpr.Core.Grid");
 
 dojo.declare("phpr.Core.Grid", phpr.Default.LegacyGrid, {
-    setUrl:function() {
+    setUrl: function() {
         this.url = 'index.php/Core/' + this.main.module.toLowerCase() + '/jsonList/nodeId/1';
     },
 
-    setGetExtraActionsUrl:function() {
+    setGetExtraActionsUrl: function() {
         this.getActionsUrl = 'index.php/Core/' + this.main.module.toLowerCase() + '/jsonGetExtraActions';
     },
 
-    useCheckbox:function() {
+    useCheckbox: function() {
         return false;
     },
 
-    getLinkForEdit:function(id) {
+    getLinkForEdit: function(id) {
         phpr.pageManager.modifyCurrentState({
             moduleName: this.main.module,
             id: id,
@@ -41,17 +41,14 @@ dojo.declare("phpr.Core.Grid", phpr.Default.LegacyGrid, {
         });
     },
 
-    canEdit:function(inRowIndex) {
+    canEdit: function(inRowIndex) {
         return true;
     },
 
-    showTags:function() {
+    setExportButton: function(meta) {
     },
 
-    setExportButton:function(meta) {
-    },
-
-    getDoActionUrl:function(action, idUrl, ids) {
+    getDoActionUrl: function(action, idUrl, ids) {
         // Summary:
         //    Custom getDoActionUrl for Core
         return 'index.php/Core/' + phpr.module.toLowerCase() + '/' + action + '/' + idUrl + '/' + ids;

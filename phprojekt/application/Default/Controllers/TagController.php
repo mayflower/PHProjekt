@@ -1,8 +1,5 @@
 <?php
 /**
- * Tag Controller.
- * The controller will get all the actions for manage tags.
- *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 3 as published by the Free Software Foundation
@@ -12,60 +9,16 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
- * @category   PHProjekt
- * @package    Application
- * @subpackage Default
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
- * @author     David Soria Parra <soria_parra@mayflower.de>
  */
 
 /**
  * Tag Controller.
  * The controller will get all the actions for manage tags.
- *
- * @category   PHProjekt
- * @package    Application
- * @subpackage Default
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
- * @author     David Soria Parra <soria_parra@mayflower.de>
  */
 class TagController extends IndexController
 {
-    /**
-     * Returns an array with tags order by number of ocurrences.
-     *
-     * Returns the metadata of the fieds and the data itself with:
-     * <pre>
-     *  - string => The tag.
-     *  - count  => Number of ocurrences.
-     * </pre>
-     * Also the number of rows is returned.
-     *
-     * OPTIONAL request parameters:
-     * <pre>
-     *  - integer <b>limit</b> Number of results.
-     * </pre>
-     *
-     * The return is in JSON format.
-     *
-     * @return void
-     */
-    public function jsonGetTagsAction()
-    {
-        $tagObj = Phprojekt_Tags::getInstance();
-        $limit  = (int) $this->getRequest()->getParam('limit', 0);
-        $tags   = $tagObj->getTags($limit);
-        $fields = $tagObj->getFieldDefinition();
-
-        Phprojekt_Converter_Json::echoConvert($tags, $fields);
-    }
-
     /**
      * Returns an array with tags for one item.
      *
@@ -89,7 +42,7 @@ class TagController extends IndexController
      */
     public function jsonGetTagsByModuleAction()
     {
-        $tagObj = Phprojekt_Tags::getInstance();
+        $tagObj = new Phprojekt_Tags();
 
         $id        = (int) $this->getRequest()->getParam('id', 0);
         $limit     = (int) $this->getRequest()->getParam('limit', 0);
@@ -104,40 +57,6 @@ class TagController extends IndexController
         $fields = $tagObj->getFieldDefinition();
 
         Phprojekt_Converter_Json::echoConvert($tags, $fields);
-    }
-
-    /**
-     * Search for a tag.
-     *
-     * Returns an array with all the modules with the tag, with:
-     * <pre>
-     *  - id            => id of the item found.
-     *  - moduleId      => id of the module.
-     *  - moduleName    => Name of the module.
-     *  - moduleLabel   => Display for the module.
-     *  - firstDisplay  => Firts display for the item (Ej. title).
-     *  - secondDisplay => Second display for the item (Ej. notes).
-     *  - projectId     => Parent project id of the item.
-     * </pre>
-     *
-     * OPTIONAL request parameters:
-     * <pre>
-     *  - integer <b>tag</b>   Tag to search.
-     *  - integer <b>limit</b> Number of results.
-     * </pre>
-     *
-     * The return is in JSON format.
-     *
-     * @return void
-     */
-    public function jsonGetModulesByTagAction()
-    {
-        $tagObj = Phprojekt_Tags::getInstance();
-        $tag    = (string) $this->getRequest()->getParam('tag', '');
-        $limit  = (int) $this->getRequest()->getParam('limit', 0);
-        $tags   = $tagObj->getModulesByTag($tag, $limit);
-
-        Phprojekt_Converter_Json::echoConvert($tags);
     }
 
     /**
@@ -168,7 +87,7 @@ class TagController extends IndexController
      */
     public function jsonSaveTagsAction()
     {
-        $tagObj = Phprojekt_Tags::getInstance();
+        $tagObj = new Phprojekt_Tags();
         $id     = (int) $this->getRequest()->getParam('id');
         $string = (string) $this->getRequest()->getParam('string', '');
 
@@ -217,7 +136,7 @@ class TagController extends IndexController
      */
     public function jsonDeleteTagsAction()
     {
-        $tagObj = Phprojekt_Tags::getInstance();
+        $tagObj = new Phprojekt_Tags();
         $id     = (int) $this->getRequest()->getParam('id');
 
         if (empty($id)) {

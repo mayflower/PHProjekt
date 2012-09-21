@@ -1,10 +1,5 @@
 <?php
 /**
- * Class for manage the words-module relation.
- *
- * The class provide the functions for save/delete/search
- * the words - module relation in the SearchWordsModule table.
- *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 3 as published by the Free Software Foundation
@@ -14,14 +9,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
- * @category   PHProjekt
- * @package    Phprojekt
- * @subpackage Search
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
- * @author     Gustavo Solt <solt@mayflower.de>
  */
 
 /**
@@ -29,15 +18,6 @@
  *
  * The class provide the functions for save/delete/search
  * the words - module relation in the SearchWordsModule table.
- *
- * @category   PHProjekt
- * @package    Phprojekt
- * @subpackage Search
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
- * @author     Gustavo Solt <solt@mayflower.de>
  */
 class Phprojekt_Search_WordModule extends Zend_Db_Table_Abstract
 {
@@ -180,9 +160,15 @@ class Phprojekt_Search_WordModule extends Zend_Db_Table_Abstract
                     break;
                 }
 
-                // Only fetch records with read access
-                if ($rights->getItemRight($data['module_id'], $data['item_id'], $userId) > 0) {
-                    $result[$data['module_id'] . '-' . $data['item_id']] = $data;
+                $moduleName = Phprojekt_Module::getModuleName($data['module_id']);
+                $model = Phprojekt_Loader::getModel($moduleName, $moduleName);
+
+                if ($model) {
+                    // Only fetch records with read access
+                    $model = $model->find($data['item_id']);
+                    if (!empty($model)) {
+                        $result[$data['module_id'] . '-' . $data['item_id']] = $data;
+                    }
                 }
             }
         }

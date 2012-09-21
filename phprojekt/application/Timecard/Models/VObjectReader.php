@@ -1,7 +1,5 @@
 <?php
 /**
- * Timecard VObject Reader utility class
- *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 3 as published by the Free Software Foundation
@@ -11,27 +9,12 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
- * @category   PHProjekt
- * @package    Application
- * @subpackage Timecard
  * @copyright  Copyright (c) 2012 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.1.5
- * @author     Gustavo Solt <solt@mayflower.de>
  */
 
 /**
  * Utility class to read Timecard models from SabreDAV VObjects.
- *
- * @category   PHProjekt
- * @package    Application
- * @subpackage Timecard
- * @copyright  Copyright (c) 2012 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.1.5
- * @author     Gustavo Solt <solt@mayflower.de>
  */
 class Timecard_Models_VObjectReader
 {

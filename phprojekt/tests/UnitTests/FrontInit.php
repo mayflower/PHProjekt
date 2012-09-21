@@ -1,7 +1,5 @@
 <?php
 /**
- * Unit test
- *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 3 as published by the Free Software Foundation
@@ -11,25 +9,12 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
- * @category   PHProjekt
- * @package    UnitTests
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
- * @author     Gustavo Solt <solt@mayflower.de>
  */
 
 /**
  * Tests for Index Controller
- *
- * @category   PHProjekt
- * @package    UnitTests
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
- * @author     Gustavo Solt <solt@mayflower.de>
  */
 abstract class FrontInit extends DatabaseTest
 {
@@ -175,7 +160,7 @@ abstract class FrontInit extends DatabaseTest
             $this->front->dispatch($this->request, $this->response);
             $this->content = ob_get_contents();
             ob_end_clean();
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             /* make sure we end the output buffering in case of an exception */
             ob_end_clean();
             throw $e;

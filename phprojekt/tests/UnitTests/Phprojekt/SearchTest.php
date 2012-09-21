@@ -1,7 +1,5 @@
 <?php
 /**
- * Unit test
- *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 3 as published by the Free Software Foundation
@@ -11,28 +9,14 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
- * @category   PHProjekt
- * @package    UnitTests
- * @subpackage Phprojekt
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
- * @author     Eduardo Polidor <polidor@mayflower.de>
  */
 
 
 /**
  * Tests for Default Search class
  *
- * @category   PHProjekt
- * @package    UnitTests
- * @subpackage Phprojekt
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
- * @author     Eduardo Polidor <polidor@mayflower.de>
  * @group      phprojekt
  * @group      search
  * @group      phprojekt-search
@@ -56,7 +40,7 @@ class Phprojekt_SearchTest extends DatabaseTest
     public function testIndex()
     {
         $project = new Project_Models_Project(array('db' => $this->sharedFixture));
-        $project->title = 'CCÄC DDÖD TTÜT';
+        $project->title = 'CCÃ„C DDÃ–D TTÃœT';
         $project->path = '/1/';
         $project->ownerId = 1;
         $project->projectId = 1;
@@ -64,10 +48,10 @@ class Phprojekt_SearchTest extends DatabaseTest
         $project->saveRights(array(1 => 255, 2 => 255));
 
         $search = new Phprojekt_Search();
-        $result = $search->search('CCÄC');
+        $result = $search->search('CCÃ„C');
         $this->assertEquals(1, count($result));
 
-        $result = $search->search('CCÄC DDÖD');
+        $result = $search->search('CCÃ„C DDÃ–D');
         $this->assertEquals(1, count($result));
     }
 
@@ -94,7 +78,7 @@ class Phprojekt_SearchTest extends DatabaseTest
         $this->assertEquals(0, count($result));
 
         $search = new Phprojekt_Search();
-        $result = (array)$search->search('CÄ');
+        $result = (array)$search->search('CÃ„');
         $this->assertEquals(0, count($result));
     }
 

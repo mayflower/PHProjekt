@@ -49,21 +49,14 @@ dojo.declare("phpr.Default.SearchContentMixin", phpr.Default.System.DefaultViewC
         this.view.clear = dojo.hitch(this, "clear");
     },
     destroyMixin: function() {
-        this.clear();
-        this._clearCenterMainContent();
-        delete this.view.clear;
-        delete this.view.defaultMainContent;
+        this.inherited(arguments);
         delete this.view.resultsTitleBox;
-        delete this.view.detailsBox;
     },
     update: function(config) {
         this.inherited(arguments);
+        phpr.pageManager.getActiveModule().cleanPage();
         this.clear();
         this._renderSearchResults(config || {});
-    },
-    clear: function() {
-        this._clearCenterMainContent();
-        return this.view;
     },
     _renderSearchResults: function(config) {
         // Create our container layout
@@ -89,19 +82,32 @@ dojo.declare("phpr.Default.SearchContentMixin", phpr.Default.System.DefaultViewC
             }
 
             // append each result to the results list of the module
-            results[modulesData.moduleLabel].push(
-                new phpr.Default.System.TemplateWrapper({
-                    templateName: "phpr.Default.template.results.results.html",
-                    templateData: {
-                        id:            modulesData.id,
-                        moduleId:      modulesData.modulesId,
-                        moduleName:    modulesData.moduleName,
-                        projectId:     modulesData.projectId,
-                        firstDisplay:  modulesData.firstDisplay,
-                        secondDisplay: modulesData.secondDisplay,
-                        resultType:    "tag"
-                    }
-                }));
+            var widget = new phpr.Default.System.TemplateWrapper({
+                templateName: "phpr.Default.template.results.results.html",
+                templateData: {
+                    id:            modulesData.id,
+                    moduleId:      modulesData.modulesId,
+                    moduleName:    modulesData.moduleName,
+                    projectId:     modulesData.projectId,
+                    firstDisplay:  modulesData.firstDisplay,
+                    secondDisplay: modulesData.secondDisplay,
+                    resultType:    "tag"
+                }
+            });
+
+            dojo.connect(
+                widget.linkNode,
+                "click",
+                dojo.hitch(
+                    this,
+                    function(moduleName, itemId, projectId) {
+                        var module = phpr.pageManager.getModule(moduleName);
+                        module.loadResult(itemId, moduleName, projectId);
+                    },
+                    modulesData.moduleName, modulesData.id, modulesData.projectId)
+            );
+
+            results[modulesData.moduleLabel].push(widget);
         }
 
         for (var i in results) {
@@ -207,7 +213,6 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         dojo.subscribe(module + ".reload", this, "reload");
         dojo.subscribe(module + ".openForm", this, "openForm");
         dojo.subscribe(module + ".showSearchResults", this, "showSearchResults");
-        dojo.subscribe(module + ".showTagsResults", this, "showTagsResults");
         dojo.subscribe(module + ".updateCacheData", this, "updateCacheData");
         dojo.subscribe(module + ".loadResult", this, "loadResult");
         dojo.subscribe(module + ".setLanguage", this, "setLanguage");
@@ -255,7 +260,8 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         phpr.pageManager.modifyCurrentState({
             moduleName: module,
             id: id,
-            projectId: projectId
+            projectId: projectId,
+            search: undefined
         }, {
             forceModuleReload: true
         });
@@ -968,25 +974,35 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                 url:       getDataUrl,
                 content:   {words: words, count: 10}
             }).then(dojo.hitch(this, function(data) {
-                if (data) {
-                    var search        = [];
-                    var results       = {};
-                    var index         = 0;
+                if (data && data.search && data.tags) {
+                    var search = [];
+                    var results = {};
+                    var index = 0;
+                    var labelIdMap = {};
 
-                    for (var i = 0; i < data.length; i++) {
-                        modulesData = data[i];
-                        if (!results[modulesData.moduleLabel]) {
-                            results[modulesData.moduleLabel] = [];
+                    var addSearchResult = function(item) {
+                        var moduleLabel = item.moduleLabel;
+                        var itemId = item.id;
+                        if (!results[moduleLabel]) {
+                            results[moduleLabel] = [];
+                            labelIdMap[moduleLabel] = {};
                         }
-                        results[modulesData.moduleLabel].push({
-                            id :           modulesData.id,
-                            moduleName:    modulesData.moduleName,
-                            projectId:     modulesData.projectId,
-                            firstDisplay:  modulesData.firstDisplay,
-                            secondDisplay: modulesData.secondDisplay,
-                            resultType:    "search"
-                        });
-                    }
+                        if (!labelIdMap[moduleLabel][itemId]) {
+                            results[moduleLabel].push({
+                                id :           itemId,
+                                moduleName:    item.moduleName,
+                                projectId:     item.projectId,
+                                firstDisplay:  item.firstDisplay,
+                                secondDisplay: item.secondDisplay,
+                                resultType:    "search"
+                            });
+                            labelIdMap[moduleLabel][itemId] = 1;
+                        }
+                    };
+
+                    dojo.forEach(data.search, addSearchResult);
+                    dojo.forEach(data.tags, addSearchResult);
+
                     var moduleLabel = '';
                     for (var i in results) {
                         moduleLabel = i;
@@ -1014,21 +1030,14 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         if (words.length >= 3) {
             this.searchButton.hideSuggest();
             var getDataUrl   = 'index.php/Default/Search/jsonSearch';
-            var resultsTitle = phpr.nls.get('Search results');
+            var resultsTitle = phpr.nls.get('Search results for:') + ' ' + words;
             var content      = {words: words};
+            phpr.pageManager.modifyCurrentState(
+                { search: words },
+                { noAction: true }
+            );
             this.showResults(getDataUrl, content, resultsTitle);
         }
-    },
-
-    showTagsResults: function(/*String*/tag) {
-        // Summary:
-        //    This function reload the grid place with the result of the tag search
-        // Description:
-        //    The server return the found records and the function display it
-        var getDataUrl   = 'index.php/Default/Tag/jsonGetModulesByTag';
-        var resultsTitle = phpr.nls.get('Tag results');
-        var content      = {tag: tag};
-        this.showResults(getDataUrl, content, resultsTitle);
     },
 
     showResults: function(/*String*/getDataUrl, /*Object*/content, /*String*/resultsTitle) {
@@ -1048,8 +1057,9 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                 phpr.Default.System.DefaultView,
                 phpr.Default.SearchContentMixin,
                 {
+                    blank: true,
                     resultsTitle: resultsTitle,
-                    results: data
+                    results: [].concat(data.search, data.tags)
                 }
             );
         }));

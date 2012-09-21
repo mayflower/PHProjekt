@@ -303,4 +303,5 @@
     <frontend_message />
 
     <calendar2 />
+    <calendar2_user_relation />
 </dataset>

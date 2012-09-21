@@ -1,9 +1,5 @@
 <?php
 /**
- * Tree class.
- *
- * Represents an node of a tree and provides iterator abilities.
- *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 3 as published by the Free Software Foundation
@@ -13,29 +9,14 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
- * @category   PHProjekt
- * @package    Phprojekt
- * @subpackage Tree
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
- * @author     David Soria Parra <david.soria_parra@mayflower.de>
  */
 
 /**
  * Tree class.
  *
  * Represents an node of a tree and provides iterator abilities.
- *
- * @category   PHProjekt
- * @package    Phprojekt
- * @subpackage Tree
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
- * @author     David Soria Parra <david.soria_parra@mayflower.de>
  */
 class Phprojekt_Tree_Node_Database implements IteratorAggregate
 {
@@ -198,11 +179,6 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
             }
 
             $object = $this;
-
-            // Delete the session for re-calculate the rights
-            $sessionName     = 'Phprojekt_Tree_Node_Database-applyRights';
-            $rightsNamespace = new Zend_Session_Namespace($sessionName);
-            $rightsNamespace->unsetAll();
         }
 
         return $this->applyRights($object);

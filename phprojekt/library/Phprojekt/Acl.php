@@ -1,7 +1,5 @@
 <?php
 /**
- * ACL class.
- *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 3 as published by the Free Software Foundation
@@ -11,27 +9,12 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
- * @category   PHProjekt
- * @package    Phprojekt
- * @subpackage Core
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
- * @author     Nina Schmitt <schmitt@mayflower.de>
  */
 
 /**
  * ACL class.
- *
- * @category   PHProjekt
- * @package    Phprojekt
- * @subpackage Core
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
- * @author     Nina Schmitt <schmitt@mayflower.de>
  */
 class Phprojekt_Acl extends Zend_Acl
 {
@@ -64,15 +47,7 @@ class Phprojekt_Acl extends Zend_Acl
     public static function getInstance()
     {
         if (null === self::$_instance) {
-            // Save the class in the session
-            $sessionName  = 'Phprojekt_Acl';
-            $aclNamespace = new Zend_Session_Namespace($sessionName);
-            if (!isset($aclNamespace->class)) {
-                self::$_instance     = new self();
-                $aclNamespace->class = self::$_instance;
-            } else {
-                self::$_instance = $aclNamespace->class;
-            }
+            self::$_instance = new self();
         }
 
         return self::$_instance;
