@@ -162,7 +162,4 @@ dojo.declare("phpr.Statistic.Main", phpr.Default.Main, {
             + '/csrfToken/' + phpr.csrfToken);
         return false;
     },
-
-    openForm:function(id, module) {
-    }
 });
