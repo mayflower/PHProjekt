@@ -72,6 +72,7 @@ class WebDAV_Models_FilemanagerDirectory extends Sabre_DAV_Collection
     {
         $hash = md5(mt_rand() . time());
         $newPath = Phprojekt::getInstance()->getConfig()->uploadPath . '/' . $hash;
+        Default_Helpers_Upload::addFilesToUnusedFileList(array(array('md5' => $hash)));
         if (false === file_put_contents($newPath, $data)) {
             throw new Phprojekt_Exception_IOException('saving failed');
         }
@@ -81,13 +82,8 @@ class WebDAV_Models_FilemanagerDirectory extends Sabre_DAV_Collection
         }
         $this->_filemanager->files .= $hash . '|' . $name;
 
-        try {
-            $this->_filemanager->save();
-        } catch (Exception $e) {
-            unlink($newPath);
-            throw $e;
-        }
-
+        $this->_filemanager->save();
+        Default_Helpers_Upload::removeFilesFromUnusedFileList(array(array('md5' => $hash)));
     }
 
     /**
