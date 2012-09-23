@@ -289,10 +289,12 @@
         list_align="center" list_use_filter="1" alt_position="0"
         status="1" is_integer="0" is_required="1"
         is_unique="0" />
-    <filemanager id="1" owner_id="1" title="Test" project_id="1"
+    <filemanager id="1" owner_id="1" title="TestFoobar" project_id="1"
         comments="Foobar" files="966f9bfa01ec4a2a3fa6282bb8fa8d56|articles.txt" />
-    <filemanager id="2" owner_id="1" title="Other Test" project_id="1"
+    <filemanager id="2" owner_id="1" title="TestEinself" project_id="1"
         comments="einself" files="deadbeef01ec4a2a3fa6282bb8fa8d56|articles.txt" />
+    <filemanager id="3" owner_id="1" title="Test" project_id="2"
+        comments="einself" files="" />
     <item_rights
         module_id="7" item_id="1" user_id="1" access="255" />
     <item_rights
