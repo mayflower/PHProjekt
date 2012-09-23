@@ -118,6 +118,9 @@ final class Default_Helpers_Upload
         return $files;
     }
 
+    /**
+     * Makes $name unique with respect to $otherFiles by adding (3) to $name, where 3 is the next free index for $name.
+     */
     private static function _makeUniqueName($name, $otherFiles)
     {
         if (!self::_nameExistsInFilesArray($name, $otherFiles)) {
@@ -133,7 +136,6 @@ final class Default_Helpers_Upload
             if ($entry['name'] === $name) {
                 return true;
             }
-
         }
         return false;
     }
