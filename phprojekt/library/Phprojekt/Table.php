@@ -616,7 +616,7 @@ class Phprojekt_Table
     public function createIndex($tableName, array $columns, array $options = array())
     {
         $defaults = array(
-            'name'   => implode($columns),
+            'name'   => implode('', $columns),
             'unique' => false,
         );
         $options = array_merge($defaults, $options);
