@@ -621,14 +621,17 @@ class Phprojekt_Table
         );
         $options = array_merge($defaults, $options);
 
-        $sql  = 'CREATE' . ($options['unique'] ? ' UNIQUE' : '') . ' INDEX ';
-        $sql .= $this->_db->quoteIdentifier($options['name']);
-        $sql .= ' ON ' . $this->_db->quoteIdentifier($tableName);
-
         foreach ($columns as $key => $column) {
             $columns[$key] = $this->_db->quoteIdentifier($column);
         }
-        $sql .= ' (' . implode($columns, ', ') . ')';
+
+        $sql = sprintf(
+            'CREATE %s INDEX %s ON %s (%s)',
+            $options['unique'] ? 'UNIQUE' : '',
+            $this->_db->quoteIdentifier($options['name']),
+            $this->_db->quoteIdentifier($tableName),
+            implode(', ', $columns)
+        );
 
         $this->_db->query($sql);
     }
