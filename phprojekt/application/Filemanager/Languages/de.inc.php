@@ -55,3 +55,5 @@ $lang["Content Help"]["Basic data"] = "<br />
 $lang["Content Help"]["Access"] = "DEFAULT";
 $lang["Content Help"]["Notification"] = "DEFAULT";
 $lang["Content Help"]["History"] = "DEFAULT";
+$lang["Filenames must be unique, "] = "Dateinamen müssen eindeutig sein, ";
+$lang[" appears multiple times."] = " taucht mehrmals auf.";

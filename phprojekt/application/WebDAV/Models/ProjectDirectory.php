@@ -18,13 +18,9 @@
  *
  * A directory in the webdav structure. Maps to a project.
  */
-class WebDAV_Models_ProjectDirectory extends Sabre_DAV_Directory
+class WebDAV_Models_ProjectDirectory extends Sabre_DAV_Collection
 {
     protected $_project;
-
-    protected $_directory;
-
-    protected $_subproject;
 
     /**
      * Constructor
@@ -33,16 +29,7 @@ class WebDAV_Models_ProjectDirectory extends Sabre_DAV_Directory
      */
     public function __construct(Project_Models_Project $project)
     {
-        $this->_project   = $project;
-        $path             = Phprojekt::getInstance()->getConfig()->webdavPath . 'public/';
-        $path            .= str_replace('/', '_', $this->_project->path);
-        if (!is_dir($path)) {
-            mkdir($path, 0700);
-        }
-
-        $this->_directory = new Sabre_DAV_FS_Directory($path);
-
-        $this->_subprojects = $project->getTree()->getChildren();
+        $this->_project = $project;
     }
 
     /**
@@ -50,15 +37,16 @@ class WebDAV_Models_ProjectDirectory extends Sabre_DAV_Directory
      *
      * @param string $name The name of the child node to get.
      */
-      public function getChild($name)
-      {
-          foreach ($this->_subprojects as $sub) {
-              if ($sub->title == $name) {
-                  return new WebDAV_Models_ProjectDirectory($sub->getActiveRecord());
-              }
-          }
-          return $this->_directory->getChild($name);
-      }
+    public function getChild($name)
+    {
+        if (WebDAV_Constants::SUBPROJECTS_NAME === $name) {
+            return new WebDAV_Models_SubprojectsDirectory($this->_project);
+        } elseif (WebDAV_Constants::FILEMANAGERS_NAME === $name) {
+            return new WebDAV_Models_FilemanagersDirectory($this->_project);
+        }
+
+        throw new Sabre_DAV_Exception_NotFound('Directory not found: ' . $name);
+    }
 
     /**
      * Checks if a child with the given name exists.
@@ -67,52 +55,44 @@ class WebDAV_Models_ProjectDirectory extends Sabre_DAV_Directory
      */
     public function childExists($name)
     {
-        foreach ($this->_subprojects as $sub) {
-            if ($sub->title == $name) {
-                return true;
-            }
-        }
-        return $this->_directory->childExists($name);
+        return in_array($name, array(WebDAV_Constants::SUBPROJECTS_NAME, WebDAV_Constants::FILEMANAGERS_NAME));
     }
 
+    /**
+     * Creates a file in this directory.
+     */
     public function createFile($name, $data = NULL)
     {
-        foreach ($this->_subprojects as $sub) {
-            if ($sub->title == $name) {
-                throw new Sabre_DAV_Exception_Conflict(
-                    'Cannot create file because a subproject with the same name already exists'
-                );
-            }
-        }
-
-        $this->_directory->createFile($name, $data);
+        throw new Sabre_DAV_Exception_NotImplemented('Files can only be created in Filemanager directories');
     }
 
+    /**
+     * Creates a subdirectory of this one.
+     */
     public function createDirectory($name)
     {
-        foreach ($this->_subprojects as $sub) {
-            if ($sub->title == $name) {
-                throw new Sabre_DAV_Exception_Conflict(
-                    'Cannot create directory because a subproject with the same name already exists'
-                );
-            }
-        }
-
-        $this->_directory->createDirectory($name);
+        throw new Sabre_DAV_Exception_NotImplemented(
+            'Directories can only be created in the "Filemanagers" subdirectories of projects'
+        );
     }
 
+    /**
+     * Returns the name of this directory.
+     */
     public function getName()
     {
         return $this->_project->title;
     }
 
+    /**
+     * Returns all elements in this directory.
+     */
     public function getChildren()
     {
-        $ret = $this->_directory->getChildren();
-        foreach ($this->_subprojects as $sub) {
-            $ret[] = new WebDAV_Models_ProjectDirectory($sub->getActiveRecord());
-        }
-        return $ret;
+        return array(
+            new WebDAV_Models_SubprojectsDirectory($this->_project),
+            new WebDAV_Models_FilemanagersDirectory($this->_project)
+        );
     }
 
 }
