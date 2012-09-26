@@ -7,28 +7,15 @@
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details
+ * Lesser General Public License for more details.
  *
- * @copyright  Copyright (c) 2011 Mayflower GmbH (http://www.mayflower.de)
+ * @copyright  Copyright (c) 2012 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
  */
-require_once 'Sabre.autoload.php';
 
 /**
- * WebDAV collection model.
- *
- * A dummy that serves as an empty, read-only directory.
+ * An IO Exception
  */
-class WebDAV_Models_EmptyDir extends Sabre_DAV_Collection
+class Phprojekt_Exception_IOException extends Exception
 {
-    public function getName()
-    {
-        return "Empty";
-    }
-
-    public function getChildren()
-    {
-        return array();
-    }
-
 }

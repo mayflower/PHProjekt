@@ -41,12 +41,9 @@ class Phprojekt_ExtensionsPlugin extends Zend_Controller_Plugin_Abstract
                     || $request->getActionName() != 'logout')) {
             $migration = new Phprojekt_Migration($this->_extensions);
             if ($migration->needsUpgrade()) {
-                $r = Zend_Controller_Action_HelperBroker::getStaticHelper(
-                    'redirector'
-                );
-                $url = 'index.php/Core/Upgrade/index/csrfToken/'
-                        . Phprojekt::createCsrfToken();
-                $r->gotoUrl($url);
+                $this->_request->setModuleName('Core');
+                $this->_request->setControllerName('Upgrade');
+                $this->_request->setActionName('index');
             }
         }
     }

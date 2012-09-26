@@ -184,7 +184,7 @@ class Filemanager_IndexController_Test extends FrontInit
         $expectedData = array(
             array(
                 'id'        => 1,
-                'title'     => 'Test',
+                'title'     => 'TestFoobar',
                 'comments'  => 'Foobar',
                 'projectId' => 1,
                 'files'     => '966f9bfa01ec4a2a3fa6282bb8fa8d56|articles.txt',

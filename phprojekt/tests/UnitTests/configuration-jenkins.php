@@ -21,6 +21,7 @@ applicationDir       = "/var/lib/jenkins/jobs/PHProjekt (next)/workspace/phproje
 
 tmpPath            = "/var/lib/jenkins/jobs/PHProjekt (next)/workspace/phprojekt/tests/private_folder/tmp/"
 applicationPath    = "/var/lib/jenkins/jobs/PHProjekt (next)/workspace/phprojekt/tests/private_folder/application/"
+uploadPath         = "/var/lib/jenkins/jobs/PHProjekt (next)/workspace/phprojekt/tests/private_folder/upload/"
 log.debug.filename = "/var/lib/jenkins/jobs/PHProjekt (next)/workspace/phprojekt/tests/private_folder/logs/debug.log"
 
 itemsPerPage         = 3;

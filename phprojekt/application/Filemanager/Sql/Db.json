@@ -190,6 +190,14 @@
                 "unique":  "true"
             }
         }
+    },
+    "initialData": {
+        "database_manager": {
+            "update": [{
+                "_sqlWhere": "table_name = 'filemanager' AND table_field = 'files'",
+                "is_required": "0"
+            }]
+        }
     }
 }
 

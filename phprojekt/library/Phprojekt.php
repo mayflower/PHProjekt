@@ -26,12 +26,12 @@ class Phprojekt
     /**
      * The second part of the version number.
      */
-    const VERSION_MINOR = 1;
+    const VERSION_MINOR = 2;
 
     /**
      * The third part of the version number.
      */
-    const VERSION_RELEASE = 3;
+    const VERSION_RELEASE = 0;
 
     /**
      * The extra part of the version number.

@@ -480,7 +480,4 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
             phpr.DataStore.deleteData({url: formUrl});
         }
     },
-
-    openForm: function(id, module) {
-    }
 });

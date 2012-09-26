@@ -21,6 +21,7 @@ applicationDir       = "phprojekt/"
 
 tmpPath            = "phprojekt/tests/private_folder/tmp/"
 applicationPath    = "phprojekt/tests/private_folder/application/"
+uploadPath         = "phprojekt/tests/private_folder/upload/"
 log.debug.filename = "phprojekt/tests/private_folder/logs/debug.log"
 
 itemsPerPage         = 3;

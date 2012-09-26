@@ -3,9 +3,10 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
     <title>PHProjekt</title>
-    <link rel="favicon" href="img/favicon.ico"></link>
-    <link rel="shortcut icon" href="img/favicon.ico"></link>
-    <link href="min/min/?g=phprojekt" rel="stylesheet" type="text/css" />
+    <link rel="favicon" href="<?php echo $this->baseUrl('img/favicon.ico'); ?>"></link>
+    <link rel="favicon" href="<?php echo $this->baseUrl('img/favicon.ico'); ?>"></link>
+    <link rel="shortcut icon" href="<?php echo $this->baseUrl('img/favicon.ico'); ?>"></link>
+    <link href="<?php echo $this->baseUrl('min/min/?g=phprojekt" rel="stylesheet'); ?>" type="text/css" />
 
     <script type="text/javascript">
         var djConfig = {isDebug: false, parseOnLoad: true, useCommentedJson: true};
@@ -13,11 +14,13 @@
         <?php
         if ($this->compressedDojo) {
         ?>
-            <script type="text/javascript" src="dojo/release/dojo/dojo/dojo.js"></script>
+            <script type="text/javascript"
+                    src="<?php echo $this->baseUrl('dojo/release/dojo/dojo/dojo.js'); ?>"></script>
         <?php
         } else {
         ?>
-            <script type="text/javascript" src="dojo/release/dojo/dojo/dojo.js.uncompressed.js"></script>
+            <script type="text/javascript"
+                    src="<?php echo $this->baseUrl('dojo/release/dojo/dojo/dojo.js.uncompressed.js'); ?>"></script>
         <?php
         }
         ?>
@@ -27,7 +30,8 @@
 </head>
 <body class="phprojekt">
 <?php if (!$this->disabled) { ?>
-    <form method="post" id="upload" action="<?php echo $this->formPath; ?>" enctype="multipart/form-data" style="display:inline;">
+    <form method="post" id="upload" action="<?php echo $this->baseUrl($this->formPath); ?>"
+          enctype="multipart/form-data" style="display:inline;">
         <div style="display:inline;">
             <input type="hidden" name="field" id="field" value="<?php echo $this->field; ?>" />
             <input type="hidden" name="id" id="id" value="<?php echo $this->itemId; ?>" />
