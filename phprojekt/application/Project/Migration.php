@@ -34,7 +34,8 @@ class Project_Migration extends Phprojekt_Migration_Abstract
         return '6.1.5';
     }
 
-    public function onVersionStep($oldVersion, $newVersion) {
+    public function afterVersionStep($oldVersion, $newVersion)
+    {
         if ($newVersion === "6.1.4") {
             $this->_db->query(<<<HERE
 INSERT INTO tags_modules_items (module_id, item_id, tag_id)
@@ -44,6 +45,13 @@ INSERT INTO tags_modules_items (module_id, item_id, tag_id)
     GROUP BY m.module_id, m.item_id, t.id
 HERE
 );
+        }
+    }
+
+    public function beforeVersionStep($oldVersion, $newVersion)
+    {
+        if ($newVersion === "6.1.5") {
+            $this->_renameProjectsWithSameTitle();
         }
     }
 
@@ -61,27 +69,24 @@ HERE
     {
         $this->_db = $db;
 
-        if (is_null($currentVersion)
-            || Phprojekt::compareVersion($currentVersion, '6.1.4') < 0)
-        {
+        if (is_null($currentVersion) || Phprojekt::compareVersion($currentVersion, '6.1.4') < 0) {
             $obj =& $this;
-            $stepWrapper = function ($oldVersion, $newVersion) use ($obj) {
-                $obj->onVersionStep($oldVersion, $newVersion);
+            $before = function ($oldVersion, $newVersion) use ($obj) {
+                $obj->beforeVersionStep($oldVersion, $newVersion);
+            };
+            $after = function ($oldVersion, $newVersion) use ($obj) {
+                $obj->afterVersionStep($oldVersion, $newVersion);
             };
 
             $dbParser = new Phprojekt_DbParser(
                 array('useExtraData' => false),
                 Phprojekt::getInstance()->getDb()
             );
-            $dbParser->parseSingleModuleData('Project', null,  $stepWrapper);
+            $dbParser->parseSingleModuleData('Project', null, array('before' => $before, 'after' => $after));
 
             Phprojekt::getInstance()->getCache()->clean(
                 Zend_Cache::CLEANING_MODE_ALL
             );
-        }
-        if (Phprojekt::compareVersion($currentVersion, '6.1.5') < 0) {
-            $this->_renameProjectsWithSameTitle();
-            $this->_makeTitleParentUniqueIndex();
         }
     }
 
@@ -99,10 +104,5 @@ JOIN (
 SET p.title = CONCAT(p.title, ' (', p.id, ')')
 HERE
 );
-    }
-
-    private function _makeTitleParentUniqueIndex()
-    {
-        $this->_db->query('ALTER TABLE project ADD UNIQUE INDEX (title, project_id)');
     }
 }

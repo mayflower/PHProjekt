@@ -183,6 +183,14 @@
 },
 
 "6.1.5": {
+    "structure": {
+        "filemanager": {
+            "createIndex": {
+                "columns": ["title", "project_id"],
+                "unique":  "true"
+            }
+        }
+    },
     "initialData": {
         "database_manager": {
             "update": [{

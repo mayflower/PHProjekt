@@ -604,4 +604,35 @@ class Phprojekt_Table
             return false;
         }
     }
+
+    /**
+     * Creates an index.
+     *
+     * @param string $tableName The name of the table.
+     * @param array  $columns   The columns contained in the index.
+     * @param array  $options   Optional parameters, may contain the keys 'name' (string) and'unique' (boolean).
+     * @author Simon Kohlmeyer
+     **/
+    public function createIndex($tableName, array $columns, array $options = array())
+    {
+        $defaults = array(
+            'name'   => implode('', $columns),
+            'unique' => false,
+        );
+        $options = array_merge($defaults, $options);
+
+        foreach ($columns as $key => $column) {
+            $columns[$key] = $this->_db->quoteIdentifier($column);
+        }
+
+        $sql = sprintf(
+            'CREATE %s INDEX %s ON %s (%s)',
+            $options['unique'] ? 'UNIQUE' : '',
+            $this->_db->quoteIdentifier($options['name']),
+            $this->_db->quoteIdentifier($tableName),
+            implode(', ', $columns)
+        );
+
+        $this->_db->query($sql);
+    }
 }
