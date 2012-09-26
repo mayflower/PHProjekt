@@ -47,6 +47,17 @@
             }
         }
     }
+},
+
+"6.1.5": {
+    "structure": {
+        "project": {
+            "createIndex": {
+                "columns": ["title", "project_id"],
+                "unique":  "true"
+            }
+        }
+    }
 }
 
 }
