@@ -94,7 +94,6 @@ class Phprojekt_Loader extends Zend_Loader
             @self::loadClass($class, self::$_directories);
             return $class;
         } catch (Zend_Exception $error) {
-            Phprojekt::getInstance()->getLog()->warn($error->getMessage());
             return false;
         }
     }
