@@ -19,7 +19,7 @@
         <div dojoType="dijit.layout.ContentPane" region="top" dojoAttachPoint="header"
         style="height: 60px; overflow: hidden;" class="header">
             <img class="left PHProjektLogo" src="img/logo.png" alt="PHProjekt 6" dojoAttachPoint="PHProjektLogo"
-            onClick='phpr.currentProjectId = 1; dojo.publish("Project.setUrlHash", ["Project"])' />
+            onClick='phpr.pageManager.modifyCurrentState({id: undefined, projectId: 1, moduleName: "Project"})' />
             <div dojoAttachPoint="mainNavigation" class="right align-right mainNavigation" dojoType="dijit.Toolbar">
             </div>
             <div dojoAttachPoint="loadingIcon" class="right align-right loadingIcon"
