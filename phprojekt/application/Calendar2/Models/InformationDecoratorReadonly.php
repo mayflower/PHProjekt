@@ -46,4 +46,23 @@ class Calendar2_Models_InformationDecoratorReadonly extends Phprojekt_ModelInfor
 
         return $meta;
     }
+
+    /**
+     * This function is copied from the database manager because Phprojekt_Item_Abstract mistakenly expects
+     * it to be a database manager.
+     */
+    public function getInfo($order, $column)
+    {
+        $column = Phprojekt_ActiveRecord_Abstract::convertVarFromSql($column);
+        $fields = $this->_getFields();
+        $result = array();
+
+        foreach ($fields as $field) {
+            if (isset($field->$column)) {
+                $result[] = $field->$column;
+            }
+        }
+
+        return $result;
+    }
 }

@@ -514,7 +514,7 @@ dojo.declare("phpr.Calendar2.DefaultView", phpr.Default.System.Component, {
                     resizeDiv.minSize = {w: minWidth, h: minHeight};
                 }
 
-                if (this.events[i] !== null && this.events[i].shown) {
+                if (this.events[i] !== undefined && this.events[i].shown) {
                     var resizeDivPlain = dojo.byId('eventResize' + i);
                     var displayMode;
                     if (this.events[i].hasResizeHandler) {
@@ -690,7 +690,7 @@ dojo.declare("phpr.Calendar2.DefaultView", phpr.Default.System.Component, {
         var processedIds = [];
 
         for (var i in this.events) {
-            if (this.events[i] !== null && this.events[i].hasChanged) {
+            if (this.events[i] !== undefined && this.events[i].hasChanged) {
                 doSaving = true;
                 var id         = this.events[i].id;
                 var occurrence = this.events[i].occurrence;
@@ -785,7 +785,7 @@ dojo.declare("phpr.Calendar2.DefaultView", phpr.Default.System.Component, {
             // For each event...
             for (var otherEvent in this.events) {
                 // ...different to the received event...
-                if (this.events[otherEvent] !== null && otherEvent != currentEvent) {
+                if (this.events[otherEvent] !== undefined && otherEvent != currentEvent) {
                     // ...that happens in the same day...
                     if (this.events[currentEvent].column == this.events[otherEvent].column) {
                         // ...check whether it shares time with current half of hour of the received event.
@@ -895,7 +895,7 @@ dojo.declare("phpr.Calendar2.DefaultView", phpr.Default.System.Component, {
         // Summary:
         //    Checks every event and updates its 'simultaneous' type properties
         for (var i in this.events) {
-            if (this.events[i] !== null) {
+            if (this.events[i] !== undefined) {
                 // parseInt is very important here:
                 i = parseInt(i);
                 var simultEvents = this.isSharingSpace(i);
@@ -1385,12 +1385,12 @@ dojo.declare("phpr.Calendar2.DefaultView", phpr.Default.System.Component, {
             for (var i in eventsInfo) {
                 var eventInfo = eventsInfo[i];
                 // Events inside the grid
-                if (eventInfo.range == this.SHOWN_INSIDE_CHART) {
+                if (eventInfo.range === this.SHOWN_INSIDE_CHART) {
                     eventInfo.hasChanged = false;
                     parent                  = this.addGridEventToArray(eventInfo, id, occurrence, summary, comments, parent,
                         content[event].startDate, content[event].startTime, content[event].endDate,
                         content[event].endTime, column);
-                } else if (eventInfo.range == this.SHOWN_OUTSIDE_CHART) {
+                } else if (eventInfo.range === this.SHOWN_OUTSIDE_CHART) {
                     // Events outside the grid: located under it as textual strings
                     furtherEventsTemp.show = true;
                     var nextPosition          = furtherEventsTemp.events.length;
@@ -1435,14 +1435,8 @@ dojo.declare("phpr.Calendar2.DefaultView", phpr.Default.System.Component, {
              wholeStartTime, wholeEndDate, wholeEndTime, column) {
         // Summary:
         //    Adds an event to 'events' class array. Returns parent index which is useful just for multiple day events.
-        var nextEvent = 0;
-        for (var i = 0; i - 1 < this.events.length; i++) {
-            if (this.events[i] === null) {
-                var nextEvent = i;
-                break;
-            }
-        }
-        var newEventDiv            = [];
+        var nextEvent = this.events.length;
+        var newEventDiv         = [];
         newEventDiv.shown       = eventInfo.shown;
         newEventDiv.editable    = true;
         newEventDiv.order       = nextEvent; // For Django template
@@ -1495,7 +1489,7 @@ dojo.declare("phpr.Calendar2.DefaultView", phpr.Default.System.Component, {
         newEventDiv.currentTop  = null;
 
         // Put event div contents into class internal array
-        this.events[nextEvent] = newEventDiv;
+        this.events.push(newEventDiv);
 
         return parent;
     },
