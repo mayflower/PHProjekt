@@ -1126,7 +1126,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
         var filters = this.getFilters();
 
         if (!phpr.isGlobalModule(state.moduleName)) {
-            q.projectId = state.projectId;
+            q.projectId = state.projectId || 1;
         }
         if (state.includeSubentries == "true") {
             q.recursive = "true";
