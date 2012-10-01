@@ -979,38 +979,6 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
 
         var meta = dataContent[0][1];
 
-        if (meta.length === 0) {
-            //TODO: This never triggers at the moment.
-            // Create a "ADD" button
-            var params = {
-                label:     phpr.nls.get('Add a new item'),
-                showLabel: true,
-                baseClass: "positive",
-                iconClass: 'add'
-            };
-
-            this.node.set('content', phpr.drawEmptyMessage('There are no entries on this level'));
-
-            var buttonRow = phpr.viewManager.getView().buttonRow.domNode;
-            if (buttonRow.children.length !== 0) {
-                // There is an 'add' button, so the user have create access
-                var button = buttonRow.children[0].children[0].children[0].children[0];
-                if (button.className == 'dijitReset dijitInline dijitIcon add') {
-                    var newEntry = new dijit.form.Button(params);
-
-                    this.garbageCollector.addNode(newEntry);
-
-                    dojo.addClass(this.node.domNode, 'addButtonText');
-                    this.node.domNode.appendChild(newEntry.domNode);
-
-                    this.garbageCollector.addEvent(
-                        dojo.connect(newEntry, "onClick",
-                            dojo.hitch(this, '_addButtonCb')));
-                }
-                button = null;
-            }
-            buttonRow = null;
-        } else {
             dojo.removeClass(this.node.domNode, 'addButtonText');
             this.processActions();
 
@@ -1135,7 +1103,6 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
                         this,
                         "doComboAction"));
             }
-        }
 
         // Filters
         this.setFilterButton(meta);
