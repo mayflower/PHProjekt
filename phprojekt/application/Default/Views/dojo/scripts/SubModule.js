@@ -218,7 +218,7 @@ dojo.declare("phpr.Default.SubModule.Grid", phpr.Default.LegacyGrid, {
         this.url = this.main.setUrl('grid');
     },
 
-    getLinkForEdit: function(id) {
+    editItemWithId: function(id) {
         this.main.destroySubForm();
         this.main.subForm = new this.main.formWidget(this.main, id, phpr.module, {}, this.main.detailsBox);
     },

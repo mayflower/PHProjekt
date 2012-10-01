@@ -1266,7 +1266,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
                             var rowId = this.grid.store.getValue(item, 'id');
                             this.hideTooltip(e);
                             this._doubleClickTimer = null;
-                            phpr.pageManager.modifyCurrentState({ id: rowId });
+                            this.editItemWithId(rowId);
                         },
                         e
                     ),
@@ -1274,6 +1274,10 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
                 );
             }
         }
+    },
+
+    editItemWithId: function(id) {
+        phpr.pageManager.modifyCurrentState({ id: id });
     },
 
     checkCanEdit: function(inCell, inRowIndex) {
@@ -1393,7 +1397,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
                         ids.push(this.grid.store.getValue(this.grid.getItem(i), 'id'));
                     }
                 }
-            };
+            }
 
             if (ids.length > 0) {
                 var idsSend = ids.join(',');

@@ -33,7 +33,7 @@ dojo.declare("phpr.Core.Grid", phpr.Default.LegacyGrid, {
         return false;
     },
 
-    getLinkForEdit: function(id) {
+    editItemWithId: function(id) {
         phpr.pageManager.modifyCurrentState({
             moduleName: this.main.module,
             id: id,

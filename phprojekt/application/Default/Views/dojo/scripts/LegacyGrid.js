@@ -1234,7 +1234,7 @@ dojo.declare("phpr.Default.LegacyGrid", phpr.Default.System.Component, {
                             var rowId = this.grid.store.getValue(item, 'id');
                             this.hideTooltip(e);
                             this._doubleClickTimer = null;
-                            phpr.pageManager.modifyCurrentState({ id: rowId });
+                            this.editItemWithId(rowId);
                         },
                         e
                     ),
@@ -1242,6 +1242,10 @@ dojo.declare("phpr.Default.LegacyGrid", phpr.Default.System.Component, {
                 );
             }
         }
+    },
+
+    editItemWithId: function(id) {
+        phpr.pageManager.modifyCurrentState({ id: id });
     },
 
     checkCanEdit: function(inCell, inRowIndex) {
