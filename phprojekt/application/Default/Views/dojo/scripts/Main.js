@@ -796,6 +796,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
     setNewEntry: function() {
         // Summary:
         //    Create the Add button
+        this.garbageCollector.collect('newEntry');
         var params = {
             label:     phpr.nls.get('Add a new item'),
             showLabel: true,
@@ -804,7 +805,11 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         };
         var newEntry = new dijit.form.Button(params);
         phpr.viewManager.getView().buttonRow.domNode.appendChild(newEntry.domNode);
-        dojo.connect(newEntry, "onClick", dojo.hitch(this, "newEntry"));
+        this.garbageCollector.addNode(newEntry, 'newEntry');
+        this.garbageCollector.addEvent(
+            dojo.connect(newEntry, "onClick", dojo.hitch(this, "newEntry")),
+            'newEntry'
+        );
     },
 
     setSubGlobalModulesNavigation: function(currentModule) {
