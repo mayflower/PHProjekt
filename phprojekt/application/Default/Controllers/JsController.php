@@ -151,6 +151,7 @@ class JsController extends IndexController
         $scripttext .= $this->_getModuleScripts(PHPR_USER_CORE_PATH, $scripts, $module);
 
         $scripttext .= '
+            phpr.pageManager.deregister(\'' . $module . '\');
             phpr.pageManager.register(
                 new phpr.' . $module . '.Main()
             );
