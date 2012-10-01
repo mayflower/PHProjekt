@@ -295,22 +295,26 @@ dojo.declare("phpr.Module.Form", phpr.Core.DialogForm, {
             if (data) {
                 new phpr.handleResponse('serverFeedback', data);
                 if (data.type == 'success') {
+                    var def;
                     if (data.id) {
-                        phpr.loadJsFile('index.php/js/module/name/' + this.sendData.name +
+                        def = phpr.loadJsFile('index.php/js/module/name/' + this.sendData.name +
                             '/csrfToken/' + phpr.csrfToken);
                     }
-                    this.publish("updateCacheData");
-                    phpr.DataStore.deleteData({url: phpr.globalModuleUrl});
-                    phpr.DataStore.addStore({url: phpr.globalModuleUrl});
-                    phpr.DataStore.requestData({
-                        url: phpr.globalModuleUrl
-                    }).then(dojo.hitch(this, function() {
-                        this.setSubmitInProgress(false);
-                        this.main.setGlobalModulesNavigation();
-                        phpr.pageManager.modifyCurrentState(
-                            { moduleName: "Module", id: undefined },
-                            { forceModuleReload: true }
-                        );
+
+                    dojo.when(def, dojo.hitch(this, function() {
+                        this.publish("updateCacheData");
+                        phpr.DataStore.deleteData({url: phpr.globalModuleUrl});
+                        phpr.DataStore.addStore({url: phpr.globalModuleUrl});
+                        phpr.DataStore.requestData({
+                            url: phpr.globalModuleUrl
+                        }).then(dojo.hitch(this, function() {
+                            this.setSubmitInProgress(false);
+                            this.main.setGlobalModulesNavigation();
+                            phpr.pageManager.modifyCurrentState(
+                                { moduleName: "Module", id: undefined },
+                                { forceModuleReload: true }
+                            );
+                        }));
                     }));
                 } else {
                     this.setSubmitInProgress(false);

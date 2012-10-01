@@ -747,11 +747,18 @@ dojo.declare("phpr.InitialScreen", null, {
 phpr.loadJsFile = function(fileName) {
     // Load a js and insert into the head
     var fileRef = document.createElement('script');
+    var def;
     fileRef.setAttribute("type", "text/javascript");
     fileRef.setAttribute("src", fileName);
     if (typeof fileRef != "undefined") {
+        def = new dojo.Deferred();
+        fileRef.onload = function() {
+            def.callback();
+        };
         document.getElementsByTagName("head")[0].appendChild(fileRef);
     }
+
+    return def;
 };
 
 phpr.loadCssFile = function(fileName) {
