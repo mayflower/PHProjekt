@@ -50,7 +50,7 @@ class WebDAV_IndexController extends IndexController
 
         // The server object is responsible for making sense out of the WebDAV protocol
         $server = new Sabre_DAV_Server($rootDirectory);
-        $server->setBaseUri(PHPR_ROOT_WEB_BASE_PATH . 'WebDAV/index/index/');
+        $server->setBaseUri($this->view->baseUrl('index.php/WebDAV/index/index/'));
 
         // The lock manager is reponsible for making sure users don't overwrite each others changes.
         // Change 'data' to a different directory, if you're storing your data somewhere else.
