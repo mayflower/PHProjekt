@@ -864,6 +864,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         //    Third value (or Second for global modules):
         //      "id", and the next value a number
         //    After that, add all the params
+        params = dojo.clone(params);
 
         var state = { action: undefined, id: undefined, tag: undefined, search: undefined };
         if (id && module) {
