@@ -45,6 +45,18 @@ dojo.declare("phpr.Default.System.PageManager", null, {
         this._modules[module.module] = module;
     },
 
+    deregister: function(moduleName) {
+        // Summary:
+        //      Deregisters a module
+        if (moduleName && this._modules.hasOwnProperty(moduleName)) {
+            if (this._modules[moduleName].destroy) {
+                this._modules[moduleName].destroy();
+            }
+
+            delete this._modules[moduleName];
+        }
+    },
+
     changeState: function(state, options) {
         options = options || {};
         // Summary:
