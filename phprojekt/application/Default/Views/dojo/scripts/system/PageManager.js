@@ -42,7 +42,9 @@ dojo.declare("phpr.Default.System.PageManager", null, {
     register: function(module) {
         // Summary:
         //      Registers a new module to be handled by the PageManager
-        this._modules[module.module] = module;
+        if (module && module.module) {
+            this._modules[module.module] = module;
+        }
     },
 
     deregister: function(moduleName) {
