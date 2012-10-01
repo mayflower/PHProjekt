@@ -1177,6 +1177,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
 
         helpDialog.show();
 
+        var selectTab = null;
         for (var tab in helpData) {
             var text = helpData[tab];
             // Check if the tab have DEFAULT text
@@ -1200,6 +1201,10 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                 style:   'width: 100%; padding-left: 10px; padding-right: 10px;'
             });
 
+            if (tab === phpr.pageManager.getActiveModuleName()) {
+                selectTab = content;
+            }
+
             container.addChild(content);
 
             this.garbageCollector.addNode(content, 'help');
@@ -1208,6 +1213,12 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         }
 
         helpContainer.set('content', container);
+
+        if (selectTab) {
+            container.selectChild(selectTab);
+        }
+
+        selectTab = null;
     },
 
     addLogoTooltip: function() {
