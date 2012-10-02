@@ -1,7 +1,5 @@
 <?php
 /**
- * Unit test
- *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 3 as published by the Free Software Foundation
@@ -11,30 +9,16 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
- * @category   PHProjekt
- * @package    UnitTests
- * @subpackage Filemanager
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
  * @version    Release: 6.1.0
- * @author     Mariano La Penna <mariano.lapenna@mayflower.de>
  */
 
 
 /**
  * Tests for Index Controller
  *
- * @category   PHProjekt
- * @package    UnitTests
- * @subpackage Filemanager
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
  * @version    Release: 6.1.0
- * @author     Mariano La Penna <mariano.lapenna@mayflower.de>
  * @group      filemanager
  * @group      controller
  * @group      filemanager-controller
@@ -200,7 +184,7 @@ class Filemanager_IndexController_Test extends FrontInit
         $expectedData = array(
             array(
                 'id'        => 1,
-                'title'     => 'Test',
+                'title'     => 'TestFoobar',
                 'comments'  => 'Foobar',
                 'projectId' => 1,
                 'files'     => '966f9bfa01ec4a2a3fa6282bb8fa8d56|articles.txt',

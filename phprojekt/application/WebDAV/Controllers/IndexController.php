@@ -1,7 +1,5 @@
 <?php
 /**
- * WebDAV Module Controller.
- *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 3 as published by the Free Software Foundation
@@ -11,29 +9,14 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
- * @category   PHProjekt
- * @package    Application
- * @subpackage WebDAV
  * @copyright  Copyright (c) 2011 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.1
- * @author     Simon Kohlmeyer <simon.kohlmeyer@mayflower.de>
  */
 
 require_once 'Sabre.autoload.php';
 
 /**
  * WebDAV Module Controller.
- *
- * @category   PHProjekt
- * @package    Application
- * @subpackage WebDAV
- * @copyright  Copyright (c) 2011 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.1
- * @author     Simon Kohlmeyer <simon.kohlmeyer@mayflower.de>
  */
 class WebDAV_IndexController extends IndexController
 {
@@ -67,7 +50,7 @@ class WebDAV_IndexController extends IndexController
 
         // The server object is responsible for making sense out of the WebDAV protocol
         $server = new Sabre_DAV_Server($rootDirectory);
-        $server->setBaseUri(PHPR_ROOT_WEB_BASE_PATH . 'WebDAV/index/index/');
+        $server->setBaseUri($this->view->baseUrl('index.php/WebDAV/index/index/'));
 
         // The lock manager is reponsible for making sure users don't overwrite each others changes.
         // Change 'data' to a different directory, if you're storing your data somewhere else.

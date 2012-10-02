@@ -1,7 +1,5 @@
 <?php
 /**
- * Unit test
- *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 3 as published by the Free Software Foundation
@@ -11,15 +9,9 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
- * @category   PHProjekt
- * @package    UnitTests
- * @subpackage Calendar2
  * @copyright  Copyright (c) 2011 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.1
  * @version    Release: 6.1.0
- * @author     Simon Kohlmeyer <simon.kohlmeyer@mayflower.de>
  */
 
 require_once 'Sabre.autoload.php';
@@ -27,15 +19,7 @@ require_once 'Sabre.autoload.php';
 /**
  * Tests Calendar2 Model
  *
- * @category   PHProjekt
- * @package    UnitTests
- * @subpackage Calendar2
- * @copyright  Copyright (c) 2011 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.1
  * @version    Release: 6.1.0
- * @author     Simon Kohlmeyer <simon.kohlmeyer@mayflower.de>
  * @group      calendar2
  * @group      calendar
  * @group      caldav
@@ -75,7 +59,7 @@ class Calendar2_Caldav_CalendarBackend_Test extends FrontInit
 
         $this->_reset();
 
-        $tzOffset = (int) Phprojekt_User_User::getSetting('timeZone', '0');
+        $tzOffset = (int) Phprojekt_Auth_Proxy::getEffectiveUser()->getSetting('timeZone', '0');
         $hour = 8 - $tzOffset;
         $hour = sprintf('%02d', $hour);
         $this->setRequestUrl("Calendar2/index/jsonSave/nodeId/1/id/{$firstId}/occurrence/2011-12-03%20{$hour}:00:00");

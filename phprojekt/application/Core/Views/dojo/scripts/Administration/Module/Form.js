@@ -51,7 +51,7 @@ dojo.declare("phpr.Module.Form", phpr.Core.DialogForm, {
 
     initData: function() {
         // Get all the active users
-        this._moduleDesignerUrl  = phpr.webpath + 'index.php/Core/moduleDesigner/jsonDetail/nodeId/1/id/' + this.id;
+        this._moduleDesignerUrl = 'index.php/Core/moduleDesigner/jsonDetail/nodeId/1/id/' + this.id;
         this._initData.push({'url': this._moduleDesignerUrl});
     },
 
@@ -98,8 +98,7 @@ dojo.declare("phpr.Module.Form", phpr.Core.DialogForm, {
         var jsonDesignerData = dojo.toJson(designerData.definition);
 
         this.formdata[1].push(
-            this.fieldTemplate.hiddenFieldRender('Designer Data', 'designerData', jsonDesignerData, true, false)
-        );
+            this.fieldTemplate.hiddenFieldRender('Designer Data', 'designerData', jsonDesignerData, true, false));
     },
 
     setPermissions: function(data) {
@@ -138,7 +137,6 @@ dojo.declare("phpr.Module.Form", phpr.Core.DialogForm, {
             tabs[t].name = phpr.nls.get(tabs[t].name);
         }
         this.render(["phpr.Core.Module.template", "moduleDesigner.html"], this._dialog.containerNode, {
-            webpath:     phpr.webpath,
             tableText:   phpr.nls.get('Database'),
             formText:    phpr.nls.get('Form'),
             listText:    phpr.nls.get('Grid'),
@@ -156,7 +154,7 @@ dojo.declare("phpr.Module.Form", phpr.Core.DialogForm, {
         parent._showChild(dijit.byId(parent.containerNode.children[0].id));
 
         dijit.byId('moduleDesignerTarget').startup();
-        var parent = dijit.byId('moduleDesignerEditor');
+        parent = dijit.byId('moduleDesignerEditor');
         parent._showChild(dijit.byId(parent.containerNode.children[0].id));
 
         this._dialog.show();
@@ -188,7 +186,7 @@ dojo.declare("phpr.Module.Form", phpr.Core.DialogForm, {
 
                 formPosition++;
                 data[i].formPosition  = formPosition;
-                data[i].formTab       = parseInt(tabs[j].id);
+                data[i].formTab       = parseInt(tabs[j].id, 10);
                 data[i].formColumns   = 1;
                 data[i].formRegexp    = null;
                 data[i].listAlign     = 'center';
@@ -291,28 +289,32 @@ dojo.declare("phpr.Module.Form", phpr.Core.DialogForm, {
 
         this.setSubmitInProgress(true);
         phpr.send({
-            url:       phpr.webpath + 'index.php/Core/moduleDesigner/jsonSave/nodeId/1/id/' + this.id,
-            content:   this.sendData
+            url:     'index.php/Core/moduleDesigner/jsonSave/nodeId/1/id/' + this.id,
+            content: this.sendData
         }).then(dojo.hitch(this, function(data) {
             if (data) {
                 new phpr.handleResponse('serverFeedback', data);
                 if (data.type == 'success') {
+                    var def;
                     if (data.id) {
-                        phpr.loadJsFile(phpr.webpath + 'index.php/js/module/name/' + this.sendData.name +
+                        def = phpr.loadJsFile('index.php/js/module/name/' + this.sendData.name +
                             '/csrfToken/' + phpr.csrfToken);
                     }
-                    this.publish("updateCacheData");
-                    phpr.DataStore.deleteData({url: phpr.globalModuleUrl});
-                    phpr.DataStore.addStore({url: phpr.globalModuleUrl});
-                    phpr.DataStore.requestData({
-                        url:         phpr.globalModuleUrl
-                    }).then(dojo.hitch(this, function() {
-                        this.setSubmitInProgress(false);
-                        this.main.setGlobalModulesNavigation();
-                        phpr.pageManager.modifyCurrentState(
-                            { moduleName: "Module", id: undefined },
-                            { forceModuleReload: true }
-                        );
+
+                    dojo.when(def, dojo.hitch(this, function() {
+                        this.publish("updateCacheData");
+                        phpr.DataStore.deleteData({url: phpr.globalModuleUrl});
+                        phpr.DataStore.addStore({url: phpr.globalModuleUrl});
+                        phpr.DataStore.requestData({
+                            url: phpr.globalModuleUrl
+                        }).then(dojo.hitch(this, function() {
+                            this.setSubmitInProgress(false);
+                            this.main.setGlobalModulesNavigation();
+                            phpr.pageManager.modifyCurrentState(
+                                { moduleName: "Module", id: undefined },
+                                { forceModuleReload: true }
+                            );
+                        }));
                     }));
                 } else {
                     this.setSubmitInProgress(false);
@@ -323,7 +325,7 @@ dojo.declare("phpr.Module.Form", phpr.Core.DialogForm, {
 
     deleteForm: function() {
         phpr.send({
-            url:       phpr.webpath + 'index.php/Core/' + phpr.module.toLowerCase() + '/jsonDelete/id/' + this.id
+            url: 'index.php/Core/' + phpr.module.toLowerCase() + '/jsonDelete/id/' + this.id
         }).then(dojo.hitch(this, function(data) {
             new phpr.handleResponse('serverFeedback', data);
             if (data.type == 'success') {
@@ -331,7 +333,7 @@ dojo.declare("phpr.Module.Form", phpr.Core.DialogForm, {
                 phpr.DataStore.deleteData({url: phpr.globalModuleUrl});
                 phpr.DataStore.addStore({url: phpr.globalModuleUrl});
                 phpr.DataStore.requestData({
-                    url:         phpr.globalModuleUrl
+                    url: phpr.globalModuleUrl
                 }).then(dojo.hitch(this, function() {
                     this.main.setGlobalModulesNavigation();
                     phpr.pageManager.modifyCurrentState(

@@ -1,7 +1,5 @@
 <?php
 /**
- * User model class.
- *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 3 as published by the Free Software Foundation
@@ -11,27 +9,12 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
- * @category   PHProjekt
- * @package    Phprojekt
- * @subpackage User
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
- * @author     Gustavo Solt <solt@mayflower.de>
  */
 
 /**
  * User model class.
- *
- * @category   PHProjekt
- * @package    Phprojekt
- * @subpackage User
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
- * @author     Gustavo Solt <solt@mayflower.de>
  */
 class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Phprojekt_Model_Interface
 {
@@ -57,6 +40,13 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
      * @var Phprojekt_Model_Validate
      */
     protected $_validate = null;
+
+    /**
+     * Setting object. Cached for Efficiency.
+     *
+     * @var Phprojekt_Setting
+     */
+    protected $_setting = null;
 
     /**
      * Initialize new user.
@@ -191,18 +181,6 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
      */
     public function save()
     {
-        // Reset users by project cache
-        $activeRecord = new Project_Models_Project();
-        $tree         = new Phprojekt_Tree_Node_Database($activeRecord, 1);
-        $tree         = $tree->setup();
-        foreach ($tree as $node) {
-            $sessionName = 'Phprojekt_User_User-getAllowedUsers' . '-' . (int) $node->id;
-            $namespace   = new Zend_Session_Namespace($sessionName);
-            if (isset($namespace->users)) {
-                $namespace->unsetAll();
-            }
-        }
-
         if ($this->id == 0) {
             if (parent::save()) {
                 // adding default values
@@ -294,12 +272,14 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
      *
      * @return mix Setting value.
      */
-    static public function getSetting($settingName, $defaultValue = null)
+    public function getSetting($settingName, $defaultValue = null)
     {
-        $setting = new Phprojekt_Setting();
-        $setting->setModule('User');
+        if (is_null($this->_setting)) {
+            $this->_setting = new Phprojekt_Setting();
+            $this->_setting->setModule('User');
+        }
 
-        $value = $setting->getSetting($settingName);
+        $value = $this->_setting->getSetting($settingName, $this->id);
         if (empty($value)) {
             $value = $defaultValue;
         }
@@ -315,7 +295,7 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
      */
     public static function getUserDateTimeZone()
     {
-        $tz = self::getSetting('timezone', '0');
+        $tz = Phprojekt_Auth_Proxy::getEffectiveUser()->getSetting('timezone', '0');
         $tz = explode('_', $tz);
         $hours = (int) $tz[0];
         if ($hours >= 0) {
@@ -401,21 +381,13 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
      */
     public function getAllowedUsers()
     {
-        // Cache the query
-        $sessionName    = 'Phprojekt_User_User-getAllowedUsers' . '-' . (int) Phprojekt::getCurrentProjectId();
-        $usersNamespace = new Zend_Session_Namespace($sessionName);
+        $where  = sprintf('status = %s', $this->getAdapter()->quote('A'));
+        $result = $this->fetchAll($where);
+        $values = array();
 
-        if (!isset($usersNamespace->users)) {
-            $where       = sprintf('status = %s', $this->getAdapter()->quote('A'));
-            $result      = $this->fetchAll($where);
-            $values      = array();
-            foreach ($result as $node) {
-                $values[] = array('id'   => (int) $node->id,
-                                  'name' => $node->displayName);
-            }
-            $usersNamespace->users = $values;
+        foreach ($result as $node) {
+            $values[] = array('id'   => (int) $node->id, 'name' => $node->displayName);
         }
-
-        return $usersNamespace->users;
+        return $values;
     }
 }

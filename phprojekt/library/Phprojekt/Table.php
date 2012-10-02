@@ -1,9 +1,5 @@
 <?php
 /**
- * Table udpater for setup and database manager.
- *
- * The class provide the functions for create and alter tables on database.
- *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 3 as published by the Free Software Foundation
@@ -13,29 +9,14 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
- * @category   PHProjekt
- * @package    Phprojekt
- * @subpackage Core
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
- * @author     Eduardo Polidor <polidor@mayflower.de>
  */
 
 /**
  * Table udpater for setup and database manager.
  *
  * The class provide the functions for create and alter tables on database.
- *
- * @category   PHProjekt
- * @package    Phprojekt
- * @subpackage Core
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
- * @author     Eduardo Polidor <polidor@mayflower.de>
  */
 class Phprojekt_Table
 {
@@ -622,5 +603,36 @@ class Phprojekt_Table
             echo $error . '<br\>';
             return false;
         }
+    }
+
+    /**
+     * Creates an index.
+     *
+     * @param string $tableName The name of the table.
+     * @param array  $columns   The columns contained in the index.
+     * @param array  $options   Optional parameters, may contain the keys 'name' (string) and'unique' (boolean).
+     * @author Simon Kohlmeyer
+     **/
+    public function createIndex($tableName, array $columns, array $options = array())
+    {
+        $defaults = array(
+            'name'   => implode('', $columns),
+            'unique' => false,
+        );
+        $options = array_merge($defaults, $options);
+
+        foreach ($columns as $key => $column) {
+            $columns[$key] = $this->_db->quoteIdentifier($column);
+        }
+
+        $sql = sprintf(
+            'CREATE %s INDEX %s ON %s (%s)',
+            $options['unique'] ? 'UNIQUE' : '',
+            $this->_db->quoteIdentifier($options['name']),
+            $this->_db->quoteIdentifier($tableName),
+            implode(', ', $columns)
+        );
+
+        $this->_db->query($sql);
     }
 }

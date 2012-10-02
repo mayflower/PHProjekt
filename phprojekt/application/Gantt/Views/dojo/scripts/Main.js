@@ -50,7 +50,6 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
         var content = new phpr.Default.System.TemplateWrapper({
             templateName: "phpr.Gantt.template.mainContent.html",
             templateData: {
-                webpath:                     phpr.webpath,
                 selectedProjectTimelineText: phpr.nls.get('Selected Project Timeline'),
                 projectPeriodHelp:           projectPeriodHelp
             }
@@ -66,13 +65,15 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
         // Summary:
         //   Custom setWidgets for gantt
         this.gantt = new phpr.Project.GanttBase(this);
-        this._url  = phpr.webpath + 'index.php/Gantt/index/jsonGetProjects/nodeId/' + phpr.currentProjectId;
+        this._url  = 'index.php/Gantt/index/jsonGetProjects/nodeId/' + phpr.currentProjectId;
         phpr.DataStore.addStore({'url': this._url, 'noCache': true});
         phpr.DataStore.requestData({'url': this._url, 'processData': dojo.hitch(this, 'prepareData')});
     },
 
     setNewEntry: function() {
     },
+
+    createIncludeSubprojectsCheckbox: function() {},
 
     prepareData: function(items, request) {
         // Summary:
@@ -139,8 +140,7 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
                 dataForRender: dataForRender,
                 gantt:         this.gantt,
                 STEPPING:      this.gantt.STEPPING,
-                width:         width + 4,
-                webpath:       phpr.webpath
+                width:         width + 4
             });
 
             dijit.byId('ganttObject').container = this.gantt;
@@ -450,8 +450,8 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
         }
         sendData['projects[]'] = projects;
         phpr.send({
-            url:       phpr.webpath + 'index.php/Gantt/index/jsonSave/nodeId/' + phpr.currentProjectId,
-            content:   sendData
+            url:    'index.php/Gantt/index/jsonSave/nodeId/' + phpr.currentProjectId,
+            content: sendData
         }).then(dojo.hitch(this, function(data) {
             if (data) {
                 new phpr.handleResponse('serverFeedback', data);
@@ -471,18 +471,15 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
         for (var i in ids) {
             var parentId = phpr.tree.getParentId(ids[i]);
             // List
-            var listUrl = phpr.webpath + 'index.php/Project/index/jsonList/nodeId/' + ids[i];
+            var listUrl = 'index.php/Project/index/jsonList/nodeId/' + ids[i];
             phpr.DataStore.deleteDataPartialString({url: listUrl});
             // Parent List
-            var listUrl  = phpr.webpath + 'index.php/Project/index/jsonList/nodeId/' + parentId;
+            var listUrl  = 'index.php/Project/index/jsonList/nodeId/' + parentId;
             phpr.DataStore.deleteDataPartialString({url: listUrl});
             // Form
-            var formUrl = phpr.webpath + 'index.php/Project/index/jsonDetail/nodeId/' + parentId +
+            var formUrl = 'index.php/Project/index/jsonDetail/nodeId/' + parentId +
                 "/id/" + ids[i];
             phpr.DataStore.deleteData({url: formUrl});
         }
-    },
-
-    openForm: function(id, module) {
     }
 });

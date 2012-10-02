@@ -66,7 +66,7 @@ dojo.declare("phpr.Default.SubModule", phpr.Default.System.Component, {
         //    Set all the urls
         // Description:
         //    Set all the urls
-        var url = phpr.webpath + 'index.php/' + this.module + '/' + this.getController();
+        var url = 'index.php/' + this.module + '/' + this.getController();
         switch (type) {
             case 'grid':
                 url += '/jsonList/';
@@ -177,7 +177,7 @@ dojo.declare("phpr.Default.SubModule", phpr.Default.System.Component, {
     }
 });
 
-dojo.declare("phpr.Default.SubModule.Grid", phpr.Default.Grid, {
+dojo.declare("phpr.Default.SubModule.Grid", phpr.Default.LegacyGrid, {
     // Overwrite functions for use with internal vars
     // This functions can be Rewritten
     updateData: function() {
@@ -218,7 +218,7 @@ dojo.declare("phpr.Default.SubModule.Grid", phpr.Default.Grid, {
         this.url = this.main.setUrl('grid');
     },
 
-    getLinkForEdit: function(id) {
+    editItemWithId: function(id) {
         this.main.destroySubForm();
         this.main.subForm = new this.main.formWidget(this.main, id, phpr.module, {}, this.main.detailsBox);
     },
@@ -256,9 +256,6 @@ dojo.declare("phpr.Default.SubModule.Grid", phpr.Default.Grid, {
     },
 
     manageFilters: function() {
-    },
-
-    showTags: function() {
     }
 });
 
@@ -428,7 +425,7 @@ dojo.declare("phpr.Default.SubModule.Form", phpr.Default.Form, {
     },
 
     getUploadIframePath: function(itemid) {
-        return phpr.webpath + 'index.php/' +
+        return 'index.php/' +
             this.main.module + '/index/fileForm' +
             '/nodeId/' + phpr.currentProjectId +
             '/id/' + this.id + '/field/' + itemid +

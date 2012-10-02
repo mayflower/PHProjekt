@@ -180,6 +180,25 @@
             ]
         }
     }
+},
+
+"6.1.5": {
+    "structure": {
+        "filemanager": {
+            "createIndex": {
+                "columns": ["title", "project_id"],
+                "unique":  "true"
+            }
+        }
+    },
+    "initialData": {
+        "database_manager": {
+            "update": [{
+                "_sqlWhere": "table_name = 'filemanager' AND table_field = 'files'",
+                "is_required": "0"
+            }]
+        }
+    }
 }
 
 }

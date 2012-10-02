@@ -1,7 +1,5 @@
 <?php
 /**
- * DbParser Class for process the json db data.
- *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 3 as published by the Free Software Foundation
@@ -11,27 +9,12 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
- * @category   PHProjekt
- * @package    Phprojekt
- * @subpackage Core
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
- * @author     Gustavo Solt <solt@mayflower.de>
  */
 
 /**
  * DbParser Class for process the json db data.
- *
- * @category   PHProjekt
- * @package    Phprojekt
- * @subpackage Core
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
- * @author     Gustavo Solt <solt@mayflower.de>
  */
 class Phprojekt_DbParser
 {
@@ -187,14 +170,18 @@ class Phprojekt_DbParser
     /**
      * Parse the data of a single module.
      *
-     * @param string $module        The module
-     * @param string $coreDirectory The core directory. The module is assumed to
-     *                              live under $coreDirectory . '/' . $module.
-     *                              Defaults to PHPR_CORE_PATH if omitted.
+     * @param string $module              The module
+     * @param string $coreDirectory       The core directory. The module is assumed to
+     *                                    live under $coreDirectory . '/' . $module.
+     *                                    Defaults to PHPR_CORE_PATH if omitted.
+     * @param array $versionStepCallbacks May contain the keys 'before' and 'after.
+     *                                    Each can be a callback function that is called on every version increment.
+     *                                    It takes 2 arguments $oldVersion and $newVersion to mark the increment.
+     *                                    It should return nothing.
      *
      * @return void
      */
-    public function parseSingleModuleData($module, $coreDirectory = null)
+    public function parseSingleModuleData($module, $coreDirectory = null, array $versionStepCallbacks = array())
     {
         if (null === $coreDirectory) {
             $coreDirectory = PHPR_CORE_PATH;
@@ -224,7 +211,7 @@ class Phprojekt_DbParser
             }
         }
         if (!empty($data)) {
-            $this->_parseData($data, $module);
+            $this->_parseData($data, $module, $versionStepCallbacks);
         }
     }
 
@@ -234,15 +221,19 @@ class Phprojekt_DbParser
      *
      * Update the module with the new version.
      *
-     * @param array  $data   Array with all the version and data for parse.
-     * @param string $module Current module of the data.
+     * @param array  $data                 Array with all the version and data for parse.
+     * @param string $module               Current module of the data.
+     * @param array  $versionStepCallbacks See parseSingleModuleData documentation
      *
      * @return void
      */
-    private function _parseData($data, $module)
+    private function _parseData($data, $module, array $versionStepCallbacks = array())
     {
-        $data          = $this->_getVersionsForProcess($module, $this->_sortData($data));
-        $moduleVersion = $this->_getModuleVersion($module);
+        $data           = $this->_getVersionsForProcess($module, $this->_sortData($data));
+        $moduleVersion  = $this->_getModuleVersion($module);
+        $beforeCallback = array_key_exists('before', $versionStepCallbacks) ? $versionStepCallbacks['before'] : null;
+        $afterCallback  = array_key_exists('after', $versionStepCallbacks) ? $versionStepCallbacks['after'] : null;
+
         foreach ($data as $version => $content) {
             if (!isset($this->_messages[$module])) {
                 $this->_messages[$module] = array();
@@ -250,6 +241,9 @@ class Phprojekt_DbParser
             $this->_messages[$module]['version'] = $version;
             // Only process the initialData if the module version is lower than the data version
             if (Phprojekt::compareVersion($moduleVersion, $version) < 0) {
+                if (is_callable($beforeCallback)) {
+                    $beforeCallback($moduleVersion, $version);
+                }
                 if (!isset($this->_messages[$module]['process'])) {
                     $this->_messages[$module]['process'] = array();
                 }
@@ -268,10 +262,15 @@ class Phprojekt_DbParser
                     $this->_processData($this->_convertSpecialValues($content['extraData'], 0));
                 }
                 $this->_messages[$module]['finish'] = 'Done';
+
+                if (is_callable($afterCallback)) {
+                    $afterCallback($moduleVersion, $version);
+                }
             } else {
                 $this->_messages[$module]['finish'] = 'Already installed';
             }
             $this->_setModuleVersion($module, $version);
+            $moduleVersion = $version;
         }
     }
 
@@ -339,8 +338,7 @@ class Phprojekt_DbParser
     }
 
     /**
-     * Delete all the version higher than the current one
-     * and the version lower than the current module version.
+     * Delete all the versions lower than the current module version.
      *
      * @param string $module Current module of the data.
      * @param array  $data   Array with all the version and data for parse.
@@ -349,12 +347,10 @@ class Phprojekt_DbParser
      */
     private function _getVersionsForProcess($module, $data)
     {
-        $current       = Phprojekt::getVersion();
         $moduleVersion = $this->_getModuleVersion($module);
 
         foreach (array_keys($data) as $version) {
-            if (Phprojekt::compareVersion($moduleVersion, $version) > 0 ||
-                Phprojekt::compareVersion($current, $version) < 0) {
+            if (Phprojekt::compareVersion($moduleVersion, $version) > 0) {
                 unset($data[$version]);
             }
         }
@@ -413,6 +409,20 @@ class Phprojekt_DbParser
                         foreach ($fields as $key => $field) {
                             $this->_tableManager->deleteField($tableName, $field);
                         }
+                        break;
+                    case 'createIndex':
+                        if (!array_key_exists('columns', $fields)) {
+                            throw new Exception('Mandatory entry "columns" not found.');
+                        }
+
+                        $options = array();
+                        if (array_key_exists('name', $fields)) {
+                            $options['name'] = $fields['name'];
+                        }
+                        if (array_key_exists('unique', $fields)) {
+                            $options['unique'] = $fields['unique'];
+                        }
+                        $this->_tableManager->createIndex($tableName, $fields['columns'], $options);
                         break;
                 }
             }

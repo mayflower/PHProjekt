@@ -1,7 +1,5 @@
 <?php
 /**
- * Settings on a per user base.
- *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 3 as published by the Free Software Foundation
@@ -11,27 +9,12 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
- * @category   PHProjekt
- * @package    Application
- * @subpackage Core
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
- * @author     Gustavo Solt <solt@mayflower.de>
  */
 
 /**
  * Settings on a per user base.
- *
- * @category   PHProjekt
- * @package    Application
- * @subpackage Core
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
- * @author     Gustavo Solt <solt@mayflower.de>
  */
 class Core_Models_User_Setting extends Phprojekt_ModelInformation_Default
 {
@@ -150,14 +133,12 @@ class Core_Models_User_Setting extends Phprojekt_ModelInformation_Default
     public function validateSettings($params)
     {
         $message = null;
-        $setting = new Phprojekt_Setting();
-        $setting->setModule('User');
 
         // Passwords
         $confirmPassValue = (isset($params['confirmValue'])) ? $params['confirmValue'] : null;
         $oldPassValue     = (isset($params['oldValue'])) ? $params['oldValue'] : null;
         $newPassValue     = $params['password'];
-        $currentPassValue = $setting->getSetting('password');
+        $currentPassValue = Phprojekt_Auth::getRealUser()->getSetting('password');
 
         $isInSettings       = !array_key_exists('id', $params);
         $isNew              = !$isInSettings && $params['id'] == 0;
@@ -209,10 +190,8 @@ class Core_Models_User_Setting extends Phprojekt_ModelInformation_Default
         if (!$userId) {
             $userId = Phprojekt_Auth::getUserId();
         }
-        $setting = new Phprojekt_Setting();
-        $setting->setModule('User');
         if (empty($params['password'])) {
-            $password = $setting->getSetting('password', $userId);
+            $password = Phprojekt_Auth::getRealUser()->getSetting('password', $userId);
         } else {
             $password = Phprojekt_Auth::cryptString($params['password']);
         }

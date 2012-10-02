@@ -1,7 +1,5 @@
 <?php
 /**
- * Timecard model class
- *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 3 as published by the Free Software Foundation
@@ -11,27 +9,12 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
- * @category   PHProjekt
- * @package    Application
- * @subpackage Timecard
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
- * @author     Gustavo Solt <solt@mayflower.de>
  */
 
 /**
  * Timecard model class
- *
- * @category   PHProjekt
- * @package    Application
- * @subpackage Timecard
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
- * @author     Gustavo Solt <solt@mayflower.de>
  */
 class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implements Phprojekt_Model_Interface
 {
@@ -50,6 +33,38 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
      */
     protected $_validate = null;
 
+    /**
+     * Overwrite save to set the uri if it's not already set and recalculate the minutes.
+     */
+    public function save()
+    {
+        // Prevent http://jira.opensource.mayflower.de/jira/browse/PHPROJEKT-450
+        if (is_null($this->notes)) {
+            $this->notes = '';
+        }
+
+        if (empty($this->endTime)) {
+            $this->minutes = null;
+        } else {
+            $start         = new Datetime($this->startDatetime);
+            $end           = new Datetime(substr($this->startDatetime, 0, 11) . $this->endTime);
+            $this->minutes = floor (($end->getTimestamp() - $start->getTimestamp()) / 60);
+        }
+
+        if (empty($this->uid)) {
+            $this->uid = Phprojekt::generateUniqueIdentifier();
+        }
+
+        if (empty($this->uri)) {
+            $this->uri = $this->uid;
+        }
+
+        if (!$this->projectId) {
+            $this->projectId = 1;
+        }
+
+        return parent::save();
+    }
     /**
      * Constructor initializes additional Infomanager.
      *
@@ -319,7 +334,6 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
         return array('data' => $datas);
     }
 
-
     /**
      * Return an array with all the bookings in the day
      *
@@ -443,5 +457,17 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
         } else {
             return false;
         }
+    }
+
+    /**
+     * Retrieves the timecard entry with the given uri
+     */
+    public function findByUri($uri)
+    {
+        $fetch = $this->fetchAll(Phprojekt::getInstance()->getDb()->quoteInto('uri = ?', $uri));
+        if (!$fetch) {
+            return false;
+        }
+        return $fetch[0];
     }
 }

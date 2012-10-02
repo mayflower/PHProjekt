@@ -20,5 +20,5 @@
 
 dojo.provide("phpr.Contact.Grid");
 
-dojo.declare("phpr.Contact.Grid", phpr.Default.Grid, {
+dojo.declare("phpr.Contact.Grid", phpr.Default.LegacyGrid, {
 });

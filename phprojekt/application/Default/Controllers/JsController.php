@@ -1,8 +1,5 @@
 <?php
 /**
- * JavaScript Controller.
- * The controller will return all the js files for the modules.
- *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 3 as published by the Free Software Foundation
@@ -12,28 +9,13 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
- * @category   PHProjekt
- * @package    Application
- * @subpackage Default
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
- * @author     Gustavo Solt <solt@mayflower.de>
  */
 
 /**
  * JavaScript Controller.
  * The controller will return all the js files for the modules.
- *
- * @category   PHProjekt
- * @package    Application
- * @subpackage Default
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
- * @author     Gustavo Solt <solt@mayflower.de>
  */
 class JsController extends IndexController
 {
@@ -62,6 +44,7 @@ class JsController extends IndexController
         $scripttext = "";
         // System files, must be parsed in this order
         $scripttext .= file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/phpr.js');
+        $scripttext .= file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/MetadataStore.js');
         $scripttext .= file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/GarbageCollector.js');
         $scripttext .= file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/Component.js');
         $scripttext .= file_get_contents(PHPR_CORE_PATH . '/Default/Views/dojo/scripts/system/Form.js');
@@ -91,8 +74,7 @@ class JsController extends IndexController
 
         $scripttext .= '
             dojo.declare("phpr.Main", null, {
-                constructor:function(/*String*/webpath, /*Int*/rootProjectId, /*String*/language) {
-                    phpr.webpath          = webpath;
+                constructor:function(/*Int*/rootProjectId, /*String*/language) {
                     phpr.DefaultModule    = "Project";
                     phpr.viewManager      = new phpr.Default.System.ViewManager();
                     phpr.pageManager      = new phpr.Default.System.PageManager();
@@ -113,7 +95,7 @@ class JsController extends IndexController
                     phpr.tree             = new phpr.Default.System.Tree();
                     phpr.regExpForFilter  = new phpr.regExpForFilter();
                     phpr.garbageCollector = new phpr.Default.System.GarbageCollector();
-                    phpr.globalModuleUrl  = webpath + "index.php/Core/module/jsonGetGlobalModules";
+                    phpr.globalModuleUrl  = "index.php/Core/module/jsonGetGlobalModules";
                     phpr.tutorialAnchors = {};
         ';
 
@@ -169,6 +151,7 @@ class JsController extends IndexController
         $scripttext .= $this->_getModuleScripts(PHPR_USER_CORE_PATH, $scripts, $module);
 
         $scripttext .= '
+            phpr.pageManager.deregister(\'' . $module . '\');
             phpr.pageManager.register(
                 new phpr.' . $module . '.Main()
             );

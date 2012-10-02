@@ -3,9 +3,9 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
     <title>PHProjekt</title>
-    <link rel="favicon" href="<?php echo $this->webpath ?>img/favicon.ico" type="image/x-icon" ></link>
-    <link rel="shortcut icon" href="<?php echo $this->webpath ?>img/favicon.ico" type="image/x-icon" ></link>
-    <link href="<?php echo $this->webpath; ?>min/min/?g=phprojekt" rel="stylesheet" type="text/css" />
+    <link rel="favicon" href="img/favicon.ico" type="image/x-icon" ></link>
+    <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon" ></link>
+    <link href="min/min/?g=phprojekt" rel="stylesheet" type="text/css" />
 
     <style type="text/css">
         .dj_ie .phprojekt #serverFeedback {
@@ -25,8 +25,8 @@
         var djConfig = {isDebug: false, parseOnLoad: false, bindEncoding: "utf-8",
                         locale: 'en', useCommentedJson: true};
     </script>
-    <script type="text/javascript" src="<?php echo $this->webPath; ?>dojo/release/dojo/dojo/dojo.js"></script>
-    <script type="text/javascript" src="<?php echo $this->webPath; ?>dojo/release/dojo/dojo/setup.js"></script>
+    <script type="text/javascript" src="dojo/release/dojo/dojo/dojo.js"></script>
+    <script type="text/javascript" src="dojo/release/dojo/dojo/setup.js"></script>
     <script type="text/javascript">
         dojo.require("dijit.layout.BorderContainer");
         dojo.require("dijit.layout.ContentPane");
@@ -136,7 +136,7 @@
         };
 
         function makeImg(id) {
-            dojo.byId('resultFor' + id).innerHTML = '&nbsp;&nbsp;<img src=\"<?php echo $this->webPath; ?>img/ajax-loader.gif\"'
+            dojo.byId('resultFor' + id).innerHTML = '&nbsp;&nbsp;<img src=\"img/ajax-loader.gif\"'
                 + ' style="width: 15px; height: 15px"; alt=\"Loadding\" />';
         };
 
@@ -163,7 +163,7 @@
 
             makeImg(params['module']);
             phprSend({
-                url: '<?php echo $this->webPath; ?>' + 'setup.php/index/jsonMigrateSetup/module/'
+                url: 'setup.php/index/jsonMigrateSetup/module/'
                     + params['module'],
                 content:   dijit.byId('installForm').attr('value'),
                 onSuccess: dojo.hitch(this, function(data) {
@@ -200,18 +200,18 @@
         function changeStep(oldStep, newStep) {
             dojo.byId('Step' + oldStep).style.background = '#CCCCCC';
             if (previous = dojo.byId('Step' + (oldStep - 1) + 'Img')) {
-                previous.innerHTML = '<img src="<?php echo $this->webPath; ?>'
+                previous.innerHTML = '<img src="'
                     + 'img/setup/grey-grey.png" alt="" />';
             }
-            dojo.byId('Step' + oldStep + 'Img').innerHTML = '<img src="<?php echo $this->webPath; ?>'
+            dojo.byId('Step' + oldStep + 'Img').innerHTML = '<img src="'
                 + 'img/setup/grey-blue.png" alt="" />';
 
             dojo.byId('Step' + newStep).style.background = '#284164';
             if (newStep != 7) {
-                dojo.byId('Step' + newStep + 'Img').innerHTML = '<img src="<?php echo $this->webPath; ?>'
+                dojo.byId('Step' + newStep + 'Img').innerHTML = '<img src="'
                     + 'img/setup/blue-grey.png" alt="" />';
             } else {
-                dojo.byId('Step' + newStep + 'Img').innerHTML = '<img src="<?php echo $this->webPath; ?>'
+                dojo.byId('Step' + newStep + 'Img').innerHTML = '<img src="'
                     + 'img/setup/blue-white.png" alt="" />';
             }
         };
@@ -346,12 +346,12 @@
     <!-- Top Bar menu -->
     <div dojoType="dijit.layout.ContentPane" region="top" id="header" class="header"
     style="height: 55px; overflow: hidden;">
-        <img class="left" src="<?php echo $this->webPath; ?>img/logo.png" alt="PHProjekt 6" />
+        <img class="left" src="img/logo.png" alt="PHProjekt 6" />
         <div id="mainNavigation" class="mainNavigation"  class="right align-right" dojoType="dijit.Toolbar">
         </div>
         <div id="loadingIcon" class="loadingIcon" class="right align-right"
         style="margin-top: 5px; margin-bottom: 5px; display: none;">
-            <img class="left" src="<?php echo $this->webPath; ?>img/ajax-loader.gif" alt="Loadding" />
+            <img class="left" src="img/ajax-loader.gif" alt="Loadding" />
         </div>
     </div>
 
@@ -364,7 +364,7 @@
             <div dojoType="dijit.layout.ContentPane" region="top" class="block" splitter="false"
             style="height: 100%;">
                 <div class="column">
-                    <img src="<?php echo $this->webPath; ?>img/subheaderborder.png" alt="" />
+                    <img src="img/subheaderborder.png" alt="" />
                 </div>
                 <div dojoType="dijit.layout.ContentPane" region="top" class="block" splitter="false"
                 style="height: 2%; overflow: hidden;">
@@ -378,7 +378,7 @@
                     </div>
                     <div dojoType="dijit.layout.ContentPane"  id="Step1Img"
                     style="height: 20px; display: inline; float: left; overflow: hidden;">
-                        <img src="<?php echo $this->webPath; ?>img/setup/blue-grey.png" alt="" />
+                        <img src="img/setup/blue-grey.png" alt="" />
                     </div>
                     <div dojoType="dijit.layout.ContentPane"  id="Step2"
                     style="background: #CCCCCC; height: 20px; display: inline; float: left; padding: 0 10px 0 10px;">
@@ -386,7 +386,7 @@
                     </div>
                     <div dojoType="dijit.layout.ContentPane"  id="Step2Img"
                     style="height: 20px; display: inline; float: left; overflow: hidden;">
-                        <img src="<?php echo $this->webPath; ?>img/setup/grey-grey.png" alt="" />
+                        <img src="img/setup/grey-grey.png" alt="" />
                     </div>
                     <div dojoType="dijit.layout.ContentPane" id="Step3"
                     style="background: #CCCCCC; height: 20px; display: inline; float: left; padding: 0 10px 0 10px;">
@@ -394,7 +394,7 @@
                     </div>
                     <div dojoType="dijit.layout.ContentPane" id="Step3Img"
                     style="height: 20px; display: inline; float: left; overflow: hidden;">
-                        <img src="<?php echo $this->webPath; ?>img/setup/grey-grey.png" alt="" />
+                        <img src="img/setup/grey-grey.png" alt="" />
                     </div>
                     <div dojoType="dijit.layout.ContentPane" id="Step4"
                     style="background: #CCCCCC; height: 20px; display: inline; float: left; padding: 0 10px 0 10px;">
@@ -402,7 +402,7 @@
                     </div>
                     <div dojoType="dijit.layout.ContentPane" id="Step4Img"
                     style="height: 20px; display: inline; float: left; overflow: hidden;">
-                        <img src="<?php echo $this->webPath; ?>img/setup/grey-grey.png" alt="" />
+                        <img src="img/setup/grey-grey.png" alt="" />
                     </div>
                     <div dojoType="dijit.layout.ContentPane" id="Step5"
                     style="background: #CCCCCC; height: 20px; display: inline; float: left; padding: 0 10px 0 10px;">
@@ -410,7 +410,7 @@
                     </div>
                     <div dojoType="dijit.layout.ContentPane" id="Step5Img"
                     style="height: 20px; display: inline; float: left; overflow: hidden;">
-                        <img src="<?php echo $this->webPath; ?>img/setup/grey-grey.png" alt="" />
+                        <img src="img/setup/grey-grey.png" alt="" />
                     </div>
                     <div dojoType="dijit.layout.ContentPane" id="Step6"
                     style="background: #CCCCCC; height: 20px; display: inline; float: left; padding: 0 10px 0 10px;">
@@ -418,7 +418,7 @@
                     </div>
                     <div dojoType="dijit.layout.ContentPane" id="Step6Img"
                     style="height: 20px; display: inline; float: left; overflow: hidden;">
-                        <img src="<?php echo $this->webPath; ?>img/setup/grey-grey.png" alt="" />
+                        <img src="img/setup/grey-grey.png" alt="" />
                     </div>
                     <div dojoType="dijit.layout.ContentPane" id="Step7"
                     style="background: #CCCCCC; height: 20px; display: inline; float: left; padding: 0 10px 0 10px;">
@@ -426,7 +426,7 @@
                     </div>
                     <div dojoType="dijit.layout.ContentPane" id="Step7Img"
                     style="height: 20px; display: inline; float: left; overflow: hidden;">
-                        <img src="<?php echo $this->webPath; ?>img/setup/grey-white.png" alt="" />
+                        <img src="img/setup/grey-white.png" alt="" />
                     </div>
                 </div>
                 <br />

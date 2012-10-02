@@ -20,20 +20,20 @@
 
 dojo.provide("phpr.Core.Grid");
 
-dojo.declare("phpr.Core.Grid", phpr.Default.Grid, {
-    setUrl:function() {
-        this.url = phpr.webpath + 'index.php/Core/' + this.main.module.toLowerCase() + '/jsonList/nodeId/1';
+dojo.declare("phpr.Core.Grid", phpr.Default.LegacyGrid, {
+    setUrl: function() {
+        this.url = 'index.php/Core/' + this.main.module.toLowerCase() + '/jsonList/nodeId/1';
     },
 
-    setGetExtraActionsUrl:function() {
-        this.getActionsUrl = phpr.webpath + 'index.php/Core/' + this.main.module.toLowerCase() + '/jsonGetExtraActions';
+    setGetExtraActionsUrl: function() {
+        this.getActionsUrl = 'index.php/Core/' + this.main.module.toLowerCase() + '/jsonGetExtraActions';
     },
 
-    useCheckbox:function() {
+    useCheckbox: function() {
         return false;
     },
 
-    getLinkForEdit:function(id) {
+    editItemWithId: function(id) {
         phpr.pageManager.modifyCurrentState({
             moduleName: this.main.module,
             id: id,
@@ -41,19 +41,16 @@ dojo.declare("phpr.Core.Grid", phpr.Default.Grid, {
         });
     },
 
-    canEdit:function(inRowIndex) {
+    canEdit: function(inRowIndex) {
         return true;
     },
 
-    showTags:function() {
+    setExportButton: function(meta) {
     },
 
-    setExportButton:function(meta) {
-    },
-
-    getDoActionUrl:function(action, idUrl, ids) {
+    getDoActionUrl: function(action, idUrl, ids) {
         // Summary:
         //    Custom getDoActionUrl for Core
-        return phpr.webpath + 'index.php/Core/' + phpr.module.toLowerCase() + '/' + action + '/' + idUrl + '/' + ids;
+        return 'index.php/Core/' + phpr.module.toLowerCase() + '/' + action + '/' + idUrl + '/' + ids;
     }
 });

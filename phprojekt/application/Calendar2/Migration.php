@@ -1,7 +1,5 @@
 <?php
 /**
- * Calendar2 Migration
- *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 3 as published by the Free Software Foundation
@@ -11,14 +9,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
- * @category   PHProjekt
- * @package    Application
- * @subpackage Calendar2
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.1
- * @author     Simon Kohlmeyer <simon.kohlmeyer@mayflower.de>
  */
 
 /**
@@ -26,15 +18,6 @@
  *
  * This is used to install the Cal2 tables and Convert the Calendar1 data to the
  * new format.
- *
- * @category   PHProjekt
- * @package    Application
- * @subpackage Calendar2
- * @copyright  Copyright (c) 2011 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.1.0
- * @author     Simon Kohlmeyer <simon.kohlmeyer@mayflower.de>
  */
 class Calendar2_Migration extends Phprojekt_Migration_Abstract
 {
@@ -251,7 +234,7 @@ class Calendar2_Migration extends Phprojekt_Migration_Abstract
                 );
             } else if (!in_array($e['start_datetime'], $regularTimes)) {
                 // This event doesn't really belong here. We just create a new one for the user independent of $parent.
-                $uid = Calendar2_Models_Calendar2::generateUniqueIdentifier();
+                $uid = Phprojekt::generateUniqueIdentifier();
                 $this->_db->insert(
                     'calendar2',
                     array(

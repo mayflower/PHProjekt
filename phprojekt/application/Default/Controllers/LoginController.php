@@ -1,7 +1,5 @@
 <?php
 /**
- * Login handling.
- *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 3 as published by the Free Software Foundation
@@ -11,27 +9,12 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
- * @category   PHProjekt
- * @package    Application
- * @subpackage Default
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
- * @author     Eduardo Polidor <soria_parra@mayflower.de>
  */
 
 /**
  * Login handling.
- *
- * @category   PHProjekt
- * @package    Application
- * @subpackage Default
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
- * @author     Eduardo Polidor <epolidor@mayflower.de>
  */
 class LoginController extends Zend_Controller_Action
 {
@@ -47,7 +30,6 @@ class LoginController extends Zend_Controller_Action
         $this->getResponse()->clearHeaders();
         $this->getResponse()->clearBody();
 
-        $this->view->webpath        = Phprojekt::getInstance()->getConfig()->webpath;
         $this->view->compressedDojo = (bool) Phprojekt::getInstance()->getConfig()->compressedDojo;
 
         $this->render('login');
@@ -80,7 +62,6 @@ class LoginController extends Zend_Controller_Action
         $keepLogged = ($keepLogged == 1) ? true : false;
         $loginServer = $this->getRequest()->getParam('domain', null);
 
-        $this->view->webpath        = Phprojekt::getInstance()->getConfig()->webpath;
         $this->view->compressedDojo = (bool) Phprojekt::getInstance()->getConfig()->compressedDojo;
 
         try {
@@ -95,7 +76,7 @@ class LoginController extends Zend_Controller_Action
                 $frontendMessage->setControllProcess(Phprojekt_Notification::LAST_ACTION_LOGIN);
                 $frontendMessage->saveFrontendMessage();
                 Default_Helpers_Upload::cleanUnusedFiles();
-                $this->_redirect($config->webpath . 'index.php' . $hash);
+                $this->_redirect('../../index.php' . $hash);
                 die();
             }
         } catch (Phprojekt_Auth_Exception $error) {
@@ -161,7 +142,7 @@ class LoginController extends Zend_Controller_Action
 
         Phprojekt_Auth::logout();
         $config = Phprojekt::getInstance()->getConfig();
-        $this->_redirect($config->webpath . 'index.php');
+        $this->_redirect('../../index.php');
         die();
     }
 }

@@ -21,6 +21,7 @@ applicationDir       = "/home/dsp/public_html/phprojekt-mvc"
 
 tmpPath            = "/home/dsp/phprojekt_private/tests/private_folder/tmp/"
 applicationPath    = "/home/dsp/phprojekt_private/tests/private_folder/application/"
+uploadPath         = "/home/dsp/phprojekt_private/tests/private_folder/upload/"
 log.debug.filename = "/home/dsp/phprojekt_private/tests/private_folder/logs/debug.log"
 
 itemsPerPage         = 3;

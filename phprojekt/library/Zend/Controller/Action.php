@@ -683,6 +683,7 @@ abstract class Zend_Controller_Action implements Zend_Controller_Action_Interfac
      */
     protected function _redirect($url, array $options = array())
     {
+        $this->_helper->redirector->setPrependBase(false);
         $this->_helper->redirector->gotoUrl($url, $options);
     }
 }

@@ -42,7 +42,22 @@ dojo.declare("phpr.Default.System.PageManager", null, {
     register: function(module) {
         // Summary:
         //      Registers a new module to be handled by the PageManager
-        this._modules[module.module] = module;
+        if (module && module.module) {
+            this.deregister(module.module);
+            this._modules[module.module] = module;
+        }
+    },
+
+    deregister: function(moduleName) {
+        // Summary:
+        //      Deregisters a module
+        if (moduleName && this._modules.hasOwnProperty(moduleName)) {
+            if (this._modules[moduleName].destroy) {
+                this._modules[moduleName].destroy();
+            }
+
+            delete this._modules[moduleName];
+        }
     },
 
     changeState: function(state, options) {
@@ -182,8 +197,6 @@ dojo.declare("phpr.Default.System.PageManager", null, {
                 }
             } else if ("undefined" != typeof state.search) {
                 mod.showSearchResults(state.search || "");
-            } else if ("undefined" != typeof state.tag) {
-                mod.showTagsResults(state.tag || "");
             } else if ("undefined" != typeof state.action) {
                 // TODO: create better semantics for custom function calls
                 if (dojo.isFunction(mod.processActionFromUrlHash)) {

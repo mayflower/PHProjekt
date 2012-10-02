@@ -1,7 +1,5 @@
 <?php
 /**
- * Phprojekt Class for initialize the Zend Framework.
- *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 3 as published by the Free Software Foundation
@@ -11,27 +9,12 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
- * @category   PHProjekt
- * @package    Phprojekt
- * @subpackage Core
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
- * @author     Gustavo Solt <solt@mayflower.de>
  */
 
 /**
  * Phprojekt Class for initialize the Zend Framework.
- *
- * @category   PHProjekt
- * @package    Phprojekt
- * @subpackage Core
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
- * @author     Gustavo Solt <solt@mayflower.de>
  */
 class Phprojekt
 {
@@ -43,12 +26,12 @@ class Phprojekt
     /**
      * The second part of the version number.
      */
-    const VERSION_MINOR = 1;
+    const VERSION_MINOR = 2;
 
     /**
      * The third part of the version number.
      */
-    const VERSION_RELEASE = 4;
+    const VERSION_RELEASE = 0;
 
     /**
      * The extra part of the version number.
@@ -284,7 +267,7 @@ class Phprojekt
     public function getTranslate($locale = null)
     {
         if (null === $locale) {
-            $locale = Phprojekt_User_User::getSetting("language", $this->_config->language);
+            $locale = Phprojekt_Auth::getRealUser()->getSetting("language", $this->_config->language);
         }
 
         if (!($translate = $this->_cache->load('Phprojekt_getTranslate_' . $locale))) {
@@ -304,7 +287,12 @@ class Phprojekt
      */
     public static function setCurrentProjectId($projectId)
     {
-        Zend_Registry::set(self::CURRENT_PROJECT, (int) $projectId);
+        $project = new Project_Models_Project();
+        if (!$project = $project->find($projectId)) {
+            throw new Phprojekt_PublishedException("Project with id $projectId not found.");
+        }
+
+        Zend_Registry::set(self::CURRENT_PROJECT, $project);
     }
 
     /**
@@ -313,6 +301,16 @@ class Phprojekt
      * @return integer Current project ID.
      */
     public static function getCurrentProjectId()
+    {
+        return Zend_Registry::get(self::CURRENT_PROJECT)->id;
+    }
+
+    /**
+     * Return the current project.
+     *
+     * @return Phprojekt_Models_Project Current project
+     */
+    public static function getCurrentProject()
     {
         return Zend_Registry::get(self::CURRENT_PROJECT);
     }
@@ -347,7 +345,7 @@ class Phprojekt
         }
 
         if (null === $locale) {
-            $locale = Phprojekt_User_User::getSetting("language", $this->_config->language);
+            $locale = Phprojekt_Auth::getRealUser()->getSetting("language", $this->_config->language);
         }
 
         return $translate->translate($message, $moduleName, $locale);
@@ -447,18 +445,10 @@ class Phprojekt
             $this->_dieWithInternalServerError();
         }
 
-        // Set webpath, tmpPath and applicationPath
         if (empty($this->_config->webpath)) {
             $response               = new Zend_Controller_Request_Http();
             $this->_config->webpath = $response->getScheme() . '://' . $response->getHttpHost()
                 . $response->getBasePath() . '/';
-            $this->_config->basepath = $response->getBasePath() . '/';
-        }
-        if (!defined('PHPR_ROOT_WEB_PATH')) {
-            define('PHPR_ROOT_WEB_PATH', $this->_config->webpath . 'index.php/');
-        }
-        if (!defined('PHPR_ROOT_WEB_BASE_PATH')) {
-            define('PHPR_ROOT_WEB_BASE_PATH', $this->_config->basepath . 'index.php/');
         }
         if (!defined('PHPR_TEMP_PATH')) {
             define('PHPR_TEMP_PATH', $this->_config->tmpPath);
@@ -558,6 +548,7 @@ class Phprojekt
         $front->setModuleControllerDirectoryName('Controllers');
         $front->addModuleDirectory(PHPR_CORE_PATH);
         $front->addModuleDirectory(PHPR_USER_CORE_PATH);
+        $front->getRouter()->addRoute('rest', new Phprojekt_RestRoute($front));
 
         // Add SubModules directories with controlles
         $moduleDirectories = $this->_getControllersFolders($helperPaths);
@@ -1034,6 +1025,16 @@ class Phprojekt
         return in_array($name, $this->_blockedModules);
     }
 
+    /**
+     * Generates a unique identifier, usable for example as a uri or uid.
+     *
+     * @return string
+     */
+    public static function generateUniqueIdentifier()
+    {
+        return rand() . '-' . time() . '-' . getMyPid() . '@' . php_uname('n');
+    }
+
     private function _dieWithInternalServerError()
     {
         $response = new Zend_Controller_Response_Http();
@@ -1045,10 +1046,8 @@ class Phprojekt
 
     private function _redirectToSetupAndDie()
     {
-        $request  = new Zend_Controller_Request_Http();
-        $webPath  = $request->getScheme() . '://' . $request->getHttpHost() . $request->getBasePath() . '/';
         $response = new Zend_Controller_Response_Http();
-        $response->setRedirect($webPath . 'setup.php');
+        $response->setRedirect('setup.php');
         $response->setBody('No configuration file found, redirecting to setup.');
         $response->sendResponse();
         die();

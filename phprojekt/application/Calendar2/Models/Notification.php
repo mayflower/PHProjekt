@@ -1,7 +1,5 @@
 <?php
 /**
- * Calendar2 Notification class.
- *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 3 as published by the Free Software Foundation
@@ -11,29 +9,14 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details
  *
- * @category   PHProjekt
- * @package    Application
- * @subpackage Calendar2
  * @copyright  Copyright (c) 2011 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.1
- * @author     Simon Kohlmeyer <simon.kohlmeyer@mayflower.de>
  */
 
 /**
  * Calendar2 Notification class.
  *
  * This class extends PHProjekt's default notification class because of some special requirements for calendar2.
- *
- * @category   PHProjekt
- * @package    Application
- * @subpackage Calendar2
- * @copyright  Copyright (c) 2011 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.1
- * @author     Simon Kohlmeyer <simon.kohlmeyer@mayflower.de>
  */
 class Calendar2_Models_Notification extends Phprojekt_Notification
 {
@@ -79,7 +62,7 @@ class Calendar2_Models_Notification extends Phprojekt_Notification
         if ($this->_model->recurrenceId) {
             $params['occurrence'] = $this->_model->recurrenceId;
         }
-        $bodyParams['url'] = Phprojekt::getInstance()->getConfig()->webpath . 'index.php#' . http_build_query($params);
+        $bodyParams['url'] = 'index.php#' . http_build_query($params);
 
         return $bodyParams;
     }

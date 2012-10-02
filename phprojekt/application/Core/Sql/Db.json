@@ -238,26 +238,6 @@
             }
         },
 
-        "tags_modules":
-        {
-            "create":
-            {
-                "module_id":   {"type": "int", "notNull": "true", "primary": "true"},
-                "item_id":     {"type": "int", "notNull": "true", "primary": "true"},
-                "tag_user_id": {"type": "int", "notNull": "true", "primary": "true"}
-            }
-        },
-
-        "tags_users":
-        {
-            "create":
-            {
-                "id":      "default",
-                "user_id": {"type": "int", "notNull": "true"},
-                "tag_id":  {"type": "int", "notNull": "true"}
-            }
-        },
-
         "user":
         {
             "create":

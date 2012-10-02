@@ -1,9 +1,5 @@
 <?php
 /**
- * An own class loader that reads the class files from the
- * /application directory or from the Zend library directory depending
- * on the name of the class.
- *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 3 as published by the Free Software Foundation
@@ -13,29 +9,14 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
- * @category   PHProjekt
- * @package    Phprojekt
- * @subpackage Core
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
- * @author     David Soria Parra <soria_parra@mayflower.de>
  */
 
 /**
  * An own class loader that reads the class files from the
  * /application directory or from the Zend library directory depending
  * on the name of the class.
- *
- * @category   PHProjekt
- * @package    Phprojekt
- * @subpackage Core
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
- * @author     David Soria Parra <soria_parra@mayflower.de>
  */
 class Phprojekt_Loader extends Zend_Loader
 {
@@ -100,23 +81,21 @@ class Phprojekt_Loader extends Zend_Loader
 
     /**
      * The autoload method used to load classes on demand.
-     * Returns either the name of the class or false, if loading failed.
+     * Returns either the name of the class or throws the Zend_Excepton, if loading failed.
+     * The Zend_Exception can be catched for something like: new MissingClass().
      *
      * @param string $class The name of the class.
      *
-     * @return string|false Class name on success; false on failure.
+     * @return string|Zend_Exception Class name on success; false on failure.
      */
     public static function autoload($class)
     {
         try {
-            self::loadClass($class, self::$_directories);
+            @self::loadClass($class, self::$_directories);
             return $class;
-        } catch (Exception $error) {
-            $error->getMessage();
+        } catch (Zend_Exception $error) {
             return false;
         }
-
-        return false;
     }
 
     /**
@@ -183,7 +162,8 @@ class Phprojekt_Loader extends Zend_Loader
         }
 
         $name = self::getModelClassname($module, $model);
-        return new $name();
+
+        return class_exists($name) ? new $name() : false;
     }
 
     /**

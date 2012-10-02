@@ -1,7 +1,5 @@
 <?php
 /**
- * Notification class.
- *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 3 as published by the Free Software Foundation
@@ -11,27 +9,12 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
- * @category   PHProjekt
- * @package    Phprojekt
- * @subpackage Notification
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
- * @author     Mariano La Penna <mariano.lapenna@mayflower.de>
  */
 
 /**
  * Notification class.
- *
- * @category   PHProjekt
- * @package    Phprojekt
- * @subpackage Notification
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
- * @author     Mariano La Penna <mariano.lapenna@mayflower.de>
  */
 class Phprojekt_Notification
 {
@@ -277,7 +260,7 @@ class Phprojekt_Notification
         $bodyParams['moduleTable'] = $this->_model->getModelName();
 
         // Url
-        $url = Phprojekt::getInstance()->getConfig()->webpath . "index.php#" . $this->_model->getModelName();
+        $url = "index.php#" . $this->_model->getModelName();
         if (Phprojekt_Module::saveTypeIsNormal(Phprojekt_Module::getId($this->_model->getModelName()))) {
             $url .= "," . $this->_model->projectId;
         }

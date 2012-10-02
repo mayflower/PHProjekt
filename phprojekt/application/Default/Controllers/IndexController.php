@@ -1,7 +1,5 @@
 <?php
 /**
- * Default Controller.
- *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 3 as published by the Free Software Foundation
@@ -11,14 +9,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
- * @category   PHProjekt
- * @package    Application
- * @subpackage Default
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
- * @author     David Soria Parra <soria_parra@mayflower.de>
  */
 
 /**
@@ -30,15 +22,6 @@
  * The actions whose name starts with csv, returns the data in CSV format.
  * The controller calls the class model of the module, for process all the data.
  * </pre>
- *
- * @category   PHProjekt
- * @package    Application
- * @subpackage Default
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
- * @author     David Soria Parra <soria_parra@mayflower.de>
  */
 class IndexController extends Zend_Controller_Action
 {
@@ -86,6 +69,11 @@ class IndexController extends Zend_Controller_Action
      * String for use if the nodeId is not in the request parameters.
      */
     const NODEID_REQUIRED_TEXT = "Node Id parameter required";
+
+    /**
+     * String for use if the nodeId is not in the request parameters.
+     */
+    const PROJECTID_REQUIRED_TEXT = "projectId parameter required";
 
     /**
      * Internal number for the root project.
@@ -223,7 +211,7 @@ class IndexController extends Zend_Controller_Action
         // Skip initial request
         // and jsonGetConfigurations since is the action that returns
         // the valid token for use in the next request
-        if ($controller == 'index') {
+        if ($controller == 'index' || $controller == 'Upgrade') {
             if ($action == 'index' || $action == 'jsonGetConfigurations') {
                 return true;
             }
@@ -261,9 +249,11 @@ class IndexController extends Zend_Controller_Action
      */
     public function indexAction()
     {
-        $language = Phprojekt_User_User::getSetting("language", Phprojekt::getInstance()->getConfig()->language);
+        $language = Phprojekt_Auth::getRealUser()->getSetting(
+            "language",
+            Phprojekt::getInstance()->getConfig()->language
+        );
 
-        $this->view->webpath        = Phprojekt::getInstance()->getConfig()->webpath;
         $this->view->language       = $language;
         $this->view->compressedDojo = (bool) Phprojekt::getInstance()->getConfig()->compressedDojo;
         $this->view->frontendMsg    = (bool) Phprojekt::getInstance()->getConfig()->frontendMessages;
@@ -338,6 +328,7 @@ class IndexController extends Zend_Controller_Action
 
     /**
      * Keep in the registry the current project id.
+     * Deprecated, do not use.
      *
      * @return void
      */
@@ -347,6 +338,22 @@ class IndexController extends Zend_Controller_Action
 
         if (empty($projectId)) {
             throw new Zend_Controller_Action_Exception(self::NODEID_REQUIRED_TEXT, 400);
+        } else {
+            Phprojekt::setCurrentProjectId($projectId);
+        }
+    }
+
+    /**
+     * Keeps the project id in zend registry or reports an error if an empty value is supplied.
+     *
+     * @param int $projectId The project id to store.
+     *
+     * @return void
+     */
+    protected function _storeCurrentProjectId($projectId)
+    {
+        if (empty($projectId)) {
+            throw new Phprojekt_PublishedException(self::PROJECTID_REQUIRED_TEXT);
         } else {
             Phprojekt::setCurrentProjectId($projectId);
         }
@@ -388,10 +395,8 @@ class IndexController extends Zend_Controller_Action
      *
      * Each action defines in the array:
      * <pre>
-     *  - target: {@link TARGET_ACTION_MULTIPLE} or {@link TARGET_ACTION_SIMPLE}.
      *  - action: Name of the action that will process ids.
      *  - label:  Display for the action.
-     *  - mode:   {@link MODE_ACTION_XHR} or {@link MODE_ACTION_WINDOW}.
      *  - class:  Name of the class for display the icon.
      * </pre>
      *
@@ -491,6 +496,23 @@ class IndexController extends Zend_Controller_Action
 
             Phprojekt_Converter_Json::echoConvert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);
         }
+    }
+
+    /**
+     * Returns the metadata for this Module's default module.
+     *
+     * Mandatory parameters:
+     *  - integer projectId The id of the project that the metadata should be based on.
+     */
+    public function metadataAction()
+    {
+        $projectId = $this->getRequest()->getParam('projectId', null);
+        $this->_storeCurrentProjectId($projectId);
+
+        $fieldDefinition  = $this->getModelObject()->getInformation()->getFieldDefinition();
+        Phprojekt_CompressedSender::send(
+            Zend_Json_Encoder::encode($fieldDefinition)
+        );
     }
 
     /**
@@ -868,10 +890,8 @@ class IndexController extends Zend_Controller_Action
      *
      * Each action defines in the array:
      * <pre>
-     *  - target: {@link TARGET_ACTION_MULTIPLE} or {@link TARGET_ACTION_SIMPLE}.
      *  - action: Name of the action that will process ids.
      *  - label:  Display for the action.
-     *  - mode:   {@link MODE_ACTION_XHR} or {@link MODE_ACTION_WINDOW}.
      *  - class:  Name of the class for display the icon.
      * </pre>
      *
@@ -1190,7 +1210,7 @@ class IndexController extends Zend_Controller_Action
         $sessionName   = 'Phprojekt_CsrfToken';
         $csrfNamespace = new Zend_Session_Namespace($sessionName);
         $config        = Phprojekt::getInstance()->getConfig();
-        $linkBegin     = $config->webpath . 'index.php/' . $this->getModuleName() . '/index/';
+        $linkBegin     = 'index.php/' . $this->getModuleName() . '/index/';
         $fieldId       = $this->getRequest()->getParam('fieldId', '');
 
         // Add all the extra parameters that have the original URL
@@ -1203,7 +1223,6 @@ class IndexController extends Zend_Controller_Action
             }
         }
 
-        $this->view->webpath        = $config->webpath;
         $this->view->compressedDojo = (bool) $config->compressedDojo;
         $this->view->formPath       = $linkBegin . 'fileUpload/' . $linkData;
         $this->view->downloadLink   = '';

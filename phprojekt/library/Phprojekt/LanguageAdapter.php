@@ -1,7 +1,5 @@
 <?php
 /**
- * Language Interface for use the PHProjekt lang files
- *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 3 as published by the Free Software Foundation
@@ -11,14 +9,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
- * @category   PHProjekt
- * @package    Phprojekt
- * @subpackage Language
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
- * @author     Gustavo Solt <solt@mayflower.de>
  */
 
 /**
@@ -27,15 +19,6 @@
  *
  * The class is an extension of the Zend_Translate_Adapter that is an abstract class.
  * So we only must redefine the functions defined on the Original Adapter.
- *
- * @category   PHProjekt
- * @package    Phprojekt
- * @subpackage Language
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
- * @author     Gustavo Solt <solt@mayflower.de>
  */
 class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
 {
@@ -112,7 +95,7 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
      * where $key is the string to be translated and $value is the translated string.
      *
      * Since is not nessesary load the file in each request,
-     * we use sessions for save the langs translations.
+     * we use the cache to save the langs translations.
      * And also have an array with the already loaded languages for not load a same file two times.
      *
      * @param string             $data    Path to the default translation file.
@@ -144,7 +127,10 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
                         if (!isset($this->_translate[$locale]['Default'])) {
                             $this->_translate[$locale]['Default'] = array();
                         }
-                        $this->_translate[$locale]['Default'] = array_merge($this->_translate[$locale]['Default'], $lang);
+                        $this->_translate[$locale]['Default'] = array_merge(
+                            $this->_translate[$locale]['Default'],
+                            $lang
+                        );
                         $this->_langLoaded[$locale] = 1;
                     }
                 }
@@ -227,7 +213,8 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
                             }
                             $this->_langLoaded[$locale] = 1;
                             $this->_translate[$locale][$subModule] = array_merge(
-                                $this->_translate[$locale][$subModule], $lang);
+                                $this->_translate[$locale][$subModule], $lang
+                            );
                         }
                     } else if ($module == 'Core') {
                         $subCoreFiles = scandir(PHPR_CORE_PATH . '/' . $module . '/SubModules/' . $subModule);
@@ -243,7 +230,8 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
                                         }
                                         $this->_langLoaded[$locale] = 1;
                                         $this->_translate[$locale][$subCoreModule] = array_merge(
-                                            $this->_translate[$locale][$subCoreModule], $lang);
+                                            $this->_translate[$locale][$subCoreModule], $lang
+                                        );
                                     }
                                 }
                             }
@@ -518,10 +506,10 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
      */
     public static function getLanguageList()
     {
-        // Keep the list in the session
-        $sessionName           = 'Phprojekt_LanguageAdapter-getLanguageList';
-        $languageListNamespace = new Zend_Session_Namespace($sessionName);
-        if (!isset($languageListNamespace->list)) {
+        $cacheId = "Phprojekt_LanguageAdapter__getLanguageList";
+        $cache   = Phprojekt::getInstance()->getCache();
+
+        if (!$cache->test($cacheId)) {
             $reflect   = new ReflectionClass('Phprojekt_LanguageAdapter');
             $constants = $reflect->getConstants();
             $languages = array();
@@ -550,9 +538,11 @@ class Phprojekt_LanguageAdapter extends Zend_Translate_Adapter
                 }
             }
             asort($languages);
-            $languageListNamespace->list = $languages;
+            $cache->save($languages, $cacheId);
+        } else {
+            $languages = $cache->load($cacheId);
         }
 
-        return $languageListNamespace->list;
+        return $languages;
     }
 }

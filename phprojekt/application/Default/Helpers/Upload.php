@@ -1,7 +1,5 @@
 <?php
 /**
- * Helper to manage the upload files.
- *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 3 as published by the Free Software Foundation
@@ -11,27 +9,12 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
- * @category   PHProjekt
- * @package    Application
- * @subpackage Default
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.1
- * @author     Gustavo Solt <gustavo.solt@mayflower.de>
  */
 
 /**
  * Helper to manage the upload files.
- *
- * @category   PHProjekt
- * @package    Application
- * @subpackage Default
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.1
- * @author     Gustavo Solt <gustavo.solt@mayflower.de>
  */
 final class Default_Helpers_Upload
 {
@@ -106,7 +89,7 @@ final class Default_Helpers_Upload
             $md5name                        = md5(mt_rand() . time());
             $addedFile                     = array(
                 'md5' => $md5name,
-                'name' => $_FILES['uploadedFile']['name']
+                'name' => self::_makeUniqueName($_FILES['uploadedFile']['name'], $files)
             );
             $_FILES['uploadedFile']['name'] = $md5name;
         }
@@ -133,6 +116,48 @@ final class Default_Helpers_Upload
 
         self::_setSessionFiles($files, $field);
         return $files;
+    }
+
+    /**
+     * Makes $name unique with respect to $otherFiles by adding (3) to $name, where 3 is the next free index for $name.
+     */
+    private static function _makeUniqueName($name, $otherFiles)
+    {
+        if (!self::_nameExistsInFilesArray($name, $otherFiles)) {
+            return $name;
+        }
+
+        return $name . ' (' . self::_nextFreeFilenameIndex($name, $otherFiles) . ')';
+    }
+
+    private static function _nameExistsInFilesArray($name, $files)
+    {
+        foreach ($files as $entry) {
+            if ($entry['name'] === $name) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static function _nextFreeFilenameIndex($name, $otherFiles)
+    {
+        $relevant = array();
+        foreach ($otherFiles as $entry) {
+            if (stripos($entry['name'], $name . ' (') === 0) {
+                $relevant[] = $entry['name'];
+            }
+        }
+
+        $highestIndex = 0;
+        foreach ($relevant as $file) {
+            $matches = array();
+            if (preg_match('/\((\d+)\)$/', $file, $matches) === 1) {
+                $highestIndex = max($highestIndex, $matches[1]);
+            }
+        }
+
+        return $highestIndex + 1;
     }
 
     /**

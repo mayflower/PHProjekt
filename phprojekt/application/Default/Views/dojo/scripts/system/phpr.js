@@ -44,7 +44,6 @@ dojo.require("dojox.dtl.Inline");
 
 // Global vars
 var module           = null;
-var webpath          = null;
 var currentProjectId = null;
 var rootProjectId    = null;
 var userTags         = null;
@@ -274,7 +273,7 @@ dojo.declare("phpr.DataStore", null, {
         // Description:
         //    Set a new store for save the data
         if (typeof this._internalCache[params.url] == 'undefined' || params.noCache) {
-            store = new phpr.ReadStore({url: params.url});
+            var store = new phpr.ReadStore({url: params.url});
             this._internalCache[params.url] = {
                 data: [],
                 store: store,
@@ -442,7 +441,7 @@ dojo.declare("phpr.DataStore", null, {
         //    Delete all the cache
         for (var i in this._internalCache) {
             // Special case for global modules since are not reloaded
-            if (this._internalCache[i] && i != phpr.webpath + 'index.php/Core/module/jsonGetGlobalModules') {
+            if (this._internalCache[i] && i != 'index.php/Core/module/jsonGetGlobalModules') {
                 this._internalCache[i].data = [];
             }
         }
@@ -481,7 +480,7 @@ dojo.declare("phpr.ReadStore", dojox.data.QueryReadStore, {
             phpr.handleError(this.url, 'exception');
         } else if (data.code && data.code == 500) {
             // 500 is the error code for logut
-            location = phpr.webpath + 'index.php/Login/logout';
+            location = 'index.php/Login/logout';
         } else if (data.type && data.type == "error") {
             phpr.handleError(this.url, 'error', data.message);
         } else {
@@ -633,7 +632,7 @@ dojo.declare("phpr.translator", null, {
     },
 
     _loadLanguage: function(lang) {
-        var url = phpr.webpath + 'index.php/Default/index/jsonGetTranslatedStrings/language/' + lang;
+        var url = 'index.php/Default/index/jsonGetTranslatedStrings/language/' + lang;
         var param = { url: url };
         phpr.DataStore.addStore(param);
         return phpr.DataStore.requestData(param).then(function () {
@@ -748,11 +747,18 @@ dojo.declare("phpr.InitialScreen", null, {
 phpr.loadJsFile = function(fileName) {
     // Load a js and insert into the head
     var fileRef = document.createElement('script');
+    var def;
     fileRef.setAttribute("type", "text/javascript");
     fileRef.setAttribute("src", fileName);
     if (typeof fileRef != "undefined") {
+        def = new dojo.Deferred();
+        fileRef.onload = function() {
+            def.callback();
+        };
         document.getElementsByTagName("head")[0].appendChild(fileRef);
     }
+
+    return def;
 };
 
 phpr.loadCssFile = function(fileName) {
@@ -772,7 +778,7 @@ phpr.handleError = function(url, type, message) {
     response.type = 'error';
 
     if (url) {
-        response.message = url.replace(phpr.webpath, "") + ': ';
+        response.message = url + ': ';
     } else {
         response.message = '';
     }

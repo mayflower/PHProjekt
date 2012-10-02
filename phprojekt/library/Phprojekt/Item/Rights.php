@@ -1,8 +1,5 @@
 <?php
 /**
- * This class manage the rights for each item per user.
- * Return and save the rights using the moduleId-itemId relation.
- *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 3 as published by the Free Software Foundation
@@ -12,28 +9,13 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
- * @category   PHProjekt
- * @package    Phprojekt
- * @subpackage Item
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
- * @author     Gustavo Solt <solt@mayflower.de>
  */
 
 /**
  * This class manage the rights for each item per user.
  * Return and save the rights using the moduleId-itemId relation.
- *
- * @category   PHProjekt
- * @package    Phprojekt
- * @subpackage Item
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
- * @author     Gustavo Solt <solt@mayflower.de>
  */
 class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
 {
@@ -74,16 +56,7 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
 
         foreach ($rights as $userId => $access) {
             $this->_saveRight($moduleId, $itemId, $userId, $access);
-            // Reset cache
-            $sessionName = 'Phprojekt_Item_Rights-getItemRight' . '-' . $moduleId . '-' . $itemId . '-' . $userId;
-            $rightPerUserNamespace = new Zend_Session_Namespace($sessionName);
-            $rightPerUserNamespace->unsetAll();
         }
-
-        // Reset access by module-item
-        $sessionName    = 'Phprojekt_Item_Rights-getUsersRights' . '-' . $moduleId . '-' . $itemId;
-        $rightNamespace = new Zend_Session_Namespace($sessionName);
-        $rightNamespace->unsetAll();
     }
 
     /**
@@ -180,27 +153,18 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
      */
     public function getUsersRights($moduleId, $itemId)
     {
-        // Cache the query
-        $sessionName    = 'Phprojekt_Item_Rights-getUsersRights' . '-' . $moduleId . '-' . $itemId;
-        $rightNamespace = new Zend_Session_Namespace($sessionName);
-
-        if (!isset($rightNamespace->right)) {
-            $values = array();
-            $where  = sprintf('module_id = %d AND item_id = %d', (int) $moduleId, (int) $itemId);
-            $rows   = $this->fetchAll($where)->toArray();
-            foreach ($rows as $row) {
-                $access = Phprojekt_Acl::convertBitmaskToArray($row['access']);
-                $values[$row['user_id']] = array_merge($access, array(
-                    'moduleId' => (int) $moduleId,
-                    'itemId'   => (int) $itemId,
-                    'userId'   => (int) $row['user_id']
-                ));
-            }
-            $rightNamespace->right = $values;
-
+        $values = array();
+        $where  = sprintf('module_id = %d AND item_id = %d', (int) $moduleId, (int) $itemId);
+        $rows   = $this->fetchAll($where)->toArray();
+        foreach ($rows as $row) {
+            $access = Phprojekt_Acl::convertBitmaskToArray($row['access']);
+            $values[$row['user_id']] = array_merge($access, array(
+                'moduleId' => (int) $moduleId,
+                'itemId'   => (int) $itemId,
+                'userId'   => (int) $row['user_id']
+            ));
         }
-
-        return $rightNamespace->right;
+        return $values;
     }
 
     /**
@@ -216,7 +180,7 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
         $data['module_id'] = Phprojekt_Module::getId('Project');
         $data['item_id']   = 1;
         $data['user_id']   = (int) $userId;
-        $data['access']    = (int) Phprojekt_Acl::WRITE | Phprojekt_Acl::CREATE;
+        $data['access']    = (int) Phprojekt_Acl::WRITE | Phprojekt_Acl::CREATE | Phprojekt_Acl::READ;
         $this->insert($data);
     }
 

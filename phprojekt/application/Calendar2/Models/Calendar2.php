@@ -1,7 +1,5 @@
 <?php
 /**
- * Calendar2 model class.
- *
  * This software is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License version 3 as published by the Free Software Foundation
@@ -11,14 +9,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details
  *
- * @category   PHProjekt
- * @package    Application
- * @subpackage Calendar2
  * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.1
- * @author     Simon Kohlmeyer <simon.kohlmeyer@mayflower.de>
  */
 require_once 'Sabre.autoload.php';
 
@@ -26,15 +18,6 @@ require_once 'Sabre.autoload.php';
  * Calendar2 model class.
  *
  * An object of this class corresponds to a series of objects.
- *
- * @category   PHProjekt
- * @package    Application
- * @subpackage Calendar2
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.1
- * @author     Simon Kohlmeyer <simon.kohlmeyer@mayflower.de>
  */
 class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
 {
@@ -139,7 +122,7 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
         // This is needed to make fields read-only if we're not the owner.
         $this->_information = new Calendar2_Models_CalendarInformation();
 
-        $this->_generateUid();
+        $this->uid = Phprojekt::generateUniqueIdentifier();
 
         // Default values
         $this->visibility = self::VISIBILITY_PUBLIC;
@@ -255,7 +238,7 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
             // http://jira.opensource.mayflower.de/jira/browse/PHPROJEKT-298
             // As they don't belong together anymore, we also need to set a new uri.
             if ($new->rrule) {
-                $new->_generateUid();
+                $this->uid = Phprojekt::generateUniqueIdentifier();
                 $new->uri = $new->uid;
             }
 
@@ -338,7 +321,8 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
                 $db->quoteInto('calendar2_id = ?', $this->id)
             );
 
-            Phprojekt_Tags::getInstance()->deleteTagsByItem(
+            $tag = new Phprojekt_Tags();
+            $tag->deleteTagsByItem(
                 Phprojekt_Module::getId('Calendar2'),
                 $this->id
             );
@@ -449,11 +433,11 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
     }
 
     /**
-     * Returns the count of the calendar2 objects matching the given sql clause.
+     * Returns the count of objects matching the given sql clause
      *
-     * @param string $where A SQL-where-clause limiting the result set
+     * @param string $where The sql where-clause
      *
-     * @return int
+     * @return int Count of matching entries
      */
     public function count($where = null) {
         return Phprojekt_ActiveRecord_Abstract::count($where);
@@ -859,6 +843,13 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
     }
 
     /**
+     * Dummy in order to make activerecord think that a recurrence field exists.
+     */
+    public function setRecurrence()
+    {
+    }
+
+    /**
      * Returns a Calendar2_Helper_Rrule object initialized with this objects
      * start date, recurrence rule and excluded ocurrences.
      *
@@ -913,17 +904,9 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
      */
     public function copy()
     {
-        $m = new Calendar2_Models_Calendar2();
-        $m->find($this->id);
-
-        // use _data to bypass __set
-        foreach ($this->_data as $k => $v) {
-            $m->_data[$k] = $v;
-        }
-        $m->_participantData     = $this->_participantData;
-        $m->_participantDataInDb = $this->_participantDataInDb;
-        $m->_isFirst             = $this->_isFirst;
-        $m->_originalStart       = $this->_originalStart;
+        $m            = clone $this;
+        $m->_data     = $this->_data;
+        $m->_storedId = $this->_storedId;
 
         return $m;
     }
@@ -1305,11 +1288,11 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
      */
     private function _saveToNewRow()
     {
-        $tagsObject = Phprojekt_Tags::getInstance();
+        $tagsObject = new Phprojekt_Tags();
         $moduleId = Phprojekt_Module::getId('Calendar2');
         $tags = array();
         foreach ($tagsObject->getTagsByModule($moduleId, $this->id) as $val) {
-            $tags[] = $val['string'];
+            $tags[] = $val;
         }
 
         $this->_fetchParticipantData();
@@ -1325,22 +1308,4 @@ class Calendar2_Models_Calendar2 extends Phprojekt_Item_Abstract
         return $this->id;
     }
 
-    /**
-     * Generate a unique uid for this event as recommended in rfc
-     */
-    private function _generateUid()
-    {
-        // UID generation method taken from rfc 5545
-        $this->uid = self::generateUniqueIdentifier();
-    }
-
-    /**
-     * Generates a unique identifier, usable for example as a uri or uid.
-     *
-     * @return string
-     */
-    public static function generateUniqueIdentifier()
-    {
-        return rand() . '-' . time() . '-' . getMyPid() . '@' . php_uname('n');
-    }
 }

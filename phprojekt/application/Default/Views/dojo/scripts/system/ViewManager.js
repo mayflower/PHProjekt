@@ -49,7 +49,7 @@ dojo.declare("phpr.Default.System.TemplatedLayoutContainer", [dijit.layout.Conte
             this.inherited(arguments);
             if (this.dataNode && this.dataNode.getAttribute('phprTemplateData')) {
                 try {
-                    dojo.mixin(this, dojo.fromJson(this.dataNode.getAttribute('phprTemplateData')))
+                    dojo.mixin(this, dojo.fromJson(this.dataNode.getAttribute('phprTemplateData')));
                 } catch (e) {
                     console.error("malformated data");
                 }
@@ -80,7 +80,7 @@ dojo.declare("phpr.Default.System.ViewContentMixin", null, {
     destroy: function() {
         this.destroyMixin();
     }
-})
+});
 
 dojo.declare("phpr.Default.System.DefaultViewContentMixin", phpr.Default.System.ViewContentMixin, {
     _blank: true,
@@ -103,6 +103,7 @@ dojo.declare("phpr.Default.System.DefaultViewContentMixin", phpr.Default.System.
         }
     },
     destroyMixin: function() {
+        this.inherited(arguments);
         this.clear();
         this._clearCenterMainContent();
         delete this.view.clear;
@@ -174,7 +175,7 @@ dojo.declare("phpr.Default.System.DefaultViewContentMixin", phpr.Default.System.
 
         this._blank = false;
     }
-})
+});
 
 dojo.declare("phpr.Default.System.ViewManager", null, {
     _currentView: null,
@@ -244,7 +245,7 @@ dojo.declare("phpr.Default.System.ViewManager", null, {
         return this.getView();
     },
     setView: function(viewType, mixinType, config) {
-        return this._updateView(viewType, [mixinType, config || {}])
+        return this._updateView(viewType, [mixinType, config || {}]);
     },
     getView: function() {
         return this._currentView;
@@ -272,7 +273,7 @@ dojo.declare("phpr.Default.System.View", phpr.Default.System.TemplatedLayoutCont
             this._contentMixin = mixinType.apply(null, [this]);
             this._contentMixin.update(config);
             this._contentMixinType = mixinType;
-        } else if (this._contentMixinType === mixinType){
+        } else if (this._contentMixinType === mixinType) {
             this._contentMixin.update(config);
         } else {
             this._destroyMixin();
@@ -295,7 +296,6 @@ dojo.declare("phpr.Default.System.DefaultView", phpr.Default.System.View, {
     constructor: function() {
         this.templateString = phpr.fillTemplate("phpr.Default.template.main.html",
             {
-                webpath: phpr.webpath,
                 currentModule: phpr.module
             });
     },
