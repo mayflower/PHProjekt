@@ -661,82 +661,79 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         var subModuleUrl = 'index.php/Default/index/jsonGetModulesPermission/nodeId/' + phpr.currentProjectId;
         var createPermissions = false;
         phpr.DataStore.addStore({url: subModuleUrl});
-        phpr.DataStore.requestData({
-            url:         subModuleUrl,
-            processData: dojo.hitch(this, function() {
-                var modules        = dojo.clone(phpr.DataStore.getData({url: subModuleUrl}));
-                var foundBasicData = false;
+        phpr.DataStore.requestData({ url: subModuleUrl}).then(dojo.hitch(this, function() {
+            var modules        = dojo.clone(phpr.DataStore.getData({url: subModuleUrl}));
+            var foundBasicData = false;
 
-                if (phpr.currentProjectId != 1) {
-                    modules.unshift({
-                        name:           "Project",
-                        label:          phpr.nls.get("Basic Data"),
-                        rights:         {read: true},
-                        moduleFunction: "setUrlHash",
-                        functionParams: "'Project', null, ['basicData']"
+            if (phpr.currentProjectId != 1) {
+                modules.unshift({
+                    name:           "Project",
+                    label:          phpr.nls.get("Basic Data"),
+                    rights:         {read: true},
+                    moduleFunction: "setUrlHash",
+                    functionParams: "'Project', null, ['basicData']"
+                });
+            }
+
+            if (currentModule == "BasicData") {
+                phpr.module = 'Project';
+            }
+
+            var subModuleNavigation = phpr.viewManager.getView().subModuleNavigation;
+            this._navigation = new phpr.Default.System.TabController({ });
+
+            modules = this.sortModuleTabs(modules);
+            var selectedEntry;
+            var activeTab = false;
+            for (var i = 0; i < modules.length; i++) {
+                var moduleName     = modules[i].name;
+                var moduleLabel    = modules[i].label;
+                var moduleFunction = modules[i].moduleFunction || "setUrlHash";
+                var functionParams = modules[i].functionParams || "\'" +
+                    modules[i].name + "\'";
+                if (modules[i].rights.read || phpr.isAdminUser) {
+                    if (functionParams == "'Project', null, ['basicData']" &&
+                            currentModule == 'BasicData' &&
+                            !activeTab) {
+                        activeTab = true;
+                    } else if (moduleName == phpr.module &&
+                            functionParams != "'Project', null, ['basicData']" &&
+                            !activeTab) {
+                        activeTab = true;
+                    }
+
+                    var entry = this._navigation.getEntryFromOptions({
+                        moduleLabel: moduleLabel,
+                        callback: dojo.hitch(
+                            this,
+                            "_subModuleNavigationClick",
+                            moduleName,
+                            moduleFunction,
+                            functionParams)
                     });
-                }
+                    this._navigation.onAddChild(entry);
 
-                if (currentModule == "BasicData") {
-                    phpr.module = 'Project';
-                }
-
-                var subModuleNavigation = phpr.viewManager.getView().subModuleNavigation;
-                this._navigation = new phpr.Default.System.TabController({ });
-
-                modules = this.sortModuleTabs(modules);
-                var selectedEntry;
-                var activeTab = false;
-                for (var i = 0; i < modules.length; i++) {
-                    var moduleName     = modules[i].name;
-                    var moduleLabel    = modules[i].label;
-                    var moduleFunction = modules[i].moduleFunction || "setUrlHash";
-                    var functionParams = modules[i].functionParams || "\'" +
-                        modules[i].name + "\'";
-                    if (modules[i].rights.read || phpr.isAdminUser) {
-                        if (functionParams == "'Project', null, ['basicData']" &&
-                                currentModule == 'BasicData' &&
-                                !activeTab) {
-                            activeTab = true;
-                        } else if (moduleName == phpr.module &&
-                                functionParams != "'Project', null, ['basicData']" &&
-                                !activeTab) {
-                            activeTab = true;
-                        }
-
-                        var entry = this._navigation.getEntryFromOptions({
-                            moduleLabel: moduleLabel,
-                            callback: dojo.hitch(
-                                this,
-                                "_subModuleNavigationClick",
-                                moduleName,
-                                moduleFunction,
-                                functionParams)
-                        });
-                        this._navigation.onAddChild(entry);
-
-                        if (activeTab && !selectedEntry) {
-                            selectedEntry = entry;
-                        }
-                    }
-                    if (modules[i].rights.create && moduleName == phpr.module && currentModule != 'BasicData') {
-                        this.setNewEntry();
+                    if (activeTab && !selectedEntry) {
+                        selectedEntry = entry;
                     }
                 }
-
-                subModuleNavigation.set('content', this._navigation);
-                this._navigation.onSelectChild(selectedEntry);
-
-                // avoid cyclic refs
-                tmp = null;
-
-                this.customSetSubmoduleNavigation();
-
-                if (!phpr.isGlobalModule(this.module) && (currentModule != "BasicData")) {
-                    this.createIncludeSubprojectsCheckbox();
+                if (modules[i].rights.create && moduleName == phpr.module && currentModule != 'BasicData') {
+                    this.setNewEntry();
                 }
-            })
-        });
+            }
+
+            subModuleNavigation.set('content', this._navigation);
+            this._navigation.onSelectChild(selectedEntry);
+
+            // avoid cyclic refs
+            tmp = null;
+
+            this.customSetSubmoduleNavigation();
+
+            if (!phpr.isGlobalModule(this.module) && (currentModule != "BasicData")) {
+                this.createIncludeSubprojectsCheckbox();
+            }
+        }));
     },
 
     createIncludeSubprojectsCheckbox: function() {
