@@ -733,32 +733,36 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
                 this.customSetSubmoduleNavigation();
 
                 if (!phpr.isGlobalModule(this.module) && (currentModule != "BasicData")) {
-                    var isListRecursiveBox = new dijit.form.CheckBox({
-                        checked: this.state.includeSubentries == "true"
-                    });
-                    phpr.viewManager.getView().rightButtonRow.set('content', isListRecursiveBox);
-                    var label = dojo.html.set(dojo.create('label'), phpr.nls.get("Include Subprojects"));
-                    dojo.place(label, phpr.viewManager.getView().rightButtonRow.domNode, 0);
-                    isListRecursiveBox.startup();
-                    dojo.connect(
-                        isListRecursiveBox,
-                        'onChange',
-                        dojo.hitch(this,
-                            function(arg) {
-                                phpr.pageManager.modifyCurrentState(
-                                    {
-                                        includeSubentries: arg
-                                    }, {
-                                        noAction: true
-                                    });
-                                this.rebuildGrid(arg);
-                            }
-                        )
-                    );
+                    this.createIncludeSubprojectsCheckbox();
                 }
-
             })
         });
+    },
+
+    createIncludeSubprojectsCheckbox: function() {
+        var isListRecursiveBox = new dijit.form.CheckBox({
+            checked: this.state.includeSubentries == "true"
+        });
+        phpr.viewManager.getView().rightButtonRow.set('content', isListRecursiveBox);
+        var label = dojo.html.set(dojo.create('label'), phpr.nls.get("Include Subprojects"));
+        dojo.place(label, phpr.viewManager.getView().rightButtonRow.domNode, 0);
+        isListRecursiveBox.startup();
+        dojo.connect(
+            isListRecursiveBox,
+            'onChange',
+            dojo.hitch(this,
+                function(arg) {
+                    phpr.pageManager.modifyCurrentState(
+                        {
+                            includeSubentries: arg
+                        }, {
+                            noAction: true
+                        }
+                    );
+                    this.rebuildGrid(arg);
+                }
+            )
+        );
     },
 
     _subModuleNavigationClick: function(name, func, params) {
