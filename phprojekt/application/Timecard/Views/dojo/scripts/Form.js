@@ -237,8 +237,17 @@ dojo.declare("phpr.Timecard.Form", phpr.Default.System.Component, {
             // Init formdata
             var formData = [];
             // startDatetime
-            formData.push(this._templateRenderer.datetimeRender(meta[0].label, meta[0].key, data[meta[0].key],
-                    meta[0].required, false, meta[0].hint));
+            var currentDateTime = phpr.date.getIsoDatetime(this.dateObject, phpr.date.getIsoTime(new Date()));
+            formData.push(
+                this._templateRenderer.datetimeRender(
+                    meta[0].label,
+                    meta[0].key,
+                    id === 0 ? currentDateTime : data[meta[0].key],
+                    meta[0].required,
+                    false,
+                    meta[0].hint
+                )
+            );
             // endTime
             formData.push(this._templateRenderer.timeRender(meta[1].label, meta[1].key, data[meta[1].key],
                     meta[1].required, false, meta[1].hint));
