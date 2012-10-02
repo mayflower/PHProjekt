@@ -140,7 +140,7 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
                 dataForRender: dataForRender,
                 gantt:         this.gantt,
                 STEPPING:      this.gantt.STEPPING,
-                width:         width + 4,
+                width:         width + 4
             });
 
             dijit.byId('ganttObject').container = this.gantt;
@@ -481,5 +481,5 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
                 "/id/" + ids[i];
             phpr.DataStore.deleteData({url: formUrl});
         }
-    },
+    }
 });
