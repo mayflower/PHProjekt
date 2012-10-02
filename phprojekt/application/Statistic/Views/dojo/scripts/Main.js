@@ -151,6 +151,8 @@ dojo.declare("phpr.Statistic.Main", phpr.Default.Main, {
     setNewEntry:function() {
     },
 
+    createIncludeSubprojectsCheckbox: function() {},
+
     exportData:function() {
         var start = dijit.byId("startDate").get('value');
         var end   = dijit.byId("endDate").get('value');

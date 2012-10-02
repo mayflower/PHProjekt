@@ -73,6 +73,8 @@ dojo.declare("phpr.Gantt.Main", phpr.Default.Main, {
     setNewEntry: function() {
     },
 
+    createIncludeSubprojectsCheckbox: function() {},
+
     prepareData: function(items, request) {
         // Summary:
         //    Render all the views
