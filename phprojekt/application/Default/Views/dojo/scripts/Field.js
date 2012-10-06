@@ -456,7 +456,7 @@ dojo.declare("phpr.Default.Field", phpr.Default.System.Component, {
         for (var j in range) {
             range[j].selected = '';
             for (var k in tmp) {
-                if (parseInt(tmp[k]) === range[j].id) {
+                if (parseInt(tmp[k], 10) === range[j].id) {
                     range[j].selected = 'selected="selected"';
                     break;
                 }
@@ -503,7 +503,7 @@ dojo.declare("phpr.Default.Field", phpr.Default.System.Component, {
             // The Id must be translated into a descriptive String
             for (var j in range) {
                 if (range[j]) {
-                    if (parseInt(range[j].id) == itemvalue) {
+                    if (parseInt(range[j].id, 10) == itemvalue) {
                         itemvalue = range[j].name;
                         break;
                     }

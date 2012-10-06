@@ -243,7 +243,7 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
                 data = data.data;
                 var path;
                 var state = phpr.pageManager.getState();
-                var projectId = parseInt(state.projectId) || null;
+                var projectId = parseInt(state.projectId, 10) || null;
                 if (projectId && dojo.isArray(data.items)) {
                     var error = false,
                         path,

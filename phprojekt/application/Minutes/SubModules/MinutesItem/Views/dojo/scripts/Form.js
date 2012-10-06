@@ -56,7 +56,7 @@ dojo.declare("phpr.MinutesItem.Form", phpr.Default.SubModule.Form, {
         var display = (dojo.isIE) ? 'block' : 'table-row';
         var trDate  = dojo.byId(this.main.module + 'topicDate').parentNode.parentNode.parentNode.parentNode;
         var trUser  = dojo.byId(this.main.module + 'userId').parentNode.parentNode.parentNode.parentNode;
-        switch (parseInt(typeValue)) {
+        switch (parseInt(typeValue, 10)) {
             case 3:
                 dojo.style(trUser, "display", display);
                 dojo.style(trDate, "display", display);
