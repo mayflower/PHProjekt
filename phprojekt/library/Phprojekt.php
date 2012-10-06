@@ -289,7 +289,7 @@ class Phprojekt
     {
         $project = new Project_Models_Project();
         if (!$project = $project->find($projectId)) {
-            throw new Phprojekt_PublishedException("Project with id $projectId not found.");
+            throw new Exception("Project with id $projectId not found.");
         }
 
         Zend_Registry::set(self::CURRENT_PROJECT, $project);

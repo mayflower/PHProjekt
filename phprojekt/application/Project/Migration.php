@@ -31,7 +31,7 @@ class Project_Migration extends Phprojekt_Migration_Abstract
      */
     public function getCurrentModuleVersion()
     {
-        return '6.1.5';
+        return '6.2.1';
     }
 
     public function afterVersionStep($oldVersion, $newVersion)
@@ -88,6 +88,10 @@ HERE
                 Zend_Cache::CLEANING_MODE_ALL
             );
         }
+
+        if (is_null($currentVersion) || Phprojekt::compareVersion($currentVersion, '6.2.1') < 0) {
+            $this->repairUserRightsOnRoot();
+        }
     }
 
     private function _renameProjectsWithSameTitle()
@@ -102,6 +106,15 @@ JOIN (
 ) AS c
   ON p.title = c.title AND p.project_id = c.project_id
 SET p.title = CONCAT(p.title, ' (', p.id, ')')
+HERE
+);
+    }
+
+    private function repairUserRightsOnRoot() {
+        $this->_db->query(<<<HERE
+UPDATE item_rights as i
+SET access = 255
+WHERE module_id = 1 AND item_id = 1
 HERE
 );
     }
