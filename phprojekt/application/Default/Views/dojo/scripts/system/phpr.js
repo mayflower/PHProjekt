@@ -1121,6 +1121,10 @@ phpr.confirmDialog = function(callbackOk, message) {
     return confirmDialog;
 };
 
+phpr.getAbsoluteUrl = function(suffix) {
+    return location.href.substring(0, location.href.lastIndexOf('/') + 1) + (suffix || '');
+};
+
 dojo.provide("phpr.Default.System.TabController");
 dojo.declare("phpr.Default.System.TabController", [dijit.layout.TabController], {
     "class": "dijitTabContainerTop-tabs",
