@@ -106,7 +106,7 @@ dojo.declare("phpr.Timecard.Store", null, {
             var favorites = this._favoritesData;
             var range = dojo.clone(this._projectRange);
             for (var i in favorites) {
-                var id = parseInt(favorites[i].id);
+                var id = parseInt(favorites[i].id, 10);
                 if (id > 0) {
                     for (var j in range) {
                         if (range[j].id == id) {
@@ -114,7 +114,7 @@ dojo.declare("phpr.Timecard.Store", null, {
                             break;
                         }
                     }
-                    range.unshift({'id': parseInt(favorites[i].id), 'name': favorites[i].name});
+                    range.unshift({'id': parseInt(favorites[i].id, 10), 'name': favorites[i].name});
                 }
             }
             this._mergedFavorites = range;
@@ -268,7 +268,7 @@ dojo.declare("phpr.Timecard.Store", null, {
 
     getLastProjectId: function() {
         if (this.hasRunningBooking()) {
-            return parseInt(this._runningBooking.projectId);
+            return parseInt(this._runningBooking.projectId, 10);
         } else {
             return this._unassignedProjectId;
         }

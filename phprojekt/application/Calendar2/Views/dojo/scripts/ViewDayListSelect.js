@@ -124,7 +124,7 @@ dojo.declare("phpr.Calendar2.ViewDayListSelect", phpr.Calendar2.DefaultView, {
         this._header.users        = [];
 
         for (var user in headerData) {
-            var userId  = parseInt(headerData[user].id);
+            var userId  = parseInt(headerData[user].id, 10);
             var display = headerData[user].display;
 
             this._header.users[user]            = [];

@@ -169,7 +169,7 @@ dojo.declare('phpr.Project.GanttBase', null, {
         //    Estimate parent object name scan in the list for match.
         var nameTokens = ownName.split('|');
         var parentId   = nameTokens[0].split(':');
-        if (parseInt(parentId[1]) != 0) {
+        if (parseInt(parentId[1], 10) != 0) {
             parentId = new String('|own:'+parentId[1]);
             // Serach the name in the list
             var listIndex = this.findArrayIndex(parentId);
