@@ -354,16 +354,13 @@ dojo.declare("phpr.DataStore", null, {
             // Lost connection to server
             phpr.handleError(null, 'connection');
         } else {
-            // Js error
-            if (phpr.config.showInternalJsErrors) {
-                var message = null;
-                if (error.message) {
-                    message = error.message;
-                } else if (error.description) {
-                    message = error.description;
-                }
-                phpr.handleError(scope.url, 'js', message);
+            var message = null;
+            if (error.message) {
+                message = error.message;
+            } else if (error.description) {
+                message = error.description;
             }
+            phpr.handleError(scope.url, 'php', message);
         }
 
         scope.processData();

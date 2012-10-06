@@ -434,9 +434,6 @@ class Setup_Models_Config
         $content .= '; Optional email support address to show inside error messages, general help and logo alt text'
             . $this->_eol;
         $content .= 'front.supportAddress = ""' . $this->_eol;
-        $content .= $this->_eol;
-        $content .= '; Show internal javascript errors for debug' . $this->_eol;
-        $content .= 'front.showInternalJsErrors = false' . $this->_eol;
 
         return $content;
     }
