@@ -112,7 +112,7 @@ HERE
 
     private function repairUserRightsOnRoot() {
         $this->_db->query(<<<HERE
-UPDATE item_rights as i
+UPDATE item_rights
 SET access = 255
 WHERE module_id = 1 AND item_id = 1
 HERE
