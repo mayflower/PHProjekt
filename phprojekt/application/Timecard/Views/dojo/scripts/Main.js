@@ -324,9 +324,6 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
     _contentWidget: null,
     _menuCollector: null,
     _store: null,
-    _timecardCaldavClientButton: null,
-    _timecardCaldavClientUrl: null,
-    _timecardCaldavClientIosUrl: null,
 
     constructor: function() {
         this.module = 'Timecard';
@@ -497,22 +494,32 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
         // Description:
         //    Set the timecardCaldavClient button
         this.garbageCollector.collect('timecardCaldavClient');
-        var prefix = phpr.getAbsoluteUrl('index.php/Timecard/caldav/index/');
-        this._timecardCaldavClientUrl = prefix + 'calendars/' + phpr.config.currentUserName + '/default/';
-        this._timecardCaldavClientIosUrl = prefix + 'principals/' + phpr.config.currentUserName + '/';
-        var params = {
-            label: 'Timecard Caldav Client',
-            showLabel: true,
-            baseClass: 'positive',
-            disabled: false
-        };
-        var timecardCaldavClientButton = new dijit.form.Button(params);
+
+        var prefix = phpr.getAbsoluteUrl('index.php/Timecard/caldav/index/'),
+            url = prefix + 'calendars/' + phpr.config.currentUserName + '/default/',
+            iosUrl = prefix + 'principals/' + phpr.config.currentUserName + '/',
+            params = {
+                label: 'Timecard Caldav Client',
+                showLabel: true,
+                baseClass: 'positive',
+                disabled: false
+            },
+            timecardCaldavClientButton = new dijit.form.Button(params);
+
         phpr.viewManager.getView().buttonRow.domNode.appendChild(timecardCaldavClientButton.domNode);
+
         this.garbageCollector.addNode(timecardCaldavClientButton, 'timecardCaldavClient');
-        this.garbageCollector.addEvent(dojo.connect(timecardCaldavClientButton, 'onClick', dojo.hitch(this, 'showTimecardCaldavClientData')), 'timecardCaldavClient');
+        this.garbageCollector.addEvent(
+            dojo.connect(
+                timecardCaldavClientButton,
+                'onClick',
+                dojo.hitch(this, 'showTimecardCaldavClientData', url, iosUrl)
+            ),
+            'timecardCaldavClient'
+        );
     },
 
-    showTimecardCaldavClientData: function() {
+    showTimecardCaldavClientData: function(url, iosUrl) {
         var content = phpr.fillTemplate(
             'phpr.Calendar2.template.caldavView.html',
             {
@@ -521,8 +528,8 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
                 iosLabel: phpr.nls.get('CalDav url for Apple software', 'Calendar2'),
                 noticeLabel: phpr.nls.get('Notice', 'Calendar2'),
                 notice: phpr.nls.get('Please pay attention to the trailing slash, it is important', 'Calendar2'),
-                normalUrl: this._timecardCaldavClientUrl,
-                iosUrl: this._timecardCaldavClientIosUrl
+                normalUrl: url,
+                iosUrl: iosUrl
             }
         );
 

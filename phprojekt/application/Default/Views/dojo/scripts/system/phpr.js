@@ -1122,7 +1122,7 @@ phpr.confirmDialog = function(callbackOk, message) {
 };
 
 phpr.getAbsoluteUrl = function(suffix) {
-    return location.href.substring(0, location.href.lastIndexOf('/') + 1) + (suffix || '');
+    return location.href.substring(0, location.href.indexOf('index.php')) + (suffix || '');
 };
 
 dojo.provide("phpr.Default.System.TabController");
