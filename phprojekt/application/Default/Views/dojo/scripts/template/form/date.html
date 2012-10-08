@@ -9,8 +9,7 @@
     </td>
     <td>
         <input type="text" id="{{id}}" name="{{id}}" dojoType="phpr.DateTextBox" required="{{required}}" {{disabled}}
-        constraints="{datePattern: 'yyyy-MM-dd'}" promptMessage="yyyy-MM-dd"
-        invalidMessage="Invalid date. Use yyyy-MM-dd format." value="{{value}}" />
+        invalidMessage="{{invalidDateMessage}}" value="{{value}}" />
     </td>
     <td>
         {{tooltip|safe}}
