@@ -252,7 +252,7 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
 
                     try {
                         path = that._buildPathFromTreeData(data.items);
-                        url = "index.php/WebDAV/index/index/" + path;
+                        url = phpr.getAbsoluteUrl('index.php/WebDAV/index/index/' + path);
                     } catch (e) {
                         error = true;
                         errorMessage = e.message;
