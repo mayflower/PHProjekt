@@ -74,6 +74,7 @@ $lang["The Items were deleted correctly"] = "Die Artikel wurden korrekt gelösch
 $lang["Is a required field"] = "ist ein Pflichtfeld";
 $lang["Value out of range"] = "ungültiger Wert";
 $lang["Invalid format for date"] = "Ungültiges Format für das Datum";
+$lang["Invalid date format. Use:"] = "Ungültiges Datumsformat. Benutzen Sie:";
 $lang["Invalid Format"] = "Ungültiges Format";
 $lang["The Tags were added correctly"] = "Die Tags wurden korrekt hinzugefügt";
 $lang["The Tags were deleted correctly"] = "Die Tags wurden korrekt gelöscht";
