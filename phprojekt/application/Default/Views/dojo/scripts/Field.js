@@ -23,6 +23,8 @@ dojo.provide("phpr.Default.Field");
 dojo.require("dijit._editor.plugins.LinkDialog");
 dojo.require("dijit._editor.plugins.TextColor");
 dojo.require("dijit._editor.plugins.FontChoice");
+dojo.require("dojo.date.locale");
+dojo.require("dojo.i18n");
 
 dojo.declare("phpr.Default.Field", phpr.Default.System.Component, {
     // summary:
@@ -326,7 +328,8 @@ dojo.declare("phpr.Default.Field", phpr.Default.System.Component, {
                 value:    itemvalue || phpr.date.getIsoDate(new Date()),
                 required: itemrequired,
                 disabled: (itemdisabled) ? "disabled" : '',
-                tooltip:  this.getTooltip(itemhint)
+                tooltip:  this.getTooltip(itemhint),
+                invalidDateMessage: this.getInvalidDateMessage()
             }
         });
 
@@ -371,7 +374,8 @@ dojo.declare("phpr.Default.Field", phpr.Default.System.Component, {
                 valueForTime: valueForTime,
                 required:     itemrequired,
                 disabled:     (itemdisabled) ? "disabled" : '',
-                tooltip:      this.getTooltip(itemhint)
+                tooltip:      this.getTooltip(itemhint),
+                invalidDateMessage: this.getInvalidDateMessage()
             }
         });
 
@@ -554,5 +558,10 @@ dojo.declare("phpr.Default.Field", phpr.Default.System.Component, {
         return this.render(["phpr.Default.template.form", "tooltip.html"], null, {
             hint: itemhint
         });
+    },
+
+    getInvalidDateMessage: function() {
+        var bundle = dojo.date.locale._getGregorianBundle(dojo.i18n.normalizeLocale());
+        return phpr.nls.get('Invalid date format. Use:') + ' ' + bundle['dateFormat-short'];
     }
 });
