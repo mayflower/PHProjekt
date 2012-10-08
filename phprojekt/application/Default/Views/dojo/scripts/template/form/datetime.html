@@ -10,8 +10,8 @@
     <td>
         <div class="twoFields">
             <input type="text" id="{{idForDate}}" name="{{idForDate}}" dojoType="phpr.DateTextBox"
-            required="{{required}}" {{disabled}} constraints="{datePattern: 'yyyy-MM-dd'}" promptMessage="yyyy-MM-dd"
-            invalidMessage="Invalid date. Use yyyy-MM-dd format." value="{{valueForDate}}"
+            required="{{required}}" {{disabled}}
+            invalidMessage="{{invalidDateMessage}}" value="{{valueForDate}}"
             onchange="dijit.byId('{{id}}').set('value',
             phpr.date.getIsoDatetime(this.value, dijit.byId('{{idForTime}}').get('value')));"
             dojoAttachPoint="fieldNode" />
