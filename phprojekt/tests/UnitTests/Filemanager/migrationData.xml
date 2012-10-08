@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <dataset>
-    <module id="1" name="Project" label="Project" save_type="0" version="6.1.5" active="1"/>
+    <module id="1" name="Project" label="Project" save_type="0" version="6.2.1" active="1"/>
     <module id="2" name="Todo" label="Todo" save_type="0" version="6.0.0" active="1"/>
     <module id="3" name="Note" label="Note" save_type="0" version="6.0.0" active="1"/>
     <module id="4" name="Timecard" label="Timecard" save_type="1" version="6.1.4" active="1"/>
