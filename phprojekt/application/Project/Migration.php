@@ -145,9 +145,9 @@ HERE
         }
     }
 
-    private function patchOldModuleGrid($moduleName, $applicationPath) {
+    private function patchOldModuleGrid($moduleName) {
         $applicationPath = Phprojekt::getInstance()->getConfig()->applicationPath;
-        $pathFragments = array ($applicationPath, $moduleName, "Views", "dojo", "scripts", "Grid.js");
+        $pathFragments = array($applicationPath, $moduleName, "Views", "dojo", "scripts", "Grid.js");
         $filePath = implode(DIRECTORY_SEPARATOR, $pathFragments);
 
         if (file_exists($filePath)) {
