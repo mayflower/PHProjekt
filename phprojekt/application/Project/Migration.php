@@ -91,6 +91,7 @@ HERE
 
         if (is_null($currentVersion) || Phprojekt::compareVersion($currentVersion, '6.2.1') < 0) {
             $this->repairUserRightsOnRoot();
+            $this->patchOldModuleGrids();
         }
     }
 
@@ -117,5 +118,42 @@ SET access = 255
 WHERE module_id = 1 AND item_id = 1
 HERE
 );
+    }
+
+    private function patchOldModuleGrids() {
+        $applicationPath = Phprojekt::getInstance()->getConfig()->applicationPath;
+        $moduleDirs = scandir($applicationPath);
+
+        foreach ($moduleDirs as $moduleName) {
+            if ($moduleName != "." && $moduleName != "..") {
+                $select = $this->_db->select()
+                    ->from("module", array("version", "id"))
+                    ->where("name = ?", $moduleName)
+                    ->limit(1);
+
+                $row = $this->_db->fetchRow($select);
+
+                if ($row !== false && Phprojekt::compareVersion($row["version"], "6.2.1") < 0) {
+                    $this->patchOldModuleGrid($moduleName);
+                    $this->_db->update(
+                        "module",
+                        array("version" => "6.2.1"),
+                        $this->_db->quoteInto("id = ?", $row["id"])
+                    );
+                }
+            }
+        }
+    }
+
+    private function patchOldModuleGrid($moduleName) {
+        $applicationPath = Phprojekt::getInstance()->getConfig()->applicationPath;
+        $pathFragments = array($applicationPath, $moduleName, "Views", "dojo", "scripts", "Grid.js");
+        $filePath = implode(DIRECTORY_SEPARATOR, $pathFragments);
+
+        if (file_exists($filePath)) {
+            $content = file_get_contents($filePath);
+            $content = str_replace("phpr.Default.Grid", "phpr.Default.LegacyGrid", $content);
+            file_put_contents($filePath, $content);
+        }
     }
 }
