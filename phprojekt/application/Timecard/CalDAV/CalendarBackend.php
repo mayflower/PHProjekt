@@ -220,7 +220,7 @@ class Timecard_CalDAV_CalendarBackend extends Sabre_CalDAV_Backend_Abstract
     public function createCalendarObject($calendarId, $objectUri, $calendarData)
     {
         $vcalendar = Sabre_VObject_Reader::read($calendarData);
-        $timecard  = Tiumecard_Models_VObjectReader::read($vcalendar->vevent);
+        $timecard  = Timecard_Models_VObjectReader::read($vcalendar->vevent);
 
         $timecard->projectId = 1;
         $timecard->ownerId   = Phprojekt_Auth_Proxy::getEffectiveUserId();

@@ -463,7 +463,7 @@ dojo.declare("phpr.Default.LegacyGrid", phpr.Default.System.Component, {
                     break;
 
                 case 'rating':
-                    var max   = parseInt(meta[i].range.id);
+                    var max   = parseInt(meta[i].range.id, 10);
                     opts      = [];
                     vals      = [];
                     maxLength = meta[i].key.length;
@@ -1174,7 +1174,7 @@ dojo.declare("phpr.Default.LegacyGrid", phpr.Default.System.Component, {
         var sortColumn = dojo.cookie(this._sortColumnCookie);
         var sortAsc    = dojo.cookie(this._sortAscCookie);
         if (sortColumn !== undefined && sortAsc !== undefined) {
-            this.grid.setSortIndex(parseInt(sortColumn), eval(sortAsc));
+            this.grid.setSortIndex(parseInt(sortColumn, 10), eval(sortAsc));
         }
     },
 
@@ -1214,7 +1214,7 @@ dojo.declare("phpr.Default.LegacyGrid", phpr.Default.System.Component, {
                     var key    = e.cell.field;
                     var temp   = key.split('|');
                     var action = temp[0];
-                    var mode   = parseInt(temp[1]);
+                    var mode   = parseInt(temp[1], 10);
                     var item   = this.grid.getItem(e.rowIndex);
                     var rowId  = this.grid.store.getValue(item, 'id');
                     // Click on an extra action button
@@ -1487,7 +1487,7 @@ dojo.declare("phpr.Default.LegacyGrid", phpr.Default.System.Component, {
                 if (key !== null) {
                     var temp   = key.split('|');
                     var action = temp[0];
-                    var mode   = parseInt(temp[1]);
+                    var mode   = parseInt(temp[1], 10);
 
                     // Check for multiple rows
                     var actionName = select.children[select.selectedIndex].text;

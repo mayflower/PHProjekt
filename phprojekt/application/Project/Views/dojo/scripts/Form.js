@@ -243,7 +243,7 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
                 data = data.data;
                 var path;
                 var state = phpr.pageManager.getState();
-                var projectId = parseInt(state.projectId) || null;
+                var projectId = parseInt(state.projectId, 10) || null;
                 if (projectId && dojo.isArray(data.items)) {
                     var error = false,
                         path,
@@ -252,7 +252,7 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
 
                     try {
                         path = that._buildPathFromTreeData(data.items);
-                        url = "index.php/WebDAV/index/index/" + path;
+                        url = phpr.getAbsoluteUrl('index.php/WebDAV/index/index/' + path);
                     } catch (e) {
                         error = true;
                         errorMessage = e.message;

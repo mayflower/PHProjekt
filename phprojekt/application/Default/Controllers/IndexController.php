@@ -353,7 +353,7 @@ class IndexController extends Zend_Controller_Action
     protected function _storeCurrentProjectId($projectId)
     {
         if (empty($projectId)) {
-            throw new Phprojekt_PublishedException(self::PROJECTID_REQUIRED_TEXT);
+            throw new Zend_Controller_Action_Exception(self::PROJECTID_REQUIRED_TEXT, 400);
         } else {
             Phprojekt::setCurrentProjectId($projectId);
         }

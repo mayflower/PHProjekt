@@ -621,11 +621,11 @@ phpr.makeModuleDesignerField = function(formType, target, params) {
     var tableField   = params.tableField || '';
     var formRange    = params.formRange || '';
     var defaultValue = params.defaultValue || '';
-    var listPosition = parseInt(params.listPosition);
+    var listPosition = parseInt(params.listPosition, 10);
     if  (isNaN(listPosition)) {
         listPosition = 0;
     }
-    var status = parseInt(params.status);
+    var status = parseInt(params.status, 10);
     if  (isNaN(status)) {
         status = 1;
     }

@@ -317,8 +317,8 @@ dojo.declare("phpr.Calendar2.DefaultView", phpr.Default.System.Component, {
         }
         this.stepH             = dojo.number.round(this.stepH, 1);
         this.stepY             = this.cellTimeHeight;
-        this.posHMax           = parseInt(dojo.byId('eventsArea').style.width) - this.stepH;
-        this.posYMaxComplement = parseInt(dojo.byId('eventsArea').style.height);
+        this.posHMax           = parseInt(dojo.byId('eventsArea').style.width, 10) - this.stepH;
+        this.posYMaxComplement = parseInt(dojo.byId('eventsArea').style.height, 10);
     },
 
     timeToDivPosition: function(moment, isEvent, type) {
@@ -352,7 +352,7 @@ dojo.declare("phpr.Calendar2.DefaultView", phpr.Default.System.Component, {
         if (!isEvent && (this.main.dayListSelect !== null || this.main.weekList !== null)) {
             position += this._cellHeaderHeight;
         }
-        position = parseInt(position);
+        position = parseInt(position, 10);
 
         return position;
     },
@@ -375,7 +375,7 @@ dojo.declare("phpr.Calendar2.DefaultView", phpr.Default.System.Component, {
         if (!isEvent) {
             position += this._cellTimeWidth;
         }
-        position = parseInt(position);
+        position = parseInt(position, 10);
 
         return position;
     },
@@ -486,7 +486,7 @@ dojo.declare("phpr.Calendar2.DefaultView", phpr.Default.System.Component, {
 
         if (this.main.weekList !== null) {
             // Any remaining unused html divs?
-            var lastIndex = parseInt(i);
+            var lastIndex = parseInt(i, 10);
             if ((lastIndex + 1) < this._htmlEventDivsAmount) {
                 // Yes, hide them
                 for (indexToHide = lastIndex + 1; indexToHide < this._htmlEventDivsAmount; indexToHide ++) {
@@ -542,8 +542,8 @@ dojo.declare("phpr.Calendar2.DefaultView", phpr.Default.System.Component, {
         this.putDivInTheFront(node);
 
         // 2 - Define some variables
-        var posLeftNew       = parseInt(node.style.left);
-        var posTopNew        = parseInt(node.style.top);
+        var posLeftNew       = parseInt(node.style.left, 10);
+        var posTopNew        = parseInt(node.style.top, 10);
         var posBottomNew     = posTopNew + node.offsetHeight;
         var movedEventIndex  = this.nodeIdToEventOrder(node.id);
         var movedEvent       = this.events[movedEventIndex];
@@ -673,7 +673,7 @@ dojo.declare("phpr.Calendar2.DefaultView", phpr.Default.System.Component, {
         //    corresponding index in the events array.
         var pos   = this.EVENTS_MAIN_DIV_ID.length;
         var event = nodeId.substr(pos, nodeId.length);
-        event     = parseInt(event);
+        event     = parseInt(event, 10);
 
         return event;
     },
@@ -875,12 +875,12 @@ dojo.declare("phpr.Calendar2.DefaultView", phpr.Default.System.Component, {
         var result   = false;
 
         var tmp      = time1.split(':');
-        var hour1    = parseInt(tmp[0]);
-        var minutes1 = parseInt(tmp[1]);
+        var hour1    = parseInt(tmp[0], 10);
+        var minutes1 = parseInt(tmp[1], 10);
 
         tmp          = time2.split(':');
-        var hour2    = parseInt(tmp[0]);
-        var minutes2 = parseInt(tmp[1]);
+        var hour2    = parseInt(tmp[0], 10);
+        var minutes2 = parseInt(tmp[1], 10);
 
         if (hour1 < hour2) {
             result = true;
@@ -897,7 +897,7 @@ dojo.declare("phpr.Calendar2.DefaultView", phpr.Default.System.Component, {
         for (var i in this.events) {
             if (this.events[i] !== undefined) {
                 // parseInt is very important here:
-                i = parseInt(i);
+                i = parseInt(i, 10);
                 var simultEvents = this.isSharingSpace(i);
                 if (simultEvents.sharing) {
                     this.events[i].simultWidth  = true;
@@ -1697,7 +1697,7 @@ dojo.declare("phpr.Calendar2.Moveable", dojo.dnd.Moveable, {
             // If event is concurrent and it is not the first one from left to right,
             // attach its left side to column border
             leftTop.l -= stepH / movedEvent.simultAmount * (movedEvent.simultOrder - 1);
-            leftTop.l  = parseInt(leftTop.l);
+            leftTop.l  = parseInt(leftTop.l, 10);
         }
 
         if (this.parentClass.main.weekList !== null) {
@@ -1713,7 +1713,7 @@ dojo.declare("phpr.Calendar2.Moveable", dojo.dnd.Moveable, {
             } else if (left > posHmax) {
                 left = posHmax;
             }
-            leftTop.l = parseInt(left);
+            leftTop.l = parseInt(left, 10);
         } else {
             leftTop.l = originalLeft;
         }
@@ -1723,9 +1723,9 @@ dojo.declare("phpr.Calendar2.Moveable", dojo.dnd.Moveable, {
         if (top < 0) {
             top = 0;
         } else if (top > posYmax) {
-            top = stepY * parseInt(posYmax / stepY);
+            top = stepY * parseInt(posYmax / stepY, 10);
         }
-        leftTop.t = parseInt(top);
+        leftTop.t = parseInt(top, 10);
 
         // According to new calculated left and top values, the div will be moved?
         if (originalLeft != leftTop.l || originalTop != leftTop.t) {
@@ -1807,8 +1807,8 @@ dojo.declare("phpr.Calendar2.ResizeHandle", dojox.layout.ResizeHandle, {
         }
 
         // Maximum height - Set for the event end time not to be after 20:00
-        var maxY      = parseInt(dojo.byId('eventsArea').offsetHeight) + step;
-        var eventTopY = parseInt(this.targetDomNode.parentNode.style.top);
+        var maxY      = parseInt(dojo.byId('eventsArea').offsetHeight, 10) + step;
+        var eventTopY = parseInt(this.targetDomNode.parentNode.style.top, 10);
         var proposedY = eventTopY + proposedHeight + step + sizerDivHeight;
 
         // The event bottom border will be moved?
