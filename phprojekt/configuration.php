@@ -66,14 +66,14 @@ database.params.charset = "utf8"
 
 ; Here will be logged things explicitly declared.
 ; E.G.: (PHP) Phprojekt::getInstance()->getLog()->debug("String to be logged");
-log.debug.filename = "/var/www/phprojekt_private/logs/debug.log"
+log.debug.filename = "../phprojekt_private/logs/debug.log"
 
 
 ; This is another type of logging.
 ; E.G.: (PHP) Phprojekt::getInstance()->getLog()->err("String to be logged");
 ; Note for developers: there are many different type of logs defined that can be
 ; added here, see the complete list in phprojekt/library/Phprojekt/Log.php
-log.err.filename = "/var/www/phprojekt_private/logs/err.log"
+log.err.filename = "../phprojekt_private/logs/err.log"
 
 ; If this is enabled, a stack trace will be logged for every logged message
 log.printStackTraces = false
