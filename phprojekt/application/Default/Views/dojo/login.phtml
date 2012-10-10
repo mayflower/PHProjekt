@@ -21,6 +21,21 @@
         dojo.require("dijit.TooltipDialog");
         dojo.require("dijit.form.FilteringSelect");
     </script>
+    <style type="text/css">
+    .logins {
+        width: 100%;
+        padding-top: 50px;
+    }
+    .logins th {
+        font-weight: bold;
+     }
+    .logins td, .logins th {
+        color: white;
+    }
+    .logins tfoot td {
+        padding-top: 2ex;
+    }
+    </style>
 <body class="claro phprojekt-login">
     <!-- Exception Form -->
     <div class="serverFeedback">
@@ -90,6 +105,32 @@
                         </button>
                     </td>
                 </tr>
+            </table>
+            <table align="center" class="logins">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Password</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>english</td>
+                    <td>english</td>
+                    <td>English standard user</td>
+                </tr>
+                <tr>
+                    <td>deutsch</td>
+                    <td>deutsch</td>
+                    <td>German standard user</td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="3">Please note that WebDAV is deactivated</td>
+                </tr>
+            </tfoot>
             </table>
         </form>
         </div>

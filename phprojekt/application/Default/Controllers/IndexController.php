@@ -1144,13 +1144,15 @@ class IndexController extends Zend_Controller_Action
     {
         list($model, $field, $itemId) = $this->_getFileParameters();
 
-        try {
-            $value = Default_Helpers_Upload::uploadFile($model, $field, $itemId);
-        } catch (Exception $error) {
-            $this->view->errorMessage = $error->getMessage();
-            $value                    = Default_Helpers_Upload::getFiles($model, $field);
-        }
+        //try {
+        //    $value = Default_Helpers_Upload::uploadFile($model, $field, $itemId);
+        //} catch (Exception $error) {
+        //    $this->view->errorMessage = $error->getMessage();
+        //    $value                    = Default_Helpers_Upload::getFiles($model, $field);
+        //}
 
+        $this->view->errorMessage = "Upload disabled.";
+        $value                    = array();
         $this->_fileRenderView($itemId, $field, $value);
     }
 
