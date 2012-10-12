@@ -84,7 +84,7 @@ abstract class Phprojekt_RestController extends Zend_Rest_Controller
             $recordCount = $model->count($where);
         }
 
-        $end = min($end, $recordCount);
+        $end = is_null($end) ? $recordCount : min($end, $recordCount);
         $this->getResponse()->setHeader('Content-Range', "items {$start}-{$end}/{$recordCount}");
         Phprojekt_CompressedSender::send(
             Zend_Json::encode(Phprojekt_Model_Converter::convertModels($records))
