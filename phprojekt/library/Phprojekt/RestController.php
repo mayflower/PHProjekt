@@ -35,9 +35,15 @@ abstract class Phprojekt_RestController extends Zend_Rest_Controller
     {
         $projectId = (int) $this->getRequest()->getParam('projectId', 0);
         $range     = $this->getRequest()->getHeader('range');
-        sscanf($range, 'items=%d-%d', $start, $end);
-        $count     = $end - $start + 1;
-        $sort      = $this->getRequest()->getParam('sort', null);
+        if (!empty($range)) {
+            sscanf($range, 'items=%d-%d', $start, $end);
+            $count = $end - $start + 1;
+        } else {
+            $start = null;
+            $end   = null;
+            $count = null;
+        }
+        $sort      = $this->_getSorting();
         $recursive = $this->getRequest()->getParam('recursive', 'false');
         $recursive = $recursive === 'true';
         $model     = $this->newModelObject();
@@ -83,6 +89,29 @@ abstract class Phprojekt_RestController extends Zend_Rest_Controller
         Phprojekt_CompressedSender::send(
             Zend_Json::encode(Phprojekt_Model_Converter::convertModels($records))
         );
+    }
+
+    protected function _getSorting()
+    {
+        $params = $this->getRequest()->getParams();
+        foreach ($params as $key => $value) {
+            if (strpos($key, 'sort(') === 0) {
+                return $this->_parseSortingQuery($key);
+            }
+        }
+    }
+
+    private function _parseSortingquery($sortString)
+    {
+        $criteriaStrings = explode(',', substr($sortString, strlen('sort('), -1));
+        $criteria = array();
+
+        foreach ($criteriaStrings as $c) {
+            $attribute  = substr($c, 1);
+            $descending = (substr($c, 0, 1) === '-');
+            return $attribute . ($descending ? ' DESC' : ' ASC');
+        }
+        return $criteria;
     }
 
     public function getAction()
