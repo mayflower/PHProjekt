@@ -1120,7 +1120,7 @@ phpr.confirmDialog = function(callbackOk, message) {
 
 phpr.getAbsoluteUrl = function(suffix) {
     if (location.href.indexOf('index.php') === -1) {
-        return location.href.substring(0, location.href.lastIndex.Of('/') + 1) + (suffix || '');
+        return location.href.substring(0, location.href.lastIndexOf('/') + 1) + (suffix || '');
     } else {
         return location.href.substring(0, location.href.indexOf('index.php')) + (suffix || '');
     }

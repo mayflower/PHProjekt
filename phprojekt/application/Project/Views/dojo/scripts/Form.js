@@ -287,7 +287,7 @@ dojo.declare("phpr.Project.Form", phpr.Default.Form, {
             if (segment.indexOf('/') !== -1) {
                 throw new Error(phpr.nls.get("There must be no slashes in project names for WebDAV to work.", "Project"));
             } else {
-                path += encodeURIComponent(segment) + "/";
+                path += "Subprojects/" + encodeURIComponent(segment) + "/";
             }
         }
 
