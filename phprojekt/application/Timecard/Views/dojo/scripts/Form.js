@@ -18,29 +18,7 @@
  * @author    Gustavo Solt <solt@mayflower.de>
  */
 
-dojo.provide("phpr.Timecard.Main");
+dojo.provide("phpr.Timecard.Form");
 
-dojo.require("dijit.ColorPalette");
-
-dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
-    constructor: function() {
-        this.module = "Timecard";
-        this.loadFunctions(this.module);
-
-        this.formWidget = phpr.Timecard.Form;
-    },
-
-    renderTemplate: function() {
-        phpr.viewManager.setView(
-            phpr.Default.System.DefaultView,
-            phpr.Timecard.ViewContentMixin
-        );
-    },
-
-    setWidgets: function() {
-        var grid = new phpr.Timecard.GridWidget({
-            store: new dojo.store.JsonRest({target: 'index.php/Timecard/Timecard'})
-        });
-        phpr.viewManager.getView().gridBox.set('content', grid);
-    }
+dojo.declare("phpr.Timecard.Form", phpr.Default.Form, {
 });
