@@ -1,63 +1,41 @@
-/* MonthView */
-.phprojekt .tableMonthView {
-    width: 100%;
-    line-height: 1.09;
+/* GridWidget */
+.phprojekt .timecardGrid {
+    background-color: #e9e9e9;
+    font-size: 0.85em; /* inherit font-family from dojo.css */
+    white-space: nowrap;
 }
 
-.dj_ie7 .phprojekt .tableMonthView {
-    line-height: 1.04 !important;
+.phprojekt .timecardGrid thead {
+    padding: 0px;
 }
 
-.dj_ie .phprojekt .tableMonthView {
-    line-height: 1.15;
+.phprojekt .timecardGrid th {
+    border-width: 1px;
+    padding-bottom: 0px;
+    border-color: transparent #aca899 #919191 transparent;
+    background: url("images/titleBar.png") #e9e9e9 repeat-x top;
+    color: #000 !important;
+    font-weight: 400;
+    /* shared with td */
+    padding: 1px;
+    text-align: left;
+    border: 1px dotted #d5cdb5;
 }
 
-.phprojekt .tableMonthView .col1 {
-    width: 15%;
+.phprojekt .timecardGrid td {
+    /* shared with th */
+    padding: 1px;
+    text-align: left;
+    border: 1px dotted #d5cdb5;
+
+    border-color: #ebeadb;
+    border-left-color: transparent;
+    border-top-color: transparent;
+    background-color: white;
 }
 
-.phprojekt .tableMonthView .col2 {
-    width: 30%;
-}
-
-.phprojekt .tableMonthView .col3 {
-    width: 55%;
-}
-
-.phprojekt .tableMonthView td {
-    padding: 0 0.5em 0 0.5em;
-}
-
-.phprojekt .tableMonthView .weekday,
-.phprojekt .tableMonthView .weekday a,
-.phprojekt .tableMonthView .weekend,
-.phprojekt .tableMonthView .weekend a {
-    color: #000;
-    text-decoration: none;
-}
-
-.phprojekt .tableMonthView .weekend,
-.phprojekt .tableMonthView .weekend a {
-    color: #ccc;
-}
-
-.phprojekt .tableMonthView .open,
-.phprojekt .tableMonthView .open a {
-    color: red;
-}
-
-.phprojekt .timecardTableRow:hover {
-    cursor: pointer;
-    background-color: #cedaff;
-}
-
-.phprojekt .timecardSeparator {
-    background-color: #fff;
-    height: 5px;
-}
-
-.dj_ie .phprojekt .tableMonthView .dijitButtonNode {
-    padding: 0 0 0 5px;
+.phprojekt .timecardGrid tbody {
+    background-color: #FAFAFA;
 }
 
 /* List View */
