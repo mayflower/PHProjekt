@@ -470,4 +470,19 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
         }
         return $fetch[0];
     }
+
+    /**
+     * Need to copy this from Item_Abstract as IndexController assumes it's here
+     */
+    public function getUsersRights()
+    {
+        return array_merge(
+            Phprojekt_Acl::convertBitmaskToArray(Phprojekt_Acl::ALL),
+            array(
+                'moduleId' => 1,
+                'itemId'   => $this->id,
+                'userId'   => $this->ownerId
+            )
+        );
+    }
 }
