@@ -197,6 +197,44 @@ abstract class Phprojekt_RestController extends Zend_Rest_Controller
             $where = $filterClass->getWhere();
         }
 
+
+
+        return $this->_getNewFilterWhere($where);
+    }
+
+    protected function _getNewFilterWhere($where = null) {
+        $filterString = $this->getRequest()->getParam('filter', null);
+        if (is_null($filterString)) {
+            return $where;
+        }
+
+        $db     = Phprojekt::getInstance()->getDb();
+        $parts  = array();
+        $filter = Zend_Json::decode($filterString);
+        foreach ($filter as $field => $filterDef) {
+            $field = $db->quoteIdentifier(Phprojekt_ActiveRecord_Abstract::convertVarToSql($field));
+            foreach ($filterDef as $operator => $value) {
+                switch ($operator) {
+                case '!ge':
+                    $parts[] = $field . ' >= ' . $db->quote($value);
+                    break;
+                case '!lt':
+                    $parts[] = $field . ' < ' . $db->quote($value);
+                    break;
+                default:
+                    throw new Exception("Invalid operator \"$operator\"");
+                    break;
+                }
+            }
+        }
+
+        if (!is_null($where)) {
+            $where = "($where) AND ";
+        } else {
+            $where = "";
+        }
+        $where .= implode(' AND ', $parts);
+
         return $where;
     }
 }
