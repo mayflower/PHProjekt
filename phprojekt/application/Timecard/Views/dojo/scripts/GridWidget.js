@@ -146,12 +146,13 @@ dojo.provide("phpr.Timecard.GridWidget");
     });
 
     dojo.declare("phpr.Timecard.DummyGridEntry", phpr.Timecard._GridEntry, {
-        dayOfTheWeek: '',
-        dayOfTheMonth: '',
+        date: null,
 
         constructor: function(params) {
             dojo.mixin(this, params);
-            this.item = this.item || {};
+            this.date = this.date || new Date();
+            this.dayOfTheWeek = _weekDay(this.date);
+            this.dayOfTheMonth = '' + this.date.getDate();
         },
 
         _time: function() {
@@ -218,8 +219,7 @@ dojo.provide("phpr.Timecard.GridWidget");
                         }));
                     } else {
                         this._addDummyRow({
-                            dayOfTheWeek: _weekDay(day),
-                            dayOfTheMonth: day.getDate().toString()
+                            date: day
                         });
                     }
                 }));
