@@ -104,9 +104,13 @@ dojo.provide("phpr.Timecard.GridWidget");
         },
 
         _duration: function() {
-            return this._padTo2Chars(Math.floor(this.item.minutes / 60)) +
-                ':' +
-                this._padTo2Chars(this.item.minutes % 60);
+            var start = phpr.date.isoDatetimeTojsDate(this.item.startDatetime),
+                end = new Date(start);
+            end.setHours(this.item.endTime.substr(0, 2));
+            end.setMinutes(this.item.endTime.substr(3, 2));
+
+            var minutes = dojo.date.difference(start, end, 'minute');
+            return this._padTo2Chars('' + Math.floor(minutes / 60)) + ':' + this._padTo2Chars(minutes % 60);
         },
 
         _padTo2Chars: function(s) {
