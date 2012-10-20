@@ -7,7 +7,7 @@
             <td class="hours" width="{{widthHourColumn}}%">
                 {{row.hour}}
                 <button dojoType="dijit.form.Button" showLabel="false" iconClass="add" class="addButton"
-                onClick="dojo.publish('Calendar2.openForm', [0, 0, '{{date}}', '{{row.hour}}']);">
+                onClick="dojo.publish('Calendar2.openForm', [0, null, '{{date}}', '{{row.hour}}']);">
                 </button> &nbsp;
             </td>
             {% ifequal row.even true %}
@@ -46,7 +46,7 @@
         {{furtherEventsMessage}}:<br />
         {% for event in furtherEvents.events %}
     {{event.time|safe}}:&nbsp;
-    <a href="javascript: dojo.publish('Calendar2.openForm', [{{event.id}}, 0, 0, 0, '{{event.occurrence}}']);">{{event.summary|safe}}</a>
+    <a href="javascript: dojo.publish('Calendar2.openForm', [{{event.id}}, null, 0, 0, '{{event.occurrence}}']);">{{event.summary|safe}}</a>
     <br />
         {% endfor %}
     {% endif %}

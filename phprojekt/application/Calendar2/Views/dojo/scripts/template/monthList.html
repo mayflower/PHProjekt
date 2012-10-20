@@ -15,12 +15,12 @@
                 <td class="monthEvents" style="height: 80px; background-color:{{day.color}};">
                     <a href="javascript: dojo.publish('Calendar2.anotherViewDayClick', ['{{day.date}}']);">{{day.day}}</a>
                     <button dojoType="dijit.form.Button" showLabel="false" iconClass="add" class="addButton"
-                        onClick="dojo.publish('Calendar2.openForm', [0, 0, '{{day.date}}']);">
+                        onClick="dojo.publish('Calendar2.openForm', [0, null, '{{day.date}}']);">
                     </button>
                     <br />
                     {% for event in day.events %}
                     {{event.time|safe}}
-                    <a href="javascript: dojo.publish('Calendar2.openForm', [{{event.id}}, 0, 0, 0, '{{event.occurrence}}']);">
+                    <a href="javascript: dojo.publish('Calendar2.openForm', [{{event.id}}, null, 0, 0, '{{event.occurrence}}']);">
                         {{event.summary|safe}}
                     </a> {{event.warning|safe}}
                     <br />
