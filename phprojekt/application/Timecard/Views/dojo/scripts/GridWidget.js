@@ -163,6 +163,20 @@ dojo.provide("phpr.Timecard.GridWidget");
             return '';
         },
 
+        _onClick: function() {
+            var presetDate = new Date(this.date);
+            var now = new Date();
+            presetDate.setHours(now.getHours());
+            presetDate.setMinutes(now.getMinutes());
+            phpr.pageManager.modifyCurrentState({
+                id: 0
+            }, {
+                presetValues: {
+                    startDatetime: phpr.date.jsDateToIsoDatetime(presetDate)
+                }
+            });
+        },
+
         buildRendering: function() {
             this.inherited(arguments);
             if (this.showDate === true) {
