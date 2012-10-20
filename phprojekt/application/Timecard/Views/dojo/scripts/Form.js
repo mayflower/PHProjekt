@@ -21,4 +21,7 @@
 dojo.provide("phpr.Timecard.Form");
 
 dojo.declare("phpr.Timecard.Form", phpr.Default.Form, {
+    addAccessTab: function() {},
+    addNotificationTab: function() {},
+    addHistoryTab: function() {}
 });
