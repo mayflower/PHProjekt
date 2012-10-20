@@ -18,4 +18,31 @@
  */
 class Contact_IndexController extends IndexController
 {
+    /**
+     * Saves a contact item
+     *
+     * Contacts, unlike other items, don't have a role or item rights.
+     * The save method doesn't save any rights whatsoever.
+     */
+    protected function _saveModel(Phprojekt_Model_Interface $model, $params, $newItem)
+    {
+        if (false === $newItem
+         && true === $model->private
+         && $model->ownerId !== Phprojekt_Auth_Proxy::getEffectiveUserId()
+         && !Phprojekt_Auth::isAdminUser()) {
+            throw new Zend_Controller_Action_Exception("You are not the owner of this contact", 403);
+        }
+
+        $model = Default_Helpers_Save::parameterToModel($model, $params, $newItem);
+        /* contacts are always saved under the root project */
+        $model->projectId = 1;
+
+        if (!$model->recordValidate()) {
+            $errors = $model->getError();
+            $error  = array_pop($errors);
+            throw new Zend_Controller_Action_Exception($error['label'] . ': ' . $error['message'], 400);
+        }
+
+        $model->save();
+    }
 }

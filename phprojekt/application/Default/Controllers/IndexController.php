@@ -343,6 +343,11 @@ class IndexController extends Zend_Controller_Action
         }
     }
 
+    protected function _saveModel(Phprojekt_Model_Interface $model, $params, $newItem)
+    {
+        Default_Helpers_Save::save($model, $params);
+    }
+
     /**
      * Keeps the project id in zend registry or reports an error if an empty value is supplied.
      *
@@ -592,7 +597,7 @@ class IndexController extends Zend_Controller_Action
 
         if ($model instanceof Phprojekt_Model_Interface) {
             $params = $this->setParams($this->getRequest()->getParams(), $model, $newItem);
-            Default_Helpers_Save::save($model, $params);
+            $this->_saveModel($model, $params, $newItem);
 
             $return = array('type'    => 'success',
                             'message' => $message,
@@ -635,7 +640,7 @@ class IndexController extends Zend_Controller_Action
             $model->find((int) $id);
             $params = $this->setParams($fields, $model);
             try {
-                Default_Helpers_Save::save($model, $params);
+                $this->_saveModel($model, $params, false);
                 $showId[] = $id;
             } catch (Zend_Controller_Action_Exception $error) {
                 $message = sprintf("ID %d. %s", $id, $error->getMessage());
