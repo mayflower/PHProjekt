@@ -395,7 +395,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
 
         params.recurrenceId = recurrenceId || 0;
 
-        this.form = new this.formWidget(this, id, module, params, null);
+        this.form = new this.formWidget(this, id, params, null);
     },
 
     userSelectionClick: function() {

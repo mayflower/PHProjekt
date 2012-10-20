@@ -1776,7 +1776,7 @@ dojo.declare("phpr.Calendar2.Moveable", dojo.dnd.Moveable, {
                 var movedEvent = this.parentClass.nodeIdToEventOrder(this.node.id);
                 var eventId    = this.parentClass.events[movedEvent].id;
                 var occurrence = this.parentClass.events[movedEvent].occurrence;
-                dojo.publish('Calendar2.openForm', [eventId, null, null, null, occurrence]);
+                dojo.publish('Calendar2.openForm', [eventId, null, null, occurrence]);
             }
         }
         this.parentClass.eventClickDisabled = false;

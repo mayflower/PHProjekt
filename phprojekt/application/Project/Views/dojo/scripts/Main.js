@@ -59,7 +59,7 @@ dojo.declare("phpr.Project.Main", phpr.Default.Main, {
         this.setSubmoduleNavigation('BasicData');
         phpr.tree.fadeIn();
 
-        this.form = new this.formBasicDataWidget(this, phpr.currentProjectId, phpr.module, {}, view.centerMainContent);
+        this.form = new this.formBasicDataWidget(this, phpr.currentProjectId, {}, view.centerMainContent);
     },
 
     updateCacheData:function() {
