@@ -37,10 +37,6 @@ class Timecard_Models_Information extends Phprojekt_ModelInformation_Default
         // endTime
         $this->fillField('endTime', 'End', 'time', 2, 2);
 
-        // minutes
-        $this->fillField('minutes', 'Minutes', 'text', 3, 3, array(
-            'integer' => true));
-
         // projectId
         $this->fillField('projectId', 'Project', 'selectbox', 4, 4, array(
             'range'    => $this->getProjectRange(),
