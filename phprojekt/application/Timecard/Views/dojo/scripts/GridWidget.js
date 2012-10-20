@@ -104,11 +104,13 @@ dojo.provide("phpr.Timecard.GridWidget");
         },
 
         _duration: function() {
-            return Math.floor(this.item.minutes / 60).toString() + ':' + this._padTo2Chars(this.item.minutes % 60);
+            return this._padTo2Chars(Math.floor(this.item.minutes / 60)) +
+                ':' +
+                this._padTo2Chars(this.item.minutes % 60);
         },
 
         _padTo2Chars: function(s) {
-            s = s.toString();
+            s = '' + s;
             if (s.length === 1) {
                 s = '0' + s;
             }
