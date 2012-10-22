@@ -94,7 +94,7 @@ dojo.provide("phpr.Timecard.GridWidget");
 
             dojo.html.set(this.timeNode, '' + this._time());
             dojo.html.set(this.durationNode, '' + this._duration());
-            dojo.html.set(this.notesNode, '' + this.item.notes);
+            dojo.html.set(this.notesNode, dojo.isString(this.item.notes) ? this.item.notes : '');
 
             phpr.MetadataStore.metadataFor('Timecard', 1).then(dojo.hitch(this, this._updateProjectName));
         },
