@@ -227,6 +227,9 @@ dojo.provide("phpr.Timecard.GridWidget");
                 url: "index.php/Timecard/index/yearsAndMonthsWithEntries"
             }).then(dojo.hitch(this, function(response) {
                 var entries = dojo.fromJson(response).values;
+                entries = dojo.map(entries, function(entry) {
+                    return {year: entry.year, month: entry.month - 1};
+                });
                 entries = this.addLastMonths(entries);
 
                 var menu = new dijit.Menu({style: "display: none;"});
@@ -248,7 +251,7 @@ dojo.provide("phpr.Timecard.GridWidget");
         addLastMonths: function(entries) {
             for (var i = 0; i <= 4; i++) {
                 var d = dojo.date.add(new Date(), "month", -i);
-                if (!entries[i] || entries[i].month != d.getMonth() + 1 || entries[i].year != d.getFullYear()) {
+                if (!entries[i] || entries[i].month != d.getMonth() || entries[i].year != d.getFullYear()) {
                     entries.splice(i, 0, {month: d.getMonth(), year: d.getFullYear()});
                 }
             }
