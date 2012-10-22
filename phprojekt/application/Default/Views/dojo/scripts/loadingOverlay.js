@@ -26,6 +26,7 @@ dojo.declare("phpr.Default.loadingOverlay", phpr.Default.System.Component, {
     _domNodes: null,
     _overlays: null,
     _message: "Loading",
+    _showTimeout: null,
 
     constructor: function(domNodes, message) {
         if (!dojo.isArray(domNodes)) {
@@ -47,10 +48,14 @@ dojo.declare("phpr.Default.loadingOverlay", phpr.Default.System.Component, {
         }
     },
     show: function() {
+        this.setShowTimeout();
+    },
+    _show: function() {
         for (var i in this._domNodes) {
             var node = this._domNodes[i];
             var domBox = dojo.marginBox(node);
-            var template =  phpr.fillTemplate("phpr.Default.template.loadingOverlay.html",
+            var template = phpr.fillTemplate(
+                "phpr.Default.template.loadingOverlay.html",
                 {
                     message: this._message
                 });
@@ -74,22 +79,29 @@ dojo.declare("phpr.Default.loadingOverlay", phpr.Default.System.Component, {
         }
     },
     hide: function() {
+        this.clearShowTimeout();
         var l = this._overlays.length;
         for (var i = 0; i < l; i++) {
-            (dojo.hitch(this, function() {
-                var overlay = this._overlays[i];
-                if (dojo.byId(overlay)) {
-                    dojo.fadeOut({
-                        node: overlay,
-                        duration: 500,
-                        onEnd: function() {
-                            dojo.destroy(overlay);
-                        }
-                    }).play();
-                }
-            }))();
+            var overlay = this._overlays[i];
+            if (dojo.byId(overlay)) {
+                dojo.destroy(overlay);
+            }
         }
         this._overlays = [];
+    },
+    clearShowTimeout: function() {
+        if (this._showTimeout !== null) {
+            clearTimeout(this._showTimeout);
+            this._showTimeout = null;
+        }
+    },
+    setShowTimeout: function() {
+        if (this._showTimeout === null) {
+            this._showTimeout = setTimeout(
+                dojo.hitch(this, "_show"),
+                200
+            );
+        }
     }
 });
 
