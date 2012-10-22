@@ -35,8 +35,10 @@ dojo.provide("phpr.Timecard.GridWidget");
         item: null,
         showDate: true,
         dayNodes: [],
+        _supportingWidgets: null,
 
         constructor: function(params) {
+            this._supportingWidgets = [];
             this.dayNodes = [];
             dojo.mixin(this, params);
         },
