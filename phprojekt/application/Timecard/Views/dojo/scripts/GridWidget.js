@@ -260,19 +260,7 @@ dojo.provide("phpr.Timecard.GridWidget");
         },
 
         getMonthName: function(month) {
-            return ['January',
-                'Febuary',
-                'March',
-                'April',
-                'May',
-                'June',
-                'July',
-                'August',
-                'September',
-                'October',
-                'November',
-                'December'
-            ][month - 1];
+            return dojo.date.locale.getNames("months", "wide")[month];
         },
 
         update: function() {
