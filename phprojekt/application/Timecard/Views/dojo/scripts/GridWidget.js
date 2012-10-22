@@ -209,6 +209,16 @@ dojo.provide("phpr.Timecard.GridWidget");
         store: null,
 
         _supportingWidgets: [],
+        monthStart: null,
+
+        constructor: function() {
+            this.monthStart = new Date();
+            this.monthStart.setDate(1);
+            this.monthStart.setHours(0);
+            this.monthStart.setMinutes(0);
+            this.monthStart.setSeconds(0);
+            this.monthStart.setMilliseconds(0);
+        },
 
         buildRendering: function() {
             this.inherited(arguments);
@@ -217,7 +227,12 @@ dojo.provide("phpr.Timecard.GridWidget");
             var endDate = new Date('2012-10-31');
 
             var foo = this.store.query({
-                filter: dojo.toJson({startDatetime: {"!ge": "2012-10-01 00:00:00", "!lt": "2012-11-01 00:00:00"}})
+                filter: dojo.toJson({
+                    startDatetime: {
+                        "!ge": this.monthStart.toString(),
+                        "!lt": dojo.date.add(this.monthStart, "month", 1).toString()
+                    }
+                })
             }, {
                 sort: [{attribute: "start_datetime", descending: false}]
             }).then(dojo.hitch(this, function(items) {

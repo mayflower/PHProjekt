@@ -46,7 +46,7 @@ abstract class Phprojekt_RestController extends Zend_Rest_Controller
         $sort      = $this->_getSorting();
         $recursive = $this->getRequest()->getParam('recursive', 'false');
         $recursive = $recursive === 'true';
-        $model     = $this->newModelObject();
+        $model     = $this->_newModelObject();
         $moduleId  = Phprojekt_Module::getId($this->getRequest()->getModuleName());
         $isGlobal  = Phprojekt_Module::saveTypeIsGlobal($moduleId);
 
@@ -69,7 +69,7 @@ abstract class Phprojekt_RestController extends Zend_Rest_Controller
         if ($recursive) {
             $tree = new Phprojekt_Tree_Node_Database(new Project_Models_Project(), $projectId);
             $tree->setup();
-            $where       = $this->getFilterWhere();
+            $where       = $this->_getFilterWhere();
             $records     = $tree->getRecordsFor($model, $count, $start, $where, $sort);
             $recordCount = $tree->getRecordsCount($model, $where);
         } else {
@@ -79,7 +79,7 @@ abstract class Phprojekt_RestController extends Zend_Rest_Controller
                 $where = null;
             }
 
-            $where       = $this->getFilterWhere($where);
+            $where       = $this->_getFilterWhere($where);
             $records     = $model->fetchAll($where, $sort, $count, $start);
             $recordCount = $model->count($where);
         }
@@ -117,7 +117,7 @@ abstract class Phprojekt_RestController extends Zend_Rest_Controller
     public function getAction()
     {
         $id = (int) $this->_getParam('id');
-        $record = $this->newModelObject();
+        $record = $this->_newModelObject();
         if (!empty($id)) {
             $record = $record->find($id);
             Phprojekt::setCurrentProjectId($record->projectId);
@@ -149,7 +149,7 @@ abstract class Phprojekt_RestController extends Zend_Rest_Controller
         }
         unset($item['id']);
 
-        $model = $this->newModelObject()->find($id);
+        $model = $this->_newModelObject()->find($id);
         if (!$model) {
             $this->getResponse()->setHttpResponseCode(404);
             echo "item with id $id not found";
@@ -171,20 +171,20 @@ abstract class Phprojekt_RestController extends Zend_Rest_Controller
         throw new Zend_Controller_Action_Exception('Not implemented!', 501);
     }
 
-    protected function newModelObject()
+    protected function _newModelObject()
     {
         $classname = $this->getRequest()->getModuleName() . '_Models_' . $this->getRequest()->getControllerName();
         return new $classname();
     }
 
-    protected function getFilterWhere($where = null)
+    protected function _getFilterWhere($where = null)
     {
         $filters = $this->getRequest()->getParam('filters', "[]");
 
         $filters = Zend_Json_Decoder::decode($filters);
 
         if (!empty($filters)) {
-            $filterClass = new Phprojekt_Filter($this->newModelObject(), $where);
+            $filterClass = new Phprojekt_Filter($this->_newModelObject(), $where);
             foreach ($filters as $filter) {
                 list($filterOperator, $filterField, $filterRule, $filterValue) = $filter;
                 $filterOperator = Cleaner::sanitize('alpha', $filterOperator, null);
@@ -212,14 +212,14 @@ abstract class Phprojekt_RestController extends Zend_Rest_Controller
         $parts  = array();
         $filter = Zend_Json::decode($filterString);
         foreach ($filter as $field => $filterDef) {
-            $field = $db->quoteIdentifier(Phprojekt_ActiveRecord_Abstract::convertVarToSql($field));
+            $dbField = $db->quoteIdentifier(Phprojekt_ActiveRecord_Abstract::convertVarToSql($field));
             foreach ($filterDef as $operator => $value) {
                 switch ($operator) {
                 case '!ge':
-                    $parts[] = $field . ' >= ' . $db->quote($value);
+                    $parts[] = $dbField . ' >= ' . $db->quote($this->_getFilterValue($field, $value));
                     break;
                 case '!lt':
-                    $parts[] = $field . ' < ' . $db->quote($value);
+                    $parts[] = $dbField . ' < ' . $db->quote($this->_getFilterValue($field, $value));
                     break;
                 default:
                     throw new Exception("Invalid operator \"$operator\"");
@@ -236,5 +236,24 @@ abstract class Phprojekt_RestController extends Zend_Rest_Controller
         $where .= implode(' AND ', $parts);
 
         return $where;
+    }
+
+    protected function _getFilterValue($field, $value)
+    {
+        $model = $this->_newModelObject();
+        $fieldType = $model->getInformation()->getType($field);
+
+        switch ($fieldType) {
+            case 'datetime':
+                return $this->_getDatetimeFilterValue($value);
+            default:
+                return $value;
+        }
+    }
+
+    protected function _getDatetimeFilterValue($value)
+    {
+        $dt = new Datetime($value);
+        return $dt->format('Y-m-d H:i:s');
     }
 }
