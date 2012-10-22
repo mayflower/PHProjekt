@@ -219,7 +219,7 @@ dojo.provide("phpr.Timecard.GridWidget");
             this.addYearMonthSelector();
 
             var date = new Date();
-            this.setYearAndMonth(date.getYear(), date.getMonth());
+            this.setYearAndMonth(date.getFullYear(), date.getMonth());
         },
 
         addYearMonthSelector: function() {
