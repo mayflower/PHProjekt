@@ -190,7 +190,7 @@ dojo.provide("phpr.Timecard.GridWidget");
             '        <th>Notes</th>',
             '    </tr>',
             '  </thead>',
-            '  <tbody dojoAttachpoint="tbody"></tbody>',
+            '  <tbody dojoAttachpoint="containerNode"></tbody>',
             '</table>',
             '</div>'
         ].join("\n"),
@@ -265,6 +265,7 @@ dojo.provide("phpr.Timecard.GridWidget");
         },
 
         update: function() {
+            this.destroyDescendants();
             this.store.query({
                 filter: dojo.toJson({
                     startDatetime: {
@@ -300,7 +301,7 @@ dojo.provide("phpr.Timecard.GridWidget");
         },
 
         _addRow: function(params) {
-            var placeholder = dojo.create('tr', null, this.tbody);
+            var placeholder = dojo.create('tr', null, this.containerNode);
             this._supportingWidgets.push(
                 new phpr.Timecard.GridEntry({
                     item: params.item,
@@ -310,7 +311,7 @@ dojo.provide("phpr.Timecard.GridWidget");
         },
 
         _addDummyRow: function(params) {
-            var placeholder = dojo.create('tr', null, this.tbody);
+            var placeholder = dojo.create('tr', null, this.containerNode);
             this._supportingWidgets.push(
                 new phpr.Timecard.DummyGridEntry(params, placeholder)
             );
