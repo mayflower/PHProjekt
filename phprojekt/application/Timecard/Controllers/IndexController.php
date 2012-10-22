@@ -323,4 +323,17 @@ class Timecard_IndexController extends IndexController
 
         return $params;
     }
+    public function yearsAndMonthsWithEntriesAction()
+    {
+        Phprojekt::getInstance()->getLog()->debug('called');
+        $values = Phprojekt::getInstance()->getDb()->select()->distinct()
+            ->from('timecard', array('year' => 'YEAR(start_datetime)', 'month' => 'MONTH(start_datetime)'))
+            ->where('owner_id = ?', Phprojekt_Auth_Proxy::getEffectiveUserId())
+            ->order('YEAR(start_datetime) DESC, MONTH(start_datetime) DESC')
+            ->query()->fetchAll();
+
+        Phprojekt_CompressedSender::send(
+            Zend_Json::encode(array('values' => $values))
+        );
+    }
 }
