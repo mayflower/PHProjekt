@@ -224,7 +224,8 @@ dojo.provide("phpr.Timecard.GridWidget");
 
         addYearMonthSelector: function() {
             dojo.xhrGet({
-                url: "index.php/Timecard/index/yearsAndMonthsWithEntries"
+                url: "index.php/Timecard/index/yearsAndMonthsWithEntries",
+                content: {csrfToken: phpr.csrfToken}
             }).then(dojo.hitch(this, function(response) {
                 var entries = dojo.fromJson(response).values;
                 entries = dojo.map(entries, function(entry) {
