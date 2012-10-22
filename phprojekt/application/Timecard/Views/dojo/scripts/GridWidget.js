@@ -287,20 +287,24 @@ dojo.provide("phpr.Timecard.GridWidget");
                     itemsByDay[itemStart].push(item);
                 });
 
-                this._forEachDayBetween(new Date('2012-10-01'), new Date('2012-11-01'), dojo.hitch(this, function(day) {
-                    var dateString = day.toDateString();
-                    if (itemsByDay[dateString]) {
-                        this._addRow({item: itemsByDay[dateString].shift(), showDate: true});
-                        dojo.forEach(itemsByDay[dateString], dojo.hitch(this, function(item) {
-                            this._addRow({item: item, showDate: false});
-                        }));
-                    } else {
-                        this._addDummyRow({
-                            dayOfTheWeek: _weekDay(day),
-                            dayOfTheMonth: day.getDate().toString()
-                        });
-                    }
-                }));
+                this._forEachDayBetween(
+                    this.monthStart,
+                    dojo.date.add(this.monthStart, "month", 1),
+                    dojo.hitch(this, function(day) {
+                        var dateString = day.toDateString();
+                        if (itemsByDay[dateString]) {
+                            this._addRow({item: itemsByDay[dateString].shift(), showDate: true});
+                            dojo.forEach(itemsByDay[dateString], dojo.hitch(this, function(item) {
+                                this._addRow({item: item, showDate: false});
+                            }));
+                        } else {
+                            this._addDummyRow({
+                                dayOfTheWeek: _weekDay(day),
+                                dayOfTheMonth: day.getDate().toString()
+                            });
+                        }
+                    })
+                );
             }));
         },
 
