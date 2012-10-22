@@ -247,8 +247,8 @@ dojo.provide("phpr.Timecard.GridWidget");
         addLastMonths: function(entries) {
             for (var i = 0; i <= 4; i++) {
                 var d = dojo.date.add(new Date(), "month", -i);
-                if (entries[i].month != d.getMonth() + 1 || entries[i].year != d.getFullYear()) {
-                    entries.splice(i, 0, {month: d.getMonth() + 1, year: d.getFullYear()});
+                if (!entries[i] || entries[i].month != d.getMonth() + 1 || entries[i].year != d.getFullYear()) {
+                    entries.splice(i, 0, {month: d.getMonth(), year: d.getFullYear()});
                 }
             }
 
