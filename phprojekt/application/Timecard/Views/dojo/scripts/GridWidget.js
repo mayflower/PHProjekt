@@ -239,7 +239,8 @@ dojo.provide("phpr.Timecard.GridWidget");
                 var menu = new dijit.Menu({style: "display: none;"});
                 dojo.forEach(entries, dojo.hitch(this, function(entry) {
                     menu.addChild(new dijit.MenuItem({
-                        label: this.getYearMonthLabel(entry.year, entry.month)
+                        label: this.getYearMonthLabel(entry.year, entry.month),
+                        onClick: dojo.hitch(this, this.setYearAndMonth, entry.year, entry.month)
                     }));
                 }));
 
