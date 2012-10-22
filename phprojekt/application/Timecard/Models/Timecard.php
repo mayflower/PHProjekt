@@ -485,4 +485,13 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
             )
         );
     }
+
+    public function fetchAll($where = null, $sort = null, $count = null, $start = null)
+    {
+        $db     = Phprojekt::getInstance()->getDb();
+        $where  = (empty($where) ? '' : "({$where}) AND ");
+        $where .= $db->quoteInto('owner_id = ?', Phprojekt_Auth_Proxy::getEffectiveUserId());
+
+        return parent::fetchAll($where, $sort, $count, $start);
+    }
 }
