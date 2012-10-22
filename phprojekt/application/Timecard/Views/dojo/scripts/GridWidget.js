@@ -199,6 +199,7 @@ dojo.provide("phpr.Timecard.GridWidget");
 
         _supportingWidgets: [],
         monthStart: null,
+        button: null,
 
         setYearAndMonth: function(year, month) {
             this.monthStart = new Date();
@@ -236,8 +237,8 @@ dojo.provide("phpr.Timecard.GridWidget");
                 }));
 
                 var today = new Date();
-                var button = new dijit.form.DropDownButton({
-                    label: this.getYearMonthLabel(today.getFullYear(), today.getMonth() + 1),
+                this.button = new dijit.form.DropDownButton({
+                    label: this.getYearMonthLabel(today.getFullYear(), today.getMonth()),
                     name: "yearMonthSelector",
                     dropDown: menu
                 }, this.yearMonthSelector);
