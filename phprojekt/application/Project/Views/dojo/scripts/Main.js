@@ -21,7 +21,7 @@
 dojo.provide("phpr.Project.Main");
 
 dojo.declare("phpr.Project.Main", phpr.Default.Main, {
-    constructor:function() {
+    constructor: function() {
         this.module = 'Project';
         this.loadFunctions(this.module);
 
@@ -32,7 +32,7 @@ dojo.declare("phpr.Project.Main", phpr.Default.Main, {
         this.formBasicDataWidget = phpr.Project.FormBasicData;
     },
 
-    loadResult:function(id, module, projectId) {
+    loadResult: function(id, module, projectId) {
         this.cleanPage();
         phpr.parentmodule = null;
         phpr.currentProjectId = id;
@@ -42,10 +42,10 @@ dojo.declare("phpr.Project.Main", phpr.Default.Main, {
             action: 'basicData',
             projectId: projectId,
             id: id
-        })
+        });
     },
 
-    basicData:function() {
+    basicData: function() {
         var view = phpr.viewManager.useDefaultView({blank: true}).clear();
 
         phpr.module = this.module;
@@ -59,10 +59,10 @@ dojo.declare("phpr.Project.Main", phpr.Default.Main, {
         this.setSubmoduleNavigation('BasicData');
         phpr.tree.fadeIn();
 
-        this.form = new this.formBasicDataWidget(this, phpr.currentProjectId, phpr.module, {}, view.centerMainContent);
+        this.form = new this.formBasicDataWidget(this, phpr.currentProjectId, {}, view.centerMainContent);
     },
 
-    updateCacheData:function() {
+    updateCacheData: function() {
         phpr.tree.updateData();
         if (this.grid) {
             this.grid.updateData();
@@ -73,7 +73,7 @@ dojo.declare("phpr.Project.Main", phpr.Default.Main, {
         phpr.DataStore.deleteAllCache();
     },
 
-    processActionFromUrlHash:function(data) {
+    processActionFromUrlHash: function(data) {
         if (data.action == 'basicData') {
             this.basicData();
         } else {

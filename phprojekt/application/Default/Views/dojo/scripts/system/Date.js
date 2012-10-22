@@ -178,6 +178,14 @@ dojo.declare("phpr.Default.System.Date", null, {
         return new Date(year, month - 1, day, hour, minutes, 0);
     },
 
+    jsDateToIsoDatetime: function(date) {
+        // Summary:
+        //    Convert a js date into ISO datetime
+        // Description:
+        //    Convert a js date into ISO datetime
+        return this.getIsoDate(date) + ' ' + this.getIsoTime(date);
+    },
+
     getLongTranslateMonth: function(month) {
         // Summary:
         //    Return the string of one month

@@ -18,6 +18,7 @@
  * @author    Gustavo Solt <solt@mayflower.de>
  */
 
+dojo.require('dijit.InlineEditBox');
 dojo.provide("phpr.Timecard.GridWidget");
 
 (function() {
@@ -35,8 +36,10 @@ dojo.provide("phpr.Timecard.GridWidget");
         item: null,
         showDate: true,
         dayNodes: [],
+        _supportingWidgets: null,
 
         constructor: function(params) {
+            this._supportingWidgets = [];
             this.dayNodes = [];
             dojo.mixin(this, params);
         },
@@ -92,11 +95,68 @@ dojo.provide("phpr.Timecard.GridWidget");
                 dojo.html.set(this.dayNodes[1], '' + _dayOfTheMonth(this.item));
             }
 
-            dojo.html.set(this.timeNode, '' + this._time());
+            this._renderTimeNode();
             dojo.html.set(this.durationNode, '' + this._duration());
             dojo.html.set(this.notesNode, dojo.isString(this.item.notes) ? this.item.notes : '');
 
             phpr.MetadataStore.metadataFor('Timecard', 1).then(dojo.hitch(this, this._updateProjectName));
+        },
+
+        onChange: function(item) {
+
+        },
+
+        _renderTimeNode: function() {
+            this.timeNode = timeNodeInline = new dijit.InlineEditBox({
+                editor: dijit.form.TextBox,
+                editorParams: {
+                    maxLength: "13"
+                },
+                value: '' + this._time(),
+                autoSave: true
+            }, dojo.create('div', null, this.timeNode));
+
+            this.connect(this.timeNode, 'onChange', '_onTimeNodeChange');
+
+            this._supportingWidgets.push(this.timeNode);
+
+        },
+
+        _onTimeNodeChange: function(value) {
+            value = '' + value;
+            var newTimes = this._parseTimeValue(value);
+
+            if (newTimes === null) {
+                return;
+            }
+
+            var newItem = dojo.clone(this.item);
+
+            newItem.startDatetime = phpr.date.getIsoDatetime(
+                phpr.date.isoDatetimeTojsDate(this.item.startDatetime),
+                newTimes.startTime
+            );
+
+            newItem.endTime = newTimes.endTime + ':00';
+
+            this.item = newItem;
+
+            this.onChange(newItem);
+        },
+
+        _parseTimeValue: function(value) {
+            var re = /^(\d{1,2}:\d{2})\s*-\s*(\d{1,2}:\d{2})$/;
+            var match = value.match(re);
+
+            if (match === null) {
+                return null;
+            }
+
+            var ret = {};
+            ret.startTime = match[1];
+            ret.endTime = match[2];
+
+            return ret;
         },
 
         _time: function() {
@@ -110,11 +170,11 @@ dojo.provide("phpr.Timecard.GridWidget");
             end.setMinutes(this.item.endTime.substr(3, 2));
 
             var minutes = dojo.date.difference(start, end, 'minute');
-            return Math.floor(minutes / 60).toString() + ':' + this._padTo2Chars(minutes % 60);
+            return this._padTo2Chars('' + Math.floor(minutes / 60)) + ':' + this._padTo2Chars(minutes % 60);
         },
 
         _padTo2Chars: function(s) {
-            s = s.toString();
+            s = '' + s;
             if (s.length === 1) {
                 s = '0' + s;
             }
@@ -150,12 +210,13 @@ dojo.provide("phpr.Timecard.GridWidget");
     });
 
     dojo.declare("phpr.Timecard.DummyGridEntry", phpr.Timecard._GridEntry, {
-        dayOfTheWeek: '',
-        dayOfTheMonth: '',
+        date: null,
 
         constructor: function(params) {
             dojo.mixin(this, params);
-            this.item = this.item || {};
+            this.date = this.date || new Date();
+            this.dayOfTheWeek = _weekDay(this.date);
+            this.dayOfTheMonth = '' + this.date.getDate();
         },
 
         _time: function() {
@@ -164,6 +225,20 @@ dojo.provide("phpr.Timecard.GridWidget");
 
         _duration: function() {
             return '';
+        },
+
+        _onClick: function() {
+            var presetDate = new Date(this.date);
+            var now = new Date();
+            presetDate.setHours(now.getHours());
+            presetDate.setMinutes(now.getMinutes());
+            phpr.pageManager.modifyCurrentState({
+                id: 0
+            }, {
+                presetValues: {
+                    startDatetime: phpr.date.jsDateToIsoDatetime(presetDate)
+                }
+            });
         },
 
         buildRendering: function() {
@@ -303,8 +378,7 @@ dojo.provide("phpr.Timecard.GridWidget");
                             }));
                         } else {
                             this._addDummyRow({
-                                dayOfTheWeek: _weekDay(day),
-                                dayOfTheMonth: day.getDate().toString()
+                                date: day
                             });
                         }
                     })
@@ -314,12 +388,18 @@ dojo.provide("phpr.Timecard.GridWidget");
 
         _addRow: function(params) {
             var placeholder = dojo.create('tr', null, this.containerNode);
-            this._supportingWidgets.push(
-                new phpr.Timecard.GridEntry({
+            var newRow = new phpr.Timecard.GridEntry({
                     item: params.item,
                     showDate: params.showDate
-                }, placeholder)
-            );
+                }, placeholder);
+            this.connect(newRow, 'onChange', '_onRowDataChange');
+            this._supportingWidgets.push(newRow);
+        },
+
+        _onRowDataChange: function(item) {
+            phpr.loading.show();
+
+            this.store.put(item, { override: true }).then(dojo.hitch(phpr.loading, 'hide'));
         },
 
         _addDummyRow: function(params) {
