@@ -39,7 +39,7 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
 
     setWidgets: function() {
         this.grid = new phpr.Timecard.GridWidget({
-            store: new dojo.store.JsonRest({target: 'index.php/Timecard/Timecard'})
+            store: new dojo.store.JsonRest({target: 'index.php/Timecard/Timecard/'})
         });
         phpr.viewManager.getView().gridBox.set('content', this.grid);
     }
