@@ -211,6 +211,9 @@ dojo.provide("phpr.Timecard.GridWidget");
             this.monthStart.setSeconds(0);
             this.monthStart.setMilliseconds(0);
 
+            if (this.button) {
+                this.button.set("label", this.getYearMonthLabel(year, month));
+            }
             this.update();
         },
 
