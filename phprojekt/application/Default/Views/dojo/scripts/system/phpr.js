@@ -563,9 +563,12 @@ dojo.declare("phpr.loading", null, {
     //     Simple class for show or hide the loading icon
     // Description:
     //     Simple class for show or hide the loading icon
+    count: 0,
+
     hide: function() {
+        this.count--;
         var view = phpr.viewManager.getView();
-        if (view && view.loadingIcon) {
+        if (view && view.loadingIcon && this.count === 0) {
             view.loadingIcon.style.display = 'none';
         }
     },
@@ -574,6 +577,7 @@ dojo.declare("phpr.loading", null, {
         var view = phpr.viewManager.getView();
         if (view && view.loadingIcon) {
             view.loadingIcon.style.display = 'inline';
+            this.count++;
         }
     }
 });
