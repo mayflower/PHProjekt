@@ -212,14 +212,14 @@ abstract class Phprojekt_RestController extends Zend_Rest_Controller
         $parts  = array();
         $filter = Zend_Json::decode($filterString);
         foreach ($filter as $field => $filterDef) {
-            $field = $db->quoteIdentifier(Phprojekt_ActiveRecord_Abstract::convertVarToSql($field));
+            $dbField = $db->quoteIdentifier(Phprojekt_ActiveRecord_Abstract::convertVarToSql($field));
             foreach ($filterDef as $operator => $value) {
                 switch ($operator) {
                 case '!ge':
-                    $parts[] = $field . ' >= ' . $db->quote($value);
+                    $parts[] = $dbField . ' >= ' . $db->quote($this->_getFilterValue($field, $value));
                     break;
                 case '!lt':
-                    $parts[] = $field . ' < ' . $db->quote($value);
+                    $parts[] = $dbField . ' < ' . $db->quote($this->_getFilterValue($field, $value));
                     break;
                 default:
                     throw new Exception("Invalid operator \"$operator\"");
@@ -236,5 +236,24 @@ abstract class Phprojekt_RestController extends Zend_Rest_Controller
         $where .= implode(' AND ', $parts);
 
         return $where;
+    }
+
+    protected function _getFilterValue($field, $value)
+    {
+        $model = $this->_newModelObject();
+        $fieldType = $model->getInformation()->getType($field);
+
+        switch ($fieldType) {
+            case 'datetime':
+                return $this->_getDatetimeFilterValue($value);
+            default:
+                return $value;
+        }
+    }
+
+    protected function _getDatetimeFilterValue($value)
+    {
+        $dt = new Datetime($value);
+        return $dt->format('Y-m-d H:i:s');
     }
 }
