@@ -248,7 +248,7 @@ dojo.provide("phpr.Timecard.GridWidget");
 
     dojo.declare("phpr.Timecard.GridWidget", [dijit._Widget, dijit._Templated], {
         templateString: ['<div>',
-            '<div>',
+            '<div class="yearMonthSelector">',
             '   <div dojoAttachpoint="yearMonthSelector"></div>',
             '</div>',
             '<table class="timecardGrid">',

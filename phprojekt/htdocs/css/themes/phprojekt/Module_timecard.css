@@ -42,6 +42,10 @@
     border-color: transparent;
 }
 
+.phprojekt .yearMonthSelector {
+    margin-bottom: 2px;
+}
+
 /* List View */
 
 .phprojekt .timecardDayViewEntry {
