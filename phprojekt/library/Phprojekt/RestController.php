@@ -130,6 +130,11 @@ abstract class Phprojekt_RestController extends Zend_Rest_Controller
         foreach ($item as $property => $value) {
             $model->$property = $value;
         }
+        if (!$model->recordValidate()) {
+            $error = $model->getError();
+            $error = array_pop($error);
+            throw new Zend_Controller_Action_Exception($error['label'] . ': ' . $error['message'], 400);
+        }
         $model->save();
 
         Phprojekt_CompressedSender::send(
