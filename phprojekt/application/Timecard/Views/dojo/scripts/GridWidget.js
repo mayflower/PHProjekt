@@ -30,6 +30,14 @@ dojo.provide("phpr.Timecard.GridWidget");
         return dojo.date.locale.format(date, { datePattern: 'EEE', selector: 'date' });
     };
 
+    var _padTo2Chars = function(s) {
+        s = '' + s;
+        if (s.length === 1) {
+            s = '0' + s;
+        }
+        return s;
+    };
+
     phpr.MetadataStore.metadataFor('Timecard', 1);
 
     dojo.declare("phpr.Timecard._GridEntry", [dijit._Widget], {
@@ -170,15 +178,7 @@ dojo.provide("phpr.Timecard.GridWidget");
             end.setMinutes(this.item.endTime.substr(3, 2));
 
             var minutes = dojo.date.difference(start, end, 'minute');
-            return this._padTo2Chars('' + Math.floor(minutes / 60)) + ':' + this._padTo2Chars(minutes % 60);
-        },
-
-        _padTo2Chars: function(s) {
-            s = '' + s;
-            if (s.length === 1) {
-                s = '0' + s;
-            }
-            return s;
+            return _padTo2Chars('' + Math.floor(minutes / 60)) + ':' + _padTo2Chars(minutes % 60);
         },
 
         _updateProjectName: function(metadata) {
