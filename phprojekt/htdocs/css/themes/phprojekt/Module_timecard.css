@@ -38,6 +38,10 @@
     background-color: #FAFAFA;
 }
 
+.phprojekt .timecardGrid tfoot td {
+    border-color: transparent;
+}
+
 /* List View */
 
 .phprojekt .timecardDayViewEntry {
