@@ -137,7 +137,6 @@ dojo.provide("phpr.Timecard.GridWidget");
             this.connect(this.timeNode, 'onChange', '_onTimeNodeChange');
 
             this._supportingWidgets.push(this.timeNode);
-
         },
 
         _onTimeNodeChange: function(value) {
@@ -478,6 +477,7 @@ dojo.provide("phpr.Timecard.GridWidget");
                 var group = this.dayGroups[groupIndex];
                 this.removeEntryFromGroup(row, group);
                 this._addRow({ item: newData }, group);
+                this.sortGroup(group);
                 phpr.loading.hide();
             }));
         },
@@ -503,6 +503,36 @@ dojo.provide("phpr.Timecard.GridWidget");
             dojo.forEach([].concat(group.entries), dojo.hitch(this, function(entry) {
                 this.removeEntryFromGroup(entry, group);
             }));
+        },
+
+        sortGroup: function(group) {
+            if (group.entries.length === 0) {
+                return;
+            }
+
+            var timeToItem = {};
+
+            var times = dojo.map(
+                dojo.filter(group.entries, function(entry) {
+                    return dojo.isObject(entry.item) && typeof entry.item.startDatetime !== 'undefined';
+                }),
+                dojo.hitch(this, function(entry) {
+                    var startDate = phpr.date.isoDatetimeTojsDate(entry.item.startDatetime);
+                    var startTime = startDate.getTime();
+                    timeToItem[startTime] = dojo.clone(entry.item);
+                    return startTime;
+                })
+            );
+
+            times.sort(function(a, b) {
+                return a - b;
+            });
+
+            this.clearGroup(group);
+
+            this.addRows(dojo.map(times, function(time) {
+                return timeToItem[time];
+            }), group);
         },
 
         _addDummyRow: function(params, group) {
