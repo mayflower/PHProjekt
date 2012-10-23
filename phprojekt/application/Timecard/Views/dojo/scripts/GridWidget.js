@@ -32,6 +32,18 @@ dojo.provide("phpr.Timecard.GridWidget");
 
     phpr.MetadataStore.metadataFor('Timecard', 1);
 
+    dojo.declare('phpr.Timecard.InlineEditBox', dijit.InlineEditBox, {
+        constructor: function() {
+            this._onDblClick = this._onClick;
+            this._onClick = function() {};
+        },
+
+        postMixInProperties: function() {
+            this.inherited(arguments);
+            this.connect(this.displayNode, 'ondblclick', '_onDblClick');
+        }
+    });
+
     dojo.declare("phpr.Timecard._GridEntry", [dijit._Widget], {
         item: null,
         showDate: true,
