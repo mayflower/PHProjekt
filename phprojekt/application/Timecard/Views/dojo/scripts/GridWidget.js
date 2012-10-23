@@ -38,8 +38,6 @@ dojo.provide("phpr.Timecard.GridWidget");
         return s;
     };
 
-    phpr.MetadataStore.metadataFor('Timecard', 1);
-
     dojo.declare('phpr.Timecard.InlineEditBox', dijit.InlineEditBox, {
         constructor: function() {
             this._onDblClick = this._onClick;
