@@ -154,7 +154,11 @@ dojo.provide("phpr.Timecard.GridWidget");
                 newTimes.startTime
             );
 
-            newItem.endTime = newTimes.endTime + ':00';
+            if (newTimes.endTime) {
+                newItem.endTime = newTimes.endTime + ':00';
+            } else {
+                newItem.endTime = null;
+            }
 
             this.item = newItem;
 
@@ -162,7 +166,7 @@ dojo.provide("phpr.Timecard.GridWidget");
         },
 
         _parseTimeValue: function(value) {
-            var re = /^(\d{1,2}:\d{2})\s*-\s*(\d{1,2}:\d{2})$/;
+            var re = /^((\d{1,2}):?(\d{2}))\s*-(\s*((\d{1,2}):?(\d{2}))?)?$/;
             var match = value.match(re);
 
             if (match === null) {
@@ -170,17 +174,29 @@ dojo.provide("phpr.Timecard.GridWidget");
             }
 
             var ret = {};
-            ret.startTime = match[1];
-            ret.endTime = match[2];
+            ret.startTime = match[2] + ':' + match[3];
+            if (match[6] !== undefined && match[7] !== undefined) {
+                ret.endTime = match[6] + ':' + match[7];
+            }
 
             return ret;
         },
 
         _time: function() {
-            return this.item.startDatetime.substr(11, 5) + ' - ' + this.item.endTime.substr(0, 5);
+            var ret = this.item.startDatetime.substr(11, 5) + ' - ';
+
+            if (this.item.endTime) {
+                ret += this.item.endTime.substr(0, 5);
+            }
+
+            return ret;
         },
 
         _duration: function() {
+            if (!this.item.endTime) {
+                return '';
+            }
+
             var start = phpr.date.isoDatetimeTojsDate(this.item.startDatetime),
                 end = new Date(start);
             end.setHours(this.item.endTime.substr(0, 2));
