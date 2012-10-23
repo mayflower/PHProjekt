@@ -323,6 +323,10 @@ class Timecard_IndexController extends IndexController
 
         return $params;
     }
+
+    /**
+     * Retrieves all year-month combinations that have items belonging to the current user.
+     */
     public function yearsAndMonthsWithEntriesAction()
     {
         Phprojekt::getInstance()->getLog()->debug('called');
