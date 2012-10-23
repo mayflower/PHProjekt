@@ -286,6 +286,24 @@ dojo.provide("phpr.Timecard.GridWidget");
         _supportingWidgets: [],
         monthStart: null,
         button: null,
+        childNodes: null,
+
+        constructor: function() {
+            this.childNodes = [];
+        },
+
+        destroyDescendants: function() {
+            dojo.forEach(this.childNodes, dojo.hitch(this, function(node) {
+                dojo.forEach(dijit.findWidgets(node), function(widget) {
+                    if (widget.destroyRecursive) {
+                        widget.destroyRecursive();
+                    }
+                });
+                dojo.destroy(node);
+            }));
+
+            this.childNodes = [];
+        },
 
         setYearAndMonth: function(year, month) {
             this.monthStart = new Date();
@@ -399,6 +417,7 @@ dojo.provide("phpr.Timecard.GridWidget");
         _addDayGroup: function(day) {
             var group = dojo.create('tbody', null, this.tableNode, 'last');
             dojo.addClass(group, 'day' + day.getDate());
+            this.childNodes.push(group);
             return group;
         },
 
