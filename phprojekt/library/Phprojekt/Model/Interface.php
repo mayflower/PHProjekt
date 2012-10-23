@@ -62,4 +62,20 @@ interface Phprojekt_Model_Interface extends Iterator
      * @return boolean Whether is exists.
      */
     public function hasField($field);
+
+    /**
+     * Validate the current values against model-specific rules.
+     *
+     * @return bool Whether the data contained in this object is valid.
+     */
+    public function recordValidate();
+
+    /**
+     * Returns the errors found by recordValidate().
+     *
+     * Before a call to recordValidate(), the returned value is undefined.
+     *
+     * @return array as returned by Phprojekt_Error->getError
+     */
+    public function getError();
 }
