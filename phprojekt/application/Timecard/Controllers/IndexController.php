@@ -340,4 +340,46 @@ class Timecard_IndexController extends IndexController
             Zend_Json::encode(array('values' => $values))
         );
     }
+
+    /**
+     * Retrieves the total booked minutes of the current user for a given year-month combination.
+     *
+     * Params taken from the request:
+     *  year (int) The year
+     *  month (int) The month, starting with 1 for january.
+     */
+    public function totalMinutesForYearMonthAction()
+    {
+        $year = $this->getRequest()->getParam('year', null);
+        $month = $this->getRequest()->getParam('month', null);
+
+        if (is_null($year)) {
+            throw new Zend_Controller_Action_Exception("No year given", 400);
+        } elseif (is_null($month)) {
+            throw new Zend_Controller_Action_Exception("No month given", 400);
+        }
+
+        if (!is_numeric($year)) {
+            throw new Zend_Controller_Action_Exception("Bad year: " . $year, 400);
+        } elseif (!is_numeric($month) || $month < 1 || $month > 12) {
+            throw new Zend_Controller_Action_Exception("Bad month: " . $month, 400);
+        }
+
+        $minutes = Phprojekt::getInstance()->getDb()->select()
+            ->from('timecard', array('total' => 'SUM(minutes)'))
+            ->where('YEAR(start_datetime) = ?', (int) $year)
+            ->where('MONTH(start_datetime) = ?', (int) $month)
+            ->where('owner_id = ?', Phprojekt_Auth_Proxy::getEffectiveUserId())
+            ->query()->fetchColumn();
+
+        Phprojekt_CompressedSender::send(
+            Zend_Json::encode(
+                array(
+                    'year' => $year,
+                    'month' => $month,
+                    'minutes' => $minutes
+                )
+            )
+        );
+    }
 }
