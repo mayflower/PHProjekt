@@ -30,6 +30,14 @@ dojo.provide("phpr.Timecard.GridWidget");
         return dojo.date.locale.format(date, { datePattern: 'EEE', selector: 'date' });
     };
 
+    var _padTo2Chars = function(s) {
+        s = '' + s;
+        if (s.length === 1) {
+            s = '0' + s;
+        }
+        return s;
+    };
+
     phpr.MetadataStore.metadataFor('Timecard', 1);
 
     dojo.declare('phpr.Timecard.InlineEditBox', dijit.InlineEditBox, {
@@ -182,15 +190,7 @@ dojo.provide("phpr.Timecard.GridWidget");
             end.setMinutes(this.item.endTime.substr(3, 2));
 
             var minutes = dojo.date.difference(start, end, 'minute');
-            return this._padTo2Chars('' + Math.floor(minutes / 60)) + ':' + this._padTo2Chars(minutes % 60);
-        },
-
-        _padTo2Chars: function(s) {
-            s = '' + s;
-            if (s.length === 1) {
-                s = '0' + s;
-            }
-            return s;
+            return _padTo2Chars('' + Math.floor(minutes / 60)) + ':' + _padTo2Chars(minutes % 60);
         },
 
         _updateProjectName: function(metadata) {
@@ -277,6 +277,16 @@ dojo.provide("phpr.Timecard.GridWidget");
             '        <th>Notes</th>',
             '    </tr>',
             '  </thead>',
+            '  <tfoot>',
+            '    <tr>',
+            '      <td/>',
+            '      <td/>',
+            '      <td style="text-align: right; padding-right: 4px;">Total:</td>',
+            '      <td dojoAttachPoint="totalTime"/>',
+            '      <td/>',
+            '      <td/>',
+            '    </tr>',
+            '  </tfoot>',
             '</table>',
             '</div>'
         ].join("\n"),
@@ -319,6 +329,21 @@ dojo.provide("phpr.Timecard.GridWidget");
                 this.button.set("label", this.getYearMonthLabel(year, month));
             }
             this.update();
+            this.updateTotalTime();
+        },
+
+        updateTotalTime: function() {
+            dojo.xhrGet({
+                url: "index.php/Timecard/index/totalMinutesForYearMonth",
+                content: {
+                    csrfToken: phpr.csrfToken,
+                    year: this.monthStart.getFullYear(),
+                    month: this.monthStart.getMonth() + 1
+                }
+            }).then(dojo.hitch(this, function(data) {
+                var minutes = dojo.fromJson(data).minutes;
+                this.totalTime.innerHTML = Math.floor(minutes / 60) + ":" + _padTo2Chars(minutes % 60);
+            }));
         },
 
         buildRendering: function() {

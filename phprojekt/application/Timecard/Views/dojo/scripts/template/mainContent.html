@@ -1,7 +1,9 @@
 <div>
     <div dojoType="dijit.layout.BorderContainer" design="sidebar" gutters="false">
         <div dojoType="dijit.layout.ContentPane" region="center" dojoAttachPoint="gridBox"></div>
-
-            <div dojoType="dijit.layout.ContentPane" region="right" style="width: 700px;" dojoAttachPoint="detailsBox"></div>
+        <div region="right" style="width: 700px;" dojoType="dijit.layout.BorderContainer" gutters="false">
+            <div region="top" dojoType="dijit.layout.ContentPane" dojoAttachPoint="detailsBox" style="height: 285px;"></div>
+            <div region="center" dojoType="dijit.layout.ContentPane"></div>
+        </div>
     </div>
 </div>
