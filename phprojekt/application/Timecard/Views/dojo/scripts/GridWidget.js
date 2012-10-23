@@ -304,15 +304,14 @@ dojo.provide("phpr.Timecard.GridWidget");
         },
 
         updateTotalTime: function() {
-            dojo.xhrGet({
+            phpr.get({
                 url: "index.php/Timecard/index/totalMinutesForYearMonth",
                 content: {
-                    csrfToken: phpr.csrfToken,
                     year: this.monthStart.getFullYear(),
                     month: this.monthStart.getMonth() + 1
                 }
             }).then(dojo.hitch(this, function(data) {
-                var minutes = dojo.fromJson(data).minutes;
+                var minutes = data.minutes;
                 this.totalTime.innerHTML = Math.floor(minutes / 60) + ":" + _padTo2Chars(minutes % 60);
             }));
         },
@@ -326,11 +325,10 @@ dojo.provide("phpr.Timecard.GridWidget");
         },
 
         addYearMonthSelector: function() {
-            dojo.xhrGet({
-                url: "index.php/Timecard/index/yearsAndMonthsWithEntries",
-                content: {csrfToken: phpr.csrfToken}
+            phpr.get({
+                url: "index.php/Timecard/index/yearsAndMonthsWithEntries"
             }).then(dojo.hitch(this, function(response) {
-                var entries = dojo.fromJson(response).values;
+                var entries = response.values;
                 entries = dojo.map(entries, function(entry) {
                     return {year: entry.year, month: entry.month - 1};
                 });

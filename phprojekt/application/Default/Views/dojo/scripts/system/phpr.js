@@ -162,6 +162,30 @@ phpr.send = function(/*Object*/paramsIn) {
     return deferred;
 };
 
+phpr.get = function(params) {
+    params = dojo.mixin({
+        handleAs: "json",
+        content: {}
+    }, params);
+    params.content = dojo.mixin({
+        csrfToken: phpr.csrfToken
+    }, params.content);
+
+    return dojo.xhrGet(params).then(
+        function(data) {
+            return data;
+        },
+        function(error) {
+            try {
+                var data = dojo.fromJson(errror.responseText);
+                return data;
+            } catch (e) {
+                phpr.handleError(params.url, 'php');
+            }
+        }
+    );
+};
+
 phpr.handleResponse = function(resultArea, result) {
     phpr.loading.hide();
     var css = 'error';
