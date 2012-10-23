@@ -186,10 +186,6 @@ dojo.provide("phpr.Timecard.GridWidget");
                 return;
             }
             var projectId = parseInt(this.item.projectId, 10);
-            if (projectId === 1) {
-                dojo.html.set(this.projectNode, '' + phpr.nls.get('Unassigned', 'Timecard'));
-                return;
-            }
 
             for (var mdIndex in metadata) {
                 if (metadata.hasOwnProperty(mdIndex) && metadata[mdIndex].key === "projectId") {
