@@ -267,7 +267,7 @@ dojo.provide("phpr.Timecard.GridWidget");
             '<div>',
             '   <div dojoAttachpoint="yearMonthSelector"></div>',
             '</div>',
-            '<table class="timecardGrid">',
+            '<table class="timecardGrid" dojoAttachPoint="tableNode">',
             '  <thead>',
             '    <tr>',
             '        <th colspan="2">Date</th>',
@@ -277,7 +277,6 @@ dojo.provide("phpr.Timecard.GridWidget");
             '        <th>Notes</th>',
             '    </tr>',
             '  </thead>',
-            '  <tbody dojoAttachpoint="containerNode"></tbody>',
             '</table>',
             '</div>'
         ].join("\n"),
@@ -383,23 +382,28 @@ dojo.provide("phpr.Timecard.GridWidget");
                     dojo.date.add(this.monthStart, "month", 1),
                     dojo.hitch(this, function(day) {
                         var dateString = day.toDateString();
+                        var group = this._addDayGroup(day);
                         if (itemsByDay[dateString]) {
-                            this._addRow({item: itemsByDay[dateString].shift(), showDate: true});
+                            this._addRow({item: itemsByDay[dateString].shift(), showDate: true}, group);
                             dojo.forEach(itemsByDay[dateString], dojo.hitch(this, function(item) {
-                                this._addRow({item: item, showDate: false});
+                                this._addRow({item: item, showDate: false}, group);
                             }));
                         } else {
-                            this._addDummyRow({
-                                date: day
-                            });
+                            this._addDummyRow({ date: day }, group);
                         }
                     })
                 );
             }));
         },
 
-        _addRow: function(params) {
-            var placeholder = dojo.create('tr', null, this.containerNode);
+        _addDayGroup: function(day) {
+            var group = dojo.create('tbody', null, this.tableNode, 'last');
+            dojo.addClass(group, 'day' + day.getDate());
+            return group;
+        },
+
+        _addRow: function(params, group) {
+            var placeholder = dojo.create('tr', null, group);
             var newRow = new phpr.Timecard.GridEntry({
                     item: params.item,
                     showDate: params.showDate
@@ -414,8 +418,8 @@ dojo.provide("phpr.Timecard.GridWidget");
             this.store.put(item, { override: true }).then(dojo.hitch(phpr.loading, 'hide'));
         },
 
-        _addDummyRow: function(params) {
-            var placeholder = dojo.create('tr', null, this.containerNode);
+        _addDummyRow: function(params, group) {
+            var placeholder = dojo.create('tr', null, group);
             this._supportingWidgets.push(
                 new phpr.Timecard.DummyGridEntry(params, placeholder)
             );
