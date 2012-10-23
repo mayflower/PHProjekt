@@ -119,7 +119,7 @@ dojo.provide("phpr.Timecard.GridWidget");
         },
 
         _renderTimeNode: function() {
-            this.timeNode = timeNodeInline = new dijit.InlineEditBox({
+            this.timeNode = timeNodeInline = new phpr.Timecard.InlineEditBox({
                 editor: dijit.form.TextBox,
                 editorParams: {
                     maxLength: "13"
