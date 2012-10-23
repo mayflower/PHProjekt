@@ -242,17 +242,23 @@ class Timecard_Models_Timecard_Test extends DatabaseTest
         $data2['default']  = null;
 
         $data3                  = array();
-        $data3['key']           = 'minutes';
-        $data3['label']         = Phprojekt::getInstance()->translate('Minutes');
-        $data3['originalLabel'] = 'Minutes';
-        $data3['type']          = 'text';
-        $data3['hint']          = Phprojekt::getInstance()->getTooltip('minutes');
-        $data3['listPosition']  = 3;
-        $data3['formPosition']  = 3;
+        $data3['key']           = 'projectId';
+        $data3['label']         = Phprojekt::getInstance()->translate('Project');
+        $data3['originalLabel'] = 'Project';
+        $data3['type']          = 'selectbox';
+        $data3['hint']          = Phprojekt::getInstance()->getTooltip('projectId');
+        $data3['listPosition']  = 4;
+        $data3['formPosition']  = 4;
         $data3['fieldset']      = '';
-        $data3['range']         = array('id'   => '',
-                                        'name' => '');
-        $data3['required'] = false;
+        $data3['range']         = array();
+        $activeRecord = new Project_Models_Project();
+        $tree = new Phprojekt_Tree_Node_Database($activeRecord, 1);
+        $tree = $tree->setup();
+        foreach ($tree as $node) {
+            $data3['range'][] = array('id'   => (int) $node->id,
+                                      'name' => $node->getDepthDisplay('title'));
+        }
+        $data3['required'] = true;
         $data3['readOnly'] = false;
         $data3['tab']      = 1;
         $data3['integer']  = true;
@@ -260,49 +266,25 @@ class Timecard_Models_Timecard_Test extends DatabaseTest
         $data3['default']  = null;
 
         $data4                  = array();
-        $data4['key']           = 'projectId';
-        $data4['label']         = Phprojekt::getInstance()->translate('Project');
-        $data4['originalLabel'] = 'Project';
-        $data4['type']          = 'selectbox';
-        $data4['hint']          = Phprojekt::getInstance()->getTooltip('projectId');
-        $data4['listPosition']  = 4;
-        $data4['formPosition']  = 4;
+        $data4['key']           = 'notes';
+        $data4['label']         = Phprojekt::getInstance()->translate('Notes');
+        $data4['originalLabel'] = 'Notes';
+        $data4['type']          = 'textarea';
+        $data4['hint']          = Phprojekt::getInstance()->getTooltip('notes');
+        $data4['listPosition']  = 5;
+        $data4['formPosition']  = 5;
         $data4['fieldset']      = '';
-        $data4['range']         = array();
-        $activeRecord = new Project_Models_Project();
-        $tree = new Phprojekt_Tree_Node_Database($activeRecord, 1);
-        $tree = $tree->setup();
-        foreach ($tree as $node) {
-            $data4['range'][] = array('id'   => (int) $node->id,
-                                      'name' => $node->getDepthDisplay('title'));
-        }
-        $data4['required'] = true;
+        $data4['range']         = array('id'   => '',
+                                        'name' => '');
+        $data4['required'] = false;
         $data4['readOnly'] = false;
         $data4['tab']      = 1;
-        $data4['integer']  = true;
+        $data4['integer']  = false;
         $data4['length']   = 0;
         $data4['default']  = null;
 
-        $data5                  = array();
-        $data5['key']           = 'notes';
-        $data5['label']         = Phprojekt::getInstance()->translate('Notes');
-        $data5['originalLabel'] = 'Notes';
-        $data5['type']          = 'textarea';
-        $data5['hint']          = Phprojekt::getInstance()->getTooltip('notes');
-        $data5['listPosition']  = 5;
-        $data5['formPosition']  = 5;
-        $data5['fieldset']      = '';
-        $data5['range']         = array('id'   => '',
-                                        'name' => '');
-        $data5['required'] = false;
-        $data5['readOnly'] = false;
-        $data5['tab']      = 1;
-        $data5['integer']  = false;
-        $data5['length']   = 0;
-        $data5['default']  = null;
-
         $timecardModel = clone($this->_model);
-        $expected      = array($data1, $data2, $data3, $data4, $data5);
+        $expected      = array($data1, $data2, $data3, $data4);
         $order         = Phprojekt_ModelInformation_Default::ORDERING_FORM;
         $this->assertEquals($expected, $timecardModel->getInformation()->getFieldDefinition($order));
     }

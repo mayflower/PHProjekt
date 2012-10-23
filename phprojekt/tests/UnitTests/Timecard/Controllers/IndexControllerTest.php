@@ -361,9 +361,9 @@ class Timecard_IndexController_Test extends FrontInit
         $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
         $this->assertContains(
-            '"Start","End","Minutes","Project","Notes"'."\n"
-            .'"2009-05-17 09:00:00","13:00","240","PHProjekt","My note"'."\n"
-            .'"2009-05-17 14:00:00","18:00","120","PHProjekt","My note"'."\n", $response
+            '"Start","End","Project","Notes"'."\n"
+            .'"2009-05-17 09:00:00","13:00","PHProjekt","My note"'."\n"
+            .'"2009-05-17 14:00:00","18:00","PHProjekt","My note"'."\n", $response
         );
     }
 
