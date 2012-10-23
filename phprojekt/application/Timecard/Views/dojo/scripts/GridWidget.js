@@ -469,10 +469,17 @@ dojo.provide("phpr.Timecard.GridWidget");
             group.entries.push(newRow);
         },
 
-        _onRowDataChange: function(item) {
+        _onRowDataChange: function(row, item) {
             phpr.loading.show();
 
-            this.store.put(item, { override: true }).then(dojo.hitch(phpr.loading, 'hide'));
+            this.updateTotalTime();
+            this.store.put(item, { override: true }).then(dojo.hitch(this, function(newData) {
+                var groupIndex = phpr.date.getIsoDate(phpr.date.isoDatetimeTojsDate(newData.startDatetime));
+                var group = this.dayGroups[groupIndex];
+                this.removeEntryFromGroup(row, group);
+                this._addRow({ item: newData }, group);
+                phpr.loading.hide();
+            }));
         },
 
         removeEntryFromGroup: function(entry, group) {
