@@ -81,7 +81,7 @@ class Timecard_IndexController_Test extends FrontInit
                     "projectId" => "1",
                     "startTime" => "09:00:00",
                     "endTime" => "13:00:00",
-                    "display" => "PHProjekt",
+                    "display" => "Unassigned",
                     "note" => "My note"
                 ),
                 array(
@@ -89,7 +89,7 @@ class Timecard_IndexController_Test extends FrontInit
                     "projectId" => "1",
                     "startTime" => "14:00:00",
                     "endTime" => "18:00:00",
-                    "display" => "PHProjekt",
+                    "display" => "Unassigned",
                     "note" => "My note"
                 )
             )
@@ -130,7 +130,7 @@ class Timecard_IndexController_Test extends FrontInit
                     "projectId" => "1",
                     "startTime" => "10:00:00",
                     "endTime" => null,
-                    "display" => "PHProjekt",
+                    "display" => "Unassigned",
                     "note" => "My note"
                 )
             )
@@ -337,8 +337,8 @@ class Timecard_IndexController_Test extends FrontInit
         $expected = array(
             array(
                 'id'      => 1,
-                'display' => 'PHProjekt',
-                'name'    => 'PHProjekt'
+                'display' => 'Unassigned',
+                'name'    => 'Unassigned'
             ),
             array(
                 'id'      => 2,
@@ -362,8 +362,8 @@ class Timecard_IndexController_Test extends FrontInit
         $response = $this->getResponse();
         $this->assertContains(
             '"Start","End","Project","Notes"'."\n"
-            .'"2009-05-17 09:00:00","13:00","PHProjekt","My note"'."\n"
-            .'"2009-05-17 14:00:00","18:00","PHProjekt","My note"'."\n", $response
+            .'"2009-05-17 09:00:00","13:00","Unassigned","My note"'."\n"
+            .'"2009-05-17 14:00:00","18:00","Unassigned","My note"'."\n", $response
         );
     }
 
