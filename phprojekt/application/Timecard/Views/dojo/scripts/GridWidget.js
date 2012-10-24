@@ -351,10 +351,15 @@ dojo.provide("phpr.Timecard.GridWidget");
         },
 
         destroyDescendants: function() {
-            var nodes = dojo.map(this.dayGroups, function(group) {
-                this.clearGroup(this.dayGroups);
-                return group.groupNode;
-            });
+            var nodes = [];
+
+            for (var i in this.dayGroups) {
+                if (this.dayGroups.hasOwnProperty(i)) {
+                    var group = this.dayGroups[i];
+                    this.clearGroup(group);
+                    nodes.push(group.groupNode);
+                }
+            }
 
             dojo.forEach(nodes, dojo.hitch(this, function(node) {
                 dojo.forEach(dijit.findWidgets(node), function(widget) {
