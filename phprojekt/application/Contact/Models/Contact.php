@@ -56,6 +56,26 @@ class Contact_Models_Contact extends Phprojekt_Item_Abstract
         return Phprojekt_ActiveRecord_Abstract::fetchAll($where, $order, $count, $offset, $select, $join);
     }
 
+    public function save()
+    {
+        if ($this->id <= 0
+         && true === $this->private
+         && $this->ownerId !== Phprojekt_Auth_Proxy::getEffectiveUserId()
+         && !Phprojekt_Auth::isAdminUser()) {
+            throw new Zend_Controller_Action_Exception("You are not the owner of this contact", 403);
+        }
+
+        /* contacts are always saved under the root project */
+        $model->projectId = 1;
+
+        if (!$this->recordValidate()) {
+            $errors = array_pop($this->getError());
+            throw new Zend_Controller_Action_Exception($error['label'] . ': ' . $error['message'], 400);
+        }
+
+        parent::save();
+    }
+
     /**
      * Validate the data of the current record.
      *
@@ -75,45 +95,6 @@ class Contact_Models_Contact extends Phprojekt_Item_Abstract
      */
     public function saveRights($rights)
     {
-    }
-
-    /**
-     * Extension of save() for don't save the search strings.
-     * Only allow save if the contact is public or the ownerId is the current user.
-     *
-     * @return void
-     */
-    public function save()
-    {
-        $result = true;
-
-        if ($this->ownerId == Phprojekt_Auth_Proxy::getEffectiveUserId()) {
-            if ($this->id > 0) {
-                $this->_history->saveFields($this, 'edit');
-                $result = Phprojekt_ActiveRecord_Abstract::save();
-            } else {
-                $result = Phprojekt_ActiveRecord_Abstract::save();
-                $this->_history->saveFields($this, 'add');
-            }
-        }
-
-        return $result;
-    }
-
-
-    /**
-     * Extension of delete() for don't save the search strings.
-     * Only allow delete if the contact is public or the ownerId is the current user.
-     *
-     * @return void
-     */
-    public function delete()
-    {
-        if ($this->ownerId == Phprojekt_Auth_Proxy::getEffectiveUserId()) {
-            $this->deleteUploadFiles();
-            $this->_history->saveFields($this, 'delete');
-            parent::delete();
-        }
     }
 
     /**
