@@ -42,6 +42,9 @@
     border-color: transparent;
 }
 
+.phprojekt .timecardGrid .cellOver {
+    background-color: #60a1ea;
+}
 /* List View */
 
 .phprojekt .timecardDayViewEntry {

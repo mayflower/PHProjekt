@@ -62,6 +62,24 @@ dojo.provide("phpr.Timecard.GridWidget");
             dojo.mixin(this, params);
         },
 
+        postCreate: function() {
+            dojo.forEach(
+                [this.timeNode, this.durationNode, this.projectNode, this.notesNode],
+                dojo.hitch(this, function(node) {
+                    this.connect(node, "ondblclick", "_onDblClick");
+                    this.connect(node, "onmouseover", "_onBookingMouseOver");
+                    this.connect(node, "onmouseout", "_onBookingMouseOut");
+                })
+            );
+
+            dojo.forEach(this.dayNodes, dojo.hitch(this, function(node) {
+                this.connect(node, "onclick", "_onNewItemClick");
+                this.connect(node, "ondblclick", "_onDblClick");
+                this.connect(node, "onmouseover", "_onDayMouseOver");
+                this.connect(node, "onmouseout", "_onDayMouseOut");
+            }));
+        },
+
         buildRendering: function() {
             this.domNode = dojo.create('tr');
             dojo.addClass(this.domNode, 'dojoxGridRow');
@@ -80,16 +98,7 @@ dojo.provide("phpr.Timecard.GridWidget");
             this.projectNode = dojo.create("td", null, this.domNode);
             this.notesNode = dojo.create("td", null, this.domNode);
 
-            dojo.forEach(
-                [this.timeNode, this.durationNode, this.projectNode, this.notesNode].concat(this.dayNodes),
-                function(node) {
-                    dojo.addClass(node, 'dojoxGridCell');
-                }
-            );
-
             this.connect(this.domNode, "onclick", "_onClick");
-            this.connect(this.domNode, "onmouseover", "_onMouseOver");
-            this.connect(this.domNode, "onmouseout", "_onMouseOut");
         },
 
         _onClick: function() {
@@ -100,8 +109,41 @@ dojo.provide("phpr.Timecard.GridWidget");
             dojo.addClass(this.domNode, 'dojoxGridRowOver');
         },
 
-        _onMouseOut: function() {
-            dojo.removeClass(this.domNode, 'dojoxGridRowOver');
+        _onDblClick: function(evt) {
+            if (evt) {
+                dojo.stopEvent(evt);
+            }
+            clearTimeout(this._doubleClickTimer);
+        },
+
+        _onBookingMouseOver: function() {
+            dojo.forEach(
+                [this.timeNode, this.durationNode, this.projectNode, this.notesNode],
+                dojo.hitch(this, function(node) {
+                    dojo.addClass(node, 'cellOver');
+                })
+            );
+        },
+
+        _onBookingMouseOut: function() {
+            dojo.forEach(
+                [this.timeNode, this.durationNode, this.projectNode, this.notesNode],
+                dojo.hitch(this, function(node) {
+                    dojo.removeClass(node, 'cellOver');
+                })
+            );
+        },
+
+        _onDayMouseOver: function() {
+            dojo.forEach(this.dayNodes, dojo.hitch(this, function(node) {
+                dojo.addClass(node, 'cellOver');
+            }));
+        },
+
+        _onDayMouseOut: function() {
+            dojo.forEach(this.dayNodes, dojo.hitch(this, function(node) {
+                dojo.removeClass(node, 'cellOver');
+            }));
         }
     });
 
@@ -235,6 +277,28 @@ dojo.provide("phpr.Timecard.GridWidget");
             this.date = this.date || new Date();
             this.dayOfTheWeek = _weekDay(this.date);
             this.dayOfTheMonth = '' + this.date.getDate();
+            this._onClick = this._onNewItemClick;
+
+            var dmover = dojo.hitch(this, this._onDayMouseOver);
+            var dmout = dojo.hitch(this, this._onDayMouseOut);
+            var bmover = dojo.hitch(this, this._onBookingMouseOver);
+            var bmout = dojo.hitch(this, this._onBookingMouseOut);
+            this._onDayMouseOver = function() {
+                dmover();
+                bmover();
+            };
+            this._onDayMouseOut = function() {
+                dmout();
+                bmout();
+            };
+            this._onBookingMouseOver = function() {
+                bmover();
+                dmover();
+            };
+            this._onBookingMouseOut = function() {
+                bmout();
+                dmout();
+            };
         },
 
         _time: function() {
