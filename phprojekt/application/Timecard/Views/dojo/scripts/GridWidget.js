@@ -19,6 +19,7 @@
  */
 
 dojo.require('dijit.InlineEditBox');
+dojo.require("phpr.Timecard.YearMonthSelector");
 dojo.provide("phpr.Timecard.GridWidget");
 
 (function() {
@@ -350,8 +351,7 @@ dojo.provide("phpr.Timecard.GridWidget");
 
     dojo.declare("phpr.Timecard.GridWidget", [dijit._Widget, dijit._Templated], {
         templateString: ['<div>',
-            '<div class="yearMonthSelector">',
-            '   <div dojoAttachpoint="yearMonthSelector"></div>',
+            '<div class="yearMonthSelector" dojoAttachpoint="yearMonthSelector" dojoType="phpr.Timecard.YearMonthSelector">',
             '</div>',
             '<table class="timecardGrid" dojoAttachPoint="tableNode">',
             '  <thead>',
@@ -376,6 +376,8 @@ dojo.provide("phpr.Timecard.GridWidget");
             '</table>',
             '</div>'
         ].join("\n"),
+
+        widgetsInTemplate: true,
 
         store: null,
 
@@ -421,9 +423,6 @@ dojo.provide("phpr.Timecard.GridWidget");
             this.monthStart.setSeconds(0);
             this.monthStart.setMilliseconds(0);
 
-            if (this.button) {
-                this.button.set("label", this.getYearMonthLabel(year, month));
-            }
             this.update();
             this.updateTotalTime();
         },
@@ -443,56 +442,7 @@ dojo.provide("phpr.Timecard.GridWidget");
 
         buildRendering: function() {
             this.inherited(arguments);
-            this.addYearMonthSelector();
-
-            var date = new Date();
-            this.setYearAndMonth(date.getFullYear(), date.getMonth());
-        },
-
-        addYearMonthSelector: function() {
-            phpr.get({
-                url: "index.php/Timecard/index/yearsAndMonthsWithEntries"
-            }).then(dojo.hitch(this, function(response) {
-                var entries = response.values;
-                entries = dojo.map(entries, function(entry) {
-                    return {year: entry.year, month: entry.month - 1};
-                });
-                entries = this.addLastMonths(entries);
-
-                var menu = new dijit.Menu({style: "display: none;"});
-                dojo.forEach(entries, dojo.hitch(this, function(entry) {
-                    menu.addChild(new dijit.MenuItem({
-                        label: this.getYearMonthLabel(entry.year, entry.month),
-                        onClick: dojo.hitch(this, this.setYearAndMonth, entry.year, entry.month)
-                    }));
-                }));
-
-                var today = new Date();
-                this.button = new dijit.form.DropDownButton({
-                    label: this.getYearMonthLabel(today.getFullYear(), today.getMonth()),
-                    name: "yearMonthSelector",
-                    dropDown: menu
-                }, this.yearMonthSelector);
-            }));
-        },
-
-        addLastMonths: function(entries) {
-            for (var i = 0; i <= 4; i++) {
-                var d = dojo.date.add(new Date(), "month", -i);
-                if (!entries[i] || entries[i].month != d.getMonth() || entries[i].year != d.getFullYear()) {
-                    entries.splice(i, 0, {month: d.getMonth(), year: d.getFullYear()});
-                }
-            }
-
-            return entries;
-        },
-
-        getYearMonthLabel: function(year, month) {
-            return year + " " + this.getMonthName(month);
-        },
-
-        getMonthName: function(month) {
-            return dojo.date.locale.getNames("months", "wide")[month];
+            this.connect(this.yearMonthSelector, "onDateChange", dojo.hitch(this, this.setYearAndMonth));
         },
 
         update: function() {
