@@ -71,6 +71,8 @@ dojo.provide("phpr.Timecard.GridWidget");
             } else {
                 this.dayNodes.push(dojo.create('td', null, this.domNode));
                 this.dayNodes.push(dojo.create('td', null, this.domNode));
+                dojo.html.set(this.dayNodes[0], '' + _weekDay(phpr.date.isoDatetimeTojsDate(this.item.startDatetime)));
+                dojo.html.set(this.dayNodes[1], '' + _dayOfTheMonth(this.item));
             }
 
             this.timeNode = dojo.create("td", null, this.domNode);
@@ -107,11 +109,6 @@ dojo.provide("phpr.Timecard.GridWidget");
         dayNodes: [],
         buildRendering: function() {
             this.inherited(arguments);
-
-            if (this.showDate === true) {
-                dojo.html.set(this.dayNodes[0], '' + _weekDay(phpr.date.isoDatetimeTojsDate(this.item.startDatetime)));
-                dojo.html.set(this.dayNodes[1], '' + _dayOfTheMonth(this.item));
-            }
 
             this._renderTimeNode();
             dojo.html.set(this.durationNode, '' + this._duration());
@@ -246,28 +243,6 @@ dojo.provide("phpr.Timecard.GridWidget");
 
         _duration: function() {
             return '';
-        },
-
-        _onClick: function() {
-            var presetDate = new Date(this.date);
-            var now = new Date();
-            presetDate.setHours(now.getHours());
-            presetDate.setMinutes(now.getMinutes());
-            phpr.pageManager.modifyCurrentState({
-                id: 0
-            }, {
-                presetValues: {
-                    startDatetime: phpr.date.jsDateToIsoDatetime(presetDate)
-                }
-            });
-        },
-
-        buildRendering: function() {
-            this.inherited(arguments);
-            if (this.showDate === true) {
-                dojo.html.set(this.dayNodes[0], this.dayOfTheWeek);
-                dojo.html.set(this.dayNodes[1], this.dayOfTheMonth);
-            }
         }
     });
 
@@ -441,7 +416,11 @@ dojo.provide("phpr.Timecard.GridWidget");
                         if (itemsByDay[dateString]) {
                             this.addRows(itemsByDay[dateString], group);
                         } else {
-                            this._addDummyRow({ date: day }, group);
+                            this._addDummyRow({
+                                item: {
+                                    startDatetime: phpr.date.jsDateToIsoDatetime(day)
+                                }
+                            }, group);
                         }
                     })
                 );
