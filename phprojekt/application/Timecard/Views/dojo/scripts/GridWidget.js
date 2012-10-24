@@ -40,8 +40,16 @@ dojo.provide("phpr.Timecard.GridWidget");
 
     dojo.declare('phpr.Timecard.InlineEditBox', dijit.InlineEditBox, {
         constructor: function() {
-            this._onDblClick = this._onClick;
-            this._onClick = function() {};
+            var oldClick = dojo.hitch(this, this._onClick);
+
+            this._onDblClick = dojo.hitch(this, function() {
+                this._onMouseOut();
+
+                // Since FF gets upset if you move a node while in an event handler for that node...
+                setTimeout(dojo.hitch(this, "edit"), 0);
+            });
+
+            this._onClick = function(evt) { };
         },
 
         postMixInProperties: function() {
@@ -55,6 +63,8 @@ dojo.provide("phpr.Timecard.GridWidget");
         showDate: true,
         dayNodes: [],
         _supportingWidgets: null,
+        _doubleClickDelay: 500,
+        _doubleClickTimer: null,
 
         constructor: function(params) {
             this._supportingWidgets = [];
@@ -101,12 +111,40 @@ dojo.provide("phpr.Timecard.GridWidget");
             this.connect(this.domNode, "onclick", "_onClick");
         },
 
-        _onClick: function() {
-            phpr.pageManager.modifyCurrentState({ id: this.item.id });
+        _onClick: function(evt) {
+            if (evt) {
+                dojo.stopEvent(evt);
+            }
+            clearTimeout(this._doubleClickTimer);
+            this._doubleClickTimer = setTimeout(
+                dojo.hitch(this, function() {
+                    phpr.pageManager.modifyCurrentState({ id: this.item.id });
+                }),
+                this._doubleClickDelay
+            );
         },
 
-        _onMouseOver: function() {
-            dojo.addClass(this.domNode, 'dojoxGridRowOver');
+        _onNewItemClick: function(evt) {
+            if (evt) {
+                dojo.stopEvent(evt);
+            }
+            clearTimeout(this._doubleClickTimer);
+            this._doubleClickTimer = setTimeout(
+                dojo.hitch(this, function() {
+                    var presetDate = new Date(phpr.date.isoDatetimeTojsDate(this.item.startDatetime));
+                    var now = new Date();
+                    presetDate.setHours(now.getHours());
+                    presetDate.setMinutes(now.getMinutes());
+                    phpr.pageManager.modifyCurrentState({
+                        id: 0
+                    }, {
+                        presetValues: {
+                            startDatetime: phpr.date.jsDateToIsoDatetime(presetDate)
+                        }
+                    });
+                }),
+                this._doubleClickDelay
+            );
         },
 
         _onDblClick: function(evt) {
