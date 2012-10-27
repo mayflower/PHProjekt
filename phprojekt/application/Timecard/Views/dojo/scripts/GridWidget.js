@@ -181,6 +181,15 @@ dojo.provide("phpr.Timecard.GridWidget");
 
     dojo.declare('phpr.Timecard.InlineEditorTextarea', phpr.Timecard._InlineEditorBase, {
         maxDisplayedChars: null,
+        editorParams: null,
+        _placeHolderChar: '&nbsp;',
+
+        postMixInProperties: function() {
+            this.inherited(arguments);
+            if (dojo.trim(this.value).length === 0) {
+                this.value = this._placeHolderChar;
+            }
+        },
 
         _getDisplayedValue: function(val) {
             if (this.maxDisplayedChars !== null && this.value.length > this.maxDisplayedChars) {
@@ -193,7 +202,7 @@ dojo.provide("phpr.Timecard.GridWidget");
         _insertEditor: function() {
             dojo.html.set(this.domNode, '');
             var params = this.editorParams || {};
-            params.value = this.value;
+            params.value = this.value === this._placeHolderChar ? '' : this.value;
             this._editor = new dijit.form.Textarea(params, dojo.create('div', null, this.domNode));
 
             this._editor.startup();
