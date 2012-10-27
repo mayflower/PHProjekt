@@ -58,7 +58,7 @@ dojo.provide("phpr.Timecard.GridWidget");
         },
 
         _onClick: function(e) {
-            if (e) {
+            if (e && this._editing === true) {
                 dojo.stopEvent(e);
             }
         },
