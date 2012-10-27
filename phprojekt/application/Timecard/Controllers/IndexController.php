@@ -117,15 +117,16 @@ class Timecard_IndexController extends IndexController
         $tree         = new Phprojekt_Tree_Node_Database($activeRecord, 1);
         $tree         = $tree->setup();
 
-        $datas = array();
+        $datas      = array();
+        $unassigned = Phprojekt::getInstance()->translate('Unassigned');
         if (is_array($favorites)) {
             foreach ($favorites as $projectId) {
                 foreach ($tree as $node) {
                     if ($node->id == $projectId) {
                         $data            = array();
                         $data['id']      = $projectId;
-                        $data['display'] = $node->getDepthDisplay('title');
-                        $data['name']    = $node->title;
+                        $data['display'] = $projectId == 1 ? $unassigned : $node->getDepthDisplay('title');
+                        $data['name']    = $projectId == 1 ? $unassigned : $node->title;
 
                         $datas[] = $data;
                     }

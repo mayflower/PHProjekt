@@ -177,7 +177,7 @@ phpr.get = function(params) {
         },
         function(error) {
             try {
-                var data = dojo.fromJson(errror.responseText);
+                var data = dojo.fromJson(error.responseText);
                 return data;
             } catch (e) {
                 phpr.handleError(params.url, 'php');
