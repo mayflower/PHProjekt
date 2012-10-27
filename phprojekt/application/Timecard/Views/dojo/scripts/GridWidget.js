@@ -456,7 +456,11 @@ dojo.provide("phpr.Timecard.GridWidget");
 
             this.item = newItem;
 
-            this.onChange(newItem);
+            this._onChange();
+        },
+
+        _onChange: function() {
+            this.onChange(this.item);
         },
 
         _parseTimeValue: function(value) {
