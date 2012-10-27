@@ -30,8 +30,11 @@ dojo.declare("phpr.MetadataStore", null, {
             throw "No projectId provided in phpr.Metadatastore::metadataFor!";
         }
 
-        if (typeof this._cache[module] == 'undefined' || typeof this._cache[module][projectId] == "undefined") {
-            if (typeof this._cache[module] == 'undefined') {
+        if (!this._cache.hasOwnProperty(module) ||
+                !this._cache[module].hasOwnProperty(projectId) ||
+                (!this._cache[module][projectId].hasOwnProperty('data') &&
+                 !this._cache[module][projectId].hasOwnProperty('deferred'))) {
+            if (!this._cache.hasOwnProperty(module)) {
                 this._cache[module] = {};
             }
             this._cache[module][projectId] = {};
@@ -55,7 +58,7 @@ dojo.declare("phpr.MetadataStore", null, {
             );
             this._cache[module][projectId].deferred = def;
             return def;
-        } else if (typeof this._cache[module][projectId].data !== 'undefined') {
+        } else if (this._cache[module][projectId].hasOwnProperty('data')) {
             var def = new dojo.Deferred();
             def.resolve(this._cache[module][projectId].data);
             return def;
