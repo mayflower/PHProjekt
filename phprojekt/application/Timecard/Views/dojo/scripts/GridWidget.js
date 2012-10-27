@@ -271,7 +271,6 @@ dojo.provide("phpr.Timecard.GridWidget");
 
         buildRendering: function() {
             this.domNode = dojo.create('tr');
-            dojo.addClass(this.domNode, 'dojoxGridRow');
 
             if (this.showDate === false) {
                 this._dayNodes.push(dojo.create('td', {colspan: "2"}, this.domNode));
