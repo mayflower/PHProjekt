@@ -439,18 +439,17 @@ dojo.provide("phpr.Timecard.GridWidget");
         },
 
         _renderTimeNode: function() {
-            timeNodeInline = new phpr.Timecard.InlineEditBox({
-                editor: dijit.form.TextBox,
-                editorParams: {
-                    maxLength: "13"
-                },
+            this.timeNodeInline = new phpr.Timecard.InlineEditorText({
                 value: '' + this._time(),
-                autoSave: true
+                editorParams: {
+                    style: 'width: 80px;',
+                    maxLength: "13"
+                }
             }, dojo.create('div', null, this.timeNode));
 
-            this.connect(this.timeNode, 'onChange', '_onTimeNodeChange');
+            this.connect(this.timeNodeInline, 'onChange', '_onTimeNodeChange');
 
-            this._supportingWidgets.push(this.timeNode);
+            this._supportingWidgets.push(this.timeNodeInline);
         },
 
         _onTimeNodeChange: function(value) {
@@ -458,6 +457,7 @@ dojo.provide("phpr.Timecard.GridWidget");
             var newTimes = this._parseTimeValue(value);
 
             if (newTimes === null) {
+                this.timeNodeInline.set('value', this._time());
                 return;
             }
 
