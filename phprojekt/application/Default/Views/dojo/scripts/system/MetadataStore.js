@@ -25,6 +25,33 @@ dojo.require("dojo.data.ItemFileReadStore");
 dojo.declare("phpr.MetadataStore", null, {
     _cache: {},
 
+    constructor: function () {
+        dojo.subscribe("updateCacheData", this, "_deleteCache");
+    },
+
+    _deleteCache: function() {
+        this._forEachCacheItem(function(item) {
+            if (item.hasOwnProperty('deferred')) {
+                return;
+            }
+            if (item.hasOwnProperty('data')) {
+                delete item.data;
+            }
+        });
+    },
+
+    _forEachCacheItem: function(fun) {
+        for (var module in this._cache) {
+            if (this._cache.hasOwnProperty(module)) {
+                for (var projectId in this._cache[module]) {
+                    if (this._cache[module].hasOwnProperty(projectId)) {
+                        fun(this._cache[module][projectId]);
+                    }
+                }
+            }
+        }
+    },
+
     metadataFor: function(module, projectId) {
         if (projectId === undefined) {
             throw "No projectId provided in phpr.Metadatastore::metadataFor!";
