@@ -38,26 +38,6 @@ dojo.provide("phpr.Timecard.GridWidget");
         return s;
     };
 
-    dojo.declare('phpr.Timecard.InlineEditBox', dijit.InlineEditBox, {
-        constructor: function() {
-            var oldClick = dojo.hitch(this, this._onClick);
-
-            this._onDblClick = dojo.hitch(this, function() {
-                this._onMouseOut();
-
-                // Since FF gets upset if you move a node while in an event handler for that node...
-                setTimeout(dojo.hitch(this, "edit"), 0);
-            });
-
-            this._onClick = function(evt) { };
-        },
-
-        postMixInProperties: function() {
-            this.inherited(arguments);
-            this.connect(this.displayNode, 'ondblclick', '_onDblClick');
-        }
-    });
-
     dojo.declare("phpr.Timecard._GridEntry", [dijit._Widget], {
         item: null,
         showDate: true,
