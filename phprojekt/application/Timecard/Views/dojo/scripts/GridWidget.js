@@ -38,133 +38,6 @@ dojo.provide("phpr.Timecard.GridWidget");
         return s;
     };
 
-    dojo.declare("phpr.Timecard._GridEntry", [dijit._Widget], {
-        item: null,
-        showDate: true,
-        _dayNodes: [],
-        _supportingWidgets: null,
-        _doubleClickDelay: 500,
-        _doubleClickTimer: null,
-
-        constructor: function(params) {
-            this._supportingWidgets = [];
-            this._dayNodes = [];
-            dojo.mixin(this, params);
-        },
-
-        postCreate: function() {
-            dojo.forEach(
-                [this.timeNode, this.durationNode, this.projectNode, this.notesNode],
-                dojo.hitch(this, function(node) {
-                    this.connect(node, "ondblclick", "_onDblClick");
-                    this.connect(node, "onmouseover", "_onBookingMouseOver");
-                    this.connect(node, "onmouseout", "_onBookingMouseOut");
-                })
-            );
-
-            dojo.forEach(this._dayNodes, dojo.hitch(this, function(node) {
-                this.connect(node, "onclick", "_onNewItemClick");
-                this.connect(node, "ondblclick", "_onDblClick");
-                this.connect(node, "onmouseover", "_onDayMouseOver");
-                this.connect(node, "onmouseout", "_onDayMouseOut");
-            }));
-        },
-
-        buildRendering: function() {
-            this.domNode = dojo.create('tr');
-            dojo.addClass(this.domNode, 'dojoxGridRow');
-
-            if (this.showDate === false) {
-                this._dayNodes.push(dojo.create('td', {colspan: "2"}, this.domNode));
-            } else {
-                this._dayNodes.push(dojo.create('td', null, this.domNode));
-                this._dayNodes.push(dojo.create('td', null, this.domNode));
-                dojo.html.set(this._dayNodes[0], '' + _weekDay(phpr.date.isoDatetimeTojsDate(this.item.startDatetime)));
-                dojo.html.set(this._dayNodes[1], '' + _dayOfTheMonth(this.item));
-            }
-
-            this.timeNode = dojo.create("td", null, this.domNode);
-            this.durationNode = dojo.create("td", null, this.domNode);
-            this.projectNode = dojo.create("td", null, this.domNode);
-            this.notesNode = dojo.create("td", null, this.domNode);
-
-            this.connect(this.domNode, "onclick", "_onClick");
-        },
-
-        _onClick: function(evt) {
-            if (evt) {
-                dojo.stopEvent(evt);
-            }
-            clearTimeout(this._doubleClickTimer);
-            this._doubleClickTimer = setTimeout(
-                dojo.hitch(this, function() {
-                    phpr.pageManager.modifyCurrentState({ id: this.item.id });
-                }),
-                this._doubleClickDelay
-            );
-        },
-
-        _onNewItemClick: function(evt) {
-            if (evt) {
-                dojo.stopEvent(evt);
-            }
-            clearTimeout(this._doubleClickTimer);
-            this._doubleClickTimer = setTimeout(
-                dojo.hitch(this, function() {
-                    var presetDate = new Date(phpr.date.isoDatetimeTojsDate(this.item.startDatetime));
-                    var now = new Date();
-                    presetDate.setHours(now.getHours());
-                    presetDate.setMinutes(now.getMinutes());
-                    phpr.pageManager.modifyCurrentState({
-                        id: 0
-                    }, {
-                        presetValues: {
-                            startDatetime: phpr.date.jsDateToIsoDatetime(presetDate)
-                        }
-                    });
-                }),
-                this._doubleClickDelay
-            );
-        },
-
-        _onDblClick: function(evt) {
-            if (evt) {
-                dojo.stopEvent(evt);
-            }
-            clearTimeout(this._doubleClickTimer);
-        },
-
-        _onBookingMouseOver: function() {
-            dojo.forEach(
-                [this.timeNode, this.durationNode, this.projectNode, this.notesNode],
-                dojo.hitch(this, function(node) {
-                    dojo.addClass(node, 'cellOver');
-                })
-            );
-        },
-
-        _onBookingMouseOut: function() {
-            dojo.forEach(
-                [this.timeNode, this.durationNode, this.projectNode, this.notesNode],
-                dojo.hitch(this, function(node) {
-                    dojo.removeClass(node, 'cellOver');
-                })
-            );
-        },
-
-        _onDayMouseOver: function() {
-            dojo.forEach(this._dayNodes, dojo.hitch(this, function(node) {
-                dojo.addClass(node, 'cellOver');
-            }));
-        },
-
-        _onDayMouseOut: function() {
-            dojo.forEach(this._dayNodes, dojo.hitch(this, function(node) {
-                dojo.removeClass(node, 'cellOver');
-            }));
-        }
-    });
-
     dojo.declare('phpr.Timecard.InlineEditorText', dijit._Widget, {
         value: '',
         _valueChanged: false,
@@ -399,6 +272,133 @@ dojo.provide("phpr.Timecard.GridWidget");
             } else {
                 dojo.html.set(this.domNode, this._getLabel(val));
             }
+        }
+    });
+
+    dojo.declare("phpr.Timecard._GridEntry", [dijit._Widget], {
+        item: null,
+        showDate: true,
+        _dayNodes: [],
+        _supportingWidgets: null,
+        _doubleClickDelay: 500,
+        _doubleClickTimer: null,
+
+        constructor: function(params) {
+            this._supportingWidgets = [];
+            this._dayNodes = [];
+            dojo.mixin(this, params);
+        },
+
+        postCreate: function() {
+            dojo.forEach(
+                [this.timeNode, this.durationNode, this.projectNode, this.notesNode],
+                dojo.hitch(this, function(node) {
+                    this.connect(node, "ondblclick", "_onDblClick");
+                    this.connect(node, "onmouseover", "_onBookingMouseOver");
+                    this.connect(node, "onmouseout", "_onBookingMouseOut");
+                })
+            );
+
+            dojo.forEach(this._dayNodes, dojo.hitch(this, function(node) {
+                this.connect(node, "onclick", "_onNewItemClick");
+                this.connect(node, "ondblclick", "_onDblClick");
+                this.connect(node, "onmouseover", "_onDayMouseOver");
+                this.connect(node, "onmouseout", "_onDayMouseOut");
+            }));
+        },
+
+        buildRendering: function() {
+            this.domNode = dojo.create('tr');
+            dojo.addClass(this.domNode, 'dojoxGridRow');
+
+            if (this.showDate === false) {
+                this._dayNodes.push(dojo.create('td', {colspan: "2"}, this.domNode));
+            } else {
+                this._dayNodes.push(dojo.create('td', null, this.domNode));
+                this._dayNodes.push(dojo.create('td', null, this.domNode));
+                dojo.html.set(this._dayNodes[0], '' + _weekDay(phpr.date.isoDatetimeTojsDate(this.item.startDatetime)));
+                dojo.html.set(this._dayNodes[1], '' + _dayOfTheMonth(this.item));
+            }
+
+            this.timeNode = dojo.create("td", null, this.domNode);
+            this.durationNode = dojo.create("td", null, this.domNode);
+            this.projectNode = dojo.create("td", null, this.domNode);
+            this.notesNode = dojo.create("td", null, this.domNode);
+
+            this.connect(this.domNode, "onclick", "_onClick");
+        },
+
+        _onClick: function(evt) {
+            if (evt) {
+                dojo.stopEvent(evt);
+            }
+            clearTimeout(this._doubleClickTimer);
+            this._doubleClickTimer = setTimeout(
+                dojo.hitch(this, function() {
+                    phpr.pageManager.modifyCurrentState({ id: this.item.id });
+                }),
+                this._doubleClickDelay
+            );
+        },
+
+        _onNewItemClick: function(evt) {
+            if (evt) {
+                dojo.stopEvent(evt);
+            }
+            clearTimeout(this._doubleClickTimer);
+            this._doubleClickTimer = setTimeout(
+                dojo.hitch(this, function() {
+                    var presetDate = new Date(phpr.date.isoDatetimeTojsDate(this.item.startDatetime));
+                    var now = new Date();
+                    presetDate.setHours(now.getHours());
+                    presetDate.setMinutes(now.getMinutes());
+                    phpr.pageManager.modifyCurrentState({
+                        id: 0
+                    }, {
+                        presetValues: {
+                            startDatetime: phpr.date.jsDateToIsoDatetime(presetDate)
+                        }
+                    });
+                }),
+                this._doubleClickDelay
+            );
+        },
+
+        _onDblClick: function(evt) {
+            if (evt) {
+                dojo.stopEvent(evt);
+            }
+            clearTimeout(this._doubleClickTimer);
+        },
+
+        _onBookingMouseOver: function() {
+            dojo.forEach(
+                [this.timeNode, this.durationNode, this.projectNode, this.notesNode],
+                dojo.hitch(this, function(node) {
+                    dojo.addClass(node, 'cellOver');
+                })
+            );
+        },
+
+        _onBookingMouseOut: function() {
+            dojo.forEach(
+                [this.timeNode, this.durationNode, this.projectNode, this.notesNode],
+                dojo.hitch(this, function(node) {
+                    dojo.removeClass(node, 'cellOver');
+                })
+            );
+        },
+
+        _onDayMouseOver: function() {
+            dojo.forEach(this._dayNodes, dojo.hitch(this, function(node) {
+                dojo.addClass(node, 'cellOver');
+            }));
+        },
+
+        _onDayMouseOut: function() {
+            dojo.forEach(this._dayNodes, dojo.hitch(this, function(node) {
+                dojo.removeClass(node, 'cellOver');
+            }));
         }
     });
 
