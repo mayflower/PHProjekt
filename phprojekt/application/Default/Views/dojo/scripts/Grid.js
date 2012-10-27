@@ -48,7 +48,7 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
     splitFields:   [],
     _lastTime:     null,
     _active:       false,
-    _doubleClickMaxTime: 750,
+    _doubleClickMaxTime: 500,
     _gridComboAction: null,
 
     // gridFilters Widget
