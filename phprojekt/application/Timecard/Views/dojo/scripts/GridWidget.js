@@ -411,7 +411,7 @@ dojo.provide("phpr.Timecard.GridWidget");
             dojo.html.set(this.durationNode, '' + this._duration());
             dojo.html.set(this.notesNode, dojo.isString(this.item.notes) ? this.item.notes : '');
 
-            phpr.MetadataStore.metadataFor('Timecard', 1).then(dojo.hitch(this, this._updateProjectName));
+            this.renderProjectNode();
         },
 
         fetchProjectRange: function() {
@@ -517,26 +517,61 @@ dojo.provide("phpr.Timecard.GridWidget");
             return _padTo2Chars('' + Math.floor(minutes / 60)) + ':' + _padTo2Chars(minutes % 60);
         },
 
-        _updateProjectName: function(metadata) {
+        renderProjectNode: function() {
+            this.fetchProjectRange().then(dojo.hitch(this, 'insertProjectNode'));
+        },
+
+        insertProjectNode: function(range) {
             if (this.destroyed) {
                 return;
             }
-            var projectId = parseInt(this.item.projectId, 10);
 
-            for (var mdIndex in metadata) {
-                if (metadata.hasOwnProperty(mdIndex) && metadata[mdIndex].key === "projectId") {
-                    var range = metadata[mdIndex].range;
-                    dojo.some(range, dojo.hitch(this, function(rItem) {
-                        if (rItem.id !== projectId) {
-                            return false;
-                        }
+            var options = [];
 
-                        dojo.html.set(this.projectNode, '' + rItem.name);
-                        return true;
-                    }));
+            for (var j in range) {
+                var item = {
+                    label: range[j].name,
+                    value: '' + range[j].id
+                };
+
+                if (range[j].id == this.item.projectId) {
+                    item.selected = true;
+                }
+
+                options.push(item);
+            }
+
+            this.projectNodeInline = new phpr.Timecard.InlineEditorSelect({
+                options: options,
+                value: '' + this.item.projectId
+            }, dojo.create('div', null, this.projectNode));
+
+            this.connect(this.projectNodeInline, 'onChange', '_onProjectSelectorChange');
+
+            this._supportingWidgets.push(this.projectNodeInline);
+        },
+
+        _onProjectSelectorChange: function(value) {
+            this.fetchProjectRange().then(dojo.hitch(this, function(range) {
+                if (!this.idInProjectRange(value, range)) {
                     return;
                 }
+
+                var newItem = dojo.clone(this.item);
+                newItem.projectId = value;
+                this.item = newItem;
+                this._onChange();
+            }));
+        },
+
+        idInProjectRange: function(id, range) {
+            for (var i in range) {
+                if (range[i].id == id) {
+                    return true;
+                }
             }
+
+            return false;
         }
 
     });
