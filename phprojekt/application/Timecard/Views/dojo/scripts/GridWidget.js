@@ -827,6 +827,16 @@ dojo.provide("phpr.Timecard.GridWidget");
                 this.removeEntryFromGroup(row, group);
                 this._addRow({ item: newData }, group);
                 this.sortGroup(group);
+                dojo.publish("updateCacheData");
+                dojo.publish("Timecard.updateCacheData");
+
+                var currentState = phpr.pageManager.getState();
+                if (item.id == currentState.id) {
+                    phpr.pageManager.modifyCurrentState({
+                        id: item.id
+                    });
+                }
+
                 phpr.loading.hide();
             }));
         },
