@@ -480,7 +480,7 @@ dojo.provide("phpr.Timecard.GridWidget");
         },
 
         _parseTimeValue: function(value) {
-            var re = /^((\d{1,2}):?(\d{2}))\s*-(\s*((\d{1,2}):?(\d{2}))?)?$/;
+            var re = /^((\d{1,2})(:|\.)?(\d{2}))\s*-(\s*((\d{1,2})(:|\.)?(\d{2}))?)?$/;
             var match = value.match(re);
 
             if (match === null) {
@@ -488,9 +488,9 @@ dojo.provide("phpr.Timecard.GridWidget");
             }
 
             var ret = {};
-            ret.startTime = match[2] + ':' + match[3];
-            if (match[6] !== undefined && match[7] !== undefined) {
-                ret.endTime = match[6] + ':' + match[7];
+            ret.startTime = match[2] + ':' + match[4];
+            if (match[7] !== undefined && match[9] !== undefined) {
+                ret.endTime = match[7] + ':' + match[9];
             }
 
             return ret;
