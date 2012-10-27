@@ -41,7 +41,9 @@ dojo.provide("phpr.Timecard.GridWidget");
             dojo.html.set(this.domNode, this._getDisplayedValue(this.value));
             var events = {
                 ondblclick: "_onDblClick",
-                onclick: "_onClick"
+                onclick: "_onClick",
+                onmouseover: "_onMouseOver",
+                onmouseout: "_onMouseOut"
             };
 
             for (var name in events) {
@@ -71,6 +73,16 @@ dojo.provide("phpr.Timecard.GridWidget");
             this._editing = true;
 
             this._insertEditor();
+        },
+
+        _onMouseOver: function() {
+            if (this._editing === false) {
+                dijit.showTooltip(phpr.nls.get("Double click to edit"), this.domNode, 'above');
+            }
+        },
+
+        _onMouseOut: function() {
+            dijit.hideTooltip(this.domNode);
         },
 
         _close: function() {
