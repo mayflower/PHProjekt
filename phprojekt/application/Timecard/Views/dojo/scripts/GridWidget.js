@@ -370,6 +370,10 @@ dojo.provide("phpr.Timecard.GridWidget");
         buildRendering: function() {
             this.inherited(arguments);
 
+            if (!this.item.endTime) {
+                dojo.addClass(this.domNode, 'unfinishedBooking');
+            }
+
             this._renderTimeNode();
             dojo.html.set(this.durationNode, '' + this._duration());
             this._renderNotesNode();
@@ -787,10 +791,18 @@ dojo.provide("phpr.Timecard.GridWidget");
         addDayGroup: function(day) {
             var groupNode = dojo.create('tbody', null, this.tableNode, 'last');
             dojo.addClass(groupNode, 'day' + day.getDate());
+
+            if (dojo.date.compare(day, new Date(), 'date') === 0) {
+                dojo.addClass(groupNode, 'today');
+            } else if (dojo.date.locale.isWeekend(day)) {
+                dojo.addClass(groupNode, 'weekend');
+            }
+
             group = this.dayGroups[phpr.date.getIsoDate(day)] = {
                 groupNode: groupNode,
                 entries: []
             };
+
             return group;
         },
 
@@ -803,6 +815,7 @@ dojo.provide("phpr.Timecard.GridWidget");
 
         _addRow: function(params, group) {
             var placeholder = dojo.create('tr', null, group.groupNode);
+
             var newRow = new phpr.Timecard.GridEntry({
                     item: params.item,
                     showDate: params.showDate

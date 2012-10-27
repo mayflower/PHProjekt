@@ -31,7 +31,6 @@
     border-color: #ebeadb;
     border-left-color: transparent;
     border-top-color: transparent;
-    background-color: white;
 }
 
 .phprojekt .timecardGrid tbody {
@@ -45,6 +44,19 @@
 .phprojekt .timecardGrid .cellOver {
     background-color: #60a1ea;
 }
+
+.phprojekt .timecardGrid .weekend {
+    background-color: LightGrey;
+}
+
+.phprojekt .timecardGrid .today {
+    background-color: LightGreen;
+}
+
+.phprojekt .timecardGrid .unfinishedBooking {
+    color: Red;
+}
+
 /* List View */
 
 .phprojekt .timecardDayViewEntry {
