@@ -40,7 +40,8 @@ dojo.provide("phpr.Timecard.GridWidget");
             this.inherited(arguments);
             dojo.html.set(this.domNode, this._getDisplayedValue(this.value));
             var events = {
-                ondblclick: "_onDblClick"
+                ondblclick: "_onDblClick",
+                onclick: "_onClick"
             };
 
             for (var name in events) {
@@ -54,6 +55,12 @@ dojo.provide("phpr.Timecard.GridWidget");
 
         _getDisplayedValue: function () {
             return this.value;
+        },
+
+        _onClick: function(e) {
+            if (e) {
+                dojo.stopEvent(e);
+            }
         },
 
         _onDblClick: function() {
