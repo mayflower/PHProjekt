@@ -252,6 +252,8 @@ dojo.provide("phpr.Timecard.GridWidget");
         },
 
         postCreate: function() {
+            this.inherited(arguments);
+
             dojo.forEach(
                 [this.timeNode, this.durationNode, this.projectNode, this.notesNode],
                 dojo.hitch(this, function(node) {
@@ -270,7 +272,7 @@ dojo.provide("phpr.Timecard.GridWidget");
         },
 
         buildRendering: function() {
-            this.domNode = dojo.create('tr');
+            this.inherited(arguments);
 
             if (this.showDate === false) {
                 this._dayNodes.push(dojo.create('td', {colspan: "2"}, this.domNode));
