@@ -160,36 +160,12 @@ dojo.provide("phpr.Timecard.GridWidget");
         }
     });
 
-    dojo.declare('phpr.Timecard.InlineEditorSelect', dijit._Widget, {
-        value: '',
-        _valueChanged: false,
-        _editing: false,
-        _editor: null,
-        params: null,
-
-        buildRendering: function() {
-            this.inherited(arguments);
-            dojo.html.set(this.domNode, this._getLabel(this.value));
-            var events = {
-                ondblclick: "_onDblClick"
-            };
-
-            for (var name in events) {
-                this.connect(this.domNode, name, events[name]);
-            }
+    dojo.declare('phpr.Timecard.InlineEditorSelect', phpr.Timecard._InlineEditorBase, {
+        _getDisplayedValue: function() {
+            return this._getLabel(this.value);
         },
 
-        _onDblClick: function() {
-            if (this._editing === true) {
-                return;
-            }
-
-            this._editing = true;
-
-            this._insertSelector();
-        },
-
-        _insertSelector: function() {
+        _insertEditor: function() {
             dojo.html.set(this.domNode, '');
             var params = this.params || {};
             this._editor = new dijit.form.Select(params, dojo.create('div', null, this.domNode));
@@ -201,55 +177,8 @@ dojo.provide("phpr.Timecard.GridWidget");
             this.connect(this._editor, 'onChange', '_onEditorChange');
         },
 
-        _close: function() {
-            if (this._editor) {
-                this._editor.destroyRecursive();
-                this._editor = null;
-            }
-
-            dojo.html.set(this.domNode, this._getLabel(this.value));
-            this._editing = false;
-        },
-
-        _cancel: function() {
-            this._close();
-        },
-
-        _saveAndClose: function() {
-            this._save();
-            this._close();
-            this._notifyOnChange();
-        },
-
-        _save: function() {
-            if (!this._editing) {
-                return;
-            }
-
-            var val = this._editor.get('value');
-            if (val !== this.value) {
-                this._valueChanged = true;
-            }
-            this.value = dojo.trim(val);
-        },
-
-        _notifyOnChange: function() {
-            if (this._valueChanged === true) {
-                this._valueChanged = false;
-                this.onChange(this.value);
-            }
-        },
-
-        _onEditorBlur: function() {
-            this._saveAndClose();
-        },
-
         _onEditorChange: function() {
             this._saveAndClose();
-        },
-
-        onChange: function() {
-
         },
 
         _getLabel: function(val) {
@@ -268,16 +197,6 @@ dojo.provide("phpr.Timecard.GridWidget");
             });
 
             return label;
-        },
-
-        _setValueAttr: function(/*String*/ val) {
-            val = dojo.trim(val);
-            this.value = val;
-            if (this._editing === true) {
-                this._editor.set('value', val);
-            } else {
-                dojo.html.set(this.domNode, this._getLabel(val));
-            }
         }
     });
 
