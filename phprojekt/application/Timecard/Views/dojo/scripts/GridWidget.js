@@ -414,6 +414,19 @@ dojo.provide("phpr.Timecard.GridWidget");
             phpr.MetadataStore.metadataFor('Timecard', 1).then(dojo.hitch(this, this._updateProjectName));
         },
 
+        fetchProjectRange: function() {
+            return phpr.MetadataStore.metadataFor('Timecard', 1).then(function(metadata) {
+                for (var mdIndex in metadata) {
+                    if (metadata.hasOwnProperty(mdIndex) &&
+                        metadata[mdIndex].key === "projectId" &&
+                        metadata[mdIndex].hasOwnProperty('range')) {
+                        return metadata[mdIndex].range;
+                    }
+                }
+                return null;
+            });
+        },
+
         onChange: function(item) {
 
         },
