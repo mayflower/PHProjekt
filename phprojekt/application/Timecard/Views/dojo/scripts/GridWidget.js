@@ -277,16 +277,16 @@ dojo.provide("phpr.Timecard.GridWidget");
                 [this.timeNode, this.durationNode, this.projectNode, this.notesNode],
                 dojo.hitch(this, function(node) {
                     this.connect(node, "ondblclick", "_onDblClick");
-                    this.connect(node, "onmouseover", "_onBookingMouseOver");
-                    this.connect(node, "onmouseout", "_onBookingMouseOut");
+                    this.connect(node, "onmouseover", dojo.hitch(this, "_onBookingMouseOver", node));
+                    this.connect(node, "onmouseout", dojo.hitch(this, "_onBookingMouseOut", node));
                 })
             );
 
             dojo.forEach(this._dayNodes, dojo.hitch(this, function(node) {
                 this.connect(node, "onclick", "_onNewItemClick");
                 this.connect(node, "ondblclick", "_onDblClick");
-                this.connect(node, "onmouseover", "_onDayMouseOver");
-                this.connect(node, "onmouseout", "_onDayMouseOut");
+                this.connect(node, "onmouseover", dojo.hitch(this, "_onDayMouseOver", node));
+                this.connect(node, "onmouseout", dojo.hitch(this, "_onDayMouseOut", node));
             }));
         },
 
@@ -371,16 +371,24 @@ dojo.provide("phpr.Timecard.GridWidget");
             );
         },
 
-        _onDayMouseOver: function() {
+        _onDayMouseOver: function(node) {
             dojo.forEach(this._dayNodes, dojo.hitch(this, function(node) {
                 dojo.addClass(node, 'cellOver');
             }));
+
+            if (node) {
+                dijit.showTooltip(phpr.nls.get('Click to add booking'), node, 'above');
+            }
         },
 
-        _onDayMouseOut: function() {
+        _onDayMouseOut: function(node) {
             dojo.forEach(this._dayNodes, dojo.hitch(this, function(node) {
                 dojo.removeClass(node, 'cellOver');
             }));
+
+            if (node) {
+                dijit.hideTooltip(node);
+            }
         }
     });
 
@@ -594,21 +602,21 @@ dojo.provide("phpr.Timecard.GridWidget");
             var dmout = dojo.hitch(this, this._onDayMouseOut);
             var bmover = dojo.hitch(this, this._onBookingMouseOver);
             var bmout = dojo.hitch(this, this._onBookingMouseOut);
-            this._onDayMouseOver = function() {
-                dmover();
+            this._onDayMouseOver = function(node) {
+                dmover(node);
                 bmover();
             };
-            this._onDayMouseOut = function() {
+            this._onDayMouseOut = function(node) {
                 dmout();
-                bmout();
+                bmout(node);
             };
-            this._onBookingMouseOver = function() {
+            this._onBookingMouseOver = function(node) {
                 bmover();
-                dmover();
+                dmover(node);
             };
-            this._onBookingMouseOut = function() {
+            this._onBookingMouseOut = function(node) {
                 bmout();
-                dmout();
+                dmout(node);
             };
         },
 
