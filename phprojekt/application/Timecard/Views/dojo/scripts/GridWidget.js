@@ -41,14 +41,14 @@ dojo.provide("phpr.Timecard.GridWidget");
     dojo.declare("phpr.Timecard._GridEntry", [dijit._Widget], {
         item: null,
         showDate: true,
-        dayNodes: [],
+        _dayNodes: [],
         _supportingWidgets: null,
         _doubleClickDelay: 500,
         _doubleClickTimer: null,
 
         constructor: function(params) {
             this._supportingWidgets = [];
-            this.dayNodes = [];
+            this._dayNodes = [];
             dojo.mixin(this, params);
         },
 
@@ -62,7 +62,7 @@ dojo.provide("phpr.Timecard.GridWidget");
                 })
             );
 
-            dojo.forEach(this.dayNodes, dojo.hitch(this, function(node) {
+            dojo.forEach(this._dayNodes, dojo.hitch(this, function(node) {
                 this.connect(node, "onclick", "_onNewItemClick");
                 this.connect(node, "ondblclick", "_onDblClick");
                 this.connect(node, "onmouseover", "_onDayMouseOver");
@@ -75,12 +75,12 @@ dojo.provide("phpr.Timecard.GridWidget");
             dojo.addClass(this.domNode, 'dojoxGridRow');
 
             if (this.showDate === false) {
-                this.dayNodes.push(dojo.create('td', {colspan: "2"}, this.domNode));
+                this._dayNodes.push(dojo.create('td', {colspan: "2"}, this.domNode));
             } else {
-                this.dayNodes.push(dojo.create('td', null, this.domNode));
-                this.dayNodes.push(dojo.create('td', null, this.domNode));
-                dojo.html.set(this.dayNodes[0], '' + _weekDay(phpr.date.isoDatetimeTojsDate(this.item.startDatetime)));
-                dojo.html.set(this.dayNodes[1], '' + _dayOfTheMonth(this.item));
+                this._dayNodes.push(dojo.create('td', null, this.domNode));
+                this._dayNodes.push(dojo.create('td', null, this.domNode));
+                dojo.html.set(this._dayNodes[0], '' + _weekDay(phpr.date.isoDatetimeTojsDate(this.item.startDatetime)));
+                dojo.html.set(this._dayNodes[1], '' + _dayOfTheMonth(this.item));
             }
 
             this.timeNode = dojo.create("td", null, this.domNode);
@@ -153,13 +153,13 @@ dojo.provide("phpr.Timecard.GridWidget");
         },
 
         _onDayMouseOver: function() {
-            dojo.forEach(this.dayNodes, dojo.hitch(this, function(node) {
+            dojo.forEach(this._dayNodes, dojo.hitch(this, function(node) {
                 dojo.addClass(node, 'cellOver');
             }));
         },
 
         _onDayMouseOut: function() {
-            dojo.forEach(this.dayNodes, dojo.hitch(this, function(node) {
+            dojo.forEach(this._dayNodes, dojo.hitch(this, function(node) {
                 dojo.removeClass(node, 'cellOver');
             }));
         }
@@ -167,9 +167,9 @@ dojo.provide("phpr.Timecard.GridWidget");
 
     dojo.declare('phpr.Timecard.InlineEditorText', dijit._Widget, {
         value: '',
-        valueChanged: false,
-        editing: false,
-        editor: null,
+        _valueChanged: false,
+        _editing: false,
+        _editor: null,
 
         editorParams: null,
 
@@ -186,69 +186,69 @@ dojo.provide("phpr.Timecard.GridWidget");
         },
 
         _onDblClick: function() {
-            if (this.editing === true) {
+            if (this._editing === true) {
                 return;
             }
 
-            this.editing = true;
+            this._editing = true;
 
-            this.insertTextArea();
+            this._insertTextArea();
         },
 
-        insertTextArea: function() {
+        _insertTextArea: function() {
             dojo.html.set(this.domNode, '');
             var params = this.editorParams || {};
             params.value = this.value;
-            this.editor = new dijit.form.TextBox(params, dojo.create('div', null, this.domNode));
+            this._editor = new dijit.form.TextBox(params, dojo.create('div', null, this.domNode));
 
-            this.editor.startup();
-            this.editor.focus();
+            this._editor.startup();
+            this._editor.focus();
 
-            this.connect(this.editor, 'onBlur', '_onEditorBlur');
-            this.connect(this.editor, 'onKeyPress', '_onEditorKeyPress');
+            this.connect(this._editor, 'onBlur', '_onEditorBlur');
+            this.connect(this._editor, 'onKeyPress', '_onEditorKeyPress');
         },
 
-        close: function() {
-            if (this.editor) {
-                this.editor.destroyRecursive();
-                this.editor = null;
+        _close: function() {
+            if (this._editor) {
+                this._editor.destroyRecursive();
+                this._editor = null;
             }
 
             dojo.html.set(this.domNode, this.value);
-            this.editing = false;
+            this._editing = false;
         },
 
-        cancel: function() {
-            this.close();
+        _cancel: function() {
+            this._close();
         },
 
-        saveAndClose: function() {
-            this.save();
-            this.close();
-            this.notifyOnChange();
+        _saveAndClose: function() {
+            this._save();
+            this._close();
+            this._notifyOnChange();
         },
 
-        save: function() {
-            if (!this.editing) {
+        _save: function() {
+            if (!this._editing) {
                 return;
             }
 
-            var val = this.editor.get('value');
+            var val = this._editor.get('value');
             if (val != this.value) {
-                this.valueChanged = true;
+                this._valueChanged = true;
             }
             this.value = dojo.trim(val);
         },
 
-        notifyOnChange: function() {
-            if (this.valueChanged === true) {
-                this.valueChanged = false;
+        _notifyOnChange: function() {
+            if (this._valueChanged === true) {
+                this._valueChanged = false;
                 this.onChange(this.value);
             }
         },
 
         _onEditorBlur: function() {
-            this.saveAndClose();
+            this._saveAndClose();
         },
 
         _onEditorKeyPress: function(e) {
@@ -256,13 +256,13 @@ dojo.provide("phpr.Timecard.GridWidget");
                 return;
             }
 
-            // If Enter/Esc pressed, treat as save/cancel.
+            // If Enter/Esc pressed, treat as _save/cancel.
             if (e.charOrCode == dojo.keys.ESCAPE) {
                 dojo.stopEvent(e);
-                this.cancel();
+                this._cancel();
             } else if (e.charOrCode == dojo.keys.ENTER) {
                 dojo.stopEvent(e);
-                this.saveAndClose();
+                this._saveAndClose();
             }
         },
 
@@ -273,8 +273,8 @@ dojo.provide("phpr.Timecard.GridWidget");
         _setValueAttr: function(/*String*/ val) {
             val = dojo.trim(val);
             this.value = val;
-            if (this.editing === true) {
-                this.editor.set('value', val);
+            if (this._editing === true) {
+                this._editor.set('value', val);
             } else {
                 dojo.html.set(this.domNode, val);
             }
@@ -283,14 +283,14 @@ dojo.provide("phpr.Timecard.GridWidget");
 
     dojo.declare('phpr.Timecard.InlineEditorSelect', dijit._Widget, {
         value: '',
-        valueChanged: false,
-        editing: false,
-        editor: null,
+        _valueChanged: false,
+        _editing: false,
+        _editor: null,
         params: null,
 
         buildRendering: function() {
             this.inherited(arguments);
-            dojo.html.set(this.domNode, this.getLabel(this.value));
+            dojo.html.set(this.domNode, this._getLabel(this.value));
             var events = {
                 ondblclick: "_onDblClick"
             };
@@ -301,79 +301,79 @@ dojo.provide("phpr.Timecard.GridWidget");
         },
 
         _onDblClick: function() {
-            if (this.editing === true) {
+            if (this._editing === true) {
                 return;
             }
 
-            this.editing = true;
+            this._editing = true;
 
-            this.insertSelector();
+            this._insertSelector();
         },
 
-        insertSelector: function() {
+        _insertSelector: function() {
             dojo.html.set(this.domNode, '');
             var params = this.params || {};
-            this.editor = new dijit.form.Select(params, dojo.create('div', null, this.domNode));
+            this._editor = new dijit.form.Select(params, dojo.create('div', null, this.domNode));
 
-            this.editor.startup();
-            this.editor.focus();
+            this._editor.startup();
+            this._editor.focus();
 
-            this.connect(this.editor, 'onBlur', '_onEditorBlur');
-            this.connect(this.editor, 'onChange', '_onEditorChange');
+            this.connect(this._editor, 'onBlur', '_onEditorBlur');
+            this.connect(this._editor, 'onChange', '_onEditorChange');
         },
 
-        close: function() {
-            if (this.editor) {
-                this.editor.destroyRecursive();
-                this.editor = null;
+        _close: function() {
+            if (this._editor) {
+                this._editor.destroyRecursive();
+                this._editor = null;
             }
 
-            dojo.html.set(this.domNode, this.getLabel(this.value));
-            this.editing = false;
+            dojo.html.set(this.domNode, this._getLabel(this.value));
+            this._editing = false;
         },
 
-        cancel: function() {
-            this.close();
+        _cancel: function() {
+            this._close();
         },
 
-        saveAndClose: function() {
-            this.save();
-            this.close();
-            this.notifyOnChange();
+        _saveAndClose: function() {
+            this._save();
+            this._close();
+            this._notifyOnChange();
         },
 
-        save: function() {
-            if (!this.editing) {
+        _save: function() {
+            if (!this._editing) {
                 return;
             }
 
-            var val = this.editor.get('value');
+            var val = this._editor.get('value');
             if (val !== this.value) {
-                this.valueChanged = true;
+                this._valueChanged = true;
             }
             this.value = dojo.trim(val);
         },
 
-        notifyOnChange: function() {
-            if (this.valueChanged === true) {
-                this.valueChanged = false;
+        _notifyOnChange: function() {
+            if (this._valueChanged === true) {
+                this._valueChanged = false;
                 this.onChange(this.value);
             }
         },
 
         _onEditorBlur: function() {
-            this.saveAndClose();
+            this._saveAndClose();
         },
 
         _onEditorChange: function() {
-            this.saveAndClose();
+            this._saveAndClose();
         },
 
         onChange: function() {
 
         },
 
-        getLabel: function(val) {
+        _getLabel: function(val) {
             if (!this.params || !this.params.hasOwnProperty('options')) {
                 return '';
             }
@@ -394,16 +394,16 @@ dojo.provide("phpr.Timecard.GridWidget");
         _setValueAttr: function(/*String*/ val) {
             val = dojo.trim(val);
             this.value = val;
-            if (this.editing === true) {
-                this.editor.set('value', val);
+            if (this._editing === true) {
+                this._editor.set('value', val);
             } else {
-                dojo.html.set(this.domNode, this.getLabel(val));
+                dojo.html.set(this.domNode, this._getLabel(val));
             }
         }
     });
 
     dojo.declare("phpr.Timecard.GridEntry", phpr.Timecard._GridEntry, {
-        dayNodes: [],
+        _dayNodes: [],
         buildRendering: function() {
             this.inherited(arguments);
 
@@ -411,10 +411,10 @@ dojo.provide("phpr.Timecard.GridWidget");
             dojo.html.set(this.durationNode, '' + this._duration());
             dojo.html.set(this.notesNode, dojo.isString(this.item.notes) ? this.item.notes : '');
 
-            this.renderProjectNode();
+            this._renderProjectNode();
         },
 
-        fetchProjectRange: function() {
+        _fetchProjectRange: function() {
             return phpr.MetadataStore.metadataFor('Timecard', 1).then(function(metadata) {
                 for (var mdIndex in metadata) {
                     if (metadata.hasOwnProperty(mdIndex) &&
@@ -432,7 +432,7 @@ dojo.provide("phpr.Timecard.GridWidget");
         },
 
         _renderTimeNode: function() {
-            this.timeNodeInline = new phpr.Timecard.InlineEditorText({
+            this._timeNodeInline = new phpr.Timecard.InlineEditorText({
                 value: '' + this._time(),
                 editorParams: {
                     style: 'width: 80px;',
@@ -440,9 +440,9 @@ dojo.provide("phpr.Timecard.GridWidget");
                 }
             }, dojo.create('div', null, this.timeNode));
 
-            this.connect(this.timeNodeInline, 'onChange', '_onTimeNodeChange');
+            this.connect(this._timeNodeInline, 'onChange', '_onTimeNodeChange');
 
-            this._supportingWidgets.push(this.timeNodeInline);
+            this._supportingWidgets.push(this._timeNodeInline);
         },
 
         _onTimeNodeChange: function(value) {
@@ -450,7 +450,7 @@ dojo.provide("phpr.Timecard.GridWidget");
             var newTimes = this._parseTimeValue(value);
 
             if (newTimes === null) {
-                this.timeNodeInline.set('value', this._time());
+                this._timeNodeInline.set('value', this._time());
                 return;
             }
 
@@ -517,11 +517,11 @@ dojo.provide("phpr.Timecard.GridWidget");
             return _padTo2Chars('' + Math.floor(minutes / 60)) + ':' + _padTo2Chars(minutes % 60);
         },
 
-        renderProjectNode: function() {
-            this.fetchProjectRange().then(dojo.hitch(this, 'insertProjectNode'));
+        _renderProjectNode: function() {
+            this._fetchProjectRange().then(dojo.hitch(this, '_insertProjectNode'));
         },
 
-        insertProjectNode: function(range) {
+        _insertProjectNode: function(range) {
             if (this.destroyed) {
                 return;
             }
@@ -541,19 +541,19 @@ dojo.provide("phpr.Timecard.GridWidget");
                 options.push(item);
             }
 
-            this.projectNodeInline = new phpr.Timecard.InlineEditorSelect({
+            this._projectNodeInline = new phpr.Timecard.InlineEditorSelect({
                 options: options,
                 value: '' + this.item.projectId
             }, dojo.create('div', null, this.projectNode));
 
-            this.connect(this.projectNodeInline, 'onChange', '_onProjectSelectorChange');
+            this.connect(this._projectNodeInline, 'onChange', '_onProjectSelectorChange');
 
-            this._supportingWidgets.push(this.projectNodeInline);
+            this._supportingWidgets.push(this._projectNodeInline);
         },
 
         _onProjectSelectorChange: function(value) {
-            this.fetchProjectRange().then(dojo.hitch(this, function(range) {
-                if (!this.idInProjectRange(value, range)) {
+            this._fetchProjectRange().then(dojo.hitch(this, function(range) {
+                if (!this._idInProjectRange(value, range)) {
                     return;
                 }
 
@@ -564,7 +564,7 @@ dojo.provide("phpr.Timecard.GridWidget");
             }));
         },
 
-        idInProjectRange: function(id, range) {
+        _idInProjectRange: function(id, range) {
             for (var i in range) {
                 if (range[i].id == id) {
                     return true;
