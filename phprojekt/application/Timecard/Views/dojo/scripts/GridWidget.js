@@ -371,7 +371,7 @@ dojo.provide("phpr.Timecard.GridWidget");
 
             this._renderTimeNode();
             dojo.html.set(this.durationNode, '' + this._duration());
-            dojo.html.set(this.notesNode, dojo.isString(this.item.notes) ? this.item.notes : '');
+            this._renderNotesNode();
 
             this._renderProjectNode();
         },
@@ -534,8 +534,26 @@ dojo.provide("phpr.Timecard.GridWidget");
             }
 
             return false;
-        }
+        },
 
+        _renderNotesNode: function() {
+            this._NotesNodeInline = new phpr.Timecard.InlineEditorTextarea({
+                value: this.item.notes || '',
+                maxChars: 15
+            }, dojo.create('div', null, this.notesNode));
+
+            this.connect(this._NotesNodeInline, 'onChange', '_onNotesChange');
+
+            this._supportingWidgets.push(this._NotesNodeInline);
+        },
+
+        _onNotesChange: function(value) {
+            value = dojo.trim(value);
+            var newItem = dojo.clone(this.item);
+            newItem.notes = value;
+            this.item = newItem;
+            this._onChange();
+        }
     });
 
     dojo.declare("phpr.Timecard.DummyGridEntry", phpr.Timecard._GridEntry, {
