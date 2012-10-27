@@ -485,9 +485,9 @@ dojo.provide("phpr.Timecard.GridWidget");
             }
 
             var ret = {};
-            ret.startTime = match[2] + ':' + match[4];
+            ret.startTime = _padTo2Chars(match[2]) + ':' + match[4];
             if (match[7] !== undefined && match[9] !== undefined) {
-                ret.endTime = match[7] + ':' + match[9];
+                ret.endTime = _padTo2Chars(match[7]) + ':' + match[9];
             }
 
             return ret;
