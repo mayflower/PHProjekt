@@ -180,11 +180,11 @@ dojo.provide("phpr.Timecard.GridWidget");
     });
 
     dojo.declare('phpr.Timecard.InlineEditorTextarea', phpr.Timecard._InlineEditorBase, {
-        maxChars: null,
+        maxDisplayedChars: null,
 
         _getDisplayedValue: function(val) {
-            if (this.maxChars !== null && this.value.length > this.maxChars) {
-                return this.value.substring(0, this.maxChars) + '..';
+            if (this.maxDisplayedChars !== null && this.value.length > this.maxDisplayedChars) {
+                return this.value.substring(0, this.maxDisplayedChars) + '..';
             }
 
             return this.value;
@@ -571,7 +571,11 @@ dojo.provide("phpr.Timecard.GridWidget");
         _renderNotesNode: function() {
             this._NotesNodeInline = new phpr.Timecard.InlineEditorTextarea({
                 value: this.item.notes || '',
-                maxChars: 15
+                maxDisplayedChars: 15,
+                editorParams: {
+                    style: 'width: 100px;'
+                }
+
             }, dojo.create('div', null, this.notesNode));
 
             this.connect(this._NotesNodeInline, 'onChange', '_onNotesChange');
