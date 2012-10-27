@@ -38,7 +38,6 @@ dependencies = {
             "dijit.Menu",
             "dijit.MenuItem",
             "dijit.MenuSeparator",
-            "dijit.InlineEditBox",
             "dijit.PopupMenuItem",
             "dijit.ScrollingTabController",
             "dijit.TitlePane",
