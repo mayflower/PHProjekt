@@ -185,6 +185,122 @@ dojo.provide("phpr.Timecard.GridWidget");
         }
     });
 
+    dojo.declare('phpr.Timecard.InlineEditorText', dijit._Widget, {
+        value: '',
+        valueChanged: false,
+        editing: false,
+        editor: null,
+
+        editorParams: null,
+
+        buildRendering: function() {
+            this.inherited(arguments);
+            dojo.html.set(this.domNode, this.value);
+            var events = {
+                ondblclick: "_onDblClick"
+            };
+
+            for (var name in events) {
+                this.connect(this.domNode, name, events[name]);
+            }
+        },
+
+        _onDblClick: function() {
+            if (this.editing === true) {
+                return;
+            }
+
+            this.editing = true;
+
+            this.insertTextArea();
+        },
+
+        insertTextArea: function() {
+            dojo.html.set(this.domNode, '');
+            var params = this.editorParams || {};
+            params.value = this.value;
+            this.editor = new dijit.form.TextBox(params, dojo.create('div', null, this.domNode));
+
+            this.editor.startup();
+            this.editor.focus();
+
+            this.connect(this.editor, 'onBlur', '_onEditorBlur');
+            this.connect(this.editor, 'onKeyPress', '_onEditorKeyPress');
+        },
+
+        close: function() {
+            if (this.editor) {
+                this.editor.destroyRecursive();
+                this.editor = null;
+            }
+
+            dojo.html.set(this.domNode, this.value);
+            this.editing = false;
+        },
+
+        cancel: function() {
+            this.close();
+        },
+
+        saveAndClose: function() {
+            this.save();
+            this.close();
+            this.notifyOnChange();
+        },
+
+        save: function() {
+            if (!this.editing) {
+                return;
+            }
+
+            var val = this.editor.get('value');
+            if (val != this.value) {
+                this.valueChanged = true;
+            }
+            this.value = dojo.trim(val);
+        },
+
+        notifyOnChange: function() {
+            if (this.valueChanged === true) {
+                this.valueChanged = false;
+                this.onChange(this.value);
+            }
+        },
+
+        _onEditorBlur: function() {
+            this.saveAndClose();
+        },
+
+        _onEditorKeyPress: function(e) {
+            if (e.altKey || e.ctrlKey) {
+                return;
+            }
+
+            // If Enter/Esc pressed, treat as save/cancel.
+            if (e.charOrCode == dojo.keys.ESCAPE) {
+                dojo.stopEvent(e);
+                this.cancel();
+            } else if (e.charOrCode == dojo.keys.ENTER) {
+                dojo.stopEvent(e);
+                this.saveAndClose();
+            }
+        },
+
+        onChange: function() {
+
+        },
+
+        _setValueAttr: function(/*String*/ val) {
+            val = dojo.trim(val);
+            this.value = val;
+            if (this.editing === true) {
+                this.editor.set('value', val);
+            } else {
+                dojo.html.set(this.domNode, val);
+            }
+        }
+    });
+
     dojo.declare("phpr.Timecard.GridEntry", phpr.Timecard._GridEntry, {
         dayNodes: [],
         buildRendering: function() {
