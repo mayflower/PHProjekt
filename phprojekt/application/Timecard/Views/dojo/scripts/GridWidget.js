@@ -160,6 +160,43 @@ dojo.provide("phpr.Timecard.GridWidget");
         }
     });
 
+    dojo.declare('phpr.Timecard.InlineEditorTextarea', phpr.Timecard._InlineEditorBase, {
+        maxChars: null,
+
+        _getDisplayedValue: function(val) {
+            if (this.maxChars !== null && this.value.length > this.maxChars) {
+                return this.value.substring(0, this.maxChars) + '..';
+            }
+
+            return this.value;
+        },
+
+        _insertEditor: function() {
+            dojo.html.set(this.domNode, '');
+            var params = this.editorParams || {};
+            params.value = this.value;
+            this._editor = new dijit.form.Textarea(params, dojo.create('div', null, this.domNode));
+
+            this._editor.startup();
+            this._editor.focus();
+
+            this.connect(this._editor, 'onBlur', '_onEditorBlur');
+            this.connect(this._editor, 'onKeyPress', '_onEditorKeyPress');
+        },
+
+        _onEditorKeyPress: function(e) {
+            if (e.altKey || e.ctrlKey) {
+                return;
+            }
+
+            // If Enter/Esc pressed, treat as _save/cancel.
+            if (e.charOrCode == dojo.keys.ESCAPE) {
+                dojo.stopEvent(e);
+                this._cancel();
+            }
+        }
+    });
+
     dojo.declare('phpr.Timecard.InlineEditorSelect', phpr.Timecard._InlineEditorBase, {
         _getDisplayedValue: function() {
             return this._getLabel(this.value);
