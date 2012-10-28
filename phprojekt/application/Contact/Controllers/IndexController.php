@@ -18,4 +18,17 @@
  */
 class Contact_IndexController extends IndexController
 {
+    /**
+     * Saves a contact item
+     *
+     * Contacts, unlike other items, don't have a role or item rights.
+     * The save method doesn't save any rights whatsoever.
+     */
+    protected function _saveModel(Phprojekt_Model_Interface $model, $params, $newItem)
+    {
+        $model = Default_Helpers_Save::parameterToModel($model, $params, $newItem);
+        /* contacts are always saved under the root project */
+        $model->projectId = 1;
+        $model->save();
+    }
 }

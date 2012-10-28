@@ -28,8 +28,9 @@ final class Default_Helpers_Save
      * @param array   $params  The mysterious parameters array
      * @param boolean $newItem At least something need a special handling,
      *                         so new items get something special.
+     * @return mixed The modified model
      */
-    protected static function parameterToModel($model, $params, $newItem = false)
+    public static function parameterToModel($model, $params, $newItem = false)
     {
         foreach ($params as $k => $v) {
             if ($model->hasField($k)) {
