@@ -17,26 +17,14 @@
         style="display: {{displayHtml}}; margin-left: 2px;">
             {{value|safe}}
         </div>
-        <div dojoType="phpr.Dialog" id="dialogFor_{{id}}" draggable="false" refocus="false" execute="
-                var value = dijit.byId('editorFor_{{id}}').attr('value');
+        <div dojoType="phpr.Default.EditorDialog" id="dialogFor_{{id}}" execute="
+                var value = this.get('value');
                 dojo.byId('displayHtml_{{id}}').innerHTML = value;
                 dijit.byId('{{id}}').set('value', value);
                 dojo.byId('displayText_{{id}}').style.display = 'none';
                 dojo.byId('textButtons_{{id}}').style.display = 'none';
                 dojo.byId('displayHtml_{{id}}').style.display = 'inline';
-                dojo.byId('htmlButtons_{{id}}').style.display = 'inline';"
-                    style="width: 82%;">
-            <div dojoType="phpr.Default.EditorContainer" id="editorFor_{{id}}" extraPlugins="['bold', 'italic', 'underline',
-                'strikethrough', 'subscript', 'superscript', 'removeFormat','|', 'justifyCenter',
-                'justifyFull', 'justifyLeft', 'justifyRight', 'delete', '|', 'insertOrderedList',
-                'insertUnorderedList', 'indent', 'outdent', '|', 'insertHorizontalRule', 'createLink', 'insertImage',
-                '|', 'foreColor', 'hiliteColor', '|', 'fontName', 'fontSize']" {{disabled}}
-            style="width: 99%; height: 99%; border: 1px solid;">
-            </div>
-            <button dojoType="dijit.form.Button" iconClass="tick" type="submit"
-            style="margin-left: 0px; margin-top: 10px; margin-bottom: 0px;">
-                {{saveTxt}}
-            </button>
+                dojo.byId('htmlButtons_{{id}}').style.display = 'inline';">
         </div>
     </td>
     <td>
@@ -49,8 +37,7 @@
                 dojo.byId('textButtons_{{id}}').style.display = 'none';
                 dojo.byId('displayHtml_{{id}}').style.display = 'inline';
                 dojo.byId('htmlButtons_{{id}}').style.display = 'inline';
-                dijit.byId('editorFor_{{id}}').set('value', dijit.byId('{{id}}').get('value'));
-                dijit.byId('editorFor_{{id}}').show();
+                dijit.byId('dialogFor_{{id}}').set('value', dijit.byId('{{id}}').get('value'));
                 dijit.byId('dialogFor_{{id}}').show();">
             </button>
         </div>
@@ -58,8 +45,7 @@
         style="display: {{displayHtml}};">
             <button dojoType="dijit.form.Button" showLabel="false" iconClass="edit" class="editButton"
             title="{{editHtmlTxt}}" onclick="
-                dijit.byId('editorFor_{{id}}').set('value', dijit.byId('{{id}}').get('value'));
-                dijit.byId('editorFor_{{id}}').show();
+                dijit.byId('dialogFor_{{id}}').set('value', dijit.byId('{{id}}').get('value'));
                 dijit.byId('dialogFor_{{id}}').show(); ">
             </button>
             <button dojoType="dijit.form.Button" showLabel="false" iconClass="toTextButton" class="toTextButton"

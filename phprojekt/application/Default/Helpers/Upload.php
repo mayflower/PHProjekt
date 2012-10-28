@@ -193,7 +193,7 @@ final class Default_Helpers_Upload
 
         if (!$permitted || !self::_isValidFileHash($md5Name) || empty($fileName)) {
             $error = Phprojekt::getInstance()->translate('You don\'t have permission for downloading on this item.');
-            throw new RuntimeException($error);
+            throw new Zend_Controller_Action_Exception($error, 403);
         }
 
         $md5Name = self::_absoluteFilePathFromHash($md5Name);
@@ -210,7 +210,7 @@ final class Default_Helpers_Upload
             fpassthru($fh);
         } else {
             $error = Phprojekt::getInstance()->translate('The file does not exists');
-            throw new RuntimeException($error);
+            throw new Zend_Controller_Action_Exception($error, 404);
         }
     }
 
@@ -347,7 +347,7 @@ final class Default_Helpers_Upload
 
             self::_logError("Error: trying to Delete or Upload a file without write access.",
                 array(get_class($model), $itemId));
-            throw new Exception($error);
+            throw new Zend_Controller_Action_Exception($error, 403);
         }
     }
 

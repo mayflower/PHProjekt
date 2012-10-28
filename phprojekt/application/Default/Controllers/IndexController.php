@@ -1168,7 +1168,7 @@ class IndexController extends Zend_Controller_Action
      */
     public function fileDownloadAction()
     {
-        $hash = (int) $this->getRequest()->getParam('hash', null);
+        $hash = $this->getRequest()->getParam('hash', null);
 
         list($model, $field, $itemId) = $this->_getFileParameters();
 
