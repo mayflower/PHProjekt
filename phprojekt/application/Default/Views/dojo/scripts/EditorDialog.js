@@ -18,10 +18,6 @@ dojo.declare('phpr.Default.EditorDialog', phpr.Dialog, {
     refocus: false,
     style: 'width: 82%',
 
-    constructor: function() {
-        this._supportingWidgets = this._supportingWidgets || [];
-    },
-
     buildRendering: function() {
         this.inherited(arguments);
 
@@ -32,7 +28,6 @@ dojo.declare('phpr.Default.EditorDialog', phpr.Dialog, {
                 'insertImage', '|', 'foreColor', 'hiliteColor', '|', 'fontName', 'fontSize'
             ]
         }, dojo.create('div', null, this.containerNode));
-        this._supportingWidgets.push(this.editor);
 
         this.saveButton = new dijit.form.Button({
             iconClass: 'tick',
@@ -40,7 +35,6 @@ dojo.declare('phpr.Default.EditorDialog', phpr.Dialog, {
             style: 'margin-left: 0px; margin-top: 10px; margin-bottom: 0px;',
             label: phpr.nls.get('save')
         }, dojo.create('div', null, this.containerNode));
-        this._supportingWidgets.push(this.saveButton);
     },
 
     _getValueAttr: function() {
