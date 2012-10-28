@@ -148,6 +148,7 @@ phpr.send = function(/*Object*/paramsIn) {
         },
         function(err) {
             // try to parse json from the error message
+            phpr.loading.hide();
             try {
                 var data = dojo.fromJson(err.responseText);
                 return data;
@@ -163,7 +164,6 @@ phpr.send = function(/*Object*/paramsIn) {
 };
 
 phpr.handleResponse = function(resultArea, result) {
-    phpr.loading.hide();
     var css = 'error';
     if (result.type == 'success') {
         css = 'success';
@@ -320,12 +320,14 @@ dojo.declare("phpr.DataStore", null, {
                         url: params.url,
                         processData: function() {
                             deferred.callback(that.getCombinedData(params));
+                            phpr.loading.hide();
                         }
                     }),
                     onError: dojo.hitch(this, "errorHandler", {
                         url: params.url,
                         processData: function() {
                             deferred.callback();
+                            phpr.loading.hide();
                         }
                     })
                 });
@@ -373,7 +375,6 @@ dojo.declare("phpr.DataStore", null, {
         //    Store the data in the cache
         //    Then return to the processData function
         this._internalCache[params.url].data = data;
-        phpr.loading.hide();
         if (params.processData) {
             params.processData(this.getCombinedData(params));
         }
