@@ -194,26 +194,23 @@ dojo.provide("phpr.Timecard.GridWidget");
         _insertEditor: function() {
             dojo.html.set(this.domNode, '');
             var params = this.editorParams || {};
+
             params.value = this.value === this._placeHolderChar ? '' : this.value;
-            this._editor = new dijit.form.Textarea(params, dojo.create('div', null, this.domNode));
+
+            var that = this;
+
+            this._editor = new phpr.Default.EditorDialog(params);
 
             this._editor.startup();
-            this._editor.focus();
+            this._editor.show();
 
-            this.connect(this._editor, 'onBlur', '_onEditorBlur');
-            this.connect(this._editor, 'onKeyPress', '_onEditorKeyPress');
+            this.connect(this._editor, 'onCancel', dojo.hitch(this, '_delay', '_cancel'));
+            this.connect(this._editor, 'onExecute', dojo.hitch(this, '_delay', '_onEditorBlur'));
         },
 
-        _onEditorKeyPress: function(e) {
-            if (e.altKey || e.ctrlKey) {
-                return;
-            }
-
-            // If Enter/Esc pressed, treat as _save/cancel.
-            if (e.charOrCode == dojo.keys.ESCAPE) {
-                dojo.stopEvent(e);
-                this._cancel();
-            }
+        _delay: function(fun) {
+            // workaround for dojo bug #12436
+            setTimeout(dojo.hitch(this, fun), 0);
         }
     });
 
@@ -571,11 +568,7 @@ dojo.provide("phpr.Timecard.GridWidget");
 
         _renderNotesNode: function() {
             this._NotesNodeInline = new phpr.Timecard.InlineEditorTextarea({
-                value: this.item.notes || '',
-                editorParams: {
-                    style: 'width: 100px;'
-                }
-
+                value: this.item.notes || ''
             }, dojo.create('div', null, this.notesNode));
 
             this.connect(this._NotesNodeInline, 'onChange', '_onNotesChange');
