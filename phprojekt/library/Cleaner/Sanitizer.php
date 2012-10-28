@@ -256,7 +256,7 @@ class Cleaner_Sanitizer
         $config = HTMLPurifier_Config::createDefault();
         $config->set('Core', 'Encoding', 'UTF-8');
         $config->set('HTML', 'Doctype', 'XHTML 1.0 Transitional');
-        $config->set('HTML', 'AllowedAttributes', '*.style, *.size, *.href, *.alt, *.src');
+        $config->set('HTML', 'AllowedAttributes', '*.style, *.size, *.href, *.alt, *.src, *.face');
         $allowedProperties = 'font-weight, font-style, text-align, text-decoration, color, font-size, '
             . 'background-color, font-family';
         $config->set('CSS','AllowedProperties', $allowedProperties);
