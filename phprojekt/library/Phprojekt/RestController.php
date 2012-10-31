@@ -132,7 +132,7 @@ abstract class Phprojekt_RestController extends Zend_Rest_Controller
         }
         $moduleId = Phprojekt_Module::getId(Phprojekt_loader::getModuleFromObject($model));
         if ($model->hasField('projectId') && !self::_checkModule($moduleId, $model->projectId)) {
-            throw new Zend_Controller_Action_Exception('The parent project do not have enabled this module', 400);
+            throw new Zend_Controller_Action_Exception('The parent project does not have enabled this module', 400);
         }
         if (!$model->recordValidate()) {
             $error = $model->getError();
