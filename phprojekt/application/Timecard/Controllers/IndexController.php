@@ -316,6 +316,7 @@ class Timecard_IndexController extends IndexController
             $params['minutes'] = Timecard_Models_Timecard::getDiffTime($params['endTime'],
                 substr($params['startDatetime'], 11));
         } else if (!isset($params['endTime'])) {
+            $params['endTime'] = NULL;
             $params['minutes'] = 0;
         } else {
             $params['minutes'] = Timecard_Models_Timecard::getDiffTime($params['endTime'],
