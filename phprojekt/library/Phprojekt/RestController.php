@@ -190,7 +190,7 @@ abstract class Phprojekt_RestController extends Zend_Rest_Controller
      */
     private static function _projectHasModuleEnabled($moduleId, $projectId)
     {
-        if ($projectId <= 0 || !Phprojekt_Module::saveTypeIsNormal($moduleId)) {
+        if (!Phprojekt_Module::saveTypeIsNormal($moduleId)) {
             return true;
         }
 
