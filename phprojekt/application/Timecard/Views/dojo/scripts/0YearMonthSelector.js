@@ -17,18 +17,20 @@ dojo.declare("phpr.Timecard.YearMonthSelector", dijit.form.DropDownButton, {
     name: "yearMonthSelector",
     dropDown: null,
 
-    /* Events */
-
-    onDateChange: function(year, month) {
-        this.set("label", this.getYearMonthLabel(year, month));
-    },
-
     constructor: function() {
         this.dropDown = new dijit.Menu({style: "display: none;"});
     },
 
     postCreate: function() {
         this.inherited(arguments);
+
+        this.subscribe(
+            "timecard/yearMonthChanged",
+            dojo.hitch(this, function(year, month) {
+                this.set("label", this.getYearMonthLabel(year, month));
+            }
+        ));
+
         phpr.get({
             url: "index.php/Timecard/index/yearsAndMonthsWithEntries"
         }).then(dojo.hitch(this, function(response) {
@@ -42,7 +44,9 @@ dojo.declare("phpr.Timecard.YearMonthSelector", dijit.form.DropDownButton, {
             dojo.forEach(entries, dojo.hitch(this, function(entry) {
                 menu.addChild(new dijit.MenuItem({
                     label: this.getYearMonthLabel(entry.year, entry.month),
-                    onClick: dojo.hitch(this, this.onDateChange, entry.year, entry.month)
+                    onClick: function() {
+                        dojo.publish("timecard/yearMonthChanged", [entry.year, entry.month]);
+                    }
                 }));
             }));
 
@@ -51,7 +55,7 @@ dojo.declare("phpr.Timecard.YearMonthSelector", dijit.form.DropDownButton, {
             this.set("dropDown", menu);
 
             var today = new Date();
-            this.onDateChange(today.getFullYear(), today.getMonth());
+            dojo.publish("timecard/yearMonthChanged", [today.getFullYear(), today.getMonth()]);
         }));
     },
 
