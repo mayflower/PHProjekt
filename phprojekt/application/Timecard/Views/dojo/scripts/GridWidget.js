@@ -708,14 +708,7 @@ dojo.provide("phpr.Timecard.GridWidget");
         },
 
         setYearAndMonth: function(year, month) {
-            this.monthStart = new Date();
-            this.monthStart.setYear(year);
-            this.monthStart.setMonth(month);
-            this.monthStart.setDate(1);
-            this.monthStart.setHours(0);
-            this.monthStart.setMinutes(0);
-            this.monthStart.setSeconds(0);
-            this.monthStart.setMilliseconds(0);
+            this.monthStart = new Date(year, month, 1);
 
             this.update();
             this.updateTotalTime();
