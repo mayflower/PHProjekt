@@ -330,7 +330,6 @@ class Timecard_IndexController extends IndexController
      */
     public function yearsAndMonthsWithEntriesAction()
     {
-        Phprojekt::getInstance()->getLog()->debug('called');
         $values = Phprojekt::getInstance()->getDb()->select()->distinct()
             ->from('timecard', array('year' => 'YEAR(start_datetime)', 'month' => 'MONTH(start_datetime)'))
             ->where('owner_id = ?', Phprojekt_Auth_Proxy::getEffectiveUserId())
