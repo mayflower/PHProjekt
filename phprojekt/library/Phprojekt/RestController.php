@@ -183,6 +183,7 @@ abstract class Phprojekt_RestController extends Zend_Rest_Controller
     /**
      * Check if the parent project has this module enabled.
      *
+     * @param integer $moduleId The ID of the module.
      * @param integer $projectId The project ID to check.
      *
      * @return boolean False if not.
