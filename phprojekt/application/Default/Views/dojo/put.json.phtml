@@ -1,0 +1,7 @@
+<?php
+
+Phprojekt_CompressedSender::send(
+    Zend_Json::encode(
+        Phprojekt_Model_Converter::convertModel($this->record)
+    )
+);

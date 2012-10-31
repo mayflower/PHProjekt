@@ -20,7 +20,33 @@ abstract class Phprojekt_RestController extends Zend_Rest_Controller
 {
     public function init()
     {
-        $this->_helper->viewRenderer->setNoRender(true);
+        if (is_null($this->getRequest()->getParam('format', null))) {
+            $this->getRequest()->setParam('format', 'json');
+        }
+
+        $this->_helper->contextSwitch()
+            ->setAutoJsonSerialization(false)
+            ->setDefaultContext('json')
+            ->addContext(
+                'csv',
+                array(
+                    'suffix' => 'csv',
+                    'headers' => array(
+                        'Content-Type' => 'application/csv',
+                        'Pragma' => 'no-cache',
+                        'Content-Disposition' => 'attachment; filename=expoort.csv',
+                        'Expires' => '0'
+                    ),
+                )
+            )->addActionContexts(
+                array(
+                    'index' => array('json', 'csv'),
+                    'get' => 'json',
+                    'post' => 'json',
+                    'put' => 'json',
+                    'delete' => 'json',
+                )
+            )->initContext();
     }
 
     public function preDispatch()
@@ -86,9 +112,7 @@ abstract class Phprojekt_RestController extends Zend_Rest_Controller
 
         $end = is_null($end) ? $recordCount : min($end, $recordCount);
         $this->getResponse()->setHeader('Content-Range', "items {$start}-{$end}/{$recordCount}");
-        Phprojekt_CompressedSender::send(
-            Zend_Json::encode(Phprojekt_Model_Converter::convertModels($records))
-        );
+        $this->view->data = $records;
     }
 
     protected function _getSorting()
@@ -123,9 +147,7 @@ abstract class Phprojekt_RestController extends Zend_Rest_Controller
             Phprojekt::setCurrentProjectId($record->projectId);
         }
 
-        Phprojekt_CompressedSender::send(
-            Zend_Json_Encoder::encode(Phprojekt_Model_Converter::convertModel($record))
-        );
+        $this->view->record = $record;
     }
 
     public function postAction()
@@ -161,9 +183,7 @@ abstract class Phprojekt_RestController extends Zend_Rest_Controller
         }
         $model->save();
 
-        Phprojekt_CompressedSender::send(
-            Zend_Json_Encoder::encode($model->toArray())
-        );
+        $this->view->record = $model;
     }
 
     public function deleteAction()
