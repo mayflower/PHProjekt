@@ -42,5 +42,52 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
             store: new dojo.store.JsonRest({target: 'index.php/Timecard/Timecard/'})
         });
         phpr.viewManager.getView().gridBox.set('content', this.grid);
+        this.addExportButton();
+    },
+
+    addExportButton: function() {
+        var params = {
+            label:     phpr.nls.get('Export to CSV'),
+            showLabel: true,
+            baseClass: "positive",
+            iconClass: "export",
+            disabled:  false
+        };
+        this._exportButton = new dijit.form.Button(params);
+
+        this.garbageCollector.addNode(this._exportButton);
+
+        phpr.viewManager.getView().buttonRow.domNode.appendChild(this._exportButton.domNode);
+
+        this._exportButton.subscribe(
+            "timecard/yearMonthChanged",
+            dojo.hitch(this, function(year, month) {
+                if (this._exportButtonFunction) {
+                    dojo.disconnect(this._exportButtonFunction);
+                }
+                this._exportButtonFunction = dojo.connect(
+                    this._exportButton,
+                    "onClick",
+                    dojo.hitch(this, "exportData", year, month)
+                );
+            })
+        );
+    },
+
+    exportData: function(year, month) {
+        var start = new Date(year, month, 1),
+            end = new Date(year, month + 1, 1);
+
+        var params = {
+            csrfToken: phpr.csrfToken,
+            format: 'csv',
+            filter: dojo.toJson({
+                startDatetime: {
+                    "!ge": start.toString(),
+                    "!lt": end.toString()
+                }
+            })
+        };
+        window.open('index.php/Timecard/Timecard/?' + dojo.objectToQuery(params), '_blank');
     }
 });
