@@ -75,6 +75,14 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
         return $allow;
     }
 
+    public function delete()
+    {
+        $this->update(
+            array('deleted' => true),
+            'id = ' . (int) $this->_storedId
+        );
+    }
+
     /**
      * Save the allow modules for one projectId.
      * First delete all the older relations
@@ -134,16 +142,6 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
         $result = parent::save();
 
         return $result;
-    }
-
-    /**
-     * Delete the tree cache after delete.
-     *
-     * @return void
-     */
-    public function delete()
-    {
-        parent::delete();
     }
 
     /**
