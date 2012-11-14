@@ -153,7 +153,6 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
 
             if ($this->_activeRecord->hasField('deleted')) {
                 $select->where('tt.deleted = 0');
-                Phprojekt::getInstance()->getLog()->debug($select->assemble());
             }
 
             if (null !== $filter) {
