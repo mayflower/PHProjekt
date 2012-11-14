@@ -305,13 +305,11 @@ dojo.declare("phpr.Default.Field", phpr.Default.System.Component, {
                 textModeTxt: phpr.nls.get('To Text Mode'),
                 htmlModeTxt: phpr.nls.get('To HTML Mode'),
                 editHtmlTxt: phpr.nls.get('Edit'),
-                saveTxt:     phpr.nls.get('Save'),
                 tooltip:     this.getTooltip(itemhint)
             }
         });
 
         this.garbageCollector.addNode('dialogFor_' + labelAndId);
-        this.garbageCollector.addNode('editorFor_' + labelAndId);
 
         return widget;
     },
@@ -325,7 +323,7 @@ dojo.declare("phpr.Default.Field", phpr.Default.System.Component, {
                 label:    itemlabel,
                 labelfor: (itemdisabled) ? itemid + "_disabled" : itemid,
                 id:       (itemdisabled) ? itemid + "_disabled" : itemid,
-                value:    itemvalue || phpr.date.getIsoDate(new Date()),
+                value:    itemvalue,
                 required: itemrequired,
                 disabled: (itemdisabled) ? "disabled" : '',
                 tooltip:  this.getTooltip(itemhint),
@@ -345,7 +343,7 @@ dojo.declare("phpr.Default.Field", phpr.Default.System.Component, {
                 label:    itemlabel,
                 labelfor: (itemdisabled) ? itemid + "_disabled" : itemid,
                 id:       (itemdisabled) ? itemid + "_disabled" : itemid,
-                value:    itemvalue || phpr.date.getIsoTime(new Date()),
+                value:    itemvalue,
                 required: itemrequired,
                 disabled: (itemdisabled) ? "disabled" : '',
                 tooltip:  this.getTooltip(itemhint)

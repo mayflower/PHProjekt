@@ -360,7 +360,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
         }
     },
 
-    openForm: function(/*int*/ id, /*String*/ module, /*String*/ startDate,
+    openForm: function(/*int*/ id, presetValues, /*String*/ startDate,
                       /*String*/ startTime, /*String*/ recurrenceId) {
         // Summary:
         //    This function opens a new Detail View
@@ -395,7 +395,7 @@ dojo.declare("phpr.Calendar2.Main", phpr.Default.Main, {
 
         params.recurrenceId = recurrenceId || 0;
 
-        this.form = new this.formWidget(this, id, module, params, null);
+        this.form = new this.formWidget(this, id, params, null);
     },
 
     userSelectionClick: function() {

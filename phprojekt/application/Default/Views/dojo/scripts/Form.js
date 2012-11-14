@@ -53,7 +53,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
 
     tabs: { _empty: true },
 
-    constructor: function(main, id, module, params, formContainer) {
+    constructor: function(main, id, params, formContainer) {
         // Summary:
         //    render the form on construction
         // Description:
@@ -64,7 +64,7 @@ dojo.declare("phpr.Default.Form", phpr.Default.System.Component, {
 
         this.setContainer(formContainer);
 
-        if (undefined !== params) {
+        if (dojo.isObject(params)) {
             this._presetValues = params;
         }
 

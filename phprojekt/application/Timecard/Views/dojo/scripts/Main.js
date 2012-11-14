@@ -8,17 +8,18 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * Lesser General Public License for more details.
  *
- * @category   PHProjekt
- * @package    Application
- * @subpackage Timecard
- * @copyright  Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.0
- * @author     Gustavo Solt <solt@mayflower.de>
+ * @category  PHProjekt
+ * @package   Template
+ * @copyright Copyright (c) 2010 Mayflower GmbH (http://www.mayflower.de)
+ * @license   LGPL v3 (See LICENSE file)
+ * @link      http://www.phprojekt.com
+ * @since     File available since Release 6.0
+ * @version   Release: 6.1.0
+ * @author    Gustavo Solt <solt@mayflower.de>
  */
 
 dojo.provide("phpr.Timecard.Main");
+
 
 dojo.declare("phpr.Timecard.Store", null, {
     _hasData: false,
@@ -83,7 +84,13 @@ dojo.declare("phpr.Timecard.Store", null, {
     },
 
     _getProjectRange: function(metaData) {
-        var range = dojo.clone(metaData[3].range);
+        var range;
+        dojo.some(metaData, function(d) {
+            if (d.key === "projectId") {
+                range = d.range;
+                return true;
+            }
+        });
 
         var l = range.length;
         for (var i = 0; i < l; i++) {
@@ -101,7 +108,7 @@ dojo.declare("phpr.Timecard.Store", null, {
      * the resulting list will be the same as the project list, but the favorites will be placed at the top of the list
      */
     _computeMergedFavorites: function() {
-        if (this._metaData && this._metaData[3].range && this._favoritesData) {
+        if (this._metaData && this._projectRange && this._favoritesData) {
             // projectId
             var favorites = this._favoritesData;
             var range = dojo.clone(this._projectRange);
@@ -254,7 +261,7 @@ dojo.declare("phpr.Timecard.Store", null, {
         };
 
         phpr.send({
-            url:     'index.php/Timecard/index/jsonFavoritesSave',
+            url: 'index.php/Timecard/index/jsonFavoritesSave',
             content: sendData
         }).then(dojo.hitch(this, function(data) {
             if (data) {
@@ -320,69 +327,30 @@ dojo.declare("phpr.Timecard.Store", null, {
 });
 
 dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
-    _date: new Date(),
-    _contentWidget: null,
-    _menuCollector: null,
+
     _store: null,
+    _menuCollector: null,
 
     constructor: function() {
-        this.module = 'Timecard';
+        this.module = "Timecard";
         this.loadFunctions(this.module);
-
-        this.gridWidget = phpr.Timecard.Grid;
-        this.formWidget = phpr.Timecard.Form;
-        this._store = new phpr.Timecard.Store(this._date);
+        this._store = new phpr.Timecard.Store(new Date());
 
         this._menuCollector = new phpr.Default.System.GarbageCollector();
 
-        dojo.subscribe("Timecard.changeDate", this, "changeDate");
-        dojo.subscribe("phpr.dateChanged", this, "_systemDateChanged");
-        dojo.connect(this._store, "onChange", this, "_dataChanged");
-    },
-
-    _systemDateChanged: function() {
-        this._store.setDate(new Date());
+        this.formWidget = phpr.Timecard.Form;
+        dojo.connect(this._store, "onChange", this, "_updateMenuButton");
     },
 
     renderTemplate: function() {
-        // Summary:
-        //   Custom renderTemplate for timecard
-        var view = phpr.viewManager.useDefaultView({blank: true}).clear();
-        this._contentWidget = new phpr.Default.System.TemplateWrapper({
-            templateName: "phpr.Timecard.template.mainContent.html",
-            templateData: {
-                manageFavoritesText: phpr.nls.get('Manage project list'),
-                monthTxt:            phpr.date.getLongTranslateMonth(this._date.getMonth())
-            }
-        });
-        view.centerMainContent.set('content', this._contentWidget);
-        this.garbageCollector.addNode(this._contentWidget);
+        phpr.viewManager.setView(
+            phpr.Default.System.DefaultView,
+            phpr.Timecard.ViewContentMixin
+        );
 
         // manageFavorites opens a dialog which places itself outside of the regular dom, so we need to clean it up
         // manually
         this.garbageCollector.addNode('manageFavorites');
-    },
-
-    setWidgets: function() {
-        // Summary:
-        //   Custom setWidgets for timecard
-        this._store.dataChanged();
-
-        this.grid = new this.gridWidget(this, this._date);
-        this.form = new this.formWidget(this, this._date);
-        this.setTimecardCaldavClientButton();
-    },
-
-    _dataChanged: function() {
-        if (this.form) {
-            this.form.updateData();
-        }
-
-        if (this.grid) {
-            this.grid.reload(this._date, true);
-        }
-
-        this._updateMenuButton();
     },
 
     _updateMenuButton: function() {
@@ -402,9 +370,7 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
                     for (var i = 0; i < l; i++) {
                         button = new dijit.MenuItem({
                             label: range[i].name,
-                            onClick: dojo.hitch(this._store, function(id) {
-                                this.stopWorking(id);
-                            }, range[i].id)
+                            onClick: dojo.hitch(this._store, this._store.stopWorking, range[i].id)
                         });
 
                         if (range[i].id === lastProjectId) {
@@ -417,9 +383,7 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
 
                     button = new dijit.MenuItem({
                         label: "Stop (" + lastProjectName + ")",
-                        onClick: dojo.hitch(this._store, function() {
-                            this.stopWorking();
-                        })
+                        onClick: dojo.hitch(this._store, this._store.stopWorking)
                     });
 
                     this._menuCollector.addNode(button);
@@ -442,11 +406,59 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
         }
     },
 
-    formDataChanged: function(newDate, forceReload) {
+    setWidgets: function() {
         this._store.dataChanged();
+        this.grid = new phpr.Timecard.GridWidget({
+            store: new dojo.store.JsonRest({target: 'index.php/Timecard/Timecard/'})
+        });
+        phpr.viewManager.getView().gridBox.set('content', this.grid);
+        this.addExportButton();
     },
 
-    setSubGlobalModulesNavigation: function(currentModule) {
+    addExportButton: function() {
+        var params = {
+            label:     phpr.nls.get('Export to CSV'),
+            showLabel: true,
+            baseClass: "positive",
+            iconClass: "export",
+            disabled:  false
+        };
+        this._exportButton = new dijit.form.Button(params);
+
+        this.garbageCollector.addNode(this._exportButton);
+
+        phpr.viewManager.getView().buttonRow.domNode.appendChild(this._exportButton.domNode);
+
+        this._exportButton.subscribe(
+            "timecard/yearMonthChanged",
+            dojo.hitch(this, function(year, month) {
+                if (this._exportButtonFunction) {
+                    dojo.disconnect(this._exportButtonFunction);
+                }
+                this._exportButtonFunction = dojo.connect(
+                    this._exportButton,
+                    "onClick",
+                    dojo.hitch(this, "exportData", year, month)
+                );
+            })
+        );
+    },
+
+    exportData: function(year, month) {
+        var start = new Date(year, month, 1),
+            end = new Date(year, month + 1, 1);
+
+        var params = {
+            csrfToken: phpr.csrfToken,
+            format: 'csv',
+            filter: dojo.toJson({
+                startDatetime: {
+                    "!ge": start.toString(),
+                    "!lt": end.toString()
+                }
+            })
+        };
+        window.open('index.php/Timecard/Timecard/?' + dojo.objectToQuery(params), '_blank');
     },
 
     getGlobalModuleNavigationButton: function(label) {
@@ -472,75 +484,5 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
             15
         );
         return button;
-    },
-
-    changeDate: function(date) {
-        // summary:
-        //    Update the date and reload the views
-        // description:
-        //    Update the date and reload the views
-        this._date = date;
-
-        this.form.setDate(date);
-        this.form.updateData();
-        this.form.drawDayView();
-
-        this.grid.reload(date);
-    },
-
-    setTimecardCaldavClientButton: function() {
-        // Summary:
-        //    Set the timecardCaldavClient button
-        // Description:
-        //    Set the timecardCaldavClient button
-        this.garbageCollector.collect('timecardCaldavClient');
-
-        var prefix = phpr.getAbsoluteUrl('index.php/Timecard/caldav/index/'),
-            url = prefix + 'calendars/' + phpr.config.currentUserName + '/default/',
-            iosUrl = prefix + 'principals/' + phpr.config.currentUserName + '/',
-            params = {
-                label: 'Timecard Caldav Client',
-                showLabel: true,
-                baseClass: 'positive',
-                disabled: false
-            },
-            timecardCaldavClientButton = new dijit.form.Button(params);
-
-        phpr.viewManager.getView().buttonRow.domNode.appendChild(timecardCaldavClientButton.domNode);
-
-        this.garbageCollector.addNode(timecardCaldavClientButton, 'timecardCaldavClient');
-        this.garbageCollector.addEvent(
-            dojo.connect(
-                timecardCaldavClientButton,
-                'onClick',
-                dojo.hitch(this, 'showTimecardCaldavClientData', url, iosUrl)
-            ),
-            'timecardCaldavClient'
-        );
-    },
-
-    showTimecardCaldavClientData: function(url, iosUrl) {
-        var content = phpr.fillTemplate(
-            'phpr.Calendar2.template.caldavView.html',
-            {
-                headline: 'Timecard Caldav Client',
-                normalLabel: phpr.nls.get('CalDav url', 'Calendar2'),
-                iosLabel: phpr.nls.get('CalDav url for Apple software', 'Calendar2'),
-                noticeLabel: phpr.nls.get('Notice', 'Calendar2'),
-                notice: phpr.nls.get('Please pay attention to the trailing slash, it is important', 'Calendar2'),
-                normalUrl: url,
-                iosUrl: iosUrl
-            }
-        );
-
-        //draggable = false must be set because otherwise the dialog can not be closed on the ipad
-        //bug: http://bugs.dojotoolkit.org/ticket/13488
-        var dialog = new dijit.Dialog({
-            content: content,
-            draggable: false
-        });
-
-        dialog.show();
-        this.garbageCollector.addNode(dialog, 'timecardCaldavClient');
     }
 });

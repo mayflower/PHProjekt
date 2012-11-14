@@ -163,6 +163,30 @@ phpr.send = function(/*Object*/paramsIn) {
     return deferred;
 };
 
+phpr.get = function(params) {
+    params = dojo.mixin({
+        handleAs: "json",
+        content: {}
+    }, params);
+    params.content = dojo.mixin({
+        csrfToken: phpr.csrfToken
+    }, params.content);
+
+    return dojo.xhrGet(params).then(
+        function(data) {
+            return data;
+        },
+        function(error) {
+            try {
+                var data = dojo.fromJson(error.responseText);
+                return data;
+            } catch (e) {
+                phpr.handleError(params.url, 'php');
+            }
+        }
+    );
+};
+
 phpr.handleResponse = function(resultArea, result) {
     var css = 'error';
     if (result.type == 'success') {
@@ -569,7 +593,7 @@ dojo.declare("phpr.loading", null, {
     hide: function() {
         this.count--;
         var view = phpr.viewManager.getView();
-        if (view && view.loadingIcon && this.count === 0) {
+        if (view && view.loadingIcon && this.count <= 0) {
             view.loadingIcon.style.display = 'none';
         }
     },

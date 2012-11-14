@@ -355,7 +355,12 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
 
         foreach ($records as $record) {
             $data    = array();
-            $display = $tree->getNodeById($record->projectId)->getDepthDisplay('title');
+            $display;
+            if ($record->projectId == 1) {
+                $display = Phprojekt::getInstance()->translate('Unassigned');
+            } else {
+                $display = $tree->getNodeById($record->projectId)->getDepthDisplay('title');
+            }
             if (!empty($record->notes)) {
                 if (strlen($record->notes) > 50) {
                     $record->notes = substr($record->notes, 0, 50) . '...';
@@ -469,5 +474,29 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
             return false;
         }
         return $fetch[0];
+    }
+
+    /**
+     * Need to copy this from Item_Abstract as IndexController assumes it's here
+     */
+    public function getUsersRights()
+    {
+        return array_merge(
+            Phprojekt_Acl::convertBitmaskToArray(Phprojekt_Acl::ALL),
+            array(
+                'moduleId' => 1,
+                'itemId'   => $this->id,
+                'userId'   => $this->ownerId
+            )
+        );
+    }
+
+    public function fetchAll($where = null, $sort = null, $count = null, $start = null)
+    {
+        $db     = Phprojekt::getInstance()->getDb();
+        $where  = (empty($where) ? '' : "({$where}) AND ");
+        $where .= $db->quoteInto('owner_id = ?', Phprojekt_Auth_Proxy::getEffectiveUserId());
+
+        return parent::fetchAll($where, $sort, $count, $start);
     }
 }

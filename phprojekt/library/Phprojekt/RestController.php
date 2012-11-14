@@ -20,7 +20,33 @@ abstract class Phprojekt_RestController extends Zend_Rest_Controller
 {
     public function init()
     {
-        $this->_helper->viewRenderer->setNoRender(true);
+        if (is_null($this->getRequest()->getParam('format', null))) {
+            $this->getRequest()->setParam('format', 'json');
+        }
+
+        $this->_helper->contextSwitch()
+            ->setAutoJsonSerialization(false)
+            ->setDefaultContext('json')
+            ->addContext(
+                'csv',
+                array(
+                    'suffix' => 'csv',
+                    'headers' => array(
+                        'Content-Type' => 'application/csv',
+                        'Pragma' => 'no-cache',
+                        'Content-Disposition' => 'attachment; filename=expoort.csv',
+                        'Expires' => '0'
+                    ),
+                )
+            )->addActionContexts(
+                array(
+                    'index' => array('json', 'csv'),
+                    'get' => 'json',
+                    'post' => 'json',
+                    'put' => 'json',
+                    'delete' => 'json',
+                )
+            )->initContext();
     }
 
     public function preDispatch()
@@ -35,12 +61,18 @@ abstract class Phprojekt_RestController extends Zend_Rest_Controller
     {
         $projectId = (int) $this->getRequest()->getParam('projectId', 0);
         $range     = $this->getRequest()->getHeader('range');
-        sscanf($range, 'items=%d-%d', $start, $end);
-        $count     = $end - $start + 1;
-        $sort      = $this->getRequest()->getParam('sort', null);
+        if (!empty($range)) {
+            sscanf($range, 'items=%d-%d', $start, $end);
+            $count = $end - $start + 1;
+        } else {
+            $start = null;
+            $end   = null;
+            $count = null;
+        }
+        $sort      = $this->_getSorting();
         $recursive = $this->getRequest()->getParam('recursive', 'false');
         $recursive = $recursive === 'true';
-        $model     = $this->newModelObject();
+        $model     = $this->_newModelObject();
         $moduleId  = Phprojekt_Module::getId($this->getRequest()->getModuleName());
         $isGlobal  = Phprojekt_Module::saveTypeIsGlobal($moduleId);
 
@@ -63,7 +95,7 @@ abstract class Phprojekt_RestController extends Zend_Rest_Controller
         if ($recursive) {
             $tree = new Phprojekt_Tree_Node_Database(new Project_Models_Project(), $projectId);
             $tree->setup();
-            $where       = $this->getFilterWhere();
+            $where       = $this->_getFilterWhere();
             $records     = $tree->getRecordsFor($model, $count, $start, $where, $sort);
             $recordCount = $tree->getRecordsCount($model, $where);
         } else {
@@ -73,30 +105,49 @@ abstract class Phprojekt_RestController extends Zend_Rest_Controller
                 $where = null;
             }
 
-            $where       = $this->getFilterWhere($where);
+            $where       = $this->_getFilterWhere($where);
             $records     = $model->fetchAll($where, $sort, $count, $start);
             $recordCount = $model->count($where);
         }
 
-        $end = min($end, $recordCount);
+        $end = is_null($end) ? $recordCount : min($end, $recordCount);
         $this->getResponse()->setHeader('Content-Range', "items {$start}-{$end}/{$recordCount}");
-        Phprojekt_CompressedSender::send(
-            Zend_Json::encode(Phprojekt_Model_Converter::convertModels($records))
-        );
+        $this->view->data = $records;
+    }
+
+    protected function _getSorting()
+    {
+        $params = $this->getRequest()->getParams();
+        foreach ($params as $key => $value) {
+            if (strpos($key, 'sort(') === 0) {
+                return $this->_parseSortingQuery($key);
+            }
+        }
+    }
+
+    private function _parseSortingquery($sortString)
+    {
+        $criteriaStrings = explode(',', substr($sortString, strlen('sort('), -1));
+        $criteria = array();
+
+        foreach ($criteriaStrings as $c) {
+            $attribute  = substr($c, 1);
+            $descending = (substr($c, 0, 1) === '-');
+            return $attribute . ($descending ? ' DESC' : ' ASC');
+        }
+        return $criteria;
     }
 
     public function getAction()
     {
         $id = (int) $this->_getParam('id');
-        $record = $this->newModelObject();
+        $record = $this->_newModelObject();
         if (!empty($id)) {
             $record = $record->find($id);
             Phprojekt::setCurrentProjectId($record->projectId);
         }
 
-        Phprojekt_CompressedSender::send(
-            Zend_Json_Encoder::encode(Phprojekt_Model_Converter::convertModel($record))
-        );
+        $this->view->record = $record;
     }
 
     public function postAction()
@@ -120,7 +171,7 @@ abstract class Phprojekt_RestController extends Zend_Rest_Controller
         }
         unset($item['id']);
 
-        $model = $this->newModelObject()->find($id);
+        $model = $this->_newModelObject()->find($id);
         if (!$model) {
             $this->getResponse()->setHttpResponseCode(404);
             echo "item with id $id not found";
@@ -132,9 +183,7 @@ abstract class Phprojekt_RestController extends Zend_Rest_Controller
         }
         $model->save();
 
-        Phprojekt_CompressedSender::send(
-            Zend_Json_Encoder::encode($model->toArray())
-        );
+        $this->view->record = $model;
     }
 
     public function deleteAction()
@@ -142,20 +191,20 @@ abstract class Phprojekt_RestController extends Zend_Rest_Controller
         throw new Zend_Controller_Action_Exception('Not implemented!', 501);
     }
 
-    protected function newModelObject()
+    protected function _newModelObject()
     {
         $classname = $this->getRequest()->getModuleName() . '_Models_' . $this->getRequest()->getControllerName();
         return new $classname();
     }
 
-    protected function getFilterWhere($where = null)
+    protected function _getFilterWhere($where = null)
     {
         $filters = $this->getRequest()->getParam('filters', "[]");
 
         $filters = Zend_Json_Decoder::decode($filters);
 
         if (!empty($filters)) {
-            $filterClass = new Phprojekt_Filter($this->newModelObject(), $where);
+            $filterClass = new Phprojekt_Filter($this->_newModelObject(), $where);
             foreach ($filters as $filter) {
                 list($filterOperator, $filterField, $filterRule, $filterValue) = $filter;
                 $filterOperator = Cleaner::sanitize('alpha', $filterOperator, null);
@@ -168,6 +217,63 @@ abstract class Phprojekt_RestController extends Zend_Rest_Controller
             $where = $filterClass->getWhere();
         }
 
+
+
+        return $this->_getNewFilterWhere($where);
+    }
+
+    protected function _getNewFilterWhere($where = null) {
+        $filterString = $this->getRequest()->getParam('filter', null);
+        if (is_null($filterString)) {
+            return $where;
+        }
+
+        $db     = Phprojekt::getInstance()->getDb();
+        $parts  = array();
+        $filter = Zend_Json::decode($filterString);
+        foreach ($filter as $field => $filterDef) {
+            $dbField = $db->quoteIdentifier(Phprojekt_ActiveRecord_Abstract::convertVarToSql($field));
+            foreach ($filterDef as $operator => $value) {
+                switch ($operator) {
+                case '!ge':
+                    $parts[] = $dbField . ' >= ' . $db->quote($this->_getFilterValue($field, $value));
+                    break;
+                case '!lt':
+                    $parts[] = $dbField . ' < ' . $db->quote($this->_getFilterValue($field, $value));
+                    break;
+                default:
+                    throw new Exception("Invalid operator \"$operator\"");
+                    break;
+                }
+            }
+        }
+
+        if (!is_null($where)) {
+            $where = "($where) AND ";
+        } else {
+            $where = "";
+        }
+        $where .= implode(' AND ', $parts);
+
         return $where;
+    }
+
+    protected function _getFilterValue($field, $value)
+    {
+        $model = $this->_newModelObject();
+        $fieldType = $model->getInformation()->getType($field);
+
+        switch ($fieldType) {
+            case 'datetime':
+                return $this->_getDatetimeFilterValue($value);
+            default:
+                return $value;
+        }
+    }
+
+    protected function _getDatetimeFilterValue($value)
+    {
+        $dt = new Datetime($value);
+        return $dt->format('Y-m-d H:i:s');
     }
 }

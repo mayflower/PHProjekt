@@ -117,15 +117,16 @@ class Timecard_IndexController extends IndexController
         $tree         = new Phprojekt_Tree_Node_Database($activeRecord, 1);
         $tree         = $tree->setup();
 
-        $datas = array();
+        $datas      = array();
+        $unassigned = Phprojekt::getInstance()->translate('Unassigned');
         if (is_array($favorites)) {
             foreach ($favorites as $projectId) {
                 foreach ($tree as $node) {
                     if ($node->id == $projectId) {
                         $data            = array();
                         $data['id']      = $projectId;
-                        $data['display'] = $node->getDepthDisplay('title');
-                        $data['name']    = $node->title;
+                        $data['display'] = $projectId == 1 ? $unassigned : $node->getDepthDisplay('title');
+                        $data['name']    = $projectId == 1 ? $unassigned : $node->title;
 
                         $datas[] = $data;
                     }
@@ -315,6 +316,7 @@ class Timecard_IndexController extends IndexController
             $params['minutes'] = Timecard_Models_Timecard::getDiffTime($params['endTime'],
                 substr($params['startDatetime'], 11));
         } else if (!isset($params['endTime'])) {
+            $params['endTime'] = NULL;
             $params['minutes'] = 0;
         } else {
             $params['minutes'] = Timecard_Models_Timecard::getDiffTime($params['endTime'],
@@ -322,5 +324,63 @@ class Timecard_IndexController extends IndexController
         }
 
         return $params;
+    }
+
+    /**
+     * Retrieves all year-month combinations that have items belonging to the current user.
+     */
+    public function yearsAndMonthsWithEntriesAction()
+    {
+        $values = Phprojekt::getInstance()->getDb()->select()->distinct()
+            ->from('timecard', array('year' => 'YEAR(start_datetime)', 'month' => 'MONTH(start_datetime)'))
+            ->where('owner_id = ?', Phprojekt_Auth_Proxy::getEffectiveUserId())
+            ->order('YEAR(start_datetime) DESC, MONTH(start_datetime) DESC')
+            ->query()->fetchAll();
+
+        Phprojekt_CompressedSender::send(
+            Zend_Json::encode(array('values' => $values))
+        );
+    }
+
+    /**
+     * Retrieves the total booked minutes of the current user for a given year-month combination.
+     *
+     * Params taken from the request:
+     *  year (int) The year
+     *  month (int) The month, starting with 1 for january.
+     */
+    public function totalMinutesForYearMonthAction()
+    {
+        $year = $this->getRequest()->getParam('year', null);
+        $month = $this->getRequest()->getParam('month', null);
+
+        if (is_null($year)) {
+            throw new Zend_Controller_Action_Exception("No year given", 400);
+        } elseif (is_null($month)) {
+            throw new Zend_Controller_Action_Exception("No month given", 400);
+        }
+
+        if (!is_numeric($year)) {
+            throw new Zend_Controller_Action_Exception("Bad year: " . $year, 400);
+        } elseif (!is_numeric($month) || $month < 1 || $month > 12) {
+            throw new Zend_Controller_Action_Exception("Bad month: " . $month, 400);
+        }
+
+        $minutes = Phprojekt::getInstance()->getDb()->select()
+            ->from('timecard', array('total' => 'SUM(minutes)'))
+            ->where('YEAR(start_datetime) = ?', (int) $year)
+            ->where('MONTH(start_datetime) = ?', (int) $month)
+            ->where('owner_id = ?', Phprojekt_Auth_Proxy::getEffectiveUserId())
+            ->query()->fetchColumn();
+
+        Phprojekt_CompressedSender::send(
+            Zend_Json::encode(
+                array(
+                    'year' => $year,
+                    'month' => $month,
+                    'minutes' => $minutes
+                )
+            )
+        );
     }
 }

@@ -183,7 +183,7 @@ dojo.declare("phpr.Core.Main", phpr.Default.Main, {
             });
 
             if (this.state.action) {
-                this.form = new this.formWidget(this, 0, this.module, null, view.detailsBox);
+                this.form = new this.formWidget(this, 0, null, view.detailsBox);
             }
         }
     },

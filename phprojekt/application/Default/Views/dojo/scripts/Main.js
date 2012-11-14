@@ -244,7 +244,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
         this.inherited(arguments);
     },
 
-    openForm: function(/*int*/id, /*String*/module) {
+    openForm: function(/*int*/id, presetValues) {
         //Summary: this function opens a new Detail View
         this.preOpenForm();
 
@@ -252,7 +252,7 @@ dojo.declare("phpr.Default.Main", phpr.Default.System.Component, {
             this.reload(this.state);
         }
 
-        this.form = new this.formWidget(this, id, module, {}, phpr.viewManager.getView().detailsBox);
+        this.form = new this.formWidget(this, id, presetValues, phpr.viewManager.getView().detailsBox);
         this.inherited(arguments);
     },
 

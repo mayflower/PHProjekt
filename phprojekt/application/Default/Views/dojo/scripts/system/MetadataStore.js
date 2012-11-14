@@ -66,13 +66,9 @@ dojo.declare("phpr.MetadataStore", null, {
             }
             this._cache[module][projectId] = {};
             var url = "index.php/" + module + "/index/metadata/csrfToken/" + phpr.csrfToken;
-            var def = dojo.xhrGet({
+            var def = phpr.get({
                 url: url,
-                content: {
-                    csrfToken: phpr.csrfToken,
-                    projectId: projectId
-                },
-                handleAs: 'json'
+                content: {projectId: projectId}
             }).then(
                 dojo.hitch(this, function (data) {
                     this._cache[module][projectId].data = data;

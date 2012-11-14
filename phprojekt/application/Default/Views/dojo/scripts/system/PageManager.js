@@ -189,10 +189,11 @@ dojo.declare("phpr.Default.System.PageManager", null, {
                     if (!reloaded && (module !== this.oldmodule || newProject)) {
                         this._reloadModule(module, [ state ]);
                     }
+                    var presetValues = options.presetValues || null;
                     if (dojo.isFunction(mod.openForm)) {
-                        mod.openForm(state.id, module);
+                        mod.openForm(state.id, presetValues);
                     } else {
-                        dojo.publish(module + ".openForm", [state.id, module]);
+                        dojo.publish(module + ".openForm", [state.id, presetValues]);
                     }
                 }
             } else if ("undefined" != typeof state.search) {

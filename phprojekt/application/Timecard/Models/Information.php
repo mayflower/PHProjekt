@@ -37,13 +37,18 @@ class Timecard_Models_Information extends Phprojekt_ModelInformation_Default
         // endTime
         $this->fillField('endTime', 'End', 'time', 2, 2);
 
-        // minutes
-        $this->fillField('minutes', 'Minutes', 'text', 3, 3, array(
-            'integer' => true));
-
         // projectId
+        $projectRange = $this->getProjectRange();
+        foreach ($projectRange as $idx => $projectDef) {
+            // This should be the first one in the list, in which case the loop is only run once.
+            if ($projectDef['id'] === 1) {
+                $projectRange[$idx]['name'] = Phprojekt::getInstance()->translate('Unassigned', null, 'Timecard');
+                break;
+            }
+        }
+
         $this->fillField('projectId', 'Project', 'selectbox', 4, 4, array(
-            'range'    => $this->getProjectRange(),
+            'range'    => $projectRange,
             'required' => true,
             'integer'  => true));
 
