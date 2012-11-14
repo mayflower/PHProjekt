@@ -592,7 +592,7 @@ dojo.declare("phpr.loading", null, {
     hide: function() {
         this.count--;
         var view = phpr.viewManager.getView();
-        if (view && view.loadingIcon && this.count === 0) {
+        if (view && view.loadingIcon && this.count <= 0) {
             view.loadingIcon.style.display = 'none';
         }
     },
