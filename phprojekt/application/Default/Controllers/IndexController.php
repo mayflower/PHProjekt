@@ -225,11 +225,12 @@ class IndexController extends Zend_Controller_Action
         }
 
         $token = (string) $this->getRequest()->getParam('csrfToken', null);
-        if (null === $token) {
+        $headerToken = (string) $this->getRequest()->getHeader('X-CSRFToken', null);
+        if (null === $token && null === $headerToken) {
             $error = true;
         }
 
-        if (!$csrfNamespace->token == $token) {
+        if ($csrfNamespace->token != $token && $csrfNamespace->token != $headerToken) {
             $error = true;
         }
 
