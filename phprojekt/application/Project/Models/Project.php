@@ -82,7 +82,6 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
             'id = ' . (int) $this->_storedId
         );
         $this->_search->deleteObjectItem($this);
-        $this->_rights->saveRights(Phprojekt_Module::getId('Project'), $this->_storedId, array());
     }
 
     /**

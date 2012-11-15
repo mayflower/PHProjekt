@@ -18,4 +18,14 @@
  */
 class Project_ProjectController extends Phprojekt_RestController
 {
+    /**
+     * Overwrite to hide deleted projects
+     */
+    public function getFilterWhere($where = null)
+    {
+        $where  = parent::getFilterWhere($where);
+        $where  = $where ? '(' . $where . ') AND ' : '';
+        $where .= 'deleted = False';
+        return $where;
+    }
 }
