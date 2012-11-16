@@ -4,7 +4,9 @@ define([
     'dijit/_Widget',
     'dijit/_TemplatedMixin',
     'dijit/_WidgetsInTemplateMixin',
-    'dojo/text!phpr/template/baseLayout.html'
+    'dojo/text!phpr/template/baseLayout.html',
+    'dijit/layout/ContentPane',
+    'phpr/Menubar'
 ], function(declare, lang, widget, template, widgetsInTemplate, templateString) {
     return declare([widget, template, widgetsInTemplate], {
         baseClass: 'baseLayout',

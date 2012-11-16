@@ -13,24 +13,22 @@ define([
 
         constructor: function(baseLayout) {
             this.baseLayout = baseLayout;
-            this.own(topic.subscribe('phpr/showTimecard', lang.hitch(this, 'onShowTimecard')));
-            this.own(topic.subscribe('phpr/showContracts', lang.hitch(this, 'onShowContracts')));
+            var eventmap = {
+                'phpr/showLiveBooking': 'onLiveBooking',
+                'phpr/showBookings': 'onBookings'
+            };
+
+            for (var top in eventmap) {
+                this.own(topic.subscribe(top, lang.hitch(this, eventmap[top])));
+            }
         },
 
-        onShowTimecard: function() {
-
+        onLiveBooking: function() {
+            this.baseLayout.mainContent.set('content', 'imagine a timecard here');
         },
 
-        onShowContracts: function() {
-
-        },
-
-        renderTimecard: function() {
-            this.baseLayout.set('content', 'imagine a timecard here');
-        },
-
-        renderContracts: function() {
-            this.baseLayout.set('content', 'imagine contracts here');
+        onBookings: function() {
+            this.baseLayout.mainContent.set('content', 'imagine contracts here');
         }
     });
 });
