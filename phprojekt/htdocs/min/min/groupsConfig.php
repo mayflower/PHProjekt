@@ -83,5 +83,6 @@ return array(
         "//css/themes/timecard/baseLayout.css",
         "//css/themes/timecard/basicHtml.css",
         "//css/themes/timecard/contentPane.css"
+        "//css/themes/timecard/scrollbar.css"
     )
 );
