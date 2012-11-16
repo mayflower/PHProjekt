@@ -67,7 +67,7 @@ define([
                         mouseup.remove();
                         selectstart.remove();
                         if (!this.mouseOver) {
-                            this.faseOut();
+                            this.fadeOut();
                         }
                         this.scrollingWithMouse = false;
                     }));
