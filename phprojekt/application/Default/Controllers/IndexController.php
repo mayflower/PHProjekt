@@ -262,7 +262,13 @@ class IndexController extends Zend_Controller_Action
         // Since the time for re-starting a poll to the server is in milliseconds, a multiple of 1000 is needed here.
         $this->view->pollingLoop = Phprojekt::getInstance()->getConfig()->pollingLoop * 1000;
         if (Phprojekt_Auth::isLoggedIn()) {
-            $this->render('index');
+            $pageNamespace = new Zend_Session_Namespace('page');
+            if ($pageNamespace->type == "legacy") {
+                $this->render('index');
+            } else {
+                $this->render('timecard');
+            }
+
         } else {
             $this->render('login');
         }
