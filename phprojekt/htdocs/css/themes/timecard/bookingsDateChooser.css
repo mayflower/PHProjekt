@@ -1,0 +1,48 @@
+.timecard .bookingsDateChooser {
+    width: 230px;
+    background: #131413;
+    position: relative;
+    top: 0px;
+    left: 0px;
+}
+
+.timecard .bookingsDateChooser .customScroll {
+    overflow: hidden;
+    width: 230px;
+    position: relative;
+}
+
+.timecard .bookingsDateChooser .customScroll .native {
+    overflow-x: hidden;
+    overflow-y: scroll;
+    width: 200%;
+}
+
+.timecard .bookingsDateChooser .customScroll .content {
+    overflow: hidden;
+    width: 230px;
+}
+
+.timecard .bookingsDateChooser .item {
+    line-height: 30px;
+    height: 30px;
+    width: 230px;
+    margin: 2px;
+    background: #222222;
+}
+
+.timecard .bookingsDateChooser .month {
+    text-align: center;
+    font-style: bold;
+    font-size: 23px;
+}
+
+.timecard .bookingsDateChooser .day {
+    padding-left: 13px;
+    float: left;
+}
+
+.timecard .bookingsDateChooser .time {
+    padding-right: 13px;
+    float: right;
+}
