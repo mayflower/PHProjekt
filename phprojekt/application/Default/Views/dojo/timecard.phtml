@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<?php
+    $csrfToken = Phprojekt::createCsrfToken();
+?>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" />
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+    <title>PHProjekt</title>
+    <link rel="favicon" href="img/favicon.ico" />
+    <link rel="shortcut icon" href="img/favicon.ico" />
+    <link href="min/min/index.php?g=timecard" rel="stylesheet" type="text/css" />
+
+    <script type="text/javascript">
+        var dojoConfig = {
+            isDebug: true,
+            parseOnLoad: false,
+            bindEncoding: "utf-8",
+            baseUrl: "./",
+            async: true,
+            packages: [
+<?php 
+    if ($this->compressedDojo) {
+?>
+                { name: "dojo", location: "dojo2/release/dojo/dojo" },
+                { name: "dijit", location: "dojo2/release/dojo/dijit" },
+                { name: "dojox", location: "dojo2/release/dojo/dojox" },
+<?php
+    } else {
+?>
+                { name: "dojo", location: "dojo2/dojo" },
+                { name: "dijit", location: "dojo2/dijit" },
+                { name: "dojox", location: "dojo2/dojox" },
+<?php
+    }
+?>
+                { name: 'phpr', location: 'phpr' }
+            ],
+            locale: '<?php echo $this->language; ?>'
+        };
+    </script>
+    <?php
+    if (true === $this->isLoggedIn) {
+        if ($this->compressedDojo) {
+        ?>
+            <script type="text/javascript" src="dojo2/release/dojo/dojo/dojo.js"></script>
+        <?php
+        } else {
+        ?>
+            <script type="text/javascript" src="dojo2/dojo/dojo.js"></script>
+        <?php
+        }
+    }
+    ?>
+</head>
+<body class="timecard">
+    <script type="text/javascript">
+        require(['phpr/Starter', 'dojo/parser', 'dojo/domReady!'], function(starter) {
+            starter.startup('<?php echo $csrfToken ?>');
+        });
+    </script>
+</body>
+</html>
+<!-- template: index.phml -->
