@@ -1,0 +1,28 @@
+.timecard .menubar {
+    width: 100%;
+    font-size: 24px;
+    display: table-row;
+}
+
+.timecard .menubarOuter {
+    height: 40px;
+    background: #131515;
+    width: 100%;
+}
+
+.timecard .menubar .menubarItem {
+    height: 40px;
+    display: table-cell;
+    vertical-align: middle;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.timecard .menubar .startButton {
+    background: green;
+}
+
+.timecard .menubar .bookingsButton {
+    background: red;
+}
+

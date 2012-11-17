@@ -6,8 +6,9 @@ define([
     'dojo/topic',
     'phpr/Api',
     'dojo/Deferred',
-    'dojo/DeferredList'
-], function(declare, destroyable, lang, array, topic, api, Deferred, DeferredList) {
+    'dojo/DeferredList',
+    'phpr/BookingsDateChooser'
+], function(declare, destroyable, lang, array, topic, api, Deferred, DeferredList, BookingsDateChooser) {
     return declare(destroyable, {
         baseLayout: null,
 
@@ -28,7 +29,7 @@ define([
         },
 
         onBookings: function() {
-            this.baseLayout.mainContent.set('content', 'imagine contracts here');
+            this.baseLayout.mainContent.set('content', new BookingsDateChooser());
         }
     });
 });

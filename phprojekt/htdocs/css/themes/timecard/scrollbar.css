@@ -1,0 +1,15 @@
+.timecard .scrollbar {
+    position: absolute;
+    top: 0px;
+    width: 10px;
+    z-index: 10;
+}
+
+.timecard .scrollbar .handle {
+    position: absolute;
+    top: 0px;
+    width: 10px;
+    height: 100px;
+    z-index: 11;
+    background: grey;
+}
