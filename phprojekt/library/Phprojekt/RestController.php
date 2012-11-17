@@ -31,6 +31,16 @@ abstract class Phprojekt_RestController extends Zend_Rest_Controller
         }
     }
 
+    public function checkCsrfToken()
+    {
+        $action = $this->getRequest()->getActionName();
+        if ($action == 'index' || $action == 'get') {
+            return true;
+        } else {
+            return parent::checkCsrfToken();
+        }
+    }
+
     public function indexAction()
     {
         $projectId = (int) $this->getRequest()->getParam('projectId', 0);
