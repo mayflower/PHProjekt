@@ -44,9 +44,16 @@ abstract class Phprojekt_RestController extends Zend_Rest_Controller
     public function indexAction()
     {
         $projectId = (int) $this->getRequest()->getParam('projectId', 0);
+
+        $start     = null;
+        $end       = null;
+        $count     = null;
         $range     = $this->getRequest()->getHeader('range');
-        sscanf($range, 'items=%d-%d', $start, $end);
-        $count     = $end - $start + 1;
+        if (!empty($range)) {
+            sscanf($range, 'items=%d-%d', $start, $end);
+            $count = $end - $start + 1;
+        }
+
         $sort      = $this->getRequest()->getParam('sort', null);
         $recursive = $this->getRequest()->getParam('recursive', 'false');
         $recursive = $recursive === 'true';
