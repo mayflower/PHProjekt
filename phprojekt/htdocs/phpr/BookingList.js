@@ -7,8 +7,9 @@ define([
     'dojo/html',
     'dojo/json',
     'dojo/store/JsonRest',
-    'dojo/date'
-], function(array, declare, _WidgetBase, _TemplatedMixin, locale, html, json, JsonRest, date) {
+    'dojo/date',
+    'dojo/dom-construct'
+], function(array, declare, _WidgetBase, _TemplatedMixin, locale, html, json, JsonRest, date, domConstruct) {
     var stripLeadingZero = function(s) {
         if (s.substr(0, 1) === '0') {
             return s.substr(1);
@@ -87,6 +88,10 @@ define([
         }),
 
         date: new Date(),
+
+        buildRendering: function() {
+            this.domNode = domConstruct.create('div');
+        },
 
         _setStoreAttr: function(store) {
             this._update();
