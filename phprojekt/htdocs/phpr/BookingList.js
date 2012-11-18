@@ -70,7 +70,7 @@ define([
             '</div>',
 
         _setDayAttr: function(day) {
-            html.set(this.header, day);
+            html.set(this.header, locale.format(day, {selector: 'date', formatLength: 'long'}));
         },
 
         _setBookingsAttr: function(bookings) {
@@ -108,12 +108,18 @@ define([
             ).then(dojo.hitch(this, function(data) {
                 var bookingsByDay = this._partitionBookingsByDay(data);
 
-                for (var day in bookingsByDay) {
-                    var widget = new DayBlock({day: day, bookings: bookingsByDay[day]});
-                    widget.placeAt(this.domNode);
-                    this.own(widget);
+                if (date.compare(new Date(), bookingsByDay[0].day, "date") !== 0) {
+                    this._addDayBlock({day: new Date(), bookings: []});
                 }
+
+                array.forEach(bookingsByDay, this._addDayBlock, this);
             }));
+        },
+
+        _addDayBlock: function(params) {
+            var widget = new DayBlock(params);
+            widget.placeAt(this.domNode);
+            this.own(widget);
         },
 
         _getQueryString: function() {
@@ -138,7 +144,16 @@ define([
                 partitions[day] = partitions[day] || [];
                 partitions[day].push(b);
             });
-            return partitions;
+
+            var ret = [];
+            for (var day in partitions) {
+                ret.push({
+                    day: new Date(day),
+                    bookings: partitions[day]
+                });
+            }
+
+            return ret;
         }
     });
 });
