@@ -141,7 +141,9 @@ define([
             target: '/index.php/Timecard/Timecard'
         }),
 
-        date: new Date(),
+        // We default to today if date is null. If this is set to new Date() here, _update will be called twice on
+        // instantiation
+        date: null,
 
         buildRendering: function() {
             this.domNode = domConstruct.create('div');
@@ -178,7 +180,9 @@ define([
         },
 
         _getQueryString: function() {
-            var monthStart = new Date(this.date.getFullYear(), this.date.getMonth(), 1);
+            var monthStart = this.date || new Date();
+            monthStart = new Date(monthStart.getFullYear(), monthStart.getMonth(), 1);
+
             return json.stringify({
                 startDatetime: {
                     '!ge': monthStart.toString(),
