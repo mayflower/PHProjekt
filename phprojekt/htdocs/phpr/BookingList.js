@@ -162,6 +162,7 @@ define([
             ).then(dojo.hitch(this, function(data) {
                 var bookingsByDay = this._partitionBookingsByDay(data);
 
+                domConstruct.empty(this.domNode);
                 if (date.compare(new Date(), bookingsByDay[0].day, "date") !== 0) {
                     this._addDayBlock({day: new Date(), bookings: []});
                 }
