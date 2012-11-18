@@ -104,7 +104,7 @@ define([
         _update: function() {
             this.store.query(
                 {filter: this._getQueryString()},
-                {sort: [{attribute: "startDatetime", descending: false}]}
+                {sort: [{attribute: "startDatetime", descending: true}]}
             ).then(dojo.hitch(this, function(data) {
                 var bookingsByDay = this._partitionBookingsByDay(data);
 
