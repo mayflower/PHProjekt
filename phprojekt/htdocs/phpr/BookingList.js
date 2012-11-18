@@ -21,7 +21,7 @@ define([
     var datetimeToJsDate = function(dt) {
         return new Date(
             dt.substr(0, 4),
-            stripLeadingZero(dt.substr(5, 2)),
+            stripLeadingZero(dt.substr(5, 2)) - 1,
             stripLeadingZero(dt.substr(8, 2)),
             stripLeadingZero(dt.substr(11, 2)),
             stripLeadingZero(dt.substr(14, 2)),
