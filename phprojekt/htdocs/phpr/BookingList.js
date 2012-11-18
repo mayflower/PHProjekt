@@ -9,10 +9,11 @@ define([
     'dojo/store/JsonRest',
     'dojo/date',
     'dojo/dom-construct',
+    'dojo/dom-class',
     'dojo/Deferred',
     'phpr/Api'
 ], function(array, declare, _WidgetBase, _TemplatedMixin, locale, html, json, JsonRest,
-            date, domConstruct, Deferred, api) {
+            date, domConstruct, domClass, Deferred, api) {
     var stripLeadingZero = function(s) {
         if (s.substr(0, 1) === '0') {
             return s.substr(1);
@@ -81,11 +82,10 @@ define([
         booking: {},
 
         templateString:
-            '<div>' +
-            '   <span data-dojo-attach-point="project"></span>' +
-            '   <span data-dojo-attach-point="time"></span>' +
-            '   <br/>' +
-            '   <span data-dojo-attach-point="notes"></span>' +
+            '<div class="bookingEntry">' +
+            '   <span data-dojo-attach-point="project" class="project"></span>' +
+            '   <span data-dojo-attach-point="time"    class="time"></span>' +
+            '   <span data-dojo-attach-point="notes"   class="notes"></span>' +
             '</div>',
 
         _setBookingAttr: function (booking) {
@@ -119,12 +119,17 @@ define([
 
         templateString:
             '<div>' +
-            '   <div data-dojo-attach-point="header"></div>' +
-            '   <div data-dojo-attach-point="body"></div>' +
+            '   <div data-dojo-attach-point="header" class="bookingBlockHeader"></div>' +
+            '   <div data-dojo-attach-point="body" class="bookingBlockBody"></div>' +
             '</div>',
 
         _setDayAttr: function(day) {
             html.set(this.header, locale.format(day, {selector: 'date', formatLength: 'long'}));
+            if (date.compare(new Date(), day, 'date') === 0) {
+                domClass.add(this.header, 'today');
+            } else {
+                domClass.remove(this.header, 'today');
+            }
         },
 
         _setBookingsAttr: function(bookings) {
@@ -133,6 +138,10 @@ define([
                 widget.placeAt(this.body);
                 this.own(widget);
             }));
+
+            if (bookings.length === 0) {
+                domClass.add(this.body, 'empty');
+            }
         }
     });
 
@@ -146,7 +155,7 @@ define([
         date: null,
 
         buildRendering: function() {
-            this.domNode = domConstruct.create('div');
+            this.domNode = domConstruct.create('div', {'class': 'bookingList'});
         },
 
         _setStoreAttr: function(store) {

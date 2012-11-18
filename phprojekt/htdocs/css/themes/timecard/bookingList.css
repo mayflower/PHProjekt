@@ -1,0 +1,47 @@
+.bookingList {
+    font-weight: bold;
+}
+
+.bookingBlockHeader {
+    background: #171717;
+    color: white;
+    text-align: center;
+    padding: 10px;
+}
+
+.bookingBlockHeader.today {
+    font-size: large;
+    color: #adadad;
+}
+
+.bookingBlockBody {
+    background: #5a5a5a;
+}
+
+.bookingBlockBody.empty {
+    height: 9px;
+}
+
+.bookingEntry {
+    background: #eeeeee;
+    border: 1px solid black;
+    color: black;
+    padding-left: 25px;
+    padding-top: 4px;
+    padding-bottom: 2px;
+}
+
+.bookingEntry + .bookingEntry {
+    margin-top: 9px;
+}
+
+.bookingEntry .project {
+    display: inline-block;
+    min-width: 175px;
+}
+
+.bookingEntry .notes {
+    display: block;
+    margin-top: 1px;
+    font-weight: normal;
+}
