@@ -94,7 +94,21 @@ define([
             }));
 
             var start = datetimeToJsDate(booking.startDatetime), end = timeToJsDate(booking.endTime);
-            html.set(this.time, locale.format(start) + " - " + locale.format(end, {selector: "time"}));
+            end.setDate(start.getDate());
+            end.setMonth(start.getMonth());
+            end.setFullYear(start.getFullYear());
+
+            var totalMinutes = date.difference(start, end, "minute"),
+                minutes = totalMinutes % 60, hours = Math.floor(totalMinutes / 60);
+
+            html.set(
+                this.time,
+                locale.format(start, {selector: 'time'}) +
+                    ' - ' +
+                    locale.format(end, {selector: 'time'}) +
+                    ' (' + hours + 'h ' + minutes + 'm)'
+            );
+
             html.set(this.notes, booking.notes);
         }
     });
