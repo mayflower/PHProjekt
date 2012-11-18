@@ -8,8 +8,11 @@ define([
     'dojo/json',
     'dojo/store/JsonRest',
     'dojo/date',
-    'dojo/dom-construct'
-], function(array, declare, _WidgetBase, _TemplatedMixin, locale, html, json, JsonRest, date, domConstruct) {
+    'dojo/dom-construct',
+    'dojo/Deferred',
+    'phpr/Api'
+], function(array, declare, _WidgetBase, _TemplatedMixin, locale, html, json, JsonRest,
+            date, domConstruct, Deferred, api) {
     var stripLeadingZero = function(s) {
         if (s.substr(0, 1) === '0') {
             return s.substr(1);
@@ -40,6 +43,40 @@ define([
         );
     };
 
+    var projectTitleForId = (function() {
+        var titlesById = null;
+        var def = new Deferred();
+
+        api.getData(
+            '/index.php/Project/Project',
+            {query: {projectId: 1, recursive: true}}
+        ).then(function(projects) {
+            titlesById = {};
+            array.forEach(projects, function(p) {
+                titlesById[p.id] = p.title;
+            });
+
+            def.resolve(titlesById);
+            def = null;
+        });
+
+        return function(id) {
+            if (id == 1) {
+                var d = new Deferred();
+                d.resolve("Unassigned");
+                return d;
+            } else if (titlesById === null) {
+                return def.then(function(idMap) {
+                    return idMap[id];
+                });
+            } else {
+                var d = new Deferred();
+                d.resolve(titlesById[id]);
+                return d;
+            }
+        };
+    })();
+
     var BookingBlock = declare([_WidgetBase, _TemplatedMixin], {
         booking: {},
 
@@ -52,7 +89,10 @@ define([
             '</div>',
 
         _setBookingAttr: function (booking) {
-            html.set(this.project, booking.projectId);
+            projectTitleForId(booking.projectId).then(dojo.hitch(this, function(title) {
+                html.set(this.project, title);
+            }));
+
             var start = datetimeToJsDate(booking.startDatetime), end = timeToJsDate(booking.endTime);
             html.set(this.time, locale.format(start) + " - " + locale.format(end, {selector: "time"}));
             html.set(this.notes, booking.notes);
