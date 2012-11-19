@@ -11,9 +11,10 @@ define([
     'dojo/dom-construct',
     'dojo/dom-class',
     'dojo/Deferred',
-    'phpr/Api'
+    'phpr/Api',
+    'dojo/_base/lang',
 ], function(array, declare, _WidgetBase, _TemplatedMixin, locale, html, json, JsonRest,
-            date, domConstruct, domClass, Deferred, api) {
+            date, domConstruct, domClass, Deferred, api, lang) {
     var stripLeadingZero = function(s) {
         if (s.substr(0, 1) === '0') {
             return s.substr(1);
@@ -89,7 +90,7 @@ define([
             '</div>',
 
         _setBookingAttr: function (booking) {
-            projectTitleForId(booking.projectId).then(dojo.hitch(this, function(title) {
+            projectTitleForId(booking.projectId).then(lang.hitch(this, function(title) {
                 html.set(this.project, title);
             }));
 
@@ -133,7 +134,7 @@ define([
         },
 
         _setBookingsAttr: function(bookings) {
-            array.forEach(bookings, dojo.hitch(this, function(b) {
+            array.forEach(bookings, lang.hitch(this, function(b) {
                 var widget = new BookingBlock({booking: b});
                 widget.placeAt(this.body);
                 this.own(widget);
@@ -170,7 +171,7 @@ define([
             this.store.query(
                 {filter: this._getQueryString()},
                 {sort: [{attribute: 'startDatetime', descending: true}]}
-            ).then(dojo.hitch(this, function(data) {
+            ).then(lang.hitch(this, function(data) {
                 var bookingsByDay = this._partitionBookingsByDay(data);
 
                 domConstruct.empty(this.domNode);
