@@ -7,11 +7,21 @@
     color: white;
     text-align: center;
     padding: 10px;
+    margin-right: 10px;
 }
 
 .bookingBlockHeader.today {
     font-size: large;
     color: #adadad;
+    background-image: url(images/addButton.png);
+    background-position: right center;
+    background-repeat: no-repeat;
+}
+
+.bookingBlockHeader:hover {
+    background-image: url(images/addButton.png);
+    background-position: right center;
+    background-repeat: no-repeat;
 }
 
 .bookingBlockBody {
