@@ -35,7 +35,7 @@ define([
 
         addScrollBar: function() {
             var scrollbar = new Scrollbar({
-                containerNode: this.domNode,
+                containingNode: this.domNode,
                 nativeNode: this.nativeNode,
                 contentNode: this.contentNode
             });

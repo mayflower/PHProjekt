@@ -13,7 +13,7 @@ define([
     'dojo/text!phpr/template/scrollbar.html'
 ], function(declare, array, lang, evt, fx, style, geometry, on, win, widget, template, templateString) {
     return declare([widget, template], {
-        containerNode: null,
+        containingNode: null,
         nativeNode: null,
         contentNode: null,
         boxHeight: 0,
@@ -27,8 +27,8 @@ define([
             this.inherited(arguments);
             this.own(
                 on(this.nativeNode, 'scroll', lang.hitch(this, 'onScroll')),
-                on(this.containerNode, 'mouseover', lang.hitch(this, 'onMouseOver')),
-                on(this.containerNode, 'mouseout', lang.hitch(this, 'onMouseOut'))
+                on(this.containingNode, 'mouseover', lang.hitch(this, 'onMouseOver')),
+                on(this.containingNode, 'mouseout', lang.hitch(this, 'onMouseOut'))
             );
         },
 
@@ -42,9 +42,9 @@ define([
             style.set(this.domNode, { height: this.containerHeight + 'px'});
 
             this.own(
-                on(this.containerNode, 'scroll', lang.hitch(this, function() {
-                    this.containerNode.scrollLeft = 0;
-                    this.containerNode.scrollTop = 0;
+                on(this.containingNode, 'scroll', lang.hitch(this, function() {
+                    this.containingNode.scrollLeft = 0;
+                    this.containingNode.scrollTop = 0;
                 })),
                 on(this.handleNode, 'mousedown', lang.hitch(this, function(e) {
                     var startY = e.clientY;
