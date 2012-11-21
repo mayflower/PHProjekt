@@ -13,3 +13,7 @@
     z-index: 11;
     background: grey;
 }
+
+.timecard .scrollbar .hidden {
+    display: none;
+}

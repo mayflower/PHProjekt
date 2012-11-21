@@ -5,13 +5,14 @@ define([
     'dojo/_base/event',
     'dojo/_base/fx',
     'dojo/dom-style',
+    'dojo/dom-class',
     'dojo/dom-geometry',
     'dojo/on',
     'dojo/window',
     'dijit/_Widget',
     'dijit/_TemplatedMixin',
     'dojo/text!phpr/template/scrollbar.html'
-], function(declare, array, lang, evt, fx, style, geometry, on, win, widget, template, templateString) {
+], function(declare, array, lang, evt, fx, style, domClass, geometry, on, win, widget, template, templateString) {
     return declare([widget, template], {
         containingNode: null,
         nativeNode: null,
@@ -22,6 +23,7 @@ define([
         scrollingWithMouse: false,
         currentScrollPosition: 0,
         mouseOver: false,
+        autoHide: false,
 
         buildRendering: function() {
             this.inherited(arguments);
@@ -34,12 +36,12 @@ define([
 
         startup: function() {
             this.inherited(arguments);
-            this.fadeOut();
-            this.containerHeight = geometry.getMarginBox(this.containerNode).h;
-            this.handleHeight = geometry.getMarginBox(this.handleNode).h;
-            this.boxHeight = this.containerHeight - this.handleHeight;
-            this.contentHeight = this.contentNode.scrollHeight - geometry.getMarginBox(this.nativeNode).h;
-            style.set(this.domNode, { height: this.containerHeight + 'px'});
+
+            if (this.autoHide) {
+                this.fadeOut();
+            }
+
+            this.resize();
 
             this.own(
                 on(this.containingNode, 'scroll', lang.hitch(this, function() {
@@ -66,11 +68,12 @@ define([
                         mousemove.remove();
                         mouseup.remove();
                         selectstart.remove();
-                        if (!this.mouseOver) {
+                        if (!this.mouseOver && this.autoHide) {
                             this.fadeOut();
                         }
                         this.scrollingWithMouse = false;
                     }));
+                    this.own(selectstart, mouseup, mousemove);
                     evt.stop(e);
                     return false;
                 }))
@@ -78,14 +81,14 @@ define([
         },
 
         onMouseOver: function() {
-            if (!this.mouseOver) {
+            if (!this.mouseOver && this.autoHide) {
                 this.fadeIn();
                 this.mouseOver = true;
             }
         },
 
         onMouseOut: function() {
-            if (this.mouseOver) {
+            if (this.mouseOver && this.autoHide) {
                 this.mouseOver = false;
                 if (!this.scrollingWithMouse) {
                     this.fadeOut();
@@ -109,6 +112,27 @@ define([
             if (!this.scrollingWithMouse) {
                 this.currentScrollPosition = scrollPosition;
             }
+        },
+
+        hideHandleIfNeeded: function() {
+            var contentHeight = geometry.getMarginBox(this.contentNode).h;
+            var containerHeight = geometry.getMarginBox(this.containingNode).h;
+
+            if (contentHeight <= containerHeight) {
+                domClass.add(this.handleNode, 'hidden');
+            } else {
+                domClass.remove(this.handleNode, 'hidden');
+            }
+        },
+
+        resize: function() {
+            this.containerHeight = geometry.getMarginBox(this.containingNode).h;
+            this.handleHeight = geometry.getMarginBox(this.handleNode).h;
+            this.boxHeight = this.containerHeight - this.handleHeight;
+            this.contentHeight = this.contentNode.scrollHeight - geometry.getMarginBox(this.nativeNode).h;
+            style.set(this.domNode, { height: this.containerHeight + 'px'});
+
+            this.hideHandleIfNeeded();
         }
     });
 });
