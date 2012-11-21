@@ -1,0 +1,15 @@
+.timecard .bookingView > .dateChooser {
+    width: 230px;
+    position: relative;
+    top: 0px;
+    left: 0px;
+    float: left;
+}
+
+.timecard .bookingView > .bookingList {
+    width: 538px;
+    position: relative;
+    top: 0px;
+    left: 0px;
+    float: left;
+}

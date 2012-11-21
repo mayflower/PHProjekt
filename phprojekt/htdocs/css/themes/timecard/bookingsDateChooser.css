@@ -1,9 +1,5 @@
 .timecard .bookingsDateChooser {
-    width: 230px;
     background: #131413;
-    position: relative;
-    top: 0px;
-    left: 0px;
 }
 
 .timecard .bookingsDateChooser .customScroll {

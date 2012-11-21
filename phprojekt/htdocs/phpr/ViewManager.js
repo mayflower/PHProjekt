@@ -4,11 +4,8 @@ define([
     'dojo/_base/lang',
     'dojo/_base/array',
     'dojo/topic',
-    'phpr/Api',
-    'dojo/Deferred',
-    'dojo/DeferredList',
-    'phpr/BookingsDateChooser'
-], function(declare, destroyable, lang, array, topic, api, Deferred, DeferredList, BookingsDateChooser) {
+    'phpr/BookingView'
+], function(declare, destroyable, lang, array, topic, BookingView) {
     return declare(destroyable, {
         baseLayout: null,
 
@@ -29,7 +26,7 @@ define([
         },
 
         onBookings: function() {
-            this.baseLayout.mainContent.set('content', new BookingsDateChooser());
+            this.baseLayout.mainContent.set('content', new BookingView());
         }
     });
 });
