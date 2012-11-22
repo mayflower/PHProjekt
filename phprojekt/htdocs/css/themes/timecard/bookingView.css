@@ -1,15 +1,17 @@
-.timecard .bookingView > .dateChooser {
-    width: 230px;
-    position: relative;
-    top: 0px;
-    left: 0px;
-    float: left;
+.timecard .bookingView {
 }
 
-.timecard .bookingView > .bookingList {
-    width: 538px;
-    position: relative;
-    top: 0px;
-    left: 0px;
+.timecard .bookingView .dateChooserContainer {
+    width: 230px;
     float: left;
+    background-image: url(../../../img/bookingsDateChooserBackground.png);
+    background-repeat: repeat-y;
+    background-position: top left;
 }
+
+.timecard .bookingView .bookingListContainer {
+    float: left;
+    width: 604px;
+    background-color: #1a1919;
+}
+
