@@ -4,3 +4,12 @@ body, html {
     margin:0;
     padding:0;
 }
+
+.clearfix:after {
+    content: ".";
+    display: block;
+    clear: both;
+    visibility: hidden;
+    line-height: 0;
+    height: 0;
+}
