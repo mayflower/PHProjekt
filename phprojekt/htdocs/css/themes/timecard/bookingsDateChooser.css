@@ -1,44 +1,75 @@
-.timecard .bookingsDateChooser {
-    background: #131413;
+.timecard .bookingsDateChooser .dijitCalendarContainer {
+    width: 171px;
+    outline-color: transparent !important;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 14px;
 }
 
-.timecard .bookingsDateChooser .customScroll {
-    overflow: hidden;
-    width: 230px;
-    position: relative;
+.timecard .bookingsDateChooser .dijitCalendar {
+    background: none;
+    border: 0;
 }
 
-.timecard .bookingsDateChooser .customScroll .native {
-    overflow-x: hidden;
-    overflow-y: scroll;
-    width: 200%;
+.timecard .bookingsDateChooser thead > tr.dijitCalendarMonthContainer > th {
+    border-bottom: 1px solid white;
 }
 
-.timecard .bookingsDateChooser .customScroll .content {
-    overflow: hidden;
-    width: 230px;
+.timecard .bookingsDateChooser .dijitCalendarDayLabel,
+.timecard .bookingsDateChooser .dijitCalendarSelectedYear {
+    color: white;
 }
 
-.timecard .bookingsDateChooser .item {
-    line-height: 30px;
-    height: 30px;
-    width: 230px;
-    margin: 2px;
-    background: #222222;
+.timecard .bookingsDateChooser .dijitCalendarMonthLabel {
+    color: white;
+    background-color: #101110;
 }
 
-.timecard .bookingsDateChooser .month {
-    text-align: center;
-    font-style: bold;
-    font-size: 23px;
+.timecard .dijitCalendarMonthMenu .dijitCalendarMonthLabelHover {
+    background-color: #0D639B;
+    color: white;
 }
 
-.timecard .bookingsDateChooser .day {
-    padding-left: 13px;
-    float: left;
+.timecard .bookingsDateChooser .dijitCalendarYearLabel {
+    color: #4A4A4A;
 }
 
-.timecard .bookingsDateChooser .time {
-    padding-right: 13px;
-    float: right;
+.timecard .bookingsDateChooser .dijitCalendarDateTemplate.weekend span,
+.timecard .bookingsDateChooser .dijitCalendarPreviousMonth .dijitCalendarDateLabel,
+.timecard .bookingsDateChooser .dijitCalendarNextMonth .dijitCalendarDateLabel {
+    color: #C2C2C2;
+}
+
+.timecard .bookingsDateChooser .dijitCalendarDateTemplate {
+    background: none;
+    border: 0;
+    color: white;
+}
+
+.timecard .bookingsDateChooser .dijitCalendarDateTemplate .dijitCalendarDateLabel,
+.timecard .bookingsDateChooser .dijitCalendar .dijitDropDownButton .dijitButtonNode,
+.timecard .bookingsDateChooser .dijitCalendarDayLabelTemplate {
+    border: 0;
+}
+
+.timecard .bookingsDateChooser .dijitCalendarSelectedDate .dijitCalendarDateLabel,
+.timecard .bookingsDateChooser .dijitCalendarHoveredDate .dijitCalendarDateLabel,
+.timecard .bookingsDateChooser .dijitCalendarEnabledDate:hover .dijitCalendarDateLabel,
+.timecard .bookingsDateChooser .dijitCalendarNextYearHover,
+.timecard .bookingsDateChooser .dijitCalendarNextYear:hover,
+.timecard .bookingsDateChooser .dijitCalendarPreviousYearHover,
+.timecard .bookingsDateChooser .dijitCalendarPreviousYear:hover {
+    background-color: #0D639B;
+    border-color: #0D639B;
+    color: white;
+}
+
+.timecard .bookingsDateChooser .dijitCalendar .dijitDropDownButton .dijitButtonNode {
+    border: 1px solid #101110;
+}
+
+.timecard .bookingsDateChooser .dijitCalendar .dijitDropDownButtonHover .dijitButtonNode,
+.timecard .bookingsDateChooser .dijitCalendar .dijitDropDownButton:hover .dijitButtonNode {
+    border: 1px solid #0D639B;
+    background-color: transparent;
 }
