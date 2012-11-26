@@ -180,9 +180,7 @@ define([
             target: 'index.php/Timecard/Timecard/'
         }),
 
-        // We default to today if date is null. If this is set to new Date() here, _update will be called twice on
-        // instantiation
-        date: null,
+        date: new Date(),
 
         buildRendering: function() {
             this.domNode = domConstruct.create('div', {'class': 'bookingList'});
@@ -196,7 +194,14 @@ define([
             this._update();
         },
 
+        _updating: false,
+
         _update: function() {
+            if (this._updating) {
+                return;
+            }
+            this._updating = true;
+
             this.store.query(
                 {filter: this._getQueryString()},
                 {sort: [{attribute: 'startDatetime', descending: true}]}
@@ -209,6 +214,7 @@ define([
                 }
 
                 array.forEach(bookingsByDay, this._addDayBlock, this);
+                this._updating = false;
             }));
         },
 
