@@ -1,16 +1,26 @@
 .timecard .menubar {
     font-size: 24px;
-    display: table-row;
+    border-spacing: 0;
+    height:100%;
+}
+
+.timecard .menubar td {
+    padding-right: 1px;
+    width: 184px;
+    vertical-align: top;
+    text-align: left;
+    cursor: pointer;
 }
 
 .timecard .menubarMiddle {
     width: 834px;
+    height: 100%;
     margin-left: auto;
     margin-right: auto;
 }
 
 .timecard .menubarOuter {
-    height: 43px;
+    height: 44px;
     background: #101110;
     width: 100%;
     position: absolute;
@@ -18,37 +28,39 @@
     border-bottom: 2px solid #101110;
     box-shadow: 0px 1px 1px 0px black;
     z-index: 1;
-    overflow: hidden;
 }
 
-.timecard .menubar .menubarItem {
-    height: 32px;
-    width: 185px;
-    display: table-cell;
-    vertical-align: top;
-    padding-top: 11px;
-    padding-left: 53px;
+.timecard .menubar div.menuItem {
+    padding-left: 48px;
+    padding-top: 10px;
+    display: inline-block;
 }
 
-.timecard .menubar .startButton {
-    background: #0D639B;
+.timecard .menubar .startButton .menuItem {
+    background-image: url(../../../img/timecard/icon-play.png);
+    background-repeat: no-repeat;
+    background-position: 14px 10px;
+}
+
+.timecard .menubar .bookingsButton .menuItem {
     background-image: url(../../../img/timecard/icon-time.png);
     background-repeat: no-repeat;
-    background-position: 20px 11px;
+    background-position: 14px 10px;
+}
+
+.timecard .menubar td.startButton {
+    background: #0D639B;
+}
+
+.timecard .menubar td.bookingsButton {
+    background: #799B00;
 }
 
 .timecard .menubarOuter.start {
-    border-bottom: 2px solid #0D639B;
-}
-
-.timecard .menubar .bookingsButton {
-    background: #799B00;
-    background-image: url(../../../img/timecard/icon-play.png);
-    background-repeat: no-repeat;
-    background-position: 20px 11px;
+    border-color: #0D639B;
 }
 
 .timecard .menubarOuter.bookings {
-    border-bottom: 2px solid #799B00;
+    border-color: #799B00;
 }
 
