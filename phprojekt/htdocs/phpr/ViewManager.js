@@ -19,6 +19,8 @@ define([
             for (var top in eventmap) {
                 this.own(topic.subscribe(top, lang.hitch(this, eventmap[top])));
             }
+
+            this.baseLayout.menubar.onBookingsClick();
         },
 
         onLiveBooking: function() {
