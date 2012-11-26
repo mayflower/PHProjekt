@@ -43,6 +43,15 @@
     min-height: 22px;
 }
 
+.bookingEntry .deleteButton {
+    margin-top: -1px;
+    float: right;
+    display: none;
+}
+.bookingEntry:hover .deleteButton {
+    display: inline-block;
+}
+
 .bookingEntry + .bookingEntry {
     margin-top: 9px;
 }

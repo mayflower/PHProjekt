@@ -3,6 +3,7 @@ define([
     'dojo/_base/declare',
     'dijit/_WidgetBase',
     'dijit/_TemplatedMixin',
+    'dijit/_WidgetsInTemplateMixin',
     'dojo/date/locale',
     'dojo/html',
     'dojo/json',
@@ -13,8 +14,11 @@ define([
     'dojo/Deferred',
     'phpr/Api',
     'dojo/_base/lang',
-], function(array, declare, _WidgetBase, _TemplatedMixin, locale, html, json, JsonRest,
-            date, domConstruct, domClass, Deferred, api, lang) {
+    'dojo/Evented',
+    // only used in templates
+    'dijit/form/Button'
+], function(array, declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, locale, html, json, JsonRest,
+            date, domConstruct, domClass, Deferred, api, lang, Evented) {
     var stripLeadingZero = function(s) {
         if (s.substr(0, 1) === '0') {
             return s.substr(1);
@@ -79,14 +83,17 @@ define([
         };
     })();
 
-    var BookingBlock = declare([_WidgetBase, _TemplatedMixin], {
-        booking: {},
+    var BookingBlock = declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, Evented], {
+        booking: null,
 
         templateString:
             '<div class="bookingEntry">' +
             '   <span data-dojo-attach-point="project" class="project"></span>' +
             '   <span data-dojo-attach-point="time"    class="time"></span>' +
-            '   <span data-dojo-attach-point="notes"   class="notes"></span>' +
+            '   <button data-dojo-type="dijit/form/Button" type="button" data-dojo-attach-point="deleteButton"' +
+            '           data-dojo-props="showLabel: false, iconClass: \'dijitEditorIcon dijitEditorIconDelete\'"' +
+            '           class="deleteButton"></button>' +
+            '   <span data-dojo-attach-point="notes" class="notes"></span>' +
             '</div>',
 
         _setBookingAttr: function (booking) {
