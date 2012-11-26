@@ -57,3 +57,45 @@
     margin-top: 1px;
     font-weight: normal;
 }
+
+.selectedDate {
+    font-size: large;
+    text-align: center;
+    background-color: black;
+    color: white;
+}
+
+.bookingCreator {
+    margin-top: 2px;
+    min-height: 22px;
+}
+
+.dijitIcon.submitIcon {
+    background-image: url(../../../img/timecard/icon-add.png);
+    background-repeat: no-repeat;
+    min-height: 22px;
+    min-width: 22px;
+}
+
+.submitButton .dijitButtonNode {
+    border: none;
+}
+
+.bookingCreator .project {
+    color: black;
+    margin-left: 8px;
+    margin-right: 10px;
+}
+
+.bookingCreator .notes {
+    visibility: hidden;
+}
+
+.bookingCreator .time {
+    width: 5em;
+}
+
+.bookingCreator .date {
+    margin-left: 8px;
+    width: 8em;
+}

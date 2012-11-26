@@ -16,7 +16,12 @@ define([
     'dojo/_base/lang',
     'dojo/Evented',
     // only used in templates
-    'dijit/form/Button'
+    'dijit/form/Select',
+    'dijit/form/ValidationTextBox',
+    'dijit/form/Textarea',
+    'dijit/form/Button',
+    'dijit/form/DateTextBox',
+    'dijit/form/Form'
 ], function(array, declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, locale, html, json, JsonRest,
             date, domConstruct, domClass, Deferred, api, lang, Evented) {
     var stripLeadingZero = function(s) {
@@ -129,6 +134,60 @@ define([
         }
     });
 
+    var BookingCreator = declare("phpr.BookingCreator", BookingBlock, {
+        templateString:
+            '<div class="bookingCreator claro">' +
+            '   <div data-dojo-attach-point="form" data-dojo-type="dijit/form/Form">' +
+            '      <select data-dojo-attach-point="project" class="project" data-dojo-type="dijit/form/Select">' +
+            '        <option value="1"><span class="projectId">1</span> Unassigned</option>' +
+            '      </select>' +
+            '      <input type="text" data-dojo-type="dijit/form/ValidationTextBox" data-dojo-attach-point="start"' +
+            '             data-dojo-props="pattern: this._getStartRegexp, invalidMessage: \'Invalid time format\'"' +
+            '             class="time"/>' +
+            '      - ' +
+            '      <input type="text" data-dojo-type="dijit/form/ValidationTextBox" data-dojo-attach-point="end"' +
+            '             data-dojo-props="pattern: this._getEndRegexp, invalidMessage: \'Invalid time format\'"' +
+            '             class="time"/>' +
+            '      <input type="text" data-dojo-type="dijit/form/DateTextBox" value="today"' +
+            '             data-dojo-attach-point="date" class="date"/>' +
+            '       <button data-dojo-type="dijit/form/Button" type="button" data-dojo-attach-point="submitButton"' +
+            '               data-dojo-props="showLabel: false, iconClass: \'submitIcon\', baseClass: \'submitButton\'"' +
+            '               data-dojo-attach-event="onClick:_submit" class="submitButton">Submit</button>' +
+            '      <input type="text" data-dojo-type="dijit/form/TextBox"' +
+            '             data-dojo-attach-point="notes" class="notes"/>' +
+            '   </div>' +
+            '</div>',
+
+        buildRendering: function() {
+            this.inherited(arguments);
+
+            this.date.set('value', new Date());
+            this.own(this.form.on('submit', dojo.hitch(this, this._submit)));
+
+            api.getData(
+                '/index.php/Project/Project',
+                {query: {projectId: 1, recursive: true}}
+            ).then(lang.hitch(this, function(projects) {
+                var options = [{value: 1, label: "<span class='projectId'>1</span> Unassigned"}];
+                array.forEach(projects, function(p) {
+                    options.push({value: p.id, label: "<span class='projectId'>" + p.id + "</span> " + p.title});
+                });
+                this.project.set("options", options);
+            }));
+        },
+
+        _getStartRegexp: function() {
+            return '(\\d{1,2}[:\\. ]?\\d{2})';
+        },
+
+        _getEndRegexp: function() {
+            return '(\\d{1,2}[:\\. ]?\\d{2})?';
+        },
+
+        _submit: function() {
+        }
+    });
+
     var DayBlock = declare([_WidgetBase, _TemplatedMixin], {
         day: new Date(),
         bookings: [],
@@ -175,22 +234,26 @@ define([
         }
     });
 
-    return declare(_WidgetBase, {
+    return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
         store: new JsonRest({
             target: 'index.php/Timecard/Timecard/'
         }),
 
         date: new Date(),
 
-        buildRendering: function() {
-            this.domNode = domConstruct.create('div', {'class': 'bookingList'});
-        },
+        templateString:
+            '<div>' +
+            '   <div data-dojo-attach-point="selectedDate" class="selectedDate"></div>' +
+            '   <div data-dojo-attach-point="bookingCreator" data-dojo-type="phpr.BookingCreator"></div>' +
+            '   <div data-dojo-attach-point="content"></div>' +
+            '</div',
 
         _setStoreAttr: function(store) {
             this._update();
         },
 
         _setDateAttr: function(date) {
+            html.set(this.selectedDate, locale.format(date, {selector: "date", formatLength: "long"}));
             this._update();
         },
 
@@ -208,7 +271,7 @@ define([
             ).then(lang.hitch(this, function(data) {
                 var bookingsByDay = this._partitionBookingsByDay(data);
 
-                domConstruct.empty(this.domNode);
+                domConstruct.empty(this.content);
                 if (bookingsByDay.length === 0 || date.compare(new Date(), bookingsByDay[0].day, "date") !== 0) {
                     this._addDayBlock({day: new Date(), bookings: []});
                 }
@@ -221,7 +284,7 @@ define([
         _addDayBlock: function(params) {
             params.store = this.store;
             var widget = new DayBlock(params);
-            widget.placeAt(this.domNode);
+            widget.placeAt(this.content);
             this.own(widget);
         },
 
