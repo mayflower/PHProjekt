@@ -3,7 +3,7 @@
 
 .timecard .bookingView .table {
     border-spacing: 0;
-    background-image: url(../../../img/bookingsDateChooserBackground.png);
+    background-image: url(../../../img/timecard/bookingsDateChooserBackground.png);
     background-repeat: repeat-y;
     background-position: 604px 0px;
 }
