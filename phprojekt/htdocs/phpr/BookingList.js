@@ -124,6 +124,7 @@ define([
         _delete: function() {
             this.store.remove(this.booking.id).then(lang.hitch(this, function() {
                 this.destroyRecursive();
+                this.emit('delete', this.booking);
             }));
         }
     });
@@ -155,10 +156,21 @@ define([
                 var widget = new BookingBlock({booking: b, store: this.store});
                 widget.placeAt(this.body);
                 this.own(widget);
+                this.own(widget.on('delete', lang.hitch(this, this._checkEmpty)));
             }));
 
-            if (bookings.length === 0) {
-                domClass.add(this.body, 'empty');
+            this._checkEmpty();
+        },
+
+        _checkEmpty: function() {
+            if (this.body.children.length === 0) {
+                if (date.compare(new Date(), this.day, "date") === 0) {
+                    domClass.add(this.body, 'empty');
+                } else {
+                    this.destroyRecursive();
+                }
+            } else {
+                domClass.remove(this.body, 'empty');
             }
         }
     });
