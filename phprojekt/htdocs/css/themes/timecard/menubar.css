@@ -16,6 +16,8 @@
     position: absolute;
     left: 0px;
     border-bottom: 2px solid #101110;
+    box-shadow: 0px 1px 1px 0px black;
+    z-index: 1;
 }
 
 .timecard .menubar .menubarItem {
