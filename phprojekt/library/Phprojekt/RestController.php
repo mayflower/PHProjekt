@@ -118,29 +118,31 @@ abstract class Phprojekt_RestController extends Zend_Rest_Controller
 
     public function postAction()
     {
-        throw new Zend_Controller_Action_Exception('Not implemented!', 501);
+        $this->setHttpResponse('Not implemented!', 501);
     }
 
     public function putAction()
     {
         if (!$id = $this->_getParam('id', false)) {
-            throw new Zend_Controller_Action_Exception('No id given', 422);
+            $this->setHttpResponse('No id given', 422);
+            return;
         }
 
         $item = Zend_Json::decode($this->getRequest()->getRawBody());
         if (!$item) {
-            throw new Zend_Controller_Action_Exception('No data was received', 400);
+            $this->setHttpResponse('No data was received', 400);
+            return;
         }
 
         if ($item['id'] !== $id) {
-            throw new Zend_Controller_Action_Exception('Can not alter the id of existing items', 501);
+            $this->setHttpResponse('Can not alter the id of existing items', 501);
+            return;
         }
         unset($item['id']);
 
         $model = $this->newModelObject()->find($id);
         if (!$model) {
-            $this->getResponse()->setHttpResponseCode(404);
-            echo "item with id $id not found";
+            $this->setHttpResponse("Item with id $id not found.", 404);
             return;
         }
 
@@ -186,5 +188,13 @@ abstract class Phprojekt_RestController extends Zend_Rest_Controller
         }
 
         return $where;
+    }
+
+    protected function setHttpResponse($content, $code)
+    {
+        $this->getResponse()->setHttpResponseCode($code);
+        if (!empty($content)) {
+            echo $content;
+        }
     }
 }
