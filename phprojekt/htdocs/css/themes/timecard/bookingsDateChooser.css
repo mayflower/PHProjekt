@@ -73,3 +73,7 @@
     border: 1px solid #0D639B;
     background-color: transparent;
 }
+
+.timecard .bookingsDateChooser .dijitCalendarIncrementControl {
+    background-image: url(../../../img/timecard/calendarArrows.png);
+}
