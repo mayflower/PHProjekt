@@ -1,17 +1,25 @@
 .timecard .menubar {
-    width: 100%;
     font-size: 24px;
     display: table-row;
 }
 
+.timecard .menubarMiddle {
+    width: 834px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .timecard .menubarOuter {
-    height: 40px;
-    background: #131515;
+    height: 44px;
+    background: #101110;
     width: 100%;
+    position: absolute;
+    left: 0px;
+    border-bottom: 2px solid #101110;
 }
 
 .timecard .menubar .menubarItem {
-    height: 40px;
+    height: 44px;
     display: table-cell;
     vertical-align: middle;
     padding-left: 10px;
@@ -19,10 +27,18 @@
 }
 
 .timecard .menubar .startButton {
-    background: green;
+    background: #0D639B;
+}
+
+.timecard .menubarOuter.start {
+    border-bottom: 2px solid #0D639B;
 }
 
 .timecard .menubar .bookingsButton {
-    background: red;
+    background: #799B00;
+}
+
+.timecard .menubarOuter.bookings {
+    border-bottom: 2px solid #799B00;
 }
 

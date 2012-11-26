@@ -1,6 +1,5 @@
 .timecard .baseLayout {
     width: 834px;
-    height: 100%;
     margin-left: auto;
     margin-right: auto;
     padding: 0;
@@ -10,4 +9,6 @@
 }
 
 .timecard .mainContent {
+    position: absolute;
+    top: 46px;
 }
