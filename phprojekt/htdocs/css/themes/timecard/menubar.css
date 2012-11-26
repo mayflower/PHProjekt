@@ -10,7 +10,7 @@
 }
 
 .timecard .menubarOuter {
-    height: 44px;
+    height: 43px;
     background: #101110;
     width: 100%;
     position: absolute;
@@ -18,18 +18,23 @@
     border-bottom: 2px solid #101110;
     box-shadow: 0px 1px 1px 0px black;
     z-index: 1;
+    overflow: hidden;
 }
 
 .timecard .menubar .menubarItem {
-    height: 44px;
+    height: 32px;
+    width: 185px;
     display: table-cell;
-    vertical-align: middle;
-    padding-left: 10px;
-    padding-right: 10px;
+    vertical-align: top;
+    padding-top: 11px;
+    padding-left: 53px;
 }
 
 .timecard .menubar .startButton {
     background: #0D639B;
+    background-image: url(../../../img/timecard/icon-time.png);
+    background-repeat: no-repeat;
+    background-position: 20px 11px;
 }
 
 .timecard .menubarOuter.start {
@@ -38,6 +43,9 @@
 
 .timecard .menubar .bookingsButton {
     background: #799B00;
+    background-image: url(../../../img/timecard/icon-play.png);
+    background-repeat: no-repeat;
+    background-position: 20px 11px;
 }
 
 .timecard .menubarOuter.bookings {
