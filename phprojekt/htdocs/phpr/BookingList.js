@@ -84,6 +84,7 @@ define([
     })();
 
     var BookingBlock = declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, Evented], {
+        store: null,
         booking: null,
 
         templateString:
@@ -92,7 +93,7 @@ define([
             '   <span data-dojo-attach-point="time"    class="time"></span>' +
             '   <button data-dojo-type="dijit/form/Button" type="button" data-dojo-attach-point="deleteButton"' +
             '           data-dojo-props="showLabel: false, iconClass: \'dijitEditorIcon dijitEditorIconDelete\'"' +
-            '           class="deleteButton"></button>' +
+            '           data-dojo-attach-event="onClick:_delete" class="deleteButton"></button>' +
             '   <span data-dojo-attach-point="notes" class="notes"></span>' +
             '</div>',
 
@@ -118,12 +119,21 @@ define([
             );
 
             html.set(this.notes, booking.notes);
+        },
+
+        _delete: function() {
+            this.store.remove(this.booking.id).then(lang.hitch(this, function() {
+                this.destroyRecursive();
+            }));
         }
     });
 
     var DayBlock = declare([_WidgetBase, _TemplatedMixin], {
         day: new Date(),
         bookings: [],
+
+        // Used when creating new items
+        store: null,
 
         templateString:
             '<div>' +
@@ -142,7 +152,7 @@ define([
 
         _setBookingsAttr: function(bookings) {
             array.forEach(bookings, lang.hitch(this, function(b) {
-                var widget = new BookingBlock({booking: b});
+                var widget = new BookingBlock({booking: b, store: this.store});
                 widget.placeAt(this.body);
                 this.own(widget);
             }));
@@ -191,6 +201,7 @@ define([
         },
 
         _addDayBlock: function(params) {
+            params.store = this.store;
             var widget = new DayBlock(params);
             widget.placeAt(this.domNode);
             this.own(widget);
