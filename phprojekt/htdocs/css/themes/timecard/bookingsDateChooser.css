@@ -77,3 +77,12 @@
 .timecard .bookingsDateChooser .dijitCalendarIncrementControl {
     background-image: url(../../../img/timecard/calendarArrows.png);
 }
+
+.timecard .bookingsDateChooser .dijitArrowButtonInner {
+    background-image: url(../../../img/timecard/buttonArrows.png);
+}
+
+.timecard .bookingsDateChooser .dijitDropDownButtonHover .dijitArrowButtonInner {
+    background-position: -152px 53%;
+}
+
