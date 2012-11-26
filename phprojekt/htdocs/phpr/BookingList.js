@@ -177,7 +177,7 @@ define([
 
     return declare(_WidgetBase, {
         store: new JsonRest({
-            target: '/index.php/Timecard/Timecard/'
+            target: 'index.php/Timecard/Timecard/'
         }),
 
         // We default to today if date is null. If this is set to new Date() here, _update will be called twice on
