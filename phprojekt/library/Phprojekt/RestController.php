@@ -158,7 +158,21 @@ abstract class Phprojekt_RestController extends Zend_Rest_Controller
 
     public function deleteAction()
     {
-        throw new Zend_Controller_Action_Exception('Not implemented!', 501);
+        $id = $this->getRequest()->getParam('id');
+        if (empty($id)) {
+            $this->setHttpResponse('No id given!', 422);
+            return;
+        }
+
+        $model = $this->newModelObject()->find($id);
+        if (!$model) {
+            $this->setHttpResponse("Item with id $id not found", 404);
+            return;
+        }
+
+        $model->delete();
+
+        $this->setHttpResponse('', 204);
     }
 
     protected function newModelObject()
