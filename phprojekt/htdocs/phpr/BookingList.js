@@ -15,6 +15,10 @@ define([
     'phpr/Api',
     'dojo/_base/lang',
     'dojo/Evented',
+    //templates
+    'dojo/text!phpr/template/bookingList/bookingBlock.html',
+    'dojo/text!phpr/template/bookingList/bookingCreator.html',
+    'dojo/text!phpr/template/bookingList/dayBlock.html',
     // only used in templates
     'dijit/form/Select',
     'dijit/form/ValidationTextBox',
@@ -23,7 +27,8 @@ define([
     'dijit/form/DateTextBox',
     'dijit/form/Form'
 ], function(array, declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, locale, html, json, JsonRest,
-            date, domConstruct, domClass, Deferred, api, lang, Evented) {
+            date, domConstruct, domClass, Deferred, api, lang, Evented,
+            bookingBlockTemplate, bookingCreatorTemplate, dayBlockTemplate) {
     var stripLeadingZero = function(s) {
         if (s.substr(0, 1) === '0') {
             return s.substr(1);
@@ -92,15 +97,7 @@ define([
         store: null,
         booking: null,
 
-        templateString:
-            '<div class="bookingEntry">' +
-            '   <span data-dojo-attach-point="project" class="project"></span>' +
-            '   <span data-dojo-attach-point="time"    class="time"></span>' +
-            '   <button data-dojo-type="dijit/form/Button" type="button" data-dojo-attach-point="deleteButton"' +
-            '           data-dojo-props="showLabel: false, iconClass: \'dijitEditorIcon dijitEditorIconDelete\'"' +
-            '           data-dojo-attach-event="onClick:_delete" class="deleteButton"></button>' +
-            '   <span data-dojo-attach-point="notes" class="notes"></span>' +
-            '</div>',
+        templateString: bookingBlockTemplate,
 
         _setBookingAttr: function (booking) {
             projectTitleForId(booking.projectId).then(lang.hitch(this, function(title) {
@@ -135,28 +132,7 @@ define([
     });
 
     var BookingCreator = declare("phpr.BookingCreator", BookingBlock, {
-        templateString:
-            '<div class="bookingCreator claro">' +
-            '   <div data-dojo-attach-point="form" data-dojo-type="dijit/form/Form">' +
-            '      <select data-dojo-attach-point="project" class="project" data-dojo-type="dijit/form/Select">' +
-            '        <option value="1"><span class="projectId">1</span> Unassigned</option>' +
-            '      </select>' +
-            '      <input type="text" data-dojo-type="dijit/form/ValidationTextBox" data-dojo-attach-point="start"' +
-            '             data-dojo-props="pattern: this._getStartRegexp, invalidMessage: \'Invalid time format\'"' +
-            '             class="time"/>' +
-            '      - ' +
-            '      <input type="text" data-dojo-type="dijit/form/ValidationTextBox" data-dojo-attach-point="end"' +
-            '             data-dojo-props="pattern: this._getEndRegexp, invalidMessage: \'Invalid time format\'"' +
-            '             class="time"/>' +
-            '      <input type="text" data-dojo-type="dijit/form/DateTextBox" value="today"' +
-            '             data-dojo-attach-point="date" class="date"/>' +
-            '       <button data-dojo-type="dijit/form/Button" type="button" data-dojo-attach-point="submitButton"' +
-            '               data-dojo-props="showLabel: false, iconClass: \'submitIcon\', baseClass: \'submitButton\'"' +
-            '               data-dojo-attach-event="onClick:_submit" class="submitButton">Submit</button>' +
-            '      <input type="text" data-dojo-type="dijit/form/TextBox"' +
-            '             data-dojo-attach-point="notes" class="notes"/>' +
-            '   </div>' +
-            '</div>',
+        templateString: bookingCreatorTemplate,
 
         buildRendering: function() {
             this.inherited(arguments);
@@ -195,11 +171,7 @@ define([
         // Used when creating new items
         store: null,
 
-        templateString:
-            '<div>' +
-            '   <div data-dojo-attach-point="header" class="bookingBlockHeader"></div>' +
-            '   <div data-dojo-attach-point="body" class="bookingBlockBody"></div>' +
-            '</div>',
+        templateString: dayBlockTemplate,
 
         _setDayAttr: function(day) {
             html.set(this.header, locale.format(day, {selector: 'date', formatLength: 'long'}));
