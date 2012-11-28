@@ -64,19 +64,15 @@ class Phprojekt_Loader extends Zend_Loader
                   . DIRECTORY_SEPARATOR
                   . array_pop($names) . '.php';
 
-            if (self::isReadable(PHPR_CORE_PATH . DIRECTORY_SEPARATOR . $path)) {
-                self::_includeFile(PHPR_CORE_PATH . DIRECTORY_SEPARATOR . $path, true);
-            } else if (self::isReadable(PHPR_USER_CORE_PATH . $path)) {
-                self::_includeFile(PHPR_USER_CORE_PATH . $path, true);
+            if (is_readable(PHPR_CORE_PATH . DIRECTORY_SEPARATOR . $path)) {
+                include_once (PHPR_CORE_PATH . DIRECTORY_SEPARATOR . $path);
+            } else if (is_readable(PHPR_USER_CORE_PATH . $path)) {
+                include_once (PHPR_USER_CORE_PATH . $path);
             }
-        }
 
-        if (!class_exists($class, false)) {
-            if (null === $dirs) {
-                $dirs = self::$_directories;
-            }
-            parent::loadClass($class, $dirs);
+            return class_exists($class, false);
         }
+        return false;
     }
 
     /**
