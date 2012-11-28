@@ -85,6 +85,7 @@ return array(
         "//css/themes/timecard/bookingsDateChooser.css",
         "//css/themes/timecard/scrollbar.css",
         "//css/themes/timecard/bookingList.css",
-        "//css/themes/timecard/bookingView.css"
+        "//css/themes/timecard/bookingView.css",
+        "//css/themes/timecard/calendar.css"
     )
 );

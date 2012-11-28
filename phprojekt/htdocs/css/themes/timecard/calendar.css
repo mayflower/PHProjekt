@@ -1,0 +1,97 @@
+.timecard .dijitCalendar {
+    background: none;
+    border: 0;
+}
+
+.timecard thead > tr.dijitCalendarMonthContainer > th {
+    border-bottom: 1px solid white;
+}
+
+.timecard .dijitCalendarDayLabel,
+.timecard .dijitCalendarSelectedYear {
+    color: white;
+}
+
+.timecard .dijitCalendarHover,
+.timecard .dijitCalendar:hover,
+.timecard .dijitCalendarActive {
+    border: 0;
+    background-color: #101110;
+}
+
+.timecard .dijitCalendarActiveDate .dijitCalendarDateLabel,
+.timecard .dijitCalendarEnabledDate:active .dijitCalendarDateLabel {
+    border: 0;
+}
+
+.timecard .dijitCalendarMonthLabel {
+    color: white;
+    background-color: #101110;
+}
+
+.timecard .dijitCalendarMonthMenu .dijitCalendarMonthLabelHover {
+    background-color: #0D639B;
+    color: white;
+}
+
+.timecard .dijitCalendarYearLabel {
+    color: #4A4A4A;
+}
+
+.timecard .dijitCalendarDateTemplate.weekend span,
+.timecard .dijitCalendarPreviousMonth .dijitCalendarDateLabel,
+.timecard .dijitCalendarNextMonth .dijitCalendarDateLabel {
+    color: #C2C2C2;
+}
+
+.timecard .dijitCalendarDateTemplate {
+    background: none;
+    border: 0;
+    color: white;
+}
+.timecard .dijitCalendarHoveredDate .dijitCalendarDateLabel,
+.timecard .dijitCalendarEnabledDate:hover .dijitCalendarDateLabel,
+.timecard .dijitCalendarDateTemplate .dijitCalendarDateLabel,
+.timecard .dijitCalendar .dijitDropDownButton .dijitButtonNode {
+    border: 0;
+}
+
+.timecard .dijitCalendarDayLabelTemplate {
+    border: 0;
+    padding-top: 14px;
+}
+
+.timecard .dijitCalendarSelectedDate .dijitCalendarDateLabel,
+.timecard .dijitCalendarHoveredDate .dijitCalendarDateLabel,
+.timecard .dijitCalendarEnabledDate:hover .dijitCalendarDateLabel,
+.timecard .dijitCalendarNextYearHover,
+.timecard .dijitCalendarNextYear:hover,
+.timecard .dijitCalendarPreviousYearHover,
+.timecard .dijitCalendarPreviousYear:hover {
+    background-color: #0D639B;
+    border-color: #0D639B;
+    color: white;
+}
+
+.timecard .dijitCalendar .dijitDropDownButton .dijitButtonNode {
+    border: 1px solid #101110;
+}
+
+.timecard .dijitCalendar .dijitDropDownButtonHover .dijitButtonNode,
+.timecard .dijitCalendar .dijitDropDownButton:hover .dijitButtonNode {
+    border: 1px solid #0D639B;
+    background-color: transparent;
+}
+
+.timecard .dijitCalendarIncrementControl {
+    background-image: url(../../../img/timecard/calendarArrows.png);
+}
+
+.timecard .dijitArrowButtonInner {
+    background-image: url(../../../img/timecard/buttonArrows.png);
+}
+
+.timecard .dijitDropDownButtonHover .dijitArrowButtonInner {
+    background-position: -152px 53%;
+}
+
