@@ -46,10 +46,6 @@ set_include_path('.' . PATH_SEPARATOR
 require_once PHPR_ROOT_PATH . '/vendor/autoload.php';
 spl_autoload_register(array('Phprojekt_Loader', 'autoload'), true, false);
 
-Phprojekt_Loader::addIncludeDirectory(
-    realpath(PHPR_ROOT_PATH . DIRECTORY_SEPARATOR . 'application')
-);
-
 ini_set('max_execution_time', 0);
 error_reporting(-1);
 
