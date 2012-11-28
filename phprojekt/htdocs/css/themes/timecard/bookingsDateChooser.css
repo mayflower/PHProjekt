@@ -47,9 +47,13 @@
 }
 
 .timecard .bookingsDateChooser .dijitCalendarDateTemplate .dijitCalendarDateLabel,
-.timecard .bookingsDateChooser .dijitCalendar .dijitDropDownButton .dijitButtonNode,
+.timecard .bookingsDateChooser .dijitCalendar .dijitDropDownButton .dijitButtonNode {
+    border: 0;
+}
+
 .timecard .bookingsDateChooser .dijitCalendarDayLabelTemplate {
     border: 0;
+    padding-top: 14px;
 }
 
 .timecard .bookingsDateChooser .dijitCalendarSelectedDate .dijitCalendarDateLabel,
