@@ -1,5 +1,5 @@
 .timecard .dijitCalendar {
-    background: none;
+    background: #101110;;
     border: 0;
 }
 
@@ -45,7 +45,7 @@
 }
 
 .timecard .dijitCalendarDateTemplate {
-    background: none;
+    background: inherit;
     border: 0;
     color: white;
 }
