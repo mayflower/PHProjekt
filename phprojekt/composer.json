@@ -13,6 +13,7 @@
     "autoload": {
         "psr-0": {"": "application/",
             "Phprojekt": "library/",
+            "Setup": "htdocs/",
             "Cleaner": "library/"}
     }
 }
