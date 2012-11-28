@@ -25,7 +25,8 @@ define([
     'dijit/form/Textarea',
     'dijit/form/Button',
     'dijit/form/DateTextBox',
-    'dijit/form/Form'
+    'dijit/form/Form',
+    'phpr/DateTextBox'
 ], function(array, declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, locale, html, json, JsonRest,
             date, domConstruct, domClass, Deferred, api, lang, Evented,
             bookingBlockTemplate, bookingCreatorTemplate, dayBlockTemplate) {
