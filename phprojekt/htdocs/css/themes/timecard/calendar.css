@@ -95,3 +95,17 @@
     background-position: -152px 53%;
 }
 
+.timecard .dijitCalendarMonthMenu .dijitCalendarMonthLabel {
+    border: 0;
+}
+
+.timecard .dijitCalendarMonthMenu .dijitCalendarMonthLabelHover,
+.timecard .dijitCalendarMonthMenu .dijitCalendarMonthLabel:hover {
+    border: 0;
+    background-color: #0D639B;
+    background-image: none;
+}
+
+.timecard .dijitCalendarMonthMenu.dijitMenu {
+    border-color: #0D639B;
+}
