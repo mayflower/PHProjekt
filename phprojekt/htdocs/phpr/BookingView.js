@@ -19,8 +19,11 @@ define([
         startup: function() {
             this.inherited(arguments);
             var w = win.get(this.domNode.ownerDocument);
-            this.own(on(w, 'onresize', lang.hitch(this, 'resize')));
-            this.own(on(this.domNode, 'onresize', lang.hitch(this, 'resize')));
+            this.own(
+                on(w, 'onresize', lang.hitch(this, 'resize')),
+                on(this.domNode, 'onresize', lang.hitch(this, 'resize')),
+                on(this.dateChooserContainer, 'DateChange', lang.hitch(this, 'onDateChanged'))
+            );
         },
 
         resize: function() {
@@ -29,6 +32,10 @@ define([
                 var top = geometry.position(node).y;
                 style.set(node, 'minHeight', (winHeight - top) + 'px');
             });
+        },
+
+        onDateChanged: function(date) {
+            this.bookingListContainer.set('date', date);
         }
     });
 });

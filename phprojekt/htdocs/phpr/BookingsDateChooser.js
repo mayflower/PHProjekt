@@ -10,6 +10,13 @@ define([
     'phpr/Calendar'
 ], function(declare, array, lang, on, widget, template, widgetsInTemplate, templateString) {
     return declare([widget, template, widgetsInTemplate], {
-        templateString: templateString
+        templateString: templateString,
+
+        startup: function() {
+            this.own(on(this.calendarNode, 'Change', lang.hitch(this, 'onDateChange')));
+        },
+
+        onDateChange: function() {
+        }
     });
 });
