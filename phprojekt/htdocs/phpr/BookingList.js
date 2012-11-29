@@ -222,7 +222,9 @@ define([
         },
 
         _setDateAttr: function(date) {
+            date.setDate(1);
             html.set(this.selectedDate, locale.format(date, {selector: 'date', formatLength: 'long'}));
+            this.date = date;
             this._update();
         },
 
