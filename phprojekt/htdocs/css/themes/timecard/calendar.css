@@ -1,5 +1,8 @@
-.timecard .dijitCalendar {
-    background: #101110;;
+.timecard .dijitCalendar,
+.timecard .dijitCalendarHover,
+.timecard .dijitCalendar:hover,
+.timecard .dijitCalendarActive {
+    background: #101110;
     border: 0;
 }
 
@@ -10,18 +13,6 @@
 .timecard .dijitCalendarDayLabel,
 .timecard .dijitCalendarSelectedYear {
     color: white;
-}
-
-.timecard .dijitCalendarHover,
-.timecard .dijitCalendar:hover,
-.timecard .dijitCalendarActive {
-    border: 0;
-    background-color: #101110;
-}
-
-.timecard .dijitCalendarActiveDate .dijitCalendarDateLabel,
-.timecard .dijitCalendarEnabledDate:active .dijitCalendarDateLabel {
-    border: 0;
 }
 
 .timecard .dijitCalendarMonthLabel {
@@ -49,6 +40,9 @@
     border: 0;
     color: white;
 }
+
+.timecard .dijitCalendarActiveDate .dijitCalendarDateLabel,
+.timecard .dijitCalendarEnabledDate:active .dijitCalendarDateLabel,
 .timecard .dijitCalendarHoveredDate .dijitCalendarDateLabel,
 .timecard .dijitCalendarEnabledDate:hover .dijitCalendarDateLabel,
 .timecard .dijitCalendarDateTemplate .dijitCalendarDateLabel,
