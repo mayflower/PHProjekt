@@ -11,14 +11,13 @@ define([
     'dojo/date',
     'dojo/dom-construct',
     'dojo/dom-class',
-    'phpr/BookingList/BookingBlock',
-    'phpr/BookingList/BookingCreator',
+    'phpr/BookingList/DayBlock',
     'phpr/Timehelper',
     'dojo/_base/lang',
     //templates
-    'dojo/text!phpr/template/bookingList/dayBlock.html',
     'dojo/text!phpr/template/bookingList.html',
     // only used in templates
+    'phpr/BookingList/BookingCreator',
     'dijit/form/FilteringSelect',
     'dijit/form/ValidationTextBox',
     'dijit/form/Textarea',
@@ -26,51 +25,8 @@ define([
     'dijit/form/DateTextBox',
     'dijit/form/Form',
     'phpr/DateTextBox'
-], function(array, declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, locale, html, json, JsonRest, 
-            date, domConstruct, domClass, BookingBlock, BookingCreator, time, lang,
-            dayBlockTemplate, bookingListTemplate) {
-    var DayBlock = declare([_WidgetBase, _TemplatedMixin], {
-        day: new Date(),
-        bookings: [],
-
-        // Used when creating new items
-        store: null,
-
-        templateString: dayBlockTemplate,
-
-        _setDayAttr: function(day) {
-            html.set(this.header, locale.format(day, {selector: 'date', formatLength: 'long'}));
-            if (date.compare(new Date(), day, 'date') === 0) {
-                domClass.add(this.header, 'today');
-            } else {
-                domClass.remove(this.header, 'today');
-            }
-        },
-
-        _setBookingsAttr: function(bookings) {
-            array.forEach(bookings, lang.hitch(this, function(b) {
-                var widget = new BookingBlock({booking: b, store: this.store});
-                widget.placeAt(this.body);
-                this.own(widget);
-                this.own(widget.on('delete', lang.hitch(this, this._checkEmpty)));
-            }));
-
-            this._checkEmpty();
-        },
-
-        _checkEmpty: function() {
-            if (this.body.children.length === 0) {
-                if (date.compare(new Date(), this.day, 'date') === 0) {
-                    domClass.add(this.body, 'empty');
-                } else {
-                    this.destroyRecursive();
-                }
-            } else {
-                domClass.remove(this.body, 'empty');
-            }
-        }
-    });
-
+], function(array, declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, locale, html, json, JsonRest,
+            date, domConstruct, domClass, DayBlock, time, lang, bookingListTemplate) {
     return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
         store: new JsonRest({
             target: 'index.php/Timecard/Timecard/'
