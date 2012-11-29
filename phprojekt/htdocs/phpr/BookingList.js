@@ -8,6 +8,7 @@ define([
     'dojo/html',
     'dojo/json',
     'dojo/store/JsonRest',
+    'dojo/store/Memory',
     'dojo/date',
     'dojo/dom-construct',
     'dojo/dom-class',
@@ -21,14 +22,14 @@ define([
     'dojo/text!phpr/template/bookingList/dayBlock.html',
     'dojo/text!phpr/template/bookingList.html',
     // only used in templates
-    'dijit/form/Select',
+    'dijit/form/FilteringSelect',
     'dijit/form/ValidationTextBox',
     'dijit/form/Textarea',
     'dijit/form/Button',
     'dijit/form/DateTextBox',
     'dijit/form/Form',
     'phpr/DateTextBox'
-], function(array, declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, locale, html, json, JsonRest,
+], function(array, declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, locale, html, json, JsonRest, Memory,
             date, domConstruct, domClass, Deferred, api, lang, Evented,
             bookingBlockTemplate, bookingCreatorTemplate, dayBlockTemplate, bookingListTemplate) {
     var stripLeadingZero = function(s) {
@@ -146,11 +147,20 @@ define([
                 '/index.php/Project/Project',
                 {query: {projectId: 1, recursive: true}}
             ).then(lang.hitch(this, function(projects) {
-                var options = [{value: 1, label: "<span class='projectId'>1</span> Unassigned"}];
+                var options = [{id: '1', name: '1 Unassigned', label: '<span class="projectId">1</span> Unassigned'}];
                 array.forEach(projects, function(p) {
-                    options.push({value: p.id, label: "<span class='projectId'>" + p.id + "</span> " + p.title});
+                    options.push({
+                        id: '' + p.id,
+                        name: '' + p.id + ' ' + p.title,
+                        label: '<span class="projectId">' + p.id + '</span> ' + p.title
+                    });
                 });
-                this.project.set("options", options);
+
+                var store = new Memory({
+                    data: options
+                });
+
+                this.project.set('store', store);
             }));
         },
 

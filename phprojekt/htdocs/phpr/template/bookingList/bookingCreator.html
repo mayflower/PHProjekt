@@ -1,6 +1,9 @@
 <div class="bookingCreator claro">
     <div data-dojo-attach-point="form" data-dojo-type="dijit/form/Form">
-        <select data-dojo-attach-point="project" class="project" data-dojo-type="dijit/form/Select">
+        <select data-dojo-attach-point="project"
+                class="project"
+                data-dojo-type="dijit/form/FilteringSelect"
+                data-dojo-props="labelType: 'html', searchAttr: 'name', labelAttr: 'label', queryExpr: '*$\{0\}*'">
             <option value="1"><span class="projectId">1</span> Unassigned</option>
         </select>
         <input type="text" data-dojo-type="dijit/form/ValidationTextBox" data-dojo-attach-point="start"
