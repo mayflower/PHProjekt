@@ -14,10 +14,10 @@ define([
     'dojo/dom-class',
     'dojo/Deferred',
     'phpr/Api',
+    'phpr/BookingList/BookingBlock',
+    'phpr/Timehelper',
     'dojo/_base/lang',
-    'dojo/Evented',
     //templates
-    'dojo/text!phpr/template/bookingList/bookingBlock.html',
     'dojo/text!phpr/template/bookingList/bookingCreator.html',
     'dojo/text!phpr/template/bookingList/dayBlock.html',
     'dojo/text!phpr/template/bookingList.html',
@@ -30,8 +30,8 @@ define([
     'dijit/form/Form',
     'phpr/DateTextBox'
 ], function(array, declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, locale, html, json, JsonRest, Memory,
-            date, domConstruct, domClass, Deferred, api, lang, Evented,
-            bookingBlockTemplate, bookingCreatorTemplate, dayBlockTemplate, bookingListTemplate) {
+            date, domConstruct, domClass, Deferred, api, BookingBlock, time, lang,
+            bookingCreatorTemplate, dayBlockTemplate, bookingListTemplate) {
     var stripLeadingZero = function(s) {
         if (s.substr(0, 1) === '0') {
             return s.substr(1);
@@ -95,44 +95,6 @@ define([
             }
         };
     })();
-
-    var BookingBlock = declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, Evented], {
-        store: null,
-        booking: null,
-
-        templateString: bookingBlockTemplate,
-
-        _setBookingAttr: function (booking) {
-            projectTitleForId(booking.projectId).then(lang.hitch(this, function(title) {
-                html.set(this.project, title);
-            }));
-
-            var start = datetimeToJsDate(booking.startDatetime), end = timeToJsDate(booking.endTime);
-            end.setDate(start.getDate());
-            end.setMonth(start.getMonth());
-            end.setFullYear(start.getFullYear());
-
-            var totalMinutes = date.difference(start, end, 'minute'),
-                minutes = totalMinutes % 60, hours = Math.floor(totalMinutes / 60);
-
-            html.set(
-                this.time,
-                locale.format(start, {selector: 'time'}) +
-                    ' - ' +
-                    locale.format(end, {selector: 'time'}) +
-                    ' (' + hours + 'h ' + minutes + 'm)'
-            );
-
-            html.set(this.notes, booking.notes);
-        },
-
-        _delete: function() {
-            this.store.remove(this.booking.id).then(lang.hitch(this, function() {
-                this.destroyRecursive();
-                this.emit('delete', this.booking);
-            }));
-        }
-    });
 
     var BookingCreator = declare("phpr.BookingCreator", BookingBlock, {
         templateString: bookingCreatorTemplate,
