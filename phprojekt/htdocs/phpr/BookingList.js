@@ -19,6 +19,7 @@ define([
     'dojo/text!phpr/template/bookingList/bookingBlock.html',
     'dojo/text!phpr/template/bookingList/bookingCreator.html',
     'dojo/text!phpr/template/bookingList/dayBlock.html',
+    'dojo/text!phpr/template/bookingList.html',
     // only used in templates
     'dijit/form/Select',
     'dijit/form/ValidationTextBox',
@@ -29,7 +30,7 @@ define([
     'phpr/DateTextBox'
 ], function(array, declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, locale, html, json, JsonRest,
             date, domConstruct, domClass, Deferred, api, lang, Evented,
-            bookingBlockTemplate, bookingCreatorTemplate, dayBlockTemplate) {
+            bookingBlockTemplate, bookingCreatorTemplate, dayBlockTemplate, bookingListTemplate) {
     var stripLeadingZero = function(s) {
         if (s.substr(0, 1) === '0') {
             return s.substr(1);
@@ -214,12 +215,7 @@ define([
 
         date: new Date(),
 
-        templateString:
-            '<div>' +
-            '   <div data-dojo-attach-point="selectedDate" class="selectedDate"></div>' +
-            '   <div data-dojo-attach-point="bookingCreator" data-dojo-type="phpr.BookingCreator"></div>' +
-            '   <div data-dojo-attach-point="content"></div>' +
-            '</div',
+        templateString: bookingListTemplate,
 
         _setStoreAttr: function(store) {
             this._update();
