@@ -114,12 +114,8 @@ class Phprojekt
      */
     public static function getVersion()
     {
-        if (null !== self::VERSION_EXTRA) {
-            return sprintf("%d.%d.%d-%s", self::VERSION_MAJOR, self::VERSION_MINOR, self::VERSION_RELEASE,
-                self::VERSION_EXTRA);
-        } else {
-            return sprintf("%d.%d.%d", self::VERSION_MAJOR, self::VERSION_MINOR, self::VERSION_RELEASE);
-        }
+        $composer = json_decode(file_get_contents(PHPR_ROOT_PATH . DIRECTORY_SEPARATOR  . "composer.json"));
+        return $composer->version;
     }
 
     /**
