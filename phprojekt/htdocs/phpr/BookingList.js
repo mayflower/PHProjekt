@@ -8,17 +8,14 @@ define([
     'dojo/html',
     'dojo/json',
     'dojo/store/JsonRest',
-    'dojo/store/Memory',
     'dojo/date',
     'dojo/dom-construct',
     'dojo/dom-class',
-    'dojo/Deferred',
-    'phpr/Api',
     'phpr/BookingList/BookingBlock',
+    'phpr/BookingList/BookingCreator',
     'phpr/Timehelper',
     'dojo/_base/lang',
     //templates
-    'dojo/text!phpr/template/bookingList/bookingCreator.html',
     'dojo/text!phpr/template/bookingList/dayBlock.html',
     'dojo/text!phpr/template/bookingList.html',
     // only used in templates
@@ -29,51 +26,9 @@ define([
     'dijit/form/DateTextBox',
     'dijit/form/Form',
     'phpr/DateTextBox'
-], function(array, declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, locale, html, json, JsonRest, Memory,
-            date, domConstruct, domClass, Deferred, api, BookingBlock, time, lang,
-            bookingCreatorTemplate, dayBlockTemplate, bookingListTemplate) {
-    var BookingCreator = declare("phpr.BookingCreator", BookingBlock, {
-        templateString: bookingCreatorTemplate,
-
-        buildRendering: function() {
-            this.inherited(arguments);
-
-            this.date.set('value', new Date());
-            this.own(this.form.on('submit', dojo.hitch(this, this._submit)));
-
-            api.getData(
-                'index.php/Project/Project',
-                {query: {projectId: 1, recursive: true}}
-            ).then(lang.hitch(this, function(projects) {
-                var options = [{id: '1', name: '1 Unassigned', label: '<span class="projectId">1</span> Unassigned'}];
-                array.forEach(projects, function(p) {
-                    options.push({
-                        id: '' + p.id,
-                        name: '' + p.id + ' ' + p.title,
-                        label: '<span class="projectId">' + p.id + '</span> ' + p.title
-                    });
-                });
-
-                var store = new Memory({
-                    data: options
-                });
-
-                this.project.set('store', store);
-            }));
-        },
-
-        _getStartRegexp: function() {
-            return '(\\d{1,2}[:\\. ]?\\d{2})';
-        },
-
-        _getEndRegexp: function() {
-            return '(\\d{1,2}[:\\. ]?\\d{2})?';
-        },
-
-        _submit: function() {
-        }
-    });
-
+], function(array, declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, locale, html, json, JsonRest, 
+            date, domConstruct, domClass, BookingBlock, BookingCreator, time, lang,
+            dayBlockTemplate, bookingListTemplate) {
     var DayBlock = declare([_WidgetBase, _TemplatedMixin], {
         day: new Date(),
         bookings: [],
