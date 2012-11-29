@@ -1,5 +1,5 @@
 {
-    "hash": "e578e0dc4c43c96923a9632309a8a497",
+    "hash": "848c7735c59a283eb3f083adf2d04818",
     "packages": [
         {
             "name": "mayflower/holiday",
@@ -85,6 +85,67 @@
         }
     ],
     "packages-dev": [
+        {
+            "name": "phpunit/dbunit",
+            "version": "1.2.1",
+            "source": {
+                "type": "git",
+                "url": "git://github.com/sebastianbergmann/dbunit.git",
+                "reference": "1.2.1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/sebastianbergmann/dbunit/zipball/1.2.1",
+                "reference": "1.2.1",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3",
+                "phpunit/phpunit": ">=3.7.0@stable",
+                "symfony/yaml": ">=2.1.0@stable",
+                "ext-pdo": "*",
+                "ext-reflection": "*",
+                "ext-simplexml": "*",
+                "ext-spl": "*"
+            },
+            "time": "2012-10-05 09:05:08",
+            "bin": [
+                "dbunit.php"
+            ],
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.2.x-dev"
+                }
+            },
+            "installation-source": "dist",
+            "autoload": {
+                "classmap": [
+                    "PHPUnit/"
+                ]
+            },
+            "include-path": [
+                "",
+                "../../symfony/yaml/"
+            ],
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Sebastian Bergmann",
+                    "email": "sb@sebastian-bergmann.de",
+                    "role": "lead"
+                }
+            ],
+            "description": "DbUnit port for PHP/PHPUnit to support database interaction testing.",
+            "homepage": "http://www.phpunit.de/",
+            "keywords": [
+                "database",
+                "testing",
+                "xunit"
+            ]
+        },
         {
             "name": "phpunit/php-code-coverage",
             "version": "1.2.6",
