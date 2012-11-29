@@ -32,70 +32,6 @@ define([
 ], function(array, declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, locale, html, json, JsonRest, Memory,
             date, domConstruct, domClass, Deferred, api, BookingBlock, time, lang,
             bookingCreatorTemplate, dayBlockTemplate, bookingListTemplate) {
-    var stripLeadingZero = function(s) {
-        if (s.substr(0, 1) === '0') {
-            return s.substr(1);
-        } else {
-            return s;
-        }
-    };
-
-    var datetimeToJsDate = function(dt) {
-        return new Date(
-            dt.substr(0, 4),
-            stripLeadingZero(dt.substr(5, 2)) - 1,
-            stripLeadingZero(dt.substr(8, 2)),
-            stripLeadingZero(dt.substr(11, 2)),
-            stripLeadingZero(dt.substr(14, 2)),
-            stripLeadingZero(dt.substr(17, 2))
-        );
-    };
-
-    var timeToJsDate = function(t) {
-        return new Date(
-            0,
-            0,
-            0,
-            stripLeadingZero(t.substr(0, 2)),
-            stripLeadingZero(t.substr(3, 2)),
-            stripLeadingZero(t.substr(6, 2))
-        );
-    };
-
-    var projectTitleForId = (function() {
-        var titlesById = null;
-        var def = new Deferred();
-
-        api.getData(
-            '/index.php/Project/Project',
-            {query: {projectId: 1, recursive: true}}
-        ).then(function(projects) {
-            titlesById = {};
-            array.forEach(projects, function(p) {
-                titlesById[p.id] = p.title;
-            });
-
-            def.resolve(titlesById);
-            def = null;
-        });
-
-        return function(id) {
-            if (id == 1) {
-                var d = new Deferred();
-                d.resolve('Unassigned');
-                return d;
-            } else if (titlesById === null) {
-                return def.then(function(idMap) {
-                    return idMap[id];
-                });
-            } else {
-                var d = new Deferred();
-                d.resolve(titlesById[id]);
-                return d;
-            }
-        };
-    })();
-
     var BookingCreator = declare("phpr.BookingCreator", BookingBlock, {
         templateString: bookingCreatorTemplate,
 
@@ -246,7 +182,7 @@ define([
         _partitionBookingsByDay: function(bookings) {
             var partitions = {};
             array.forEach(bookings, function(b) {
-                var start = datetimeToJsDate(b.startDatetime),
+                var start = time.datetimeToJsDate(b.startDatetime),
                     day = new Date(
                     start.getFullYear(),
                     start.getMonth(),
