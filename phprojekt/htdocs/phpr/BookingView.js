@@ -22,7 +22,7 @@ define([
             this.own(
                 on(w, 'onresize', lang.hitch(this, 'resize')),
                 on(this.domNode, 'onresize', lang.hitch(this, 'resize')),
-                on(this.dateChooserContainer, 'DateChange', lang.hitch(this, 'onDateChanged'))
+                this.dateChooserContainer.on('dateChange', lang.hitch(this.bookingListContainer, 'set', 'date'))
             );
         },
 
@@ -32,10 +32,6 @@ define([
                 var top = geometry.position(node).y;
                 style.set(node, 'minHeight', (winHeight - top) + 'px');
             });
-        },
-
-        onDateChanged: function(date) {
-            this.bookingListContainer.set('date', date);
         }
     });
 });
