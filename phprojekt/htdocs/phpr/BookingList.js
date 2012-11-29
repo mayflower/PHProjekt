@@ -144,7 +144,7 @@ define([
             this.own(this.form.on('submit', dojo.hitch(this, this._submit)));
 
             api.getData(
-                '/index.php/Project/Project',
+                'index.php/Project/Project',
                 {query: {projectId: 1, recursive: true}}
             ).then(lang.hitch(this, function(projects) {
                 var options = [{id: '1', name: '1 Unassigned', label: '<span class="projectId">1</span> Unassigned'}];
