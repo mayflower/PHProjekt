@@ -21,28 +21,9 @@
 class Phprojekt_Loader
 {
     /**
-     * Directories.
-     *
-     * @var array
-     */
-    protected static $_directories = array(PHPR_CORE_PATH, PHPR_LIBRARY_PATH, PHPR_USER_CORE_PATH);
-
-    /**
      * Define the set of allowed characters for classes..
      */
     const CLASS_PATTERN = '[A-Za-z0-9_]+';
-
-    /**
-     * Adds a directory to search when autoloading.
-     *
-     * @param string $directory The directory
-     *
-     * @return void
-     */
-    public static function addIncludeDirectory($directory)
-    {
-        self::$_directories[] = $directory;
-    }
 
     /**
      * Load a class
@@ -87,7 +68,7 @@ class Phprojekt_Loader
     public static function autoload($class)
     {
         try {
-            @self::loadClass($class, self::$_directories);
+            @self::loadClass($class, null);
             return $class;
         } catch (Zend_Exception $error) {
             return false;
