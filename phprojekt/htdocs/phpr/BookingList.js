@@ -81,7 +81,7 @@ define([
         return function(id) {
             if (id == 1) {
                 var d = new Deferred();
-                d.resolve("Unassigned");
+                d.resolve('Unassigned');
                 return d;
             } else if (titlesById === null) {
                 return def.then(function(idMap) {
@@ -111,7 +111,7 @@ define([
             end.setMonth(start.getMonth());
             end.setFullYear(start.getFullYear());
 
-            var totalMinutes = date.difference(start, end, "minute"),
+            var totalMinutes = date.difference(start, end, 'minute'),
                 minutes = totalMinutes % 60, hours = Math.floor(totalMinutes / 60);
 
             html.set(
@@ -197,7 +197,7 @@ define([
 
         _checkEmpty: function() {
             if (this.body.children.length === 0) {
-                if (date.compare(new Date(), this.day, "date") === 0) {
+                if (date.compare(new Date(), this.day, 'date') === 0) {
                     domClass.add(this.body, 'empty');
                 } else {
                     this.destroyRecursive();
@@ -222,7 +222,7 @@ define([
         },
 
         _setDateAttr: function(date) {
-            html.set(this.selectedDate, locale.format(date, {selector: "date", formatLength: "long"}));
+            html.set(this.selectedDate, locale.format(date, {selector: 'date', formatLength: 'long'}));
             this._update();
         },
 
@@ -241,7 +241,7 @@ define([
                 var bookingsByDay = this._partitionBookingsByDay(data);
 
                 domConstruct.empty(this.content);
-                if (bookingsByDay.length === 0 || date.compare(new Date(), bookingsByDay[0].day, "date") !== 0) {
+                if (bookingsByDay.length === 0 || date.compare(new Date(), bookingsByDay[0].day, 'date') !== 0) {
                     this._addDayBlock({day: new Date(), bookings: []});
                 }
 
