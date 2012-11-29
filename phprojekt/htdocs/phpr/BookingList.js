@@ -236,7 +236,7 @@ define([
 
             this.store.query(
                 {filter: this._getQueryString()},
-                {sort: [{attribute: 'startDatetime', descending: true}]}
+                {sort: [{attribute: 'start_datetime', descending: true}]}
             ).then(lang.hitch(this, function(data) {
                 var bookingsByDay = this._partitionBookingsByDay(data);
 
