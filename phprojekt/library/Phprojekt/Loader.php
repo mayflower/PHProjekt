@@ -18,7 +18,7 @@
  * /application directory or from the Zend library directory depending
  * on the name of the class.
  */
-class Phprojekt_Loader extends Zend_Loader
+class Phprojekt_Loader
 {
     /**
      * Directories.
@@ -231,7 +231,7 @@ class Phprojekt_Loader extends Zend_Loader
 
         $assert = false;
         if (file_exists($file)) {
-            self::_includeFile($file, true);
+            include_once($file);
             $assert = true;
         }
 
