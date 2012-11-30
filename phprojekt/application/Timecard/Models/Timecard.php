@@ -228,6 +228,15 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
             }
         }
 
+        if (isset($data['ownerId']) && $data['ownerId'] != Phprojekt_Auth_Proxy::getEffectiveUserId()) {
+            $this->_validate->error->addError(array(
+                'field'   => 'ownerId',
+                'label'   => 'ownerId',
+                'message' => 'Unable to safe items for someone that is not you.'
+            ));
+            return false;
+        }
+
         return $this->_validate->recordValidate($this, $data, $fields);
     }
 
