@@ -62,9 +62,6 @@ define([
                 var bookingsByDay = this._partitionBookingsByDay(data);
 
                 domConstruct.empty(this.content);
-                if (bookingsByDay.length === 0 || date.compare(new Date(), bookingsByDay[0].day, 'date') !== 0) {
-                    this._addDayBlock({day: new Date(), bookings: []});
-                }
 
                 array.forEach(bookingsByDay, this._addDayBlock, this);
                 this._updating = false;
