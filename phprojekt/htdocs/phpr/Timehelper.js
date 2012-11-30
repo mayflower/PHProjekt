@@ -1,6 +1,7 @@
 define([
-    'exports'
-], function(exports) {
+    'exports',
+    'dojo/number'
+], function(exports, number) {
     var stripLeadingZero = function(s) {
         if (s.substr(0, 1) === '0') {
             return s.substr(1);
@@ -29,6 +30,49 @@ define([
             stripLeadingZero(t.substr(3, 2)),
             stripLeadingZero(t.substr(6, 2))
         );
+    };
+
+    exports.jsDateToIsoDate = function(date) {
+        // Summary:
+        //    Convert a js date into ISO date
+        // Description:
+        //    Convert a js date into ISO date
+        var day = number.format(date.getDate(), {pattern: '00'});
+        var month = number.format(date.getMonth() + 1, {pattern: '00'});
+
+        return date.getFullYear() + '-' + month + '-' + day;
+    };
+
+    exports.jsDateToIsoTime = function(date) {
+        // Summary:
+        //    Convert a js date into ISO time
+        // Description:
+        //    Convert a js date into ISO time
+        var hours, minutes;
+
+        hours = date.getHours();
+        minutes = date.getMinutes();
+
+        if (isNaN(hours) || hours > 24 || hours < 0) {
+            hour = '00';
+        }
+        if (isNaN(minutes) || minutes > 60 || minutes < 0) {
+            minutes = '00';
+        }
+
+        return number.format(hours, {pattern: '00'}) + ':' + number.format(minutes, {pattern: '00'});
+    };
+
+    exports.jsDateToIsoDatetime = function(date) {
+        // Summary:
+        //    Convert a js date into ISO datetime
+        // Description:
+        //    Convert a js date into ISO datetime
+        if (date === null) {
+            date = new Date();
+        }
+
+        return exports.jsDateToIsoDate(date) + ' ' + exports.jsDateToIsoTime(date);
     };
 
 });
