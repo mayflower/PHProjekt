@@ -3,7 +3,7 @@
 }
 
 .bookingBlockHeader {
-    background: #171717;
+    background: black;
     color: white;
     text-align: center;
     padding: 10px;
@@ -62,11 +62,46 @@
     text-align: center;
     background-color: black;
     color: white;
+    height: 58px;
+    line-height: 58px;
+}
+
+.selectedDate span {
+    vertical-align: middle;
 }
 
 .bookingCreator {
-    margin-top: 2px;
-    min-height: 22px;
+    min-height: 38px;
+    background-color: black;
+    border-bottom: 1px solid #4A4A4A;
+    border-top: 1px solid #4A4A4A;
+}
+
+.bookingCreator .first,
+.bookingCreator .second {
+    line-height: 38px;
+}
+
+.bookingCreator .first > *,
+.bookingCreator .second > * {
+    vertical-align: middle;
+    line-height: normal;
+}
+
+.bookingCreator .notesIcon {
+    display: inline-block;
+}
+
+.bookingCreator .notesIcon div {
+    background-image: url(../../../img/timecard/buttonArrows.png);
+    background-position: -51px 53%;
+    width: 15px;
+    height: 15px;
+    display: inline-block;
+}
+
+.bookingCreator .notesIcon:hover div {
+    background-position: -151px 53%;
 }
 
 .dijitIcon.submitIcon {
@@ -87,7 +122,7 @@
 }
 
 .bookingCreator .notes {
-    visibility: hidden;
+    display: none;
 }
 
 .bookingCreator .time {
