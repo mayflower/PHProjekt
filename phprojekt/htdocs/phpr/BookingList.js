@@ -7,12 +7,17 @@ define([
     'dojo/date/locale',
     'dojo/html',
     'dojo/json',
+    'dojo/when',
     'dojo/store/JsonRest',
+    'dojo/store/Memory',
+    'dojo/store/Observable',
+    'dojo/store/Cache',
     'dojo/date',
     'dojo/dom-construct',
     'dojo/dom-class',
     'phpr/BookingList/DayBlock',
     'phpr/Timehelper',
+    'phpr/JsonRestQueryEngine',
     'dojo/_base/lang',
     //templates
     'dojo/text!phpr/template/bookingList.html',
@@ -25,18 +30,43 @@ define([
     'dijit/form/DateTextBox',
     'dijit/form/Form',
     'phpr/DateTextBox'
-], function(array, declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, locale, html, json, JsonRest,
-            date, domConstruct, domClass, DayBlock, time, lang, bookingListTemplate) {
+], function(array, declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, locale, html, json, when,
+            JsonRest, Memory, Observable, Cache,
+            date, domConstruct, domClass, DayBlock, time, JsonRestQueryEngine, lang, bookingListTemplate) {
     return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
-        store: new JsonRest({
-            target: 'index.php/Timecard/Timecard/'
-        }),
+        store: null,
 
         date: new Date(),
 
         templateString: bookingListTemplate,
 
+        _startedUp: false,
+
+        observer: null,
+
+        day2dayBlock: null,
+
+        constructor: function() {
+            this._setStoreAttr(new JsonRest({
+                target: 'index.php/Timecard/Timecard/',
+                queryEngine: JsonRestQueryEngine
+            }));
+
+            this.day2dayBlock = {};
+        },
+
+        postCreate: function() {
+            this.inherited(arguments);
+            this._startedUp = true;
+            this._update();
+        },
+
         _setStoreAttr: function(store) {
+            this.store = new Observable(new Cache(
+                store,
+                new Memory()
+            ));
+
             this._update();
         },
 
@@ -50,15 +80,25 @@ define([
         _updating: false,
 
         _update: function() {
-            if (this._updating) {
+            if (this._updating || !this._startedUp) {
                 return;
             }
+
             this._updating = true;
 
-            this.store.query(
+            this.bookingCreator.set('store', this.store);
+
+            if (this.observer) {
+                this.observer.cancel();
+                this.observer = null;
+            }
+
+            var results = this.store.query(
                 {filter: this._getQueryString()},
                 {sort: [{attribute: 'start_datetime', descending: true}]}
-            ).then(lang.hitch(this, function(data) {
+            );
+
+            when(results, lang.hitch(this, function(data) {
                 var bookingsByDay = this._partitionBookingsByDay(data);
 
                 domConstruct.empty(this.content);
@@ -66,13 +106,33 @@ define([
                 array.forEach(bookingsByDay, this._addDayBlock, this);
                 this._updating = false;
             }));
+
+            this.observer = results.observe(lang.hitch(this, '_storeChanged'));
+        },
+
+        _storeChanged: function(object, removedFrom, insertedInto) {
+            var idate = time.datetimeToJsDate(object.startDatetime);
+            idate = new Date(idate.getFullYear(), idate.getMonth(), idate.getDate());
+
+            var widget = this.day2dayBlock[idate.getTime()];
+            if (!widget && removedFrom === -1 && insertedInto !== -1) {
+                this._addDayBlock({day: idate});
+            }
         },
 
         _addDayBlock: function(params) {
             params.store = this.store;
             var widget = new DayBlock(params);
+            widget.on('empty', lang.hitch(this, function(day) {
+                var w = this.day2dayBlock[day.getTime()];
+                if (w) {
+                    w.destroyRecursive();
+                    delete this.day2dayBlock[day.getTime()];
+                }
+            }));
             widget.placeAt(this.content);
             this.own(widget);
+            this.day2dayBlock[params.day.getTime()] = widget;
         },
 
         _getQueryString: function() {
@@ -103,8 +163,7 @@ define([
             var ret = [];
             for (var day in partitions) {
                 ret.push({
-                    day: new Date(day),
-                    bookings: partitions[day]
+                    day: new Date(day)
                 });
             }
 
