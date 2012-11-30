@@ -177,19 +177,29 @@ abstract class Phprojekt_RestController extends Zend_Rest_Controller
 
         $model = $this->_newModelObject()->find($id);
         if (!$model) {
-            $this->getResponse()->setHttpResponseCode(404);
-            echo "item with id $id not found";
-            return;
+            throw new Zend_Controller_Action_Exception('Id not found', 404);
         }
 
         foreach ($item as $property => $value) {
             $model->$property = $value;
         }
-        $model->save();
 
-        Phprojekt_CompressedSender::send(
-            Zend_Json_Encoder::encode($model->toArray())
-        );
+        if ($model->recordValidate()) {
+            $model->save();
+
+            Phprojekt_CompressedSender::send(
+                Zend_Json_Encoder::encode(
+                    Phprojekt_Model_Converter::convertModel($model)
+                )
+            );
+        } else {
+            $errors       = $model->getError();
+            $errorStrings = array();
+            foreach ($errors as $error) {
+                $errorStrings[] = $error['label'] . ' : ' . $error['message'];
+            }
+            throw new Zend_Controller_Action_Exception('Invalid Data: ' . implode(',', $errorStrings), 422);
+        }
     }
 
     public function deleteAction()
