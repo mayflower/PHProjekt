@@ -130,7 +130,33 @@ abstract class Phprojekt_RestController extends Zend_Rest_Controller
 
     public function postAction()
     {
-        throw new Zend_Controller_Action_Exception('Not implemented!', 501);
+        $item = Zend_Json::decode($this->getRequest()->getRawBody());
+        if (!$item) {
+            throw new Zend_Controller_Action_Exception('No data was received', 400);
+        }
+
+        $model = $this->_newModelObject();
+
+        foreach ($item as $property => $value) {
+            $model->$property = $value;
+        }
+
+        if ($model->recordValidate()) {
+            $model->save();
+
+            Phprojekt_CompressedSender::send(
+                Zend_Json_Encoder::encode(
+                    Phprojekt_Model_Converter::convertModel($model)
+                )
+            );
+        } else {
+            $errors       = $model->getError();
+            $errorStrings = array();
+            foreach ($errors as $error) {
+                $errorStrings[] = $error['label'] . ' : ' . $error['message'];
+            }
+            throw new Zend_Controller_Action_Exception('Invalid Data: ' . implode(',', $errorStrings), 422);
+        }
     }
 
     public function putAction()
@@ -168,7 +194,31 @@ abstract class Phprojekt_RestController extends Zend_Rest_Controller
 
     public function deleteAction()
     {
-        throw new Zend_Controller_Action_Exception('Not implemented!', 501);
+        if (!$id = $this->_getParam('id', false)) {
+            throw new Zend_Controller_Action_Exception('No id given', 422);
+        }
+
+        $model = $this->_newModelObject()->find($id);
+        if (!$model) {
+            throw new Zend_Controller_Action_Exception('Id not found', 404);
+        }
+
+        foreach ($item as $property => $value) {
+            $model->$property = $value;
+        }
+
+        if ($model->delete()) {
+            Phprojekt_CompressedSender::send(
+                Zend_Json_Encoder::encode(
+                    array(
+                        'type' => 'info',
+                        'message' => 'Delete Successfull'
+                    )
+                )
+            );
+        } else {
+            throw new Zend_Controller_Action_Exception('Delete not permitted.', 403);
+        }
     }
 
     protected function _newModelObject()
