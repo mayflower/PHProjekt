@@ -25,21 +25,34 @@ define([
                 html.set(this.project, title);
             }));
 
-            var start = time.datetimeToJsDate(booking.startDatetime), end = time.timeToJsDate(booking.endTime);
-            end.setDate(start.getDate());
-            end.setMonth(start.getMonth());
-            end.setFullYear(start.getFullYear());
+            var start = time.datetimeToJsDate(booking.startDatetime);
+            var end = booking.endTime || '';
+            var hasEnd = end !== '';
 
-            var totalMinutes = date.difference(start, end, 'minute'),
-                minutes = totalMinutes % 60, hours = Math.floor(totalMinutes / 60);
+            var commonPrefix = locale.format(start, {selector: 'time'}) + ' - ';
 
-            html.set(
-                this.time,
-                locale.format(start, {selector: 'time'}) +
-                    ' - ' +
+            if (hasEnd) {
+                end = time.timeToJsDate(booking.endTime);
+                end.setDate(start.getDate());
+                end.setMonth(start.getMonth());
+                end.setFullYear(start.getFullYear());
+                var totalMinutes = date.difference(start, end, 'minute');
+                var minutes = totalMinutes % 60;
+                var hours = Math.floor(totalMinutes / 60);
+
+                html.set(
+                    this.time,
+                    commonPrefix +
                     locale.format(end, {selector: 'time'}) +
                     ' (' + hours + 'h ' + minutes + 'm)'
-            );
+                );
+            } else {
+                html.set(
+                    this.time,
+                    commonPrefix
+                );
+            }
+
 
             html.set(this.notes, booking.notes);
         },
