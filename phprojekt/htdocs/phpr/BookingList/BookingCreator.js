@@ -2,11 +2,15 @@ define([
     'dojo/_base/declare',
     'dojo/_base/lang',
     'dojo/_base/array',
+    'dojo/on',
+    'dojo/dom-class',
+    'dojo/store/JsonRest',
     'dojo/store/Memory',
     'phpr/BookingList/BookingBlock',
     'phpr/Api',
+    'phpr/Timehelper',
     'dojo/text!phpr/template/bookingList/bookingCreator.html'
-], function(declare, lang, array, Memory, BookingBlock, api, templateString) {
+], function(declare, lang, array, on, clazz, JsonRest, Memory, BookingBlock, api, time, templateString) {
     return declare([BookingBlock], {
         templateString: templateString,
 
@@ -35,6 +39,17 @@ define([
 
                 this.project.set('store', store);
             }));
+        },
+
+        postCreate: function() {
+            this.own(on(this.notesIcon, 'click', lang.hitch(this, 'toggleNotes')));
+            this.start.set('placeHolder', 'Start');
+            this.end.set('placeHolder', 'End');
+            this.notes.set('placeHolder', 'Notes');
+        },
+
+        toggleNotes: function() {
+            clazz.toggle(this.notesContainer, 'open');
         },
 
         _getStartRegexp: function() {
