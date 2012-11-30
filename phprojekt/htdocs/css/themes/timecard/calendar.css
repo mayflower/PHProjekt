@@ -29,6 +29,10 @@
     color: #4A4A4A;
 }
 
+.timecard .dijitCalendarDateTemplate.today span {
+    border-color: rgb(150, 120, 0);
+}
+
 .timecard .dijitCalendarDateTemplate.weekend span,
 .timecard .dijitCalendarPreviousMonth .dijitCalendarDateLabel,
 .timecard .dijitCalendarNextMonth .dijitCalendarDateLabel {
@@ -39,6 +43,7 @@
     background: inherit;
     border: 0;
     color: white;
+    outline-color: transparent !important;
 }
 
 .timecard .dijitCalendarActiveDate .dijitCalendarDateLabel,
@@ -47,7 +52,7 @@
 .timecard .dijitCalendarEnabledDate:hover .dijitCalendarDateLabel,
 .timecard .dijitCalendarDateTemplate .dijitCalendarDateLabel,
 .timecard .dijitCalendar .dijitDropDownButton .dijitButtonNode {
-    border: 0;
+    border: 1px solid transparent;
 }
 
 .timecard .dijitCalendarDayLabelTemplate {
@@ -86,7 +91,7 @@
 }
 
 .timecard .dijitDropDownButtonHover .dijitArrowButtonInner {
-    background-position: -152px 53%;
+    background-position: -151px 53%;
 }
 
 .timecard .dijitCalendarMonthMenu .dijitCalendarMonthLabel {
