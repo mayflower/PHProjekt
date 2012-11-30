@@ -1,14 +1,11 @@
 define([
     'dojo/_base/declare',
     'dojo/dom-class',
+    'dojo/date',
     'dojo/date/locale',
-    'dojo/on',
-    'dojo/Evented',
     'dijit/Calendar'
-], function(declare, clazz, locale, on, Evented, Calendar) {
-    return declare([Calendar, Evented], {
-        _startedUp: false,
-
+], function(declare, clazz, ddate, locale, Calendar) {
+    return declare([Calendar], {
         _populateGrid: function() {
             this.inherited(arguments);
             var node;
@@ -22,25 +19,12 @@ define([
                     if (locale.isWeekend(date) && date.getMonth() === month.getMonth()) {
                         clazz.add(node, 'weekend');
                     }
+
+                    if (ddate.compare(new Date(), date, 'date') === 0) {
+                        clazz.add(node, 'today');
+                    }
                 }
             }
-        },
-
-        _onMonthSelect: function(newMonth) {
-            this.inherited(arguments);
-            this.emit('change', new this.dateClassObj(this.get('currentFocus').getTime()));
-        },
-
-        _setCurrentFocusAttr: function(date, force) {
-            this.inherited(arguments);
-            if (this._startedUp === true) {
-                this.emit('change', new this.dateClassObj(date.getTime()));
-            }
-        },
-
-        postCreate: function() {
-            this.inherited(arguments);
-            this._startedUp = true;
         }
     });
 });

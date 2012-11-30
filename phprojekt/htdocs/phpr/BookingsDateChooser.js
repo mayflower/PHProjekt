@@ -8,7 +8,7 @@ define([
     'dijit/_TemplatedMixin',
     'dijit/_WidgetsInTemplateMixin',
     'dojo/text!phpr/template/bookingsDateChooser.html',
-    'phpr/Calendar'
+    'phpr/DateChooserCalendar'
 ], function(declare, array, lang, on, Evented, widget, template, widgetsInTemplate, templateString) {
     return declare([widget, template, widgetsInTemplate, Evented], {
         templateString: templateString,
