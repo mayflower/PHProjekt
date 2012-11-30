@@ -14,6 +14,14 @@ define([
     return declare([BookingBlock], {
         templateString: templateString,
 
+        store: null,
+
+        constructor: function() {
+            this.store = new JsonRest({
+                target: 'index.php/Timecard/Timecard/'
+            });
+        },
+
         buildRendering: function() {
             this.inherited(arguments);
 
@@ -53,14 +61,56 @@ define([
         },
 
         _getStartRegexp: function() {
-            return '(\\d{1,2}[:\\. ]?\\d{2})';
+            return '((\\d{1,2})[:\\. ]?(\\d{2}))';
         },
 
         _getEndRegexp: function() {
-            return '(\\d{1,2}[:\\. ]?\\d{2})?';
+            return '((\\d{1,2})[:\\. ]?(\\d{2}))?';
         },
 
-        _submit: function() {
+        _submit: function(evt) {
+            evt.stopPropagation();
+            if (this.form.validate()) {
+                var data = this.form.get('value');
+                var sendData = this._prepareDataForSend(data);
+                this.store.put(sendData);
+            }
+            return false;
+        },
+
+        _prepareDataForSend: function(data) {
+            var ret = {};
+            var startTime = this._inputToTime(data.start, this._getStartRegexp());
+            var endTime = this._inputToTime(data.end, this._getEndRegexp());
+
+            if (endTime) {
+                ret.endTime = time.jsDateToIsoTime(endTime) + ':00';
+            }
+
+            var startDatetime = new Date(data.date.getTime());
+            startDatetime.setHours(startTime.getHours());
+            startDatetime.setMinutes(startTime.getMinutes());
+
+            ret.startDatetime = time.jsDateToIsoDatetime(startDatetime) + ':00';
+
+            ret.notes = data.notes || '';
+
+            ret.projectId = data.project || '1';
+
+            return ret;
+        },
+
+        _inputToTime: function(input, reg) {
+            if (input.length !== 0) {
+                var matched = input.match(reg);
+                if (matched[2] && matched[3]) {
+                    var date = new Date();
+                    date.setHours(parseInt(matched[2], 10));
+                    date.setMinutes(parseInt(matched[3], 10));
+                    return date;
+                }
+            }
+            return null;
         },
 
         _setDateAttr: function(date) {
