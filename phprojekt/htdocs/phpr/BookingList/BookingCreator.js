@@ -46,6 +46,10 @@ define([
         },
 
         _submit: function() {
+        },
+
+        _setDateAttr: function(date) {
+            this.date.set('value', date);
         }
     });
 });
