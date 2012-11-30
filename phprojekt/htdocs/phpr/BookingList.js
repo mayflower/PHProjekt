@@ -41,9 +41,9 @@ define([
         },
 
         _setDateAttr: function(date) {
-            date.setDate(1);
-            html.set(this.selectedDate, locale.format(date, {selector: 'date', formatLength: 'long'}));
             this.date = date;
+            html.set(this.selectedDate, locale.format(date, {selector: 'date', datePattern: 'MMMM yyy'}));
+            this.bookingCreator.set('date', date);
             this._update();
         },
 
