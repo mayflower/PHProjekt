@@ -12,7 +12,6 @@
  * @copyright  Copyright (c) 2011 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
  */
-require_once 'Sabre.autoload.php';
 
 /**
  * WebDAV collection model.

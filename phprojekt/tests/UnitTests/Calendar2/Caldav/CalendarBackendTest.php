@@ -14,7 +14,6 @@
  * @version    Release: 6.1.0
  */
 
-require_once 'Sabre.autoload.php';
 
 /**
  * Tests Calendar2 Model
