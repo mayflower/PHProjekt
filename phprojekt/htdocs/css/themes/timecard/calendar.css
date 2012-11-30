@@ -30,7 +30,11 @@
 }
 
 .timecard .dijitCalendarDateTemplate.today span {
-    border-color: rgb(150, 120, 0);
+    border-color: #0D639B;
+}
+
+.timecard .dijitCalendarDateTemplate .dijitCalendarDateLabel {
+    padding: 3px 4px 3px 4px;
 }
 
 .timecard .dijitCalendarDateTemplate.weekend span,

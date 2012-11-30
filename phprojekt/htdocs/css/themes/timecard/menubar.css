@@ -4,10 +4,15 @@
     height:100%;
 }
 
+.timecard .menubar td:first-child {
+    border-left: 0;
+}
+
 .timecard .menubar td {
     padding-right: 1px;
     width: 184px;
     vertical-align: top;
+    border-left: 1px solid black;
     text-align: left;
     cursor: pointer;
 }
