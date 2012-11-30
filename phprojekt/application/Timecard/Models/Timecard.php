@@ -51,6 +51,10 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
             $this->minutes = floor (($end->getTimestamp() - $start->getTimestamp()) / 60);
         }
 
+        if (!isset($this->ownerId)) {
+            $this->ownerId = Phprojekt_Auth_Proxy::getEffectiveUserId();
+        }
+
         if (empty($this->uid)) {
             $this->uid = Phprojekt::generateUniqueIdentifier();
         }
