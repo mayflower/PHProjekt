@@ -18,31 +18,12 @@
  * /application directory or from the Zend library directory depending
  * on the name of the class.
  */
-class Phprojekt_Loader extends Zend_Loader
+class Phprojekt_Loader
 {
-    /**
-     * Directories.
-     *
-     * @var array
-     */
-    protected static $_directories = array(PHPR_CORE_PATH, PHPR_LIBRARY_PATH, PHPR_USER_CORE_PATH);
-
     /**
      * Define the set of allowed characters for classes..
      */
     const CLASS_PATTERN = '[A-Za-z0-9_]+';
-
-    /**
-     * Adds a directory to search when autoloading.
-     *
-     * @param string $directory The directory
-     *
-     * @return void
-     */
-    public static function addIncludeDirectory($directory)
-    {
-        self::$_directories[] = $directory;
-    }
 
     /**
      * Load a class
@@ -64,19 +45,15 @@ class Phprojekt_Loader extends Zend_Loader
                   . DIRECTORY_SEPARATOR
                   . array_pop($names) . '.php';
 
-            if (self::isReadable(PHPR_CORE_PATH . DIRECTORY_SEPARATOR . $path)) {
-                self::_includeFile(PHPR_CORE_PATH . DIRECTORY_SEPARATOR . $path, true);
-            } else if (self::isReadable(PHPR_USER_CORE_PATH . $path)) {
-                self::_includeFile(PHPR_USER_CORE_PATH . $path, true);
+            if (is_readable(PHPR_CORE_PATH . DIRECTORY_SEPARATOR . $path)) {
+                include_once (PHPR_CORE_PATH . DIRECTORY_SEPARATOR . $path);
+            } else if (is_readable(PHPR_USER_CORE_PATH . $path)) {
+                include_once (PHPR_USER_CORE_PATH . $path);
             }
-        }
 
-        if (!class_exists($class, false)) {
-            if (null === $dirs) {
-                $dirs = self::$_directories;
-            }
-            parent::loadClass($class, $dirs);
+            return class_exists($class, false);
         }
+        return false;
     }
 
     /**
@@ -91,7 +68,7 @@ class Phprojekt_Loader extends Zend_Loader
     public static function autoload($class)
     {
         try {
-            @self::loadClass($class, self::$_directories);
+            @self::loadClass($class, null);
             return $class;
         } catch (Zend_Exception $error) {
             return false;
@@ -235,7 +212,7 @@ class Phprojekt_Loader extends Zend_Loader
 
         $assert = false;
         if (file_exists($file)) {
-            self::_includeFile($file, true);
+            include_once($file);
             $assert = true;
         }
 

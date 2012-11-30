@@ -114,12 +114,8 @@ class Phprojekt
      */
     public static function getVersion()
     {
-        if (null !== self::VERSION_EXTRA) {
-            return sprintf("%d.%d.%d-%s", self::VERSION_MAJOR, self::VERSION_MINOR, self::VERSION_RELEASE,
-                self::VERSION_EXTRA);
-        } else {
-            return sprintf("%d.%d.%d", self::VERSION_MAJOR, self::VERSION_MINOR, self::VERSION_RELEASE);
-        }
+        $composer = json_decode(file_get_contents(PHPR_ROOT_PATH . DIRECTORY_SEPARATOR  . "composer.json"));
+        return $composer->version;
     }
 
     /**
@@ -426,11 +422,8 @@ class Phprojekt
             . PHPR_LIBRARY_PATH . PATH_SEPARATOR
             . get_include_path());
 
-        require_once 'Zend/Loader/Autoloader.php';
-        require_once 'Phprojekt/Loader.php';
-
-        $autoloader = Zend_Loader_Autoloader::getInstance();
-        $autoloader->pushAutoloader(array('Phprojekt_Loader', 'autoload'));
+        require_once PHPR_ROOT_PATH . '/vendor/autoload.php';
+        spl_autoload_register(array('Phprojekt_Loader', 'autoload'), true, false);
 
         // If the configuration file does not exist we redirect to the setup page.
         if (!file_exists(PHPR_CONFIG_FILE)) {
@@ -559,7 +552,7 @@ class Phprojekt
         $front->setParam('useDefaultControllerAlways', true);
 
         // Define general error handler
-        set_error_handler(Array("Phprojekt", "errorHandler"));
+        set_error_handler(array("Phprojekt", "errorHandler"));
 
         $front->registerPlugin(new Phprojekt_ExtensionsPlugin());
     }
@@ -754,6 +747,7 @@ class Phprojekt
             return;
         }
 
+        $errDesc = "";
         // Whether, for E_NOTICE, E_USER_ERROR, E_RECOVERABLE_ERROR and default case, show errors to user and interrupt
         // script execution
         $throwErrors = false;
