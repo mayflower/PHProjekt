@@ -58,10 +58,7 @@ define([
         },
 
         _delete: function() {
-            this.store.remove(this.booking.id).then(lang.hitch(this, function() {
-                this.destroyRecursive();
-                this.emit('delete', this.booking);
-            }));
+            this.store.remove(this.booking.id);
         }
     });
 });
