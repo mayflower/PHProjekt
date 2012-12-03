@@ -16,6 +16,9 @@ define("PHPR_CONFIG_SECTION", "testing-mysql");
 
 define('PHPR_ROOT_PATH', realpath(dirname(__FILE__) . '/../../'));
 
+include_once 'DatabaseTest.php';
+include_once 'FrontInit.php';
+
 require_once PHPR_ROOT_PATH . DIRECTORY_SEPARATOR . 'library' . DIRECTORY_SEPARATOR . 'Phprojekt.php';
 Phprojekt::getInstance();
 // Phprojekt::getInstance() indirectly sets the error handler which eats our errors.

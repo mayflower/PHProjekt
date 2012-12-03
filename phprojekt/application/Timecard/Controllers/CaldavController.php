@@ -12,7 +12,6 @@
  * @copyright  Copyright (c) 2012 Mayflower GmbH (http://www.mayflower.de)
  * @license    LGPL v3 (See LICENSE file)
  */
-require_once 'Sabre.autoload.php';
 
 /**
  * Timecard Module CalDAV Controller.

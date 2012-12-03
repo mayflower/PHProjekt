@@ -1,0 +1,22 @@
+{
+    "name": "mayflower/phprojekt",
+    "version": "6.3.0-dev",
+    "description": "PHProjekt",
+    "license": "LGPL-3.0+",
+    "require": {
+        "mayflower/holiday": "dev-master",
+        "zendframework/zendframework1": "1.10.7",
+        "sabre/dav": "1.6.2"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "3.7.*",
+        "phpunit/dbunit": ">=1.2"
+    },
+    "autoload": {
+        "psr-0": {"": "application/",
+            "Phprojekt": "library/",
+            "Setup": "htdocs/",
+            "Cleaner": "library/"
+        }
+    }
+}
