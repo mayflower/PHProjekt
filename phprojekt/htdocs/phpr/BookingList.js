@@ -165,6 +165,35 @@ define([
             }
 
             return ret;
+        },
+
+        _reorderDayWidgets: function() {
+            var entries = [];
+
+            for (var timestamp in this.day2dayBlock) {
+                entries.push({
+                    ts: timestamp,
+                    entry: this.day2dayBlock[timestamp]
+                });
+            }
+
+            entries.sort(function(a, b) {
+                return parseInt(b.ts, 10) > parseInt(a.ts, 10);
+            });
+
+            array.forEach(entries, function(e, index, a) {
+                if (e.entry.placed === false) {
+                    var w = e.entry.widget;
+                    if (index === 0) {
+                        w.placeAt(this.content, 'first');
+                    } else if (index === a.length - 1) {
+                        w.placeAt(this.content, 'last');
+                    } else {
+                        w.placeAt(a[index - 1].entry.widget, 'after');
+                    }
+                    e.entry.placed = true;
+                }
+            }, this);
         }
     });
 });
