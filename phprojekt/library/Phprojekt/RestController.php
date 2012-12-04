@@ -213,10 +213,6 @@ abstract class Phprojekt_RestController extends Zend_Rest_Controller
             throw new Zend_Controller_Action_Exception('Id not found', 404);
         }
 
-        foreach ($item as $property => $value) {
-            $model->$property = $value;
-        }
-
         if ($model->delete()) {
             Phprojekt_CompressedSender::send(
                 Zend_Json_Encoder::encode(
