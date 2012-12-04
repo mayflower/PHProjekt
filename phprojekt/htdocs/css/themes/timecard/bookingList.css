@@ -33,6 +33,11 @@
     min-height: 22px;
 }
 
+.bookingEntry.selected {
+    background: #0d639b;
+    color: white;
+}
+
 .bookingEntry.highlight {
     animation-duration: 2s;
     -moz-animation-duration: 2s;
@@ -105,7 +110,7 @@
     float: right;
     display: none;
 }
-.bookingEntry:hover .deleteButton {
+.bookingEntry.selected .deleteButton {
     display: inline-block;
 }
 
