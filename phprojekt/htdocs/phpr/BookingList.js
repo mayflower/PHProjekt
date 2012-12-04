@@ -40,8 +40,6 @@ define([
 
         templateString: bookingListTemplate,
 
-        _startedUp: false,
-
         observer: null,
 
         day2dayBlock: null,
@@ -55,9 +53,8 @@ define([
             this.day2dayBlock = {};
         },
 
-        postCreate: function() {
+        startup: function() {
             this.inherited(arguments);
-            this._startedUp = true;
             this._update();
         },
 
@@ -80,7 +77,7 @@ define([
         _updating: false,
 
         _update: function() {
-            if (this._updating || !this._startedUp) {
+            if (this._updating || !this._started) {
                 return;
             }
 

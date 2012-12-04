@@ -23,6 +23,7 @@ define([
             baseLayout.startup();
 
             viewManager = new ViewManager(baseLayout);
+            viewManager.startup();
 
             started = true;
             starting = false;
