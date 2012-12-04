@@ -38,6 +38,10 @@
     color: white;
 }
 
+.bookingEntry.confirmDeletion {
+    background: red;
+}
+
 .bookingEntry.highlight {
     animation-duration: 2s;
     -moz-animation-duration: 2s;
@@ -111,6 +115,15 @@
     display: none;
 }
 .bookingEntry.selected .deleteButton {
+    display: inline-block;
+}
+
+.bookingEntry .confirmDeleteButton {
+    margin-top: -1px;
+    float: right;
+    display: none;
+}
+.bookingEntry.confirmDeletion .confirmDeleteButton {
     display: inline-block;
 }
 
@@ -199,11 +212,6 @@
 
 .submitButton .dijitButtonNode {
     border: none;
-}
-
-.deleteButton {
-    float: right;
-    line-height
 }
 
 .deleteButton .dijitButtonNode {

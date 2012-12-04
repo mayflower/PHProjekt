@@ -20,7 +20,7 @@ define([
     time, api, templateString) {
 
     var unselectAll = function() {
-        query('.bookingEntry.selected').removeClass('selected');
+        query('.bookingEntry.selected').removeClass('selected confirmDeletion');
     };
 
     on(query('body'), 'click', unselectAll);
@@ -69,6 +69,11 @@ define([
         },
 
         _delete: function() {
+            clazz.add(this.domNode, 'confirmDeletion');
+            clazz.remove(this.domNode, 'selected');
+        },
+
+        _confirmDeletion: function() {
             this.store.remove(this.booking.id);
         },
 
@@ -82,6 +87,10 @@ define([
         },
 
         _markSelected: function(event) {
+            if (clazz.contains(this.domNode, 'confirmDeletion')) {
+                return;
+            }
+
             unselectAll();
             clazz.add(this.domNode, 'selected');
             event.stopPropagation();
