@@ -13,10 +13,6 @@ define([
         baseClass: 'baseLayout',
         templateString: templateString,
 
-        buildRendering: function() {
-            this.inherited(arguments);
-        },
-
         layout: function() {
             this.outerBorderContainer.layout.apply(this.outerBorderContainer, arguments);
         },
