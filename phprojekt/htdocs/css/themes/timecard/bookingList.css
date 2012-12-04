@@ -185,7 +185,7 @@
     min-width: 22px;
 }
 
-.dijitIcon.deleteButton {
+.dijitIcon.deleteIcon {
     background-image: url(../../../img/timecard/icon-trash.png);
     background-repeat: no-repeat;
     min-height: 23px;
