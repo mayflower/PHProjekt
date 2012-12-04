@@ -189,7 +189,8 @@ define([
             var ret = [];
             for (var day in partitions) {
                 ret.push({
-                    day: new Date(day)
+                    day: new Date(day),
+                    bookings: partitions[day]
                 });
             }
 
