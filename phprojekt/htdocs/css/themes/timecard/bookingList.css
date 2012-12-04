@@ -180,6 +180,11 @@
     min-width: 22px;
 }
 
+.submitButton {
+    float: right;
+    line-height: 38px !important;
+}
+
 .submitButton .dijitButtonNode {
     border: none;
 }
