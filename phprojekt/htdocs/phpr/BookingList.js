@@ -132,14 +132,17 @@ define([
             this.day2dayBlock[params.day.getTime()] = widget;
         },
 
-        _getQueryString: function() {
-            var monthStart = this.date || new Date();
-            monthStart = new Date(monthStart.getFullYear(), monthStart.getMonth(), 1);
+        _getQueryString: function(start, end) {
+            if (!start) {
+                start = this.date || new Date();
+                start = new Date(start.getFullYear(), start.getMonth(), 1);
+            }
+            end = end || date.add(start, 'month', 1);
 
             return json.stringify({
                 startDatetime: {
-                    '!ge': monthStart.toString(),
-                    '!lt': date.add(monthStart, 'month', 1).toString()
+                    '!ge': start.toString(),
+                    '!lt': end.toString()
                 }
             });
         },
