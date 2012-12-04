@@ -119,9 +119,19 @@
 }
 
 .bookingEntry .confirmDeleteButton {
-    margin-top: -1px;
+    margin: -4px 0 0 0;
     float: right;
     display: none;
+}
+.bookingEntry .confirmDeleteButton .dijitButtonNode {
+    background-color: red;
+}
+.bookingEntry .confirmDeleteButton.dijitHover .dijitButtonNode {
+    background-color: red;
+}
+
+.bookingEntry .confirmDeleteButton .dijitButtonNode {
+    padding: 0;
 }
 .bookingEntry.confirmDeletion .confirmDeleteButton {
     display: inline-block;
