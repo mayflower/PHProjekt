@@ -99,8 +99,9 @@ define([
                 var bookingsByDay = this._partitionBookingsByDay(data);
 
                 domConstruct.empty(this.content);
+                this.day2dayBlock = {};
 
-                array.forEach(bookingsByDay, this._addDayBlock, this);
+                this._addBookingsPartitionedByDay(bookingsByDay);
                 this._updating = false;
             }));
 
@@ -108,28 +109,53 @@ define([
         },
 
         _storeChanged: function(object, removedFrom, insertedInto) {
-            var idate = time.datetimeToJsDate(object.startDatetime);
-            idate = new Date(idate.getFullYear(), idate.getMonth(), idate.getDate());
+            var bdate = time.datetimeToJsDate(object.startDatetime);
+            idate = new Date(bdate.getFullYear(), bdate.getMonth(), bdate.getDate());
 
-            var widget = this.day2dayBlock[idate.getTime()];
-            if (!widget && removedFrom === -1 && insertedInto !== -1) {
-                this._addDayBlock({day: idate});
-            }
+            var results = this.store.query({filter: this._getQueryString(idate, date.add(idate, 'day', 1))});
+            when(results, lang.hitch(this, function(data) {
+                var entry = this.day2dayBlock[idate.getTime()];
+                if (entry && entry.widget && removedFrom !== -1 && insertedInto === -1) {
+                    entry.widget.destroyRecursive();
+                    delete this.day2dayBlock[idate.getTime()];
+                }
+
+                var partitions = this._partitionBookingsByDay(data);
+                array.some(partitions, function(partition) {
+                    return array.some(partition.bookings, function(b) {
+                        var ret = date.compare(time.datetimeToJsDate(b.startDatetime), bdate) === 0;
+                        if (ret) {
+                            b.highlight = true;
+                        }
+
+                        return ret;
+                    });
+                });
+
+                this._addBookingsPartitionedByDay(partitions);
+            }));
+        },
+
+        _addBookingsPartitionedByDay: function(bookingsByDay) {
+            array.forEach(bookingsByDay, this._addDayBlock, this);
+            this._reorderDayWidgets();
         },
 
         _addDayBlock: function(params) {
+            var entry = this.day2dayBlock[params.day.getTime()];
+            if (entry && entry.widget) {
+                entry.widget.destroyRecursive();
+                delete this.day2dayBlock[params.day.getTime()];
+            }
+
             params.store = this.store;
-            var widget = new DayBlock(params);
-            widget.on('empty', lang.hitch(this, function(day) {
-                var w = this.day2dayBlock[day.getTime()];
-                if (w) {
-                    w.destroyRecursive();
-                    delete this.day2dayBlock[day.getTime()];
-                }
-            }));
+            widget = new DayBlock(params);
             widget.placeAt(this.content);
             this.own(widget);
-            this.day2dayBlock[params.day.getTime()] = widget;
+            this.day2dayBlock[params.day.getTime()] = {
+                widget: widget,
+                placed: false
+            };
         },
 
         _getQueryString: function(start, end) {
