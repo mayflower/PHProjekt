@@ -33,6 +33,73 @@
     min-height: 22px;
 }
 
+.bookingEntry.highlight {
+    animation-duration: 2s;
+    -moz-animation-duration: 2s;
+    -webkit-animation-duration: 2s;
+    -o-animation-duration: 2s;
+    animation-name: bookingEntryHighlight;
+    -moz-animation-name: bookingEntryHighlight;
+    -webkit-animation-name: bookingEntryHighlight;
+    -o-animation-name: bookingEntryHighlight;
+}
+
+@keyframes bookingEntryHighlight {
+    from {
+        background: #eeeeee;
+    }
+
+    50% {
+        background: rgb(233, 243, 0);
+    }
+
+    to {
+        background: #eeeeee;
+    }
+}
+
+@-moz-keyframes bookingEntryHighlight {
+    from {
+        background: #eeeeee;
+    }
+
+    50% {
+        background: rgb(233, 243, 0);
+    }
+
+    to {
+        background: #eeeeee;
+    }
+}
+
+@-webkit-keyframes bookingEntryHighlight {
+    from {
+        background: #eeeeee;
+    }
+
+    50% {
+        background: rgb(233, 243, 0);
+    }
+
+    to {
+        background: #eeeeee;
+    }
+}
+
+@-o-keyframes bookingEntryHighlight {
+    from {
+        background: #eeeeee;
+    }
+
+    50% {
+        background: rgb(233, 243, 0);
+    }
+
+    to {
+        background: #eeeeee;
+    }
+}
+
 .bookingEntry .deleteButton {
     margin-top: -1px;
     float: right;

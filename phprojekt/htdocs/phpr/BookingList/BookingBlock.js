@@ -2,19 +2,21 @@ define([
     'dojo/_base/declare',
     'dojo/_base/lang',
     'dojo/html',
+    'dojo/window',
+    'dojo/on',
+    'dojo/dom-class',
     'dojo/date',
     'dojo/date/locale',
     'dijit/_WidgetBase',
     'dijit/_TemplatedMixin',
     'dijit/_WidgetsInTemplateMixin',
-    'dojo/Evented',
     'phpr/Timehelper',
     'phpr/Api',
     'dojo/text!phpr/template/bookingList/bookingBlock.html'
-], function(declare, lang, html, date, locale, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin,
-    Evented, time, api, templateString) {
+], function(declare, lang, html, win, on, clazz, date, locale, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin,
+    time, api, templateString) {
 
-    return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, Evented], {
+    return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
         store: null,
         booking: null,
 
@@ -59,6 +61,13 @@ define([
 
         _delete: function() {
             this.store.remove(this.booking.id);
+        },
+
+        startup: function() {
+            this.inherited(arguments);
+            if (this.booking && this.booking.highlight === true) {
+                clazz.add(this.domNode, 'highlight');
+            }
         }
     });
 });
