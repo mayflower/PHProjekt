@@ -1,18 +1,19 @@
 define([
     'dojo/_base/array',
+    'dojo/_base/lang',
     'dojo/json',
     'phpr/Timehelper'
-], function(array, json, time) {
+], function(array, lang, json, time) {
     var isDate = function(dateString) {
         return ("" + new Date(dateString)) == dateString;
     };
 
-    var isoDateRegex = /\d{4}-\d{2}-\d{2}/;
+    var isoDateRegex = /^\d{4}-\d{2}-\d{2}$/;
     var isIsoDate = function(dateString) {
         return isoDateRegex.test("" + dateString);
     };
 
-    var isoDatetimeRegex = /\d{4}-\d{2}-\d{2} \d{2}:\d{2}(:\d{2})?/;
+    var isoDatetimeRegex = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}(:\d{2})?$/;
     var isIsoDatetime = function(dateString) {
         return isoDatetimeRegex.test("" + dateString);
     };
@@ -32,7 +33,7 @@ define([
     var conditionHolds = function(condition, fieldType, input, compareTo) {
         switch (fieldType) {
             case 'IsoDate':
-                input = new Date(input);
+                input = time.datetimeToJsDate(input);
                 fieldType = 'Date';
                 break;
             case 'IsoDatetime':
@@ -67,12 +68,14 @@ define([
                         return false;
                     }
 
-                    var fieldType = getFieldType(item[fieldName]);
+                    var value = lang.trim(item[fieldName]);
+
+                    var fieldType = getFieldType(value);
 
                     var conditions = filter[fieldName];
                     for (var conditionName in conditions) {
                         var conditionVariable = conditions[conditionName];
-                        if (!conditionHolds(conditionName, fieldType, item[fieldName], conditionVariable)) {
+                        if (!conditionHolds(conditionName, fieldType, value, conditionVariable)) {
                             return false;
                         }
                     }
