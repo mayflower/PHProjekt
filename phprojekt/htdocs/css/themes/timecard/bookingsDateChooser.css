@@ -1,0 +1,7 @@
+.timecard .bookingsDateChooser .dijitCalendarContainer {
+    width: 171px;
+    outline-color: transparent !important;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 14px;
+}

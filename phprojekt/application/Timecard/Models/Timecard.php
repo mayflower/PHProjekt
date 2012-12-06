@@ -51,6 +51,10 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
             $this->minutes = floor (($end->getTimestamp() - $start->getTimestamp()) / 60);
         }
 
+        if (!isset($this->ownerId)) {
+            $this->ownerId = Phprojekt_Auth_Proxy::getEffectiveUserId();
+        }
+
         if (empty($this->uid)) {
             $this->uid = Phprojekt::generateUniqueIdentifier();
         }
@@ -222,6 +226,15 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
                     'message' => Phprojekt::getInstance()->translate('The start time is invalid')));
                 return false;
             }
+        }
+
+        if (isset($data['ownerId']) && $data['ownerId'] != Phprojekt_Auth_Proxy::getEffectiveUserId()) {
+            $this->_validate->error->addError(array(
+                'field'   => 'ownerId',
+                'label'   => 'ownerId',
+                'message' => 'Unable to safe items for someone that is not you.'
+            ));
+            return false;
         }
 
         return $this->_validate->recordValidate($this, $data, $fields);

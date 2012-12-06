@@ -15,10 +15,14 @@
     left: 50%;
     padding: 90px 50px 100px 80px;
     top: 60%;
-    width: 400px;
+    width: 350px;
     background-image: url("images/login-mask.png");
     background-repeat: no-repeat;
     position: relative;
+}
+
+.phprojekt-login .legacyLogin {
+    color: #CBCBCB;
 }
 
 .label {

@@ -1,0 +1,19 @@
+body, html {
+    width:100%;
+    height:100%;
+    margin:0;
+    padding:0;
+    background-attachment: fixed;
+    background-repeat-x: repeat;
+    background-repeat-y: repeat;
+    background-image: url(../../../img/timecard/background2.png);
+}
+
+.clearfix:after {
+    content: ".";
+    display: block;
+    clear: both;
+    visibility: hidden;
+    line-height: 0;
+    height: 0;
+}

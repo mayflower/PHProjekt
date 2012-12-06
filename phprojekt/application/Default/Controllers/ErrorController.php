@@ -27,6 +27,10 @@ class ErrorController extends Zend_Controller_Action
      * @return void
      */
     public function init() {
+        if ($this->getRequest()->getHeader('X-Requested-With') === 'XMLHttpRequest') {
+            $this->getRequest()->setParam('format', 'json');
+        }
+
         $this->_helper->contextSwitch()
             ->addActionContext('error', 'json')
             ->setAutoJsonSerialization(false)

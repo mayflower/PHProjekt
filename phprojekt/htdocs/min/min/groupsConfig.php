@@ -74,5 +74,18 @@ return array(
         "//css/themes/phprojekt/phprojektGrid.css",
         "//dojo/release/dojo/dijit/themes/dijit.css",
         "//dojo/release/dojo/dijit/themes/dijit_rtl.css"
+    ),
+    'timecard' => array(
+        "//dojo2/release/dojo/dijit/themes/claro/claro.css",
+        "//dojo2/release/dojo/dojo/resources/dojo.css",
+        "//css/themes/timecard/baseLayout.css",
+        "//css/themes/timecard/menubar.css",
+        "//css/themes/timecard/basicHtml.css",
+        "//css/themes/timecard/contentPane.css",
+        "//css/themes/timecard/bookingsDateChooser.css",
+        "//css/themes/timecard/scrollbar.css",
+        "//css/themes/timecard/bookingList.css",
+        "//css/themes/timecard/bookingView.css",
+        "//css/themes/timecard/calendar.css"
     )
 );

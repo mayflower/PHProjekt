@@ -1,0 +1,232 @@
+.bookingList {
+    font-weight: bold;
+}
+
+.bookingBlockHeader {
+    background: black;
+    color: white;
+    text-align: center;
+    padding: 10px;
+}
+
+.bookingBlockHeader.today {
+    font-size: large;
+    color: #adadad;
+}
+
+.bookingBlockBody {
+    background: #5a5a5a;
+}
+
+.bookingBlockBody.empty {
+    height: 9px;
+}
+
+.bookingEntry {
+    background: #eeeeee;
+    border: 1px solid black;
+    color: black;
+    padding-left: 25px;
+    padding-top: 7px;
+    padding-right: 4px;
+    padding-bottom: 2px;
+    min-height: 22px;
+}
+
+.bookingEntry.highlight {
+    animation-duration: 2s;
+    -moz-animation-duration: 2s;
+    -webkit-animation-duration: 2s;
+    -o-animation-duration: 2s;
+    animation-name: bookingEntryHighlight;
+    -moz-animation-name: bookingEntryHighlight;
+    -webkit-animation-name: bookingEntryHighlight;
+    -o-animation-name: bookingEntryHighlight;
+}
+
+@keyframes bookingEntryHighlight {
+    from {
+        background: #eeeeee;
+    }
+
+    50% {
+        background: rgb(233, 243, 0);
+    }
+
+    to {
+        background: #eeeeee;
+    }
+}
+
+@-moz-keyframes bookingEntryHighlight {
+    from {
+        background: #eeeeee;
+    }
+
+    50% {
+        background: rgb(233, 243, 0);
+    }
+
+    to {
+        background: #eeeeee;
+    }
+}
+
+@-webkit-keyframes bookingEntryHighlight {
+    from {
+        background: #eeeeee;
+    }
+
+    50% {
+        background: rgb(233, 243, 0);
+    }
+
+    to {
+        background: #eeeeee;
+    }
+}
+
+@-o-keyframes bookingEntryHighlight {
+    from {
+        background: #eeeeee;
+    }
+
+    50% {
+        background: rgb(233, 243, 0);
+    }
+
+    to {
+        background: #eeeeee;
+    }
+}
+
+.bookingEntry .deleteButton {
+    margin-top: -1px;
+    float: right;
+    display: none;
+}
+.bookingEntry:hover .deleteButton {
+    display: inline-block;
+}
+
+.bookingEntry + .bookingEntry {
+    margin-top: 9px;
+}
+
+.bookingEntry .project {
+    display: inline-block;
+    min-width: 175px;
+}
+
+.bookingEntry .notes {
+    display: block;
+    margin-top: 1px;
+    font-weight: normal;
+}
+
+.selectedDate {
+    font-size: large;
+    text-align: center;
+    background-color: black;
+    color: white;
+    height: 58px;
+    line-height: 58px;
+}
+
+.selectedDate span {
+    vertical-align: middle;
+}
+
+.bookingCreator {
+    min-height: 38px;
+    background-color: black;
+    border-bottom: 1px solid #4A4A4A;
+    border-top: 1px solid #4A4A4A;
+}
+
+.bookingCreator .first,
+.bookingCreator .second {
+    line-height: 38px;
+    padding-left: 8px;
+}
+
+.bookingCreator .first > *,
+.bookingCreator .second > * {
+    vertical-align: middle;
+    line-height: normal;
+}
+
+.bookingCreator .notesIcon {
+    display: inline-block;
+}
+
+.bookingCreator .notesIcon div {
+    background-image: url(../../../img/timecard/buttonArrows.png);
+    background-position: -51px 53%;
+    width: 15px;
+    height: 15px;
+    vertical-align: middle;
+    display: inline-block;
+}
+
+.bookingCreator .notesIcon:hover div {
+    background-position: -151px 53%;
+}
+
+.dijitIcon.submitIcon {
+    background-image: url(../../../img/timecard/icon-add.png);
+    background-repeat: no-repeat;
+    min-height: 22px;
+    min-width: 22px;
+}
+
+.submitButton .dijitButtonNode {
+    border: none;
+}
+
+.bookingCreator .project {
+    color: black;
+    margin-right: 10px;
+}
+
+.bookingCreator .second {
+    height: 0px;
+    overflow: hidden;
+    transition-property: height;
+    transition-duration: 100ms;
+    transition-timing-function: linear;
+    -webkit-transition-property: height;
+    -webkit-transition-duration: 100ms;
+    -webkit-transition-timing-function: linear;
+    -moz-transition-property: height;
+    -moz-transition-duration: 100ms;
+    -moz-transition-timing-function: linear;
+    -o-transition-property: height;
+    -o-transition-duration: 100ms;
+    -o-transition-timing-function: linear;
+}
+
+.bookingCreator .second.open {
+    height: 38px;
+    transition-property: height;
+    transition-duration: 100ms;
+    transition-timing-function: linear;
+    -webkit-transition-property: height;
+    -webkit-transition-duration: 100ms;
+    -webkit-transition-timing-function: linear;
+    -moz-transition-property: height;
+    -moz-transition-duration: 100ms;
+    -moz-transition-timing-function: linear;
+    -o-transition-property: height;
+    -o-transition-duration: 100ms;
+    -o-transition-timing-function: linear;
+}
+
+.bookingCreator .time {
+    width: 5em;
+}
+
+.bookingCreator .date {
+    margin-left: 8px;
+    width: 8em;
+}

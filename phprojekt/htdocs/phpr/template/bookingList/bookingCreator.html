@@ -1,0 +1,44 @@
+<div class="bookingCreator">
+    <div data-dojo-attach-point="form" data-dojo-type="dijit/form/Form">
+        <div class="first">
+            <select data-dojo-attach-point="project"
+                    class="project"
+                    name="project"
+                    data-dojo-type="dijit/form/FilteringSelect"
+                    data-dojo-props="labelType: 'html', searchAttr: 'name', labelAttr: 'label', queryExpr: '*$\{0\}*'">
+                <option value="1"><span class="projectId">1</span> Unassigned</option>
+            </select>
+            <input type="text"
+                   name="start"
+                   data-dojo-type="dijit/form/ValidationTextBox"
+                   data-dojo-attach-point="start"
+                   data-dojo-props="pattern: this._getStartRegexp, invalidMessage: 'Invalid time format'"
+                   class="time"/>
+            -
+            <input type="text"
+                   name="end"
+                   data-dojo-type="dijit/form/ValidationTextBox"
+                   data-dojo-attach-point="end"
+                   data-dojo-props="pattern: this._getEndRegexp, invalidMessage: 'Invalid time format'"
+                   class="time"/>
+            <input type="text"
+                   name="date"
+                   data-dojo-type="phpr/DateTextBox"
+                   value="today"
+                   data-dojo-attach-point="date"
+                   class="date"/>
+            <a href="javascript: void(0)" class="notesIcon" data-dojo-attach-point="notesIcon"><div><b></b></div></a>
+            <button data-dojo-type="dijit/form/Button"
+                    type="submit"
+                    data-dojo-attach-point="submitButton"
+                    data-dojo-props="showLabel: false, iconClass: 'submitIcon', baseClass: 'submitButton'"
+                    class="submitButton">Submit</button>
+        </div>
+        <div data-dojo-attach-point="notesContainer" class="second">
+            <input type="text"
+                   name="notes"
+                   data-dojo-type="dijit/form/TextBox"
+                   data-dojo-attach-point="notes"/>
+        </div>
+    </div>
+</div>

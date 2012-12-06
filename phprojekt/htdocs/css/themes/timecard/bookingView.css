@@ -1,0 +1,30 @@
+.timecard .bookingView {
+}
+
+.timecard .bookingView .table {
+    border-spacing: 0;
+    background-image: url(../../../img/timecard/bookingsDateChooserBackground.png);
+    background-repeat: repeat-y;
+    background-position: 604px 0px;
+}
+
+.timecard .bookingView .table td {
+    vertical-align: top;
+}
+
+.timecard .bookingView .table .bookingList {
+    width: 604px;
+}
+
+.timecard .bookingView .table .dateChooser {
+    width: 230px;
+}
+
+.timecard .bookingView .dateChooserContainer {
+    width: 100%;
+}
+
+.timecard .bookingView .bookingListContainer {
+    width: 100%;
+    background-color: #1a1919;
+}

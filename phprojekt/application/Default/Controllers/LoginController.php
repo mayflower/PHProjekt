@@ -58,6 +58,7 @@ class LoginController extends Zend_Controller_Action
         $username   = Cleaner::sanitize('xss', $this->getRequest()->getParam('username', null));
         $password   = Cleaner::sanitize('xss', $this->getRequest()->getParam('password', null));
         $hash       = Cleaner::sanitize('xss', $this->getRequest()->getParam('hash', null));
+        $legacy     = Cleaner::sanitize('xss', $this->getRequest()->getParam('legacy', null));
         $keepLogged = (int) $this->getRequest()->getParam('keepLogged', 0);
         $keepLogged = ($keepLogged == 1) ? true : false;
         $loginServer = $this->getRequest()->getParam('domain', null);
@@ -71,11 +72,17 @@ class LoginController extends Zend_Controller_Action
                 array('keepLogged' => $keepLogged, 'loginServer' => $loginServer)
             );
             if ($success === true) {
+                $pageNamespace = new Zend_Session_Namespace('page');
                 $config = Phprojekt::getInstance()->getConfig();
                 $frontendMessage = new Phprojekt_Notification();
                 $frontendMessage->setControllProcess(Phprojekt_Notification::LAST_ACTION_LOGIN);
                 $frontendMessage->saveFrontendMessage();
                 Default_Helpers_Upload::cleanUnusedFiles();
+                if ($legacy !== null) {
+                    $pageNamespace->type = 'legacy';
+                } else {
+                    $pageNamespace->type = 'timecard';
+                }
                 $this->_redirect('../../index.php' . $hash);
                 die();
             }
@@ -109,10 +116,17 @@ class LoginController extends Zend_Controller_Action
     {
         $username = Cleaner::sanitize('xss', $this->getRequest()->getParam('username', null));
         $password = Cleaner::sanitize('xss', $this->getRequest()->getParam('password', null));
+        $legacy   = Cleaner::sanitize('xss', $this->getRequest()->getParam('legacy', false));
 
         try {
             $success = Phprojekt_Auth::login($username, $password);
             if ($success === true) {
+                $pageNamespace = new Zend_Session_Namespace('page');
+                if ($legacy !== false) {
+                    $pageNamespace->type = 'legacy';
+                } else {
+                    $pageNamespace->type = 'timecard';
+                }
                 $return = array('type'    => 'success',
                                 'message' => '');
             }

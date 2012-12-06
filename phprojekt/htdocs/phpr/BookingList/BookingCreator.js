@@ -1,0 +1,121 @@
+define([
+    'dojo/_base/declare',
+    'dojo/_base/lang',
+    'dojo/_base/array',
+    'dojo/on',
+    'dojo/dom-class',
+    'dojo/store/JsonRest',
+    'dojo/store/Memory',
+    'phpr/BookingList/BookingBlock',
+    'phpr/Api',
+    'phpr/Timehelper',
+    'dojo/text!phpr/template/bookingList/bookingCreator.html'
+], function(declare, lang, array, on, clazz, JsonRest, Memory, BookingBlock, api, time, templateString) {
+    return declare([BookingBlock], {
+        templateString: templateString,
+
+        store: null,
+
+        constructor: function() {
+            this.store = new JsonRest({
+                target: 'index.php/Timecard/Timecard/'
+            });
+        },
+
+        buildRendering: function() {
+            this.inherited(arguments);
+
+            this.date.set('value', new Date());
+            this.own(this.form.on('submit', lang.hitch(this, this._submit)));
+
+            api.getData(
+                'index.php/Project/Project',
+                {query: {projectId: 1, recursive: true}}
+            ).then(lang.hitch(this, function(projects) {
+                var options = [{id: '1', name: '1 Unassigned', label: '<span class="projectId">1</span> Unassigned'}];
+                array.forEach(projects, function(p) {
+                    options.push({
+                        id: '' + p.id,
+                        name: '' + p.id + ' ' + p.title,
+                        label: '<span class="projectId">' + p.id + '</span> ' + p.title
+                    });
+                });
+
+                var store = new Memory({
+                    data: options
+                });
+
+                this.project.set('store', store);
+            }));
+        },
+
+        postCreate: function() {
+            this.own(on(this.notesIcon, 'click', lang.hitch(this, 'toggleNotes')));
+            this.start.set('placeHolder', 'Start');
+            this.end.set('placeHolder', 'End');
+            this.notes.set('placeHolder', 'Notes');
+        },
+
+        toggleNotes: function() {
+            clazz.toggle(this.notesContainer, 'open');
+        },
+
+        _getStartRegexp: function() {
+            return '((\\d{1,2})[:\\. ]?(\\d{2}))';
+        },
+
+        _getEndRegexp: function() {
+            return '((\\d{1,2})[:\\. ]?(\\d{2}))?';
+        },
+
+        _submit: function(evt) {
+            evt.stopPropagation();
+            if (this.form.validate()) {
+                var data = this.form.get('value');
+                var sendData = this._prepareDataForSend(data);
+                this.store.put(sendData);
+            }
+            return false;
+        },
+
+        _prepareDataForSend: function(data) {
+            var ret = {};
+            var startTime = this._inputToTime(data.start, this._getStartRegexp());
+            var endTime = this._inputToTime(data.end, this._getEndRegexp());
+
+            if (endTime) {
+                ret.endTime = time.jsDateToIsoTime(endTime) + ':00';
+            }
+
+            var startDatetime = new Date(data.date.getTime());
+            startDatetime.setHours(startTime.getHours());
+            startDatetime.setMinutes(startTime.getMinutes());
+
+            ret.startDatetime = time.jsDateToIsoDatetime(startDatetime) + ':00';
+
+            ret.notes = data.notes || '';
+
+            ret.projectId = data.project || '1';
+
+            return ret;
+        },
+
+        _inputToTime: function(input, reg) {
+            if (input.length !== 0) {
+                var matched = input.match(reg);
+                if (matched[2] && matched[3]) {
+                    var date = new Date();
+                    date.setHours(parseInt(matched[2], 10));
+                    date.setMinutes(parseInt(matched[3], 10));
+                    return date;
+                }
+            }
+            return null;
+        },
+
+        _setDateAttr: function(date) {
+            this.date.set('value', date);
+        }
+    });
+});
+
