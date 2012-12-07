@@ -39,7 +39,8 @@
 }
 
 .bookingEntry.confirmDeletion {
-    background: red;
+    background: #9b110d;
+    color: white;
 }
 
 .bookingEntry.highlight {
@@ -123,11 +124,34 @@
     float: right;
     display: none;
 }
-.bookingEntry .confirmDeleteButton .dijitButtonNode {
-    background-color: red;
+
+.bookingEntry .confirmDeleteButton .dijitButtonText {
+    color: white;
 }
+
+.bookingEntry .confirmDeleteButton .dijitButtonNode {
+    background-color: #9b110d;
+    border: 1px solid #810e0b;
+    -webkit-box-shadow: inset 0px 0px 1px rgba(0, 0, 0, 0.25);
+    -o-box-shadow: inset 0px 0px 1px rgba(0, 0, 0, 0.25);
+    -moz-box-shadow: inset 0px 0px 1px rgba(0, 0, 0, 0.25);
+    box-shadow: inset 0px 0px 1px rgba(0, 0, 0, 0.25);
+    background-image: -webkit-linear-gradient(rgba(153, 17, 13, 1) 0%, rgba(130, 14, 11, 1) 100%);
+    background-image: -o-linear-gradient(rgba(153, 17, 13, 1) 0%, rgba(130, 14, 11, 1) 100%);
+    background-image: -moz-linear-gradient(rgba(153, 17, 13, 1) 0%, rgba(130, 14, 11, 1) 100%);
+    background-image: linear-gradient(rgba(153, 17, 13, 1) 0%, rgba(130, 14, 11, 1) 100%);
+}
+
 .bookingEntry .confirmDeleteButton.dijitHover .dijitButtonNode {
-    background-color: red;
+    background-color: #9b110d;
+    -webkit-box-shadow: inset 0px 0px 1px rgba(0, 0, 0, 0.25);
+    -o-box-shadow: inset 0px 0px 1px rgba(0, 0, 0, 0.25);
+    -moz-box-shadow: inset 0px 0px 1px rgba(0, 0, 0, 0.25);
+    box-shadow: inset 0px 0px 1px rgba(0, 0, 0, 0.25);
+    background-image: -webkit-linear-gradient(rgba(148, 4, 0, 1) 0%, rgba(114, 5, 2, 1) 100%);
+    background-image: -o-linear-gradient(rgba(148, 4, 0, 1) 0%, rgba(114, 5, 2, 1) 100%);
+    background-image: -moz-linear-gradient(rgba(148, 4, 0, 1) 0%, rgba(114, 5, 2, 1) 100%);
+    background-image: linear-gradient(rgba(148, 4, 0, 1) 0%, rgba(114, 5, 2, 1) 100%);
 }
 
 .bookingEntry .confirmDeleteButton .dijitButtonNode {
