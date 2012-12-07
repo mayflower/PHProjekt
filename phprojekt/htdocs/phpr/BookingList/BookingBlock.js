@@ -25,9 +25,12 @@ define([
 
     on(win.doc, 'click', unselectAll);
 
+    var defaultClickDelay = 500;
+
     return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
         store: null,
         booking: null,
+        lastAction: 0,
 
         templateString: templateString,
 
@@ -70,13 +73,25 @@ define([
 
         _delete: function(evt) {
             evt.stopPropagation();
+            if (this.lastAction + defaultClickDelay > new Date().getTime()) {
+                return;
+            }
             unselectAll();
             clazz.add(this.domNode, 'confirmDeletion');
+            this._setLastAction();
         },
 
         _confirmDeletion: function(evt) {
             evt.stopPropagation();
+            if (this.lastAction + defaultClickDelay > new Date().getTime()) {
+                return;
+            }
             this.store.remove(this.booking.id);
+            this._setLastAction();
+        },
+
+        _setLastAction: function() {
+            this.lastAction = new Date().getTime();
         },
 
         startup: function() {
@@ -89,12 +104,16 @@ define([
 
         _markSelected: function(evt) {
             evt.stopPropagation();
+            if (this.lastAction + defaultClickDelay > new Date().getTime()) {
+                return;
+            }
             if (clazz.contains(this.domNode, 'confirmDeletion')) {
                 return;
             }
 
             unselectAll();
             clazz.add(this.domNode, 'selected');
+            this._setLastAction();
         }
     });
 });
