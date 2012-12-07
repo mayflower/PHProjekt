@@ -27,10 +27,11 @@
     border: 1px solid black;
     color: black;
     padding-left: 25px;
-    padding-top: 7px;
+    padding-top: 5px;
     padding-right: 4px;
-    padding-bottom: 2px;
-    min-height: 22px;
+    padding-bottom: 5px;
+    min-height: 24px;
+    line-height: 24px;
 }
 
 .bookingEntry.selected {
@@ -120,7 +121,7 @@
 }
 
 .bookingEntry .confirmDeleteButton {
-    margin: -4px 0 0 0;
+    margin: 0;
     float: right;
     display: none;
 }
