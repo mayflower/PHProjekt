@@ -5,3 +5,4 @@ build
 phprojekt/configuration.php
 phprojekt/htdocs/dojo/release/dojo/dojo/build.txt
 coverage
+phprojekt/vendor/*
