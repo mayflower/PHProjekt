@@ -7,18 +7,18 @@
             "source": {
                 "type": "git",
                 "url": "git://github.com/Mayflower/libholiday.git",
-                "reference": "a5b0ca02ad4f05763df4e0b882c992631bb79076"
+                "reference": "8310103e155d560cfc496ec2e35c91d685f3bdf0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/Mayflower/libholiday/archive/a5b0ca02ad4f05763df4e0b882c992631bb79076.zip",
-                "reference": "a5b0ca02ad4f05763df4e0b882c992631bb79076",
+                "url": "https://github.com/Mayflower/libholiday/archive/8310103e155d560cfc496ec2e35c91d685f3bdf0.zip",
+                "reference": "8310103e155d560cfc496ec2e35c91d685f3bdf0",
                 "shasum": ""
             },
             "require-dev": {
                 "phpunit/phpunit": "3.7.*"
             },
-            "time": "2012-11-27 16:51:23",
+            "time": "2012-12-07 19:03:12",
             "type": "library",
             "installation-source": "source",
             "autoload": {
@@ -26,6 +26,7 @@
                     "Holiday": "src/"
                 }
             },
+            "notification-url": "http://packagist.org/downloads/",
             "license": [
                 "LGPL-3.0+"
             ],
