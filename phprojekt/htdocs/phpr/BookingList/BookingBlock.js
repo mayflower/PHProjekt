@@ -20,7 +20,7 @@ define([
     time, api, templateString) {
 
     var unselectAll = function() {
-        query('.bookingEntry.selected').removeClass('selected confirmDeletion');
+        query('.bookingEntry.selected, .bookingEntry.confirmDeletion').removeClass('selected confirmDeletion');
     };
 
     on(win.doc, 'click', unselectAll);
@@ -68,12 +68,14 @@ define([
             html.set(this.notes, booking.notes);
         },
 
-        _delete: function() {
+        _delete: function(evt) {
+            evt.stopPropagation();
+            unselectAll();
             clazz.add(this.domNode, 'confirmDeletion');
-            clazz.remove(this.domNode, 'selected');
         },
 
-        _confirmDeletion: function() {
+        _confirmDeletion: function(evt) {
+            evt.stopPropagation();
             this.store.remove(this.booking.id);
         },
 
@@ -83,17 +85,16 @@ define([
                 clazz.add(this.domNode, 'highlight');
             }
             this.own(on(this.domNode, "click", lang.hitch(this, this._markSelected)));
-            this.own(topic.subscribe('BookingList/removeSelection', lang.hitch(this, this._unmarkSelected)));
         },
 
-        _markSelected: function(event) {
+        _markSelected: function(evt) {
+            evt.stopPropagation();
             if (clazz.contains(this.domNode, 'confirmDeletion')) {
                 return;
             }
 
             unselectAll();
             clazz.add(this.domNode, 'selected');
-            event.stopPropagation();
         }
     });
 });
