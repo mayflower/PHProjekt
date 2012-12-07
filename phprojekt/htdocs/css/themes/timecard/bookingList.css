@@ -33,6 +33,15 @@
     min-height: 22px;
 }
 
+.bookingEntry.selected {
+    background: #0d639b;
+    color: white;
+}
+
+.bookingEntry.confirmDeletion {
+    background: red;
+}
+
 .bookingEntry.highlight {
     animation-duration: 2s;
     -moz-animation-duration: 2s;
@@ -105,7 +114,26 @@
     float: right;
     display: none;
 }
-.bookingEntry:hover .deleteButton {
+.bookingEntry.selected .deleteButton {
+    display: inline-block;
+}
+
+.bookingEntry .confirmDeleteButton {
+    margin: -4px 0 0 0;
+    float: right;
+    display: none;
+}
+.bookingEntry .confirmDeleteButton .dijitButtonNode {
+    background-color: red;
+}
+.bookingEntry .confirmDeleteButton.dijitHover .dijitButtonNode {
+    background-color: red;
+}
+
+.bookingEntry .confirmDeleteButton .dijitButtonNode {
+    padding: 0;
+}
+.bookingEntry.confirmDeletion .confirmDeleteButton {
     display: inline-block;
 }
 
@@ -180,7 +208,23 @@
     min-width: 22px;
 }
 
+.dijitIcon.deleteIcon {
+    background-image: url(../../../img/timecard/icon-trash.png);
+    background-repeat: no-repeat;
+    min-height: 23px;
+    min-width: 23px;
+}
+
+.submitButton {
+    float: right;
+    line-height: 38px !important;
+}
+
 .submitButton .dijitButtonNode {
+    border: none;
+}
+
+.deleteButton .dijitButtonNode {
     border: none;
 }
 

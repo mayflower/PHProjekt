@@ -7,14 +7,23 @@ define([
     'dojo/dom-class',
     'dojo/date',
     'dojo/date/locale',
+    'dojo/topic',
+    'dojo/query',
+    'dojo/NodeList-dom',
     'dijit/_WidgetBase',
     'dijit/_TemplatedMixin',
     'dijit/_WidgetsInTemplateMixin',
     'phpr/Timehelper',
     'phpr/Api',
     'dojo/text!phpr/template/bookingList/bookingBlock.html'
-], function(declare, lang, html, win, on, clazz, date, locale, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin,
+], function(declare, lang, html, win, on, clazz, date, locale, topic, query, nodeList_dom, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin,
     time, api, templateString) {
+
+    var unselectAll = function() {
+        query('.bookingEntry.selected').removeClass('selected confirmDeletion');
+    };
+
+    on(query('body'), 'click', unselectAll);
 
     return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
         store: null,
@@ -60,6 +69,11 @@ define([
         },
 
         _delete: function() {
+            clazz.add(this.domNode, 'confirmDeletion');
+            clazz.remove(this.domNode, 'selected');
+        },
+
+        _confirmDeletion: function() {
             this.store.remove(this.booking.id);
         },
 
@@ -68,6 +82,18 @@ define([
             if (this.booking && this.booking.highlight === true) {
                 clazz.add(this.domNode, 'highlight');
             }
+            this.own(on(this.domNode, "click", lang.hitch(this, this._markSelected)));
+            this.own(topic.subscribe('BookingList/removeSelection', lang.hitch(this, this._unmarkSelected)));
+        },
+
+        _markSelected: function(event) {
+            if (clazz.contains(this.domNode, 'confirmDeletion')) {
+                return;
+            }
+
+            unselectAll();
+            clazz.add(this.domNode, 'selected');
+            event.stopPropagation();
         }
     });
 });
