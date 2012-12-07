@@ -674,6 +674,60 @@ class Calendar2_IndexController extends IndexController
         );
     }
 
+   /**
+     * Returns all holidays and "special days" in a given period for a specifc
+     * country.
+     *
+     * Request parameters:
+     *  datetime    start      => The start of the period to check
+     *  datetime    end        => The start of the period to check.
+     *  string      identifier => The name of the calculator to use, usually a
+     *                            country code.
+     *  string      tz (optional) => A timezone identifier from the timezone db
+     *
+     * Response
+     *  Array of {
+     *      string   name  => The name of the holiday
+     *      datetime date  => The date of the holiday
+     *      string   type  => If it's a 'holiday', 'notable' or 'school'
+     *  }
+     */
+    public function jsonHolidaysAction() {
+        $identifier = $this->getRequest()->getParam('identifier');
+        $start      = $this->getRequest()->getParam('start');
+        $end        = $this->getRequest()->getParam('end');
+        $tz         = $this->getRequest()->getParam('tz');
+
+        $timezone = Phprojekt_User_User::getUserDateTimeZone();
+        if (empty($timezone)) {
+            $timezone = new \DateTimeZone('UTC');
+        }
+
+        if (!Cleaner::validate('isoDate', $start)) {
+            throw new Zend_Controller_Action_Exception("Invalid start '$start'", 400);
+        }
+
+        if (!Cleaner::validate('isoDate', $end)) {
+            throw new Zend_Controller_Action_Exception("Invalid end $end", 400);
+        }
+
+        $start = new \DateTime($start);
+        $end   = new \DateTime($end);
+        switch($identifier) {
+        case 'de_DE:by':
+            $calc = new \Holiday\Bavaria($timezone);
+            break;
+        case 'de_DE':
+            $calc = new \Holiday\Germany($timezone);
+            break;
+        default:
+            throw new Zend_Controller_Action_Exception("Not a valid identifier $identifier", 400);
+        }
+
+        $days = array_values($calc->between($start, $end));
+        Phprojekt_Converter_Json::echoConvert($days);
+    }
+
     /**
      * Updates the current user's confirmation status on the given event.
      *
