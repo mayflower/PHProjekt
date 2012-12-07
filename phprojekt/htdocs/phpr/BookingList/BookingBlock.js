@@ -1,8 +1,8 @@
 define([
     'dojo/_base/declare',
     'dojo/_base/lang',
+    'dojo/_base/window',
     'dojo/html',
-    'dojo/window',
     'dojo/on',
     'dojo/dom-class',
     'dojo/date',
@@ -16,14 +16,14 @@ define([
     'phpr/Timehelper',
     'phpr/Api',
     'dojo/text!phpr/template/bookingList/bookingBlock.html'
-], function(declare, lang, html, win, on, clazz, date, locale, topic, query, nodeList_dom, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin,
+], function(declare, lang, win, html, on, clazz, date, locale, topic, query, nodeList_dom, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin,
     time, api, templateString) {
 
     var unselectAll = function() {
         query('.bookingEntry.selected').removeClass('selected confirmDeletion');
     };
 
-    on(query('body'), 'click', unselectAll);
+    on(win.doc, 'click', unselectAll);
 
     return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
         store: null,
