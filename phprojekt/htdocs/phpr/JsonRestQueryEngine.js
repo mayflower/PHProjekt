@@ -33,12 +33,12 @@ define([
     var conditionHolds = function(condition, fieldType, input, compareTo) {
         switch (fieldType) {
             case 'IsoDate':
-                input = time.datetimeToJsDate(input);
-                fieldType = 'Date';
-                break;
+                /* falls through */
             case 'IsoDatetime':
                 input = time.datetimeToJsDate(input);
+                compareTo = time.datetimeToJsDate(compareTo);
                 fieldType = 'Date';
+                break;
         }
 
         switch (fieldType) {
