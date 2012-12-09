@@ -7,5 +7,8 @@
     <button data-dojo-type="dijit/form/Button" type="button" data-dojo-attach-point="confirmDeleteButton"
         data-dojo-props="iconClass: 'deleteIcon'"
         data-dojo-attach-event="onClick:_confirmDeletion" class="confirmDeleteButton">Delete?</button>
+    <button data-dojo-type="dijit/form/Button" type="button" data-dojo-attach-point="editButton"
+        data-dojo-props="showLabel: false, iconClass: 'editIcon', baseClass: 'editButton'"
+        data-dojo-attach-event="onClick:_edit" class="editButton"></button>
     <span data-dojo-attach-point="notes" class="notes"></span>
 </div>

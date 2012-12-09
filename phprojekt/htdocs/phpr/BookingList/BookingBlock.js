@@ -114,6 +114,10 @@ define([
             unselectAll();
             clazz.add(this.domNode, 'selected');
             this._setLastAction();
+        },
+
+        _edit: function() {
+
         }
     });
 });

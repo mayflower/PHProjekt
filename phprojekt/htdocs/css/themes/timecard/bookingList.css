@@ -110,12 +110,14 @@
     }
 }
 
-.bookingEntry .deleteButton {
+.bookingEntry .deleteButton,
+.bookingEntry .editButton {
     margin-top: -1px;
     float: right;
     display: none;
 }
-.bookingEntry.selected .deleteButton {
+.bookingEntry.selected .deleteButton,
+.bookingEntry.selected .editButton {
     display: inline-block;
 }
 
@@ -228,12 +230,19 @@
 .dijitIcon.submitIcon {
     background-image: url(../../../img/timecard/icon-add.png);
     background-repeat: no-repeat;
-    min-height: 22px;
-    min-width: 22px;
+    min-height: 23px;
+    min-width: 23px;
 }
 
 .dijitIcon.deleteIcon {
     background-image: url(../../../img/timecard/icon-trash.png);
+    background-repeat: no-repeat;
+    min-height: 23px;
+    min-width: 23px;
+}
+
+.dijitIcon.editIcon {
+    background-image: url(../../../img/timecard/icon-edit.png);
     background-repeat: no-repeat;
     min-height: 23px;
     min-width: 23px;
@@ -244,11 +253,9 @@
     line-height: 38px !important;
 }
 
-.submitButton .dijitButtonNode {
-    border: none;
-}
-
-.deleteButton .dijitButtonNode {
+.submitButton .dijitButtonNode,
+.deleteButton .dijitButtonNode,
+.editButton .dijitButtonNode {
     border: none;
 }
 
