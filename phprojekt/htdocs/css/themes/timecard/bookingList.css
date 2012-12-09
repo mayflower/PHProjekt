@@ -148,6 +148,17 @@
     }
 }
 
+.bookingEntry.highlight {
+    animation-duration: 2s, 250ms;
+    -moz-animation-duration: 2s, 250ms;
+    -webkit-animation-duration: 2s, 250ms;
+    -o-animation-duration: 2s, 250ms;
+    animation-name: bookingEntryHighlight, bookingEntryFadeIn;
+    -moz-animation-name: bookingEntryHighlight, bookingEntryFadeIn;
+    -webkit-animation-name: bookingEntryHighlight, bookingEntryFadeIn;
+    -o-animation-name: bookingEntryHighlight, bookingEntryFadeIn;
+}
+
 .bookingEntry .deleteButton,
 .bookingEntry .editButton {
     margin-top: -1px;
