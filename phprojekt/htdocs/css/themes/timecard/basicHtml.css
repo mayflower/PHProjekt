@@ -4,8 +4,7 @@ body, html {
     margin:0;
     padding:0;
     background-attachment: fixed;
-    background-repeat-x: repeat;
-    background-repeat-y: repeat;
+    background-repeat: repeat;
     background-image: url(../../../img/timecard/background2.png);
 }
 
