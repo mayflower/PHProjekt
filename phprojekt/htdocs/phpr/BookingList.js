@@ -167,8 +167,8 @@ define([
 
             return json.stringify({
                 startDatetime: {
-                    '!ge': start.toString(),
-                    '!lt': end.toString()
+                    '!ge': time.jsDateToIsoDatetime(start),
+                    '!lt': time.jsDateToIsoDatetime(end)
                 }
             });
         },

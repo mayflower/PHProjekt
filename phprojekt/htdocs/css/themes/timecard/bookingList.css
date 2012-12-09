@@ -27,10 +27,11 @@
     border: 1px solid black;
     color: black;
     padding-left: 25px;
-    padding-top: 7px;
+    padding-top: 5px;
     padding-right: 4px;
-    padding-bottom: 2px;
-    min-height: 22px;
+    padding-bottom: 5px;
+    min-height: 24px;
+    line-height: 24px;
 }
 
 .bookingEntry.selected {
@@ -43,15 +44,52 @@
     color: white;
 }
 
-.bookingEntry.highlight {
-    animation-duration: 2s;
-    -moz-animation-duration: 2s;
-    -webkit-animation-duration: 2s;
-    -o-animation-duration: 2s;
-    animation-name: bookingEntryHighlight;
-    -moz-animation-name: bookingEntryHighlight;
-    -webkit-animation-name: bookingEntryHighlight;
-    -o-animation-name: bookingEntryHighlight;
+@keyframes bookingEntryFadeIn {
+    from {
+        height: 1px;
+        min-height: 1px;
+    }
+
+    to {
+        height: 22px;
+        min-height: 22px;
+    }
+}
+
+@-moz-keyframes bookingEntryFadeIn {
+    from {
+        height: 1px;
+        min-height: 1px;
+    }
+
+    to {
+        height: 22px;
+        min-height: 22px;
+    }
+}
+
+@-webkit-keyframes bookingEntryFadeIn {
+    from {
+        height: 1px;
+        min-height: 1px;
+    }
+
+    to {
+        height: 22px;
+        min-height: 22px;
+    }
+}
+
+@-o-keyframes bookingEntryFadeIn {
+    from {
+        height: 1px;
+        min-height: 1px;
+    }
+
+    to {
+        height: 22px;
+        min-height: 22px;
+    }
 }
 
 @keyframes bookingEntryHighlight {
@@ -60,7 +98,7 @@
     }
 
     50% {
-        background: rgb(233, 243, 0);
+        background: #0d639b;
     }
 
     to {
@@ -74,7 +112,7 @@
     }
 
     50% {
-        background: rgb(233, 243, 0);
+        background: #0d639b;
     }
 
     to {
@@ -88,7 +126,7 @@
     }
 
     50% {
-        background: rgb(233, 243, 0);
+        background: #0d639b;
     }
 
     to {
@@ -102,7 +140,7 @@
     }
 
     50% {
-        background: rgb(233, 243, 0);
+        background: #0d639b;
     }
 
     to {
@@ -122,7 +160,7 @@
 }
 
 .bookingEntry .confirmDeleteButton {
-    margin: -4px 0 0 0;
+    margin: 0;
     float: right;
     display: none;
 }

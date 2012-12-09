@@ -704,15 +704,21 @@ class Calendar2_IndexController extends IndexController
         }
 
         if (!Cleaner::validate('isoDate', $start)) {
-            throw new Zend_Controller_Action_Exception("Invalid start '$start'", 400);
+            throw new Zend_Controller_Action_Exception("Invalid start date", 400);
         }
 
         if (!Cleaner::validate('isoDate', $end)) {
-            throw new Zend_Controller_Action_Exception("Invalid end $end", 400);
+            throw new Zend_Controller_Action_Exception("Invalid end date", 400);
+        }
+
+        if (empty($identifier)) {
+            $setting    = new Phprojekt_Setting();
+            $identifier = $setting->getSetting('holidayIdentifier');
         }
 
         $start = new \DateTime($start);
         $end   = new \DateTime($end);
+
         switch($identifier) {
         case 'de_DE:by':
             $calc = new \Holiday\Bavaria($timezone);
