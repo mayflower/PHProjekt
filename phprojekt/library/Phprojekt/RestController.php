@@ -183,6 +183,17 @@ abstract class Phprojekt_RestController extends Zend_Rest_Controller
         foreach ($item as $property => $value) {
             $model->$property = $value;
         }
+        $moduleId = Phprojekt_Module::getId(Phprojekt_loader::getModuleFromObject($model));
+
+        if ($model->hasField('projectId') && !self::_projectHasModuleEnabled($moduleId, $model->projectId)) {
+            throw new Zend_Controller_Action_Exception('The parent project does not have enabled this module', 400);
+        }
+        if (!$model->recordValidate()) {
+            $error = $model->getError();
+            $error = array_pop($error);
+            throw new Zend_Controller_Action_Exception($error['label'] . ': ' . $error['message'], 400);
+        }
+        $model->save();
 
         if ($model->recordValidate()) {
             $model->save();
@@ -294,6 +305,24 @@ abstract class Phprojekt_RestController extends Zend_Rest_Controller
         return $where;
     }
 
+    /**
+     * Check if the parent project has this module enabled.
+     *
+     * @param integer $moduleId The ID of the module.
+     * @param integer $projectId The project ID to check.
+     *
+     * @return boolean False if not.
+     */
+    private static function _projectHasModuleEnabled($moduleId, $projectId)
+    {
+        if (!Phprojekt_Module::saveTypeIsNormal($moduleId)) {
+            return true;
+        }
+
+        $relation = new Project_Models_ProjectModulePermissions();
+        $modules  = $relation->getProjectModulePermissionsById($projectId);
+        return !empty($modules['data'][$moduleId]['inProject']);
+    }
     protected function _getFilterValue($field, $value)
     {
         $model = $this->_newModelObject();

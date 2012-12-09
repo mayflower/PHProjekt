@@ -13,7 +13,6 @@
  * @license    LGPL v3 (See LICENSE file)
  */
 
-require_once 'Sabre.autoload.php';
 
 /**
  * WebDAV Module Controller.

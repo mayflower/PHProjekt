@@ -1,8 +1,8 @@
 define([
     'dojo/_base/declare',
     'dojo/_base/lang',
+    'dojo/_base/window',
     'dojo/html',
-    'dojo/window',
     'dojo/on',
     'dojo/dom-class',
     'dojo/date',
@@ -16,18 +16,21 @@ define([
     'phpr/Timehelper',
     'phpr/Api',
     'dojo/text!phpr/template/bookingList/bookingBlock.html'
-], function(declare, lang, html, win, on, clazz, date, locale, topic, query, nodeList_dom, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin,
+], function(declare, lang, win, html, on, clazz, date, locale, topic, query, nodeList_dom, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin,
     time, api, templateString) {
 
     var unselectAll = function() {
-        query('.bookingEntry.selected').removeClass('selected confirmDeletion');
+        query('.bookingEntry.selected, .bookingEntry.confirmDeletion').removeClass('selected confirmDeletion');
     };
 
-    on(query('body'), 'click', unselectAll);
+    on(win.doc, 'click', unselectAll);
+
+    var defaultClickDelay = 500;
 
     return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
         store: null,
         booking: null,
+        lastAction: 0,
 
         templateString: templateString,
 
@@ -68,13 +71,27 @@ define([
             html.set(this.notes, booking.notes);
         },
 
-        _delete: function() {
+        _delete: function(evt) {
+            evt.stopPropagation();
+            if (this.lastAction + defaultClickDelay > new Date().getTime()) {
+                return;
+            }
+            unselectAll();
             clazz.add(this.domNode, 'confirmDeletion');
-            clazz.remove(this.domNode, 'selected');
+            this._setLastAction();
         },
 
-        _confirmDeletion: function() {
+        _confirmDeletion: function(evt) {
+            evt.stopPropagation();
+            if (this.lastAction + defaultClickDelay > new Date().getTime()) {
+                return;
+            }
             this.store.remove(this.booking.id);
+            this._setLastAction();
+        },
+
+        _setLastAction: function() {
+            this.lastAction = new Date().getTime();
         },
 
         startup: function() {
@@ -83,17 +100,20 @@ define([
                 clazz.add(this.domNode, 'highlight');
             }
             this.own(on(this.domNode, "click", lang.hitch(this, this._markSelected)));
-            this.own(topic.subscribe('BookingList/removeSelection', lang.hitch(this, this._unmarkSelected)));
         },
 
-        _markSelected: function(event) {
+        _markSelected: function(evt) {
+            evt.stopPropagation();
+            if (this.lastAction + defaultClickDelay > new Date().getTime()) {
+                return;
+            }
             if (clazz.contains(this.domNode, 'confirmDeletion')) {
                 return;
             }
 
             unselectAll();
             clazz.add(this.domNode, 'selected');
-            event.stopPropagation();
+            this._setLastAction();
         }
     });
 });

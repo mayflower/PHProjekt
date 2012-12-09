@@ -73,7 +73,9 @@ define([
             if (this.form.validate()) {
                 var data = this.form.get('value');
                 var sendData = this._prepareDataForSend(data);
-                this.store.put(sendData);
+                if (sendData) {
+                    this.store.put(sendData);
+                }
             }
             return false;
         },
@@ -82,6 +84,10 @@ define([
             var ret = {};
             var startTime = this._inputToTime(data.start, this._getStartRegexp());
             var endTime = this._inputToTime(data.end, this._getEndRegexp());
+
+            if (!startTime) {
+                return false;
+            }
 
             if (endTime) {
                 ret.endTime = time.jsDateToIsoTime(endTime) + ':00';

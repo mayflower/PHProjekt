@@ -1,0 +1,143 @@
+{
+    "hash": "3314aa2dd6cf8efb93a3d71db15591fb",
+    "packages": [
+        {
+            "name": "mayflower/holiday",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "git://github.com/Mayflower/libholiday.git",
+                "reference": "8310103e155d560cfc496ec2e35c91d685f3bdf0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/Mayflower/libholiday/archive/8310103e155d560cfc496ec2e35c91d685f3bdf0.zip",
+                "reference": "8310103e155d560cfc496ec2e35c91d685f3bdf0",
+                "shasum": ""
+            },
+            "require-dev": {
+                "phpunit/phpunit": "3.7.*"
+            },
+            "time": "2012-12-07 19:03:12",
+            "type": "library",
+            "installation-source": "source",
+            "autoload": {
+                "psr-0": {
+                    "Holiday": "src/"
+                }
+            },
+            "notification-url": "http://packagist.org/downloads/",
+            "license": [
+                "LGPL-3.0+"
+            ],
+            "authors": [
+                {
+                    "name": "David Soria Parra",
+                    "email": "david.soria_parra@mayflower.de",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A library to calculate holidays"
+        },
+        {
+            "name": "sabre/dav",
+            "version": "1.6.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/evert/SabreDAV",
+                "reference": "1.6.2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/evert/SabreDAV/zipball/1.6.2",
+                "reference": "1.6.2",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.1"
+            },
+            "time": "2012-04-15 16:56:34",
+            "type": "library",
+            "installation-source": "source",
+            "autoload": {
+                "psr-0": {
+                    "Sabre": "lib/"
+                }
+            },
+            "notification-url": "http://packagist.org/downloads/",
+            "license": [
+                "New BSD License"
+            ],
+            "authors": [
+                {
+                    "name": "Evert Pot",
+                    "email": "evert@rooftopsolutions.nl",
+                    "homepage": "http://www.rooftopsolutions.nl/",
+                    "role": "Developer"
+                }
+            ],
+            "description": "WebDAV Framework for PHP",
+            "homepage": "http://code.google.com/p/sabredav/",
+            "keywords": [
+                "framework",
+                "WebDAV",
+                "CalDAV",
+                "CardDAV",
+                "iCalendar"
+            ]
+        },
+        {
+            "name": "zendframework/zendframework1",
+            "version": "1.10.7",
+            "source": {
+                "type": "svn",
+                "url": "http://framework.zend.com/svn/framework/standard",
+                "reference": "/tags/release-1.10.7/@24902"
+            },
+            "require": {
+                "php": ">=5.2.4"
+            },
+            "time": "2012-06-13 17:24:22",
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-trunk": "1.12.x-dev",
+                    "dev-release-1.0": "1.0.x-dev",
+                    "dev-release-1.5": "1.5.x-dev",
+                    "dev-release-1.6": "1.6.x-dev",
+                    "dev-release-1.7": "1.7.x-dev",
+                    "dev-release-1.8": "1.8.x-dev",
+                    "dev-release-1.9": "1.9.x-dev",
+                    "dev-release-1.10": "1.10.x-dev",
+                    "dev-release-1.11": "1.11.x-dev"
+                }
+            },
+            "installation-source": "source",
+            "autoload": {
+                "psr-0": {
+                    "Zend": "library/"
+                }
+            },
+            "include-path": [
+                "library/"
+            ],
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "Zend Framework 1",
+            "homepage": "http://framework.zend.com/",
+            "keywords": [
+                "framework",
+                "ZF1"
+            ]
+        }
+    ],
+    "packages-dev": null,
+    "aliases": [
+
+    ],
+    "minimum-stability": "stable",
+    "stability-flags": {
+        "mayflower/holiday": 20
+    }
+}
