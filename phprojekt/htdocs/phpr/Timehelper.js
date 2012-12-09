@@ -74,5 +74,4 @@ define([
 
         return exports.jsDateToIsoDate(date) + ' ' + exports.jsDateToIsoTime(date);
     };
-
 });
