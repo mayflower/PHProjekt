@@ -49,7 +49,7 @@ define([
         var def = new Deferred();
 
         exports.getData(
-            '/index.php/Project/Project',
+            'index.php/Project/Project',
             {query: {projectId: 1, recursive: true}}
         ).then(function(projects) {
             titlesById = {};
