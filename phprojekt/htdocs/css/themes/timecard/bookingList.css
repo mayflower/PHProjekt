@@ -44,15 +44,52 @@
     color: white;
 }
 
-.bookingEntry.highlight {
-    animation-duration: 2s;
-    -moz-animation-duration: 2s;
-    -webkit-animation-duration: 2s;
-    -o-animation-duration: 2s;
-    animation-name: bookingEntryHighlight;
-    -moz-animation-name: bookingEntryHighlight;
-    -webkit-animation-name: bookingEntryHighlight;
-    -o-animation-name: bookingEntryHighlight;
+@keyframes bookingEntryFadeIn {
+    from {
+        height: 1px;
+        min-height: 1px;
+    }
+
+    to {
+        height: 22px;
+        min-height: 22px;
+    }
+}
+
+@-moz-keyframes bookingEntryFadeIn {
+    from {
+        height: 1px;
+        min-height: 1px;
+    }
+
+    to {
+        height: 22px;
+        min-height: 22px;
+    }
+}
+
+@-webkit-keyframes bookingEntryFadeIn {
+    from {
+        height: 1px;
+        min-height: 1px;
+    }
+
+    to {
+        height: 22px;
+        min-height: 22px;
+    }
+}
+
+@-o-keyframes bookingEntryFadeIn {
+    from {
+        height: 1px;
+        min-height: 1px;
+    }
+
+    to {
+        height: 22px;
+        min-height: 22px;
+    }
 }
 
 @keyframes bookingEntryHighlight {
@@ -61,7 +98,7 @@
     }
 
     50% {
-        background: rgb(233, 243, 0);
+        background: #0d639b;
     }
 
     to {
@@ -75,7 +112,7 @@
     }
 
     50% {
-        background: rgb(233, 243, 0);
+        background: #0d639b;
     }
 
     to {
@@ -89,7 +126,7 @@
     }
 
     50% {
-        background: rgb(233, 243, 0);
+        background: #0d639b;
     }
 
     to {
@@ -103,12 +140,23 @@
     }
 
     50% {
-        background: rgb(233, 243, 0);
+        background: #0d639b;
     }
 
     to {
         background: #eeeeee;
     }
+}
+
+.bookingEntry.highlight {
+    animation-duration: 2s, 250ms;
+    -moz-animation-duration: 2s, 250ms;
+    -webkit-animation-duration: 2s, 250ms;
+    -o-animation-duration: 2s, 250ms;
+    animation-name: bookingEntryHighlight, bookingEntryFadeIn;
+    -moz-animation-name: bookingEntryHighlight, bookingEntryFadeIn;
+    -webkit-animation-name: bookingEntryHighlight, bookingEntryFadeIn;
+    -o-animation-name: bookingEntryHighlight, bookingEntryFadeIn;
 }
 
 .bookingEntry .deleteButton {
