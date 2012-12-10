@@ -13,14 +13,8 @@ define([
 ], function(declare, lang, array, on, clazz, JsonRest, Memory, BookingBlock, api, time, templateString) {
     return declare([BookingBlock], {
         templateString: templateString,
-
         store: null,
-
-        constructor: function() {
-            this.store = new JsonRest({
-                target: 'index.php/Timecard/Timecard/'
-            });
-        },
+        projectDeferred: null,
 
         buildRendering: function() {
             this.inherited(arguments);
@@ -28,10 +22,11 @@ define([
             this.date.set('value', new Date());
             this.own(this.form.on('submit', lang.hitch(this, this._submit)));
 
-            api.getData(
+            this.projectDeferred = api.getData(
                 'index.php/Project/Project',
                 {query: {projectId: 1, recursive: true}}
-            ).then(lang.hitch(this, function(projects) {
+            );
+            this.projectDeferred = this.projectDeferred.then(lang.hitch(this, function(projects) {
                 var options = [{id: '1', name: '1 Unassigned', label: '<span class="projectId">1</span> Unassigned'}];
                 array.forEach(projects, function(p) {
                     options.push({
@@ -49,7 +44,32 @@ define([
             }));
         },
 
+        _setBookingAttr: function(booking) {
+            this.projectDeferred.then(lang.hitch(this, function() {
+                this.project.set('value', '' + booking.projectId);
+            }));
+            var startDatetime = time.datetimeToJsDate(booking.startDatetime);
+            this.start.set('value', startDatetime.getHours() + ':' + startDatetime.getMinutes());
+            this.date.set('value', startDatetime);
+
+            if (booking.endTime) {
+                var endDatetime = time.timeToJsDate(booking.endTime);
+                this.end.set('value', endDatetime.getHours() + ':' + endDatetime.getMinutes());
+            }
+
+            if (booking.notes) {
+                this.notes.set('value', booking.notes);
+            }
+
+            this.booking = booking;
+        },
+
         postCreate: function() {
+            if (!this.store) {
+                this.store = new JsonRest({
+                    target: 'index.php/Timecard/Timecard/'
+                });
+            }
             this.own(on(this.notesIcon, 'click', lang.hitch(this, 'toggleNotes')));
             this.start.set('placeHolder', 'Start');
             this.end.set('placeHolder', 'End');
@@ -91,6 +111,10 @@ define([
 
             if (endTime) {
                 ret.endTime = time.jsDateToIsoTime(endTime) + ':00';
+            }
+
+            if (data.id) {
+                ret.id = data.id;
             }
 
             var startDatetime = new Date(data.date.getTime());
