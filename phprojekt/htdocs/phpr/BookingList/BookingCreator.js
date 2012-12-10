@@ -3,6 +3,7 @@ define([
     'dojo/_base/lang',
     'dojo/_base/array',
     'dojo/on',
+    'dojo/number',
     'dojo/dom-class',
     'dojo/promise/all',
     'dojo/store/JsonRest',
@@ -12,7 +13,8 @@ define([
     'phpr/Timehelper',
     'phpr/models/Project',
     'dojo/text!phpr/template/bookingList/bookingCreator.html'
-], function(declare, lang, array, on, clazz, all, JsonRest, Memory, BookingBlock, api, time, projects,  templateString) {
+], function(declare, lang, array, on, number, clazz, all, JsonRest, Memory, BookingBlock, api, time, projects,
+        templateString) {
     return declare([BookingBlock], {
         templateString: templateString,
         store: null,
@@ -65,16 +67,21 @@ define([
         },
 
         _setBookingAttr: function(booking) {
+            var formatTimeString = function(date) {
+                return number.format(date.getHours(), {pattern: '00'}) + ':' +
+                    number.format(date.getMinutes(), {pattern: '00'});
+            };
+
             this.projectDeferred.then(lang.hitch(this, function() {
                 this.project.set('value', '' + booking.projectId);
             }));
             var startDatetime = time.datetimeToJsDate(booking.startDatetime);
-            this.start.set('value', startDatetime.getHours() + ':' + startDatetime.getMinutes());
+            this.start.set('value', formatTimeString(startDatetime));
             this.date.set('value', startDatetime);
 
             if (booking.endTime) {
                 var endDatetime = time.timeToJsDate(booking.endTime);
-                this.end.set('value', endDatetime.getHours() + ':' + endDatetime.getMinutes());
+                this.end.set('value', formatTimeString(endDatetime));
             }
 
             if (booking.notes) {
