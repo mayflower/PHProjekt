@@ -29,7 +29,7 @@ define([
                 projects: projects.getProjects()
             });
 
-	    this.projectDeferred = this.projectDeferred.then(lang.hitch(this, function(results) {
+            this.projectDeferred = this.projectDeferred.then(lang.hitch(this, function(results) {
                 var options = [];
 
                 var add = function(p) {
@@ -42,11 +42,15 @@ define([
 
                 array.forEach(results.recent, add);
 
-                options.push({label: "<hr />"});
+                if (results.recent.length > 0) {
+                    options.push({label: "<hr />"});
+                }
+
                 options.push({
                     id: '1',
                     name: '1 Unassigned',
-                    label: '<span class="projectId">1</span> Unassigned'});
+                    label: '<span class="projectId">1</span> Unassigned'
+                });
 
                 for (var p in results.projects) {
                     add(results.projects[p]);

@@ -23,7 +23,7 @@ define([
         });
 
         return def;
-    },
+    };
 
     exports.getRecentProjects = function(params) {
         var optsDef = {count: 2};
@@ -36,7 +36,7 @@ define([
                  'index.php/Timecard/index/jsonRecentProjects',
                  {query: {n: optsDef.count}})
         }).then(function(result) {
-            var projects = array.map(result.recent, function(id){
+            var projects = array.map(result.recent, function(id) {
                 return result.projects[id];
             });
 
@@ -44,5 +44,5 @@ define([
         });
 
         return def;
-    }
+    };
 });
