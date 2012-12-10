@@ -44,6 +44,20 @@
     color: white;
 }
 
+.dijitMenuItem hr {
+    border: 1px solid #efefef;
+    padding: 0px;
+    margin: 0px;
+}
+.timecard .dijitMenuItem.dijitMenuItemHover {
+    background: #efefef;
+    border-color: #efefef;
+}
+.timecard .dijitMenuItem.dijitMenuItemSelected {
+    background: #dfdfdf;
+    border-color: #dfdfdf;
+}
+
 @keyframes bookingEntryFadeIn {
     from {
         height: 1px;
