@@ -59,102 +59,6 @@
     border-color: #dfdfdf;
 }
 
-@keyframes bookingEntryFadeIn {
-    from {
-        height: 1px;
-        min-height: 1px;
-    }
-
-    to {
-        height: 22px;
-        min-height: 22px;
-    }
-}
-
-@-moz-keyframes bookingEntryFadeIn {
-    from {
-        height: 1px;
-        min-height: 1px;
-    }
-
-    to {
-        height: 22px;
-        min-height: 22px;
-    }
-}
-
-@-webkit-keyframes bookingEntryFadeIn {
-    from {
-        height: 1px;
-        min-height: 1px;
-    }
-
-    to {
-        height: 22px;
-        min-height: 22px;
-    }
-}
-
-@-o-keyframes bookingEntryFadeIn {
-    from {
-        height: 1px;
-        min-height: 1px;
-    }
-
-    to {
-        height: 22px;
-        min-height: 22px;
-    }
-}
-
-@keyframes bookingEntryFadeInWithNotes {
-    from {
-        height: 1px;
-        min-height: 1px;
-    }
-
-    to {
-        height: 49px;
-        min-height: 49px;
-    }
-}
-
-@-moz-keyframes bookingEntryFadeInWithNotes {
-    from {
-        height: 1px;
-        min-height: 1px;
-    }
-
-    to {
-        height: 49px;
-        min-height: 49px;
-    }
-}
-
-@-webkit-keyframes bookingEntryFadeInWithNotes {
-    from {
-        height: 1px;
-        min-height: 1px;
-    }
-
-    to {
-        height: 49px;
-        min-height: 49px;
-    }
-}
-
-@-o-keyframes bookingEntryFadeInWithNotes {
-    from {
-        height: 1px;
-        min-height: 1px;
-    }
-
-    to {
-        height: 49px;
-        min-height: 49px;
-    }
-}
-
 @keyframes bookingEntryHighlight {
     from {
         background: #eeeeee;
@@ -211,26 +115,15 @@
     }
 }
 
-.bookingEntry.highlightWithNotes {
-    animation-duration: 2s, 250ms;
-    -moz-animation-duration: 2s, 250ms;
-    -webkit-animation-duration: 2s, 250ms;
-    -o-animation-duration: 2s, 250ms;
-    animation-name: bookingEntryHighlight, bookingEntryFadeInWithNotes;
-    -moz-animation-name: bookingEntryHighlight, bookingEntryFadeInWithNotes;
-    -webkit-animation-name: bookingEntryHighlight, bookingEntryFadeInWithNotes;
-    -o-animation-name: bookingEntryHighlight, bookingEntryFadeInWithNotes;
-}
-
 .bookingEntry.highlight {
     animation-duration: 2s, 250ms;
     -moz-animation-duration: 2s, 250ms;
     -webkit-animation-duration: 2s, 250ms;
     -o-animation-duration: 2s, 250ms;
-    animation-name: bookingEntryHighlight, bookingEntryFadeIn;
-    -moz-animation-name: bookingEntryHighlight, bookingEntryFadeIn;
-    -webkit-animation-name: bookingEntryHighlight, bookingEntryFadeIn;
-    -o-animation-name: bookingEntryHighlight, bookingEntryFadeIn;
+    animation-name: bookingEntryHighlight;
+    -moz-animation-name: bookingEntryHighlight;
+    -webkit-animation-name: bookingEntryHighlight;
+    -o-animation-name: bookingEntryHighlight;
 }
 
 .bookingEntry .deleteButton,
