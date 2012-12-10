@@ -13,11 +13,12 @@ define([
     'dijit/_WidgetBase',
     'dijit/_TemplatedMixin',
     'dijit/_WidgetsInTemplateMixin',
+    'dojo/Evented',
     'phpr/Timehelper',
     'phpr/Api',
     'dojo/text!phpr/template/bookingList/bookingBlock.html'
-], function(declare, lang, win, html, on, clazz, date, locale, topic, query, nodeList_dom, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin,
-    time, api, templateString) {
+], function(declare, lang, win, html, on, clazz, date, locale, topic, query, nodeList_dom, _WidgetBase, _TemplatedMixin,
+    _WidgetsInTemplateMixin, Evented, time, api, templateString) {
 
     var unselectAll = function() {
         query('.bookingEntry.selected, .bookingEntry.confirmDeletion').removeClass('selected confirmDeletion');
@@ -27,7 +28,7 @@ define([
 
     var defaultClickDelay = 500;
 
-    return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
+    return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, Evented], {
         store: null,
         booking: null,
         lastAction: 0,
@@ -117,7 +118,7 @@ define([
         },
 
         _edit: function() {
-
+            this.emit('editClick');
         }
     });
 });
