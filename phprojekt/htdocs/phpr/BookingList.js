@@ -42,6 +42,8 @@ define([
 
         observer: null,
 
+        data: null,
+
         day2dayBlock: null,
 
         constructor: function() {
@@ -49,6 +51,8 @@ define([
                 target: 'index.php/Timecard/Timecard/',
                 queryEngine: JsonRestQueryEngine
             }));
+
+            this.data = [];
 
             this.day2dayBlock = {};
         },
@@ -98,6 +102,8 @@ define([
             when(results, lang.hitch(this, function(data) {
                 var bookingsByDay = this._partitionBookingsByDay(data);
 
+                this.data = lang.clone(data);
+
                 domConstruct.empty(this.content);
                 this.day2dayBlock = {};
 
@@ -105,33 +111,50 @@ define([
                 this._updating = false;
             }));
 
-            this.observer = results.observe(lang.hitch(this, '_storeChanged'));
+            this.observer = results.observe(lang.hitch(this, '_storeChanged'), true);
         },
 
         _storeChanged: function(object, removedFrom, insertedInto) {
+            object = lang.clone(object);
             var bdate = time.datetimeToJsDate(object.startDatetime);
-            idate = new Date(bdate.getFullYear(), bdate.getMonth(), bdate.getDate());
 
-            var results = this.store.query({filter: this._getQueryString(idate, date.add(idate, 'day', 1))});
+            if (removedFrom > -1) {
+                var odate = time.datetimeToJsDate(this.data[removedFrom].startDatetime);
+                this.data.splice(removedFrom, 1);
+                this._reloadDay(odate);
+            }
+
+            if (insertedInto > -1) {
+                this.data.splice(insertedInto, 0, object);
+            }
+
+            this._reloadDay(bdate, bdate);
+        },
+
+        _reloadDay: function(startDatetime, highlightDate) {
+            var ddate = new Date(startDatetime.getFullYear(), startDatetime.getMonth(), startDatetime.getDate());
+
+            var results = this.store.query({filter: this._getQueryString(ddate, date.add(ddate, 'day', 1))});
             when(results, lang.hitch(this, function(data) {
-                var entry = this.day2dayBlock[idate.getTime()];
-                if (entry && entry.widget && removedFrom !== -1 && insertedInto === -1) {
+                var entry = this.day2dayBlock[ddate.getTime()];
+                if (entry && entry.widget) {
                     entry.widget.destroyRecursive();
-                    delete this.day2dayBlock[idate.getTime()];
+                    delete this.day2dayBlock[ddate.getTime()];
                 }
 
                 var partitions = this._partitionBookingsByDay(data);
-                array.some(partitions, function(partition) {
-                    return array.some(partition.bookings, function(b) {
-                        var ret = date.compare(time.datetimeToJsDate(b.startDatetime), bdate) === 0;
-                        if (ret) {
-                            b.highlight = true;
-                        }
+                if (highlightDate) {
+                    array.some(partitions, function(partition) {
+                        return array.some(partition.bookings, function(b) {
+                            var ret = date.compare(time.datetimeToJsDate(b.startDatetime), highlightDate) === 0;
+                            if (ret) {
+                                b.highlight = true;
+                            }
 
-                        return ret;
+                            return ret;
+                        });
                     });
-                });
-
+                }
                 this._addBookingsPartitionedByDay(partitions);
             }));
         },
