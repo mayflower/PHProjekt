@@ -88,6 +88,26 @@ class Timecard_IndexController extends IndexController
     }
 
     /**
+     * Returns the n most recent projects used for bookings sorted in desc
+     * order.
+     *
+     * Request params:
+     * <pre>
+     *  - integer <b>n</b> How many recent projects should be returned,defaults
+     *  to 5
+     * </pre>
+     */
+    public function jsonRecentProjectsAction()
+    {
+        $n = (int) $this->getRequest()->getParam('n', 5);
+
+        $ownerId = Phprojekt_Auth_Proxy::getEffectiveUserId();
+        $model   = $this->getModelObject();
+        $records = $model->getRecentBookedProjects($ownerId, $n);
+        Phprojekt_Converter_Json::echoConvert($records);
+    }
+
+    /**
      * Return a list of Project (Ids and Names) saved as "favorites"
      *
      * For each one, the data have:
