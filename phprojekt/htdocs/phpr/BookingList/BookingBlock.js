@@ -98,7 +98,11 @@ define([
         startup: function() {
             this.inherited(arguments);
             if (this.booking && this.booking.highlight === true) {
-                clazz.add(this.domNode, 'highlight');
+                if (!this.booking.notes || this.booking.notes === '') {
+                    clazz.add(this.domNode, 'highlight');
+                } else {
+                    clazz.add(this.domNode, 'highlightWithNotes');
+                }
             }
             this.own(on(this.domNode, "click", lang.hitch(this, this._markSelected)));
         },
