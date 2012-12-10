@@ -224,6 +224,7 @@
 .bookingEntry .notes {
     display: block;
     margin-top: 1px;
+    width: /creator
     font-weight: normal;
 }
 
@@ -241,7 +242,7 @@
 }
 
 .bookingCreator {
-    min-height: 38px;
+    min-height: 30px;
     background-color: black;
     border-bottom: 1px solid #4A4A4A;
     border-top: 1px solid #4A4A4A;
@@ -249,14 +250,31 @@
 
 .bookingCreator .first,
 .bookingCreator .second {
-    line-height: 38px;
+    line-height: 30px;
     padding-left: 8px;
 }
+
+.bookingCreator .submitButton {
+    float: right;
+    line-height: 30px !important;
+}
+
 
 .bookingCreator .first > *,
 .bookingCreator .second > * {
     vertical-align: middle;
     line-height: normal;
+}
+
+.timecard .bookingCreator .dijitSelect,
+.timecard .bookingCreator .dijitSelect .dijitButtonContents,
+.timecard .bookingCreator .dijitTextBox,
+.timecard .bookingCreator .dijitTextBox .dijitButtonNode {
+    border-radius: 3px;
+}
+
+.bookingCreator .notes {
+    width: 436px;
 }
 
 .bookingCreator .notesIcon {
@@ -297,11 +315,6 @@
     min-width: 23px;
 }
 
-.submitButton {
-    float: right;
-    line-height: 38px !important;
-}
-
 .submitButton .dijitButtonNode,
 .deleteButton .dijitButtonNode,
 .editButton .dijitButtonNode {
@@ -315,6 +328,7 @@
 
 .bookingCreator .second {
     height: 0px;
+    margin-bottom: 3px;
     overflow: hidden;
     transition-property: height;
     transition-duration: 100ms;
@@ -331,7 +345,7 @@
 }
 
 .bookingCreator .second.open {
-    height: 38px;
+    height: 30px;
     transition-property: height;
     transition-duration: 100ms;
     transition-timing-function: linear;
