@@ -34,6 +34,7 @@
     line-height: 24px;
 }
 
+.bookingCreator.bookingEditor,
 .bookingEntry.selected {
     background: #0d639b;
     color: white;
@@ -89,6 +90,54 @@
     to {
         height: 22px;
         min-height: 22px;
+    }
+}
+
+@keyframes bookingEntryFadeInWithNotes {
+    from {
+        height: 1px;
+        min-height: 1px;
+    }
+
+    to {
+        height: 49px;
+        min-height: 49px;
+    }
+}
+
+@-moz-keyframes bookingEntryFadeInWithNotes {
+    from {
+        height: 1px;
+        min-height: 1px;
+    }
+
+    to {
+        height: 49px;
+        min-height: 49px;
+    }
+}
+
+@-webkit-keyframes bookingEntryFadeInWithNotes {
+    from {
+        height: 1px;
+        min-height: 1px;
+    }
+
+    to {
+        height: 49px;
+        min-height: 49px;
+    }
+}
+
+@-o-keyframes bookingEntryFadeInWithNotes {
+    from {
+        height: 1px;
+        min-height: 1px;
+    }
+
+    to {
+        height: 49px;
+        min-height: 49px;
     }
 }
 
@@ -148,6 +197,17 @@
     }
 }
 
+.bookingEntry.highlightWithNotes {
+    animation-duration: 2s, 250ms;
+    -moz-animation-duration: 2s, 250ms;
+    -webkit-animation-duration: 2s, 250ms;
+    -o-animation-duration: 2s, 250ms;
+    animation-name: bookingEntryHighlight, bookingEntryFadeInWithNotes;
+    -moz-animation-name: bookingEntryHighlight, bookingEntryFadeInWithNotes;
+    -webkit-animation-name: bookingEntryHighlight, bookingEntryFadeInWithNotes;
+    -o-animation-name: bookingEntryHighlight, bookingEntryFadeInWithNotes;
+}
+
 .bookingEntry.highlight {
     animation-duration: 2s, 250ms;
     -moz-animation-duration: 2s, 250ms;
@@ -170,12 +230,48 @@
     display: inline-block;
 }
 
+.bookingEditor table {
+    width: 100%;
+}
+
+.bookingEditor .editButtonCell {
+    vertical-align: middle !important;
+    text-align: center;
+}
+
+.bookingEditor .confirmEditButton .dijitButtonNode {
+    color: white;
+    background-color: #9b110d;
+    border: 1px solid #0b5281;
+    -webkit-box-shadow: inset 0px 0px 1px rgba(0, 0, 0, 0.25);
+    -o-box-shadow: inset 0px 0px 1px rgba(0, 0, 0, 0.25);
+    -moz-box-shadow: inset 0px 0px 1px rgba(0, 0, 0, 0.25);
+    box-shadow: inset 0px 0px 1px rgba(0, 0, 0, 0.25);
+    background-image: -webkit-linear-gradient(#0d6299 0%, #0b5382 100%);
+    background-image: -o-linear-gradient(#0d6299 0%, #0b5382 100%);
+    background-image: -moz-linear-gradient(#0d6299 0%, #0b5382 100%);
+    background-image: linear-gradient(#0d6299 0%, #0b5382 100%);
+}
+
+.bookingEditor .confirmEditButton.dijitHover .dijitButtonNode {
+    background-color: #9b110d;
+    -webkit-box-shadow: inset 0px 0px 1px rgba(0, 0, 0, 0.25);
+    -o-box-shadow: inset 0px 0px 1px rgba(0, 0, 0, 0.25);
+    -moz-box-shadow: inset 0px 0px 1px rgba(0, 0, 0, 0.25);
+    box-shadow: inset 0px 0px 1px rgba(0, 0, 0, 0.25);
+    background-image: -webkit-linear-gradient(#0c5c90 0%, #0a4b76 100%);
+    background-image: -o-linear-gradient(#0c5c90 0%, #0a4b76 100%);
+    background-image: -moz-linear-gradient(#0c5c90 0%, #0a4b76 100%);
+    background-image: linear-gradient(#0c5c90 0%, #0a4b76 100%);
+}
+
 .bookingEntry .confirmDeleteButton {
     margin: 0;
     float: right;
     display: none;
 }
 
+.bookingEditor .confirmEditButton .dijitButtonText,
 .bookingEntry .confirmDeleteButton .dijitButtonText {
     color: white;
 }
@@ -205,15 +301,13 @@
     background-image: linear-gradient(rgba(148, 4, 0, 1) 0%, rgba(114, 5, 2, 1) 100%);
 }
 
+.bookingEditor .confirmEditButton .dijitButtonNode,
 .bookingEntry .confirmDeleteButton .dijitButtonNode {
     padding: 0;
 }
+
 .bookingEntry.confirmDeletion .confirmDeleteButton {
     display: inline-block;
-}
-
-.bookingEntry + .bookingEntry {
-    margin-top: 9px;
 }
 
 .bookingEntry .project {
@@ -224,7 +318,6 @@
 .bookingEntry .notes {
     display: block;
     margin-top: 1px;
-    width: /creator
     font-weight: normal;
 }
 
@@ -254,6 +347,13 @@
     padding-left: 8px;
 }
 
+.bookingCreator.bookingEditor .submitButton {
+    visibility: hidden;
+    height: 0;
+    width: 0;
+    overflow: hidden;
+}
+
 .bookingCreator .submitButton {
     float: right;
     line-height: 30px !important;
@@ -275,6 +375,10 @@
 
 .bookingCreator .notes {
     width: 436px;
+}
+
+.bookingCreator.bookingEditor .notesIcon {
+    display: none;
 }
 
 .bookingCreator .notesIcon {
