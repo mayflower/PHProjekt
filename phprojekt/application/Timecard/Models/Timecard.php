@@ -496,7 +496,8 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
         $db     = Phprojekt::getInstance()->getDb();
         $select = $db->select();
         $select->from("timecard", "project_id")
-            ->where("owner_id = ?", (int) $ownerId)
+            ->where("owner_id = ? ", (int) $ownerId)
+            ->where("project_id > 1") // do not include the root node
             ->group("project_id")
             ->order("start_datetime desc")
             ->limit((int) $n);
