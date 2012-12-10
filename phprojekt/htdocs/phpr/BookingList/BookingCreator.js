@@ -4,13 +4,15 @@ define([
     'dojo/_base/array',
     'dojo/on',
     'dojo/dom-class',
+    'dojo/promise/all',
     'dojo/store/JsonRest',
     'dojo/store/Memory',
     'phpr/BookingList/BookingBlock',
     'phpr/Api',
     'phpr/Timehelper',
+    'phpr/models/Project',
     'dojo/text!phpr/template/bookingList/bookingCreator.html'
-], function(declare, lang, array, on, clazz, JsonRest, Memory, BookingBlock, api, time, templateString) {
+], function(declare, lang, array, on, clazz, all, JsonRest, Memory, BookingBlock, api, time, projects,  templateString) {
     return declare([BookingBlock], {
         templateString: templateString,
 
@@ -28,18 +30,32 @@ define([
             this.date.set('value', new Date());
             this.own(this.form.on('submit', lang.hitch(this, this._submit)));
 
-            api.getData(
-                'index.php/Project/Project',
-                {query: {projectId: 1, recursive: true}}
-            ).then(lang.hitch(this, function(projects) {
-                var options = [{id: '1', name: '1 Unassigned', label: '<span class="projectId">1</span> Unassigned'}];
-                array.forEach(projects, function(p) {
+            all({
+                recent: projects.getRecentProjects(),
+                projects: projects.getProjects()
+            }).then(lang.hitch(this, function(results) {
+                console.log(results);
+                var options = [];
+
+                var add = function(p) {
                     options.push({
                         id: '' + p.id,
                         name: '' + p.id + ' ' + p.title,
                         label: '<span class="projectId">' + p.id + '</span> ' + p.title
                     });
-                });
+                };
+
+                array.forEach(results.recent, add);
+
+                options.push({label: "<hr />"});
+                options.push({
+                    id: '1',
+                    name: '1 Unassigned',
+                    label: '<span class="projectId">1</span> Unassigned'});
+
+                for (var p in results.projects) {
+                    add(results.projects[p]);
+                }
 
                 var store = new Memory({
                     data: options
