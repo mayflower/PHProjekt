@@ -9,9 +9,10 @@ define([
     'phpr/Timehelper',
     'dijit/_WidgetBase',
     'dijit/_TemplatedMixin',
-    'phpr/BookingList/BookingBlock',
+    'phpr/BookingList/BookingBlockWrapper',
     'dojo/text!phpr/template/bookingList/dayBlock.html'
-], function(declare, lang, array, domClass, date, locale, html, time, _WidgetBase, _TemplatedMixin, BookingBlock, templateString) {
+], function(declare, lang, array, domClass, date, locale, html, time, _WidgetBase, _TemplatedMixin, BookingBlockWrapper,
+    templateString) {
     return declare([_WidgetBase, _TemplatedMixin], {
         day: null,
         bookings: null,
@@ -35,7 +36,7 @@ define([
             });
 
             array.forEach(this.bookings, function(b) {
-                var widget = new BookingBlock({booking: b, store: this.store});
+                var widget = new BookingBlockWrapper({booking: b, store: this.store});
                 widget.placeAt(this.body);
                 this.own(widget);
             }, this);
