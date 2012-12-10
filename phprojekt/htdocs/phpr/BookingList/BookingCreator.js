@@ -77,7 +77,19 @@ define([
         },
 
         toggleNotes: function() {
+            var opened = true;
+
+            if (clazz.contains(this.notesContainer, 'open')) {
+                opened = false;
+            }
+
             clazz.toggle(this.notesContainer, 'open');
+
+            if (opened) {
+                this.notes.focus();
+            } else {
+                this.end.focus();
+            }
         },
 
         _getStartRegexp: function() {
