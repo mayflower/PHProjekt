@@ -8,6 +8,16 @@ See http://www.phprojekt.com for more details
 
 [![Build Status](https://secure.travis-ci.org/Mayflower/PHProjekt.png)](http://travis-ci.org/Mayflower/PHProjekt)
 
+Before you run PHProjekt...
+------------
+
+In order to run PHProjekt from the checkout, you need to install the neccessary libraries.
+To do that, run the following commands. (If you're not in the directory containing this file, adjust the path.)
+
+1. cd phprojekt
+2. wget http://getcomposer.org/composer.phar
+3. php composer.phar install
+
 Contributing
 -----------
 
