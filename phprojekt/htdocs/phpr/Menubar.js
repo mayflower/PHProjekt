@@ -5,10 +5,11 @@ define([
     'dojo/dom-class',
     'dijit/_Widget',
     'dijit/_TemplatedMixin',
+    'dijit/_WidgetsInTemplateMixin',
     'dojo/topic',
     'dojo/text!phpr/template/menubar.html'
-], function(declare, lang, on, clazz, widget, template, topic, templateString) {
-    return declare([widget, template], {
+], function(declare, lang, on, clazz, widget, template, widgetsInTemplate, topic, templateString) {
+    return declare([widget, template, widgetsInTemplate], {
         templateString: templateString,
 
         buildRendering: function() {
@@ -27,6 +28,10 @@ define([
         onBookingsClick: function() {
             topic.publish('phpr/showBookings');
             clazz.replace(this.domNode, 'menubarOuter bookings');
+        },
+
+        _logout: function() {
+            window.location = "index.php/Login/logout";
         }
     });
 });
