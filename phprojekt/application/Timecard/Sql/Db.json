@@ -76,6 +76,34 @@
             }
         }
     }
+},
+
+"6.2.2":
+{
+    "structure":
+    {
+        "contract":
+        {
+            "create":
+            {
+                "id": "default",
+                "name": {"type": "varchar", "notNull": "true"},
+                "hours_per_week": {"type": "float", "notNull": "true"}
+            }
+        },
+
+        "user_contract_relation":
+        {
+            "create":
+            {
+                "id": "default",
+                "user_id": {"type": "int", "notNull": "true"},
+                "contract_id": {"type": "int", "nutNull": "true"},
+                "start": {"type": "date", "notNull": "true"},
+                "end": {"type": "date"}
+            }
+        }
+    }
 }
 
 }
