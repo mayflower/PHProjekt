@@ -16,7 +16,8 @@ define([
             this.inherited(arguments);
             this.own(
                 on(this.startButton, 'click', lang.hitch(this, 'onStartClick')),
-                on(this.bookingsButton, 'click', lang.hitch(this, 'onBookingsClick'))
+                on(this.bookingsButton, 'click', lang.hitch(this, 'onBookingsClick')),
+                on(this.logoutButton, 'click', lang.hitch(this, '_logout'))
             );
         },
 
