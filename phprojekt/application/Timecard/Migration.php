@@ -36,7 +36,7 @@ class Timecard_Migration extends Phprojekt_Migration_Abstract
      */
     public function getCurrentModuleVersion()
     {
-        return '6.1.4';
+        return '6.2.2';
     }
 
     /**
