@@ -308,6 +308,33 @@ class Timecard_IndexController extends IndexController
     }
 
     /**
+     * Retrieves the minutes booked in the given time period.
+     */
+    public function minutesBookedAction()
+    {
+        $utc = new DatetimeZone('utc');
+
+        $start = $this->getRequest()->getParam('start', null);
+        if (is_null($start)) {
+            throw new Zend_Controller_Action_Exception('Missing "start" parameter', 404);
+        }
+        $start = new DateTime($start, $utc);
+
+        $end = $this->getRequest()->getParam('end', null);
+        if (!is_null($end)) {
+            $end = new Datetime($end, $utc);
+        }
+
+        $minutes = Timecard_Models_Timecard::getBookedMinutes($start, $end);
+
+        Phprojekt_CompressedSender::send(
+            Zend_Json::encode(
+                array('minutesBooked' => $minutes)
+            )
+        );
+    }
+
+    /**
      * Set some values deppend on the params
      *
      * Sanitize some values and calculate the minutes value.
