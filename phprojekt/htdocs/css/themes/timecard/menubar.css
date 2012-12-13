@@ -19,8 +19,8 @@
 }
 
 .timecard .menubar td.right {
-    border-right: 1px solid black;
-    padding-left: 1px;
+    border-right: 0;
+    padding-left: 0;
 }
 
 .timecard .menubar td.button {
@@ -85,6 +85,11 @@
 .timecard .menubar td.button.logoutButton {
     width: 44px;
     vertical-align: middle;
+    text-align: center;
+}
+
+.timecard .menubar td.dijitHover {
+    background-color: #1F201F;
 }
 
 .timecard .menubar div.menuItem.logoutIcon {
@@ -94,4 +99,77 @@
     min-width: 26px;
     padding: 0;
     vertical-align: middle;
+}
+
+.timecard .menubar td.button.warningIconButton {
+    width: 45px;
+    vertical-align: middle;
+    text-align: center;
+    border-left: 1px solid;
+    border-right: 1px solid;
+    border-color: #101110;
+}
+
+.timecard .menubar td.button.warningIconButton .menuItem,
+.timecard .menubar td.button.warningIconButton .warningIcon {
+    background-image: url(../../../img/timecard/icon-warning.png);
+    background-repeat: no-repeat;
+    min-height: 23px;
+    min-width: 23px;
+    padding: 0;
+    vertical-align: middle;
+}
+
+.timecard .menubar .warningIconButton .dijitMenu tr {
+    display: block;
+}
+
+.timecard .menubar .warningIconButton .dijitMenu td {
+    display: inline-block;
+    background: transparent;
+    color: white;
+}
+
+.timecard .menubar .warningIconButton tr.dijitMenuItem:last-child {
+    border-bottom: 1px solid #F8A815;
+}
+
+.timecard .menubar .warningIconButton .dijitMenuItemLabel {
+    font-size: 14px;
+}
+
+.timecard .menubar .warningIconButton tr.dijitMenuItem.dijitMenuItemSelected,
+.timecard .menubar .warningIconButton tr.dijitMenuItem.dijitMenuItemHover {
+    background-color: #353635;
+    border-top: 0;
+}
+
+.timecard .menubar .warningIconButton tr.dijitMenuItem.dijitMenuItemSelected:first-child,
+.timecard .menubar .warningIconButton tr.dijitMenuItem.dijitMenuItemHover:first-child {
+    border-top: 0;
+    background-color: #353635;
+    background-image: url(../../../img/timecard/warningMenuHeader.png);
+    background-position: 0px 0px;
+    background-repeat: no-repeat;
+}
+
+.timecard .menubar td.warningIconButton.open {
+    background-color: #1F201F;
+    border-color: #F8A815;
+}
+
+.timecard .menubar .warningIconButton table.menu {
+    background-image: url(../../../img/timecard/warningMenuHeader.png);
+    background-repeat: no-repeat;
+    background-color: #1F201F;
+    border-top: 0;
+    border-color: #F8A815;
+    position: absolute;
+    visibility: hidden;
+    z-index: 2;
+    width: 411px;
+}
+
+.timecard .menubar .warningIconButton.open .menu {
+    visibility: visible;
 }
