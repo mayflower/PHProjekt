@@ -6,26 +6,23 @@ define([
     'dojo/dom-class',
     'dojo/dom-style',
     'dojo/dom-geometry',
+    'dojo/dom-construct',
     'dijit/_Widget',
     'dijit/_TemplatedMixin',
     'dijit/_WidgetsInTemplateMixin',
     'dijit/_CssStateMixin',
+    'dijit/MenuItem',
     'dojo/text!phpr/template/menubar/warningIcon.html',
-    'dijit/DropDownMenu',
-    'dijit/MenuItem'
-], function(
-    declare, lang,
-    on, topic, clazz, style, geometry,
-    widget, template, widgetsInTemplate, cssState,
-    templateString) {
+    'dijit/DropDownMenu'
+], function(declare, lang, on, topic, clazz, style, geometry, domConstruct, widget, template,
+            widgetsInTemplate, cssState, MenuItem, templateString) {
     return declare([widget, template, widgetsInTemplate,  cssState], {
         baseClass: 'warningIconButton',
         templateString: templateString,
-        warnings: null,
         state: 'closed',
 
         constructor: function() {
-            this.warnings = [];
+            topic.subscribe('notification', dojo.hitch(this, this._addNotification));
         },
 
         postCreate: function() {
@@ -58,6 +55,13 @@ define([
 
         closeMenu: function() {
             clazz.remove(this.domNode, 'open');
+        },
+
+        _addNotification: function(notification) {
+            this.menu.addChild(
+                new MenuItem({iconClass: notification.type + "Icon", label: notification.message}),
+                0
+            );
         }
     });
 });
