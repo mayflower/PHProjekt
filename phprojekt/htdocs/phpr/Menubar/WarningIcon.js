@@ -47,7 +47,7 @@ define([
         openMenu: function() {
             var pos = geometry.position(this.domNode);
             style.set(this.menu.domNode, {
-                left: (pos.x - 197) + 'px',
+                left: (pos.x - 196) + 'px',
                 top: (pos.h) + 'px'
             });
             clazz.add(this.domNode, 'open');
