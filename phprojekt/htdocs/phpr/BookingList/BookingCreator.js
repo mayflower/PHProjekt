@@ -6,6 +6,8 @@ define([
     'dojo/number',
     'dojo/dom-class',
     'dojo/promise/all',
+    'dojo/topic',
+    'dojo/json',
     'dojo/store/JsonRest',
     'dojo/store/Memory',
     'phpr/BookingList/BookingBlock',
@@ -13,8 +15,8 @@ define([
     'phpr/Timehelper',
     'phpr/models/Project',
     'dojo/text!phpr/template/bookingList/bookingCreator.html'
-], function(declare, lang, array, on, number, clazz, all, JsonRest, Memory, BookingBlock, api, time, projects,
-        templateString) {
+], function(declare, lang, array, on, number, clazz, all, topic, json,
+            JsonRest, Memory, BookingBlock, api, time, projects, templateString) {
     return declare([BookingBlock], {
         templateString: templateString,
         store: null,
@@ -133,7 +135,20 @@ define([
                 var data = this.form.get('value');
                 var sendData = this._prepareDataForSend(data);
                 if (sendData) {
-                    this.store.put(sendData);
+                    var d = this.store.put(sendData).then(
+                        function() {
+                            topic.publish(
+                                'notification',
+                                {type: 'success', message: 'The entry has been created successfully'}
+                            );
+                        },
+                        function(error) {
+                            topic.publish(
+                                'notification',
+                                json.parse(error.responseText)
+                            );
+                        }
+                    );
                 }
             }
             return false;
