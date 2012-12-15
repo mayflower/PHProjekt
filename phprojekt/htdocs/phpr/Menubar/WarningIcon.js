@@ -21,6 +21,7 @@ define([
         baseClass: 'warningIconButton',
         templateString: templateString,
         state: 'closed',
+        itemCount: 0,
 
         constructor: function() {
             topic.subscribe('notification', dojo.hitch(this, this._addNotification));
@@ -64,8 +65,13 @@ define([
             item.own(item.on('click', dojo.hitch(this, function() {
                 this.menu.removeChild(item);
                 item.destroyRecursive();
+                this.itemCount -= 1;
+                if (this.itemCount === 0) {
+                    domClass.add(this.domNode, 'empty');
+                }
             })));
             this.menu.addChild(item, 0);
+            this.itemCount += 1;
         }
     });
 });
