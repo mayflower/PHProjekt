@@ -17,6 +17,11 @@ define([
     'dijit/DropDownMenu'
 ], function(declare, lang, on, topic, clazz, style, geometry, domConstruct, domClass, widget, template,
             widgetsInTemplate, cssState, MenuItem, templateString) {
+
+    window.onerror = function() {
+        topic.publish('notification', {message: 'foo'});
+    };
+
     return declare([widget, template, widgetsInTemplate,  cssState], {
         baseClass: 'warningIconButton',
         templateString: templateString,
