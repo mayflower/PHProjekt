@@ -136,12 +136,7 @@ define([
                 var sendData = this._prepareDataForSend(data);
                 if (sendData) {
                     var d = this.store.put(sendData).then(
-                        function() {
-                            topic.publish(
-                                'notification',
-                                {type: 'success', message: 'The entry has been created successfully'}
-                            );
-                        },
+                        undefined,
                         function(error) {
                             topic.publish(
                                 'notification',
