@@ -101,6 +101,10 @@
     vertical-align: middle;
 }
 
+.timecard .menubar td.button.warningIconButton.empty {
+    display: none;
+}
+
 .timecard .menubar td.button.warningIconButton {
     width: 45px;
     vertical-align: middle;

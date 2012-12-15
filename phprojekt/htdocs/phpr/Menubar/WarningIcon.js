@@ -7,6 +7,7 @@ define([
     'dojo/dom-style',
     'dojo/dom-geometry',
     'dojo/dom-construct',
+    'dojo/dom-class',
     'dijit/_Widget',
     'dijit/_TemplatedMixin',
     'dijit/_WidgetsInTemplateMixin',
@@ -14,7 +15,7 @@ define([
     'dijit/MenuItem',
     'dojo/text!phpr/template/menubar/warningIcon.html',
     'dijit/DropDownMenu'
-], function(declare, lang, on, topic, clazz, style, geometry, domConstruct, widget, template,
+], function(declare, lang, on, topic, clazz, style, geometry, domConstruct, domClass, widget, template,
             widgetsInTemplate, cssState, MenuItem, templateString) {
     return declare([widget, template, widgetsInTemplate,  cssState], {
         baseClass: 'warningIconButton',
@@ -58,6 +59,7 @@ define([
         },
 
         _addNotification: function(notification) {
+            domClass.remove(this.domNode, 'empty');
             this.menu.addChild(
                 new MenuItem({iconClass: "warningIcon", label: notification.message}),
                 0
