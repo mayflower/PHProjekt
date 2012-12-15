@@ -60,18 +60,31 @@ define([
         },
 
         _addNotification: function(notification) {
-            domClass.remove(this.domNode, 'empty');
+            this._markNotEmpty();
+
             var item = new MenuItem({iconClass: "warningIcon", label: notification.message});
             item.own(item.on('click', dojo.hitch(this, function() {
                 this.menu.removeChild(item);
                 item.destroyRecursive();
                 this.itemCount -= 1;
                 if (this.itemCount === 0) {
-                    domClass.add(this.domNode, 'empty');
+                    this.markEmpty();
                 }
             })));
             this.menu.addChild(item, 0);
             this.itemCount += 1;
+        },
+
+        dummyItem: new MenuItem(),
+
+        _markEmpty: function() {
+            this.menu.addChild(this.dummyItem);
+            domClass.add(this.domNode, 'empty');
+        },
+
+        _markNotEmpty: function() {
+            this.menu.removeChild(this.dummyItem);
+            domClass.remove(this.domNode, 'empty');
         }
     });
 });
