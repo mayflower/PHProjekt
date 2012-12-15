@@ -60,10 +60,12 @@ define([
 
         _addNotification: function(notification) {
             domClass.remove(this.domNode, 'empty');
-            this.menu.addChild(
-                new MenuItem({iconClass: "warningIcon", label: notification.message}),
-                0
-            );
+            var item = new MenuItem({iconClass: "warningIcon", label: notification.message});
+            item.own(item.on('click', dojo.hitch(this, function() {
+                this.menu.removeChild(item);
+                item.destroyRecursive();
+            })));
+            this.menu.addChild(item, 0);
         }
     });
 });
