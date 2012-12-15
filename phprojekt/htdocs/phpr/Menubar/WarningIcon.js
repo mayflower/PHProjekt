@@ -59,7 +59,7 @@ define([
 
         _addNotification: function(notification) {
             this.menu.addChild(
-                new MenuItem({iconClass: notification.type + "Icon", label: notification.message}),
+                new MenuItem({iconClass: "warningIcon", label: notification.message}),
                 0
             );
         }
