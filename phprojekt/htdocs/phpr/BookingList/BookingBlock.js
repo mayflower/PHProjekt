@@ -9,6 +9,7 @@ define([
     'dojo/date/locale',
     'dojo/topic',
     'dojo/query',
+    'dojo/json',
     'dojo/NodeList-dom',
     'dijit/_WidgetBase',
     'dijit/_TemplatedMixin',
@@ -17,8 +18,8 @@ define([
     'phpr/Timehelper',
     'phpr/Api',
     'dojo/text!phpr/template/bookingList/bookingBlock.html'
-], function(declare, lang, win, html, on, clazz, date, locale, topic, query, nodeList_dom, _WidgetBase, _TemplatedMixin,
-    _WidgetsInTemplateMixin, Evented, time, api, templateString) {
+], function(declare, lang, win, html, on, clazz, date, locale, topic, query, json, nodeList_dom, _WidgetBase,
+            _TemplatedMixin, _WidgetsInTemplateMixin, Evented, time, api, templateString) {
 
     var unselectAll = function() {
         query('.bookingEntry.selected, .bookingEntry.confirmDeletion').removeClass('selected confirmDeletion');
@@ -87,7 +88,9 @@ define([
             if (this.lastAction + defaultClickDelay > new Date().getTime()) {
                 return;
             }
-            this.store.remove(this.booking.id);
+            this.store.remove(this.booking.id).then(undefined, function(error) {
+                topic.publish('notification', json.parse(error.responseText));
+            });
             this._setLastAction();
         },
 

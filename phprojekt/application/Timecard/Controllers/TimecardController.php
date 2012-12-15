@@ -18,4 +18,8 @@
  */
 class Timecard_TimecardController extends Phprojekt_RestController
 {
+    public function deleteAction()
+    {
+        throw new Zend_Controller_Action_Exception("you're not allowed to do this", 405);
+    }
 }
