@@ -114,6 +114,10 @@
     border-color: #101110;
 }
 
+.timecard .menubar td.button.warningIconButton .menuContainer {
+    position: relative;
+}
+
 .timecard .menubar td.button.warningIconButton .menuItem,
 .timecard .menubar td.button.warningIconButton .warningIcon {
     background-image: url(../../../img/timecard/icon-warning.png);
@@ -178,7 +182,7 @@
     visibility: hidden;
     z-index: 2;
     width: 411px;
-    left: 0px;
+    left: -197px;
 }
 
 .timecard .menubar .warningIconButton.open .menu {
