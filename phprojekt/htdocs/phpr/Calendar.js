@@ -9,14 +9,14 @@ define([
     'dijit/Calendar',
     'phpr/Api',
     'phpr/Timehelper'
-], function(declare, array, clazz, ddate, locale, when, stamp, Calendar, phpr, timehelper) {
+], function(declare, array, clazz, ddate, locale, when, stamp, Calendar, api, timehelper) {
     var specialDayCache = {};
 
     function specialDays(month, fun) {
         var key = stamp.toISOString(month, {selector: 'date'});
 
         if (!specialDayCache.hasOwnProperty(key)) {
-            specialDayCache[key] = phpr.getData(
+            specialDayCache[key] = api.getData(
                 'index.php/Calendar2/index/jsonHolidays',
                 {
                     query: {
@@ -28,9 +28,8 @@ define([
                 function(data) {
                     specialDayCache[key] = data;
                     fun(data);
-                }, function(error) {
-                    debugger;
-                }
+                },
+                api.defaultErrorHandler
             );
         } else {
             when(specialDayCache[month], fun);
