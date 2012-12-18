@@ -20,8 +20,8 @@ define([
             this.inherited(arguments);
             var w = win.get(this.domNode.ownerDocument);
             this.own(
-                on(w, 'onresize', lang.hitch(this, 'resize')),
-                on(this.domNode, 'onresize', lang.hitch(this, 'resize')),
+                on(w, 'resize', lang.hitch(this, 'resize')),
+                on(this.domNode, 'resize', lang.hitch(this, 'resize')),
                 this.dateChooserContainer.on('dateChange', lang.hitch(this.bookingListContainer, 'set', 'date'))
             );
         },
