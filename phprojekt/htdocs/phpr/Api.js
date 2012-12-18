@@ -3,8 +3,10 @@ define([
     'dojo/_base/lang',
     'dojo/_base/array',
     'dojo/request/xhr',
-    'dojo/Deferred'
-], function(exports, lang, array, xhr, Deferred) {
+    'dojo/Deferred',
+    'dojo/json',
+    'dojo/topic'
+], function(exports, lang, array, xhr, Deferred, json, topic) {
     var config = (function() {
         var config = {};
 
@@ -81,5 +83,20 @@ define([
     exports.getModulePermissions = function(projectId) {
         var modulePermissionsUrl = 'index.php/Default/index/jsonGetModulesPermission/nodeId/' + projectId;
         return exports.getData(modulePermissionsUrl);
+    };
+
+    exports.defaultErrorHandler = function(err) {
+        var msg = '';
+        try {
+            msg = json.parse(err, true);
+            if (msg.message) {
+                msg = msg.message;
+            } else {
+                throw new Error('');
+            }
+        } catch (e) {
+            msg = err;
+        }
+        topic.publish('notification', {message: msg});
     };
 });

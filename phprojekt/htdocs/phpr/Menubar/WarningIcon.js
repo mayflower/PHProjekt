@@ -3,6 +3,7 @@ define([
     'dojo/_base/lang',
     'dojo/on',
     'dojo/topic',
+    'dojo/window',
     'dojo/dom-class',
     'dojo/dom-style',
     'dojo/dom-geometry',
@@ -13,15 +14,11 @@ define([
     'dijit/_WidgetsInTemplateMixin',
     'dijit/_CssStateMixin',
     'dijit/MenuItem',
+    'phpr/Api',
     'dojo/text!phpr/template/menubar/warningIcon.html',
     'dijit/DropDownMenu'
-], function(declare, lang, on, topic, clazz, style, geometry, domConstruct, domClass, widget, template,
-            widgetsInTemplate, cssState, MenuItem, templateString) {
-
-    window.onerror = function(err) {
-        debugger;
-        topic.publish('notification', {message: 'foo'});
-    };
+], function(declare, lang, on, topic, win, clazz, style, geometry, domConstruct, domClass, widget, template,
+            widgetsInTemplate, cssState, MenuItem, api, templateString) {
 
     return declare([widget, template, widgetsInTemplate,  cssState], {
         baseClass: 'warningIconButton',
@@ -36,6 +33,10 @@ define([
         postCreate: function() {
             this.inherited(arguments);
             this.own(on(this.domNode, 'click', lang.hitch(this, 'onClick')));
+            var w = win.get(this.domNode.ownerDocument);
+            w.onerror = function(err) {
+                api.defaultErrorHandler(err);
+            };
         },
 
         onClick: function() {
