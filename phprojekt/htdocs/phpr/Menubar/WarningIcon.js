@@ -18,7 +18,8 @@ define([
 ], function(declare, lang, on, topic, clazz, style, geometry, domConstruct, domClass, widget, template,
             widgetsInTemplate, cssState, MenuItem, templateString) {
 
-    window.onerror = function() {
+    window.onerror = function(err) {
+        debugger;
         topic.publish('notification', {message: 'foo'});
     };
 
@@ -42,12 +43,10 @@ define([
         },
 
         toggleState: function() {
-            if (this.state === 'closed') {
-                this.state = 'open';
-                this.openMenu();
-            } else {
-                this.state = 'closed';
+            if (this.isOpen()) {
                 this.closeMenu();
+            } else {
+                this.openMenu();
             }
         },
 
@@ -58,10 +57,16 @@ define([
                 top: (pos.h) + 'px'
             });
             clazz.add(this.domNode, 'open');
+            this.state = 'open';
         },
 
         closeMenu: function() {
             clazz.remove(this.domNode, 'open');
+            this.state = 'open';
+        },
+
+        isOpen: function() {
+            return this.state === 'open';
         },
 
         _addNotification: function(notification) {
@@ -70,14 +75,18 @@ define([
             var item = new MenuItem({iconClass: "warningIcon", label: notification.message});
             item.own(item.on('click', dojo.hitch(this, function() {
                 this.menu.removeChild(item);
-                item.destroyRecursive();
                 this.itemCount -= 1;
                 if (this.itemCount === 0) {
-                    this.markEmpty();
+                    this._markEmpty();
+                    this.closeMenu();
                 }
             })));
             this.menu.addChild(item, 0);
             this.itemCount += 1;
+
+            if (this.itemCount > 0) {
+                this.openMenu();
+            }
         },
 
         dummyItem: new MenuItem(),

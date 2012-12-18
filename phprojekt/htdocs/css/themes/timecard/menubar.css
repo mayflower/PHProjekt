@@ -138,8 +138,14 @@
     border-bottom: 1px solid #F8A815;
 }
 
-.timecard .menubar .warningIconButton .dijitMenuItemLabel {
+.timecard .menubar .warningIconButton td.dijitMenuItemLabel {
     font-size: 14px;
+    white-space: normal;
+    width: 351px;
+}
+
+.timecard .menubar .warningIconButton td.dijitMenuArrowCell {
+    display: none;
 }
 
 .timecard .menubar .warningIconButton tr.dijitMenuItem.dijitMenuItemSelected,
@@ -172,6 +178,7 @@
     visibility: hidden;
     z-index: 2;
     width: 411px;
+    left: 0px;
 }
 
 .timecard .menubar .warningIconButton.open .menu {
