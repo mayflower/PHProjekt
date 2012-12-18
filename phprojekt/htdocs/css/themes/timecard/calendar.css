@@ -33,6 +33,10 @@
     border-color: #0D639B;
 }
 
+.timecard .dijitCalendarDateTemplate.specialDay span {
+    color: #c88246;
+}
+
 .timecard .dijitCalendarDateTemplate .dijitCalendarDateLabel {
     padding: 3px 4px 3px 4px;
 }
