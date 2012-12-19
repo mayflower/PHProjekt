@@ -85,18 +85,29 @@ define([
         return exports.getData(modulePermissionsUrl);
     };
 
+    var publishError = function(msg) {
+        topic.publish('notification', {message: msg});
+    };
+
     exports.defaultErrorHandler = function(err) {
-        var msg = '';
         try {
             msg = json.parse(err, true);
             if (msg.message) {
-                msg = msg.message;
-            } else {
-                throw new Error('');
+                return publishError(msg.message);
             }
         } catch (e) {
-            msg = err;
         }
-        topic.publish('notification', {message: msg});
+
+        try {
+            if (err && err.response && err.response.text) {
+                msg = json.parse(err.response.text, true);
+                if (msg.message) {
+                    return publishError(msg.message);
+                }
+            }
+        } catch (e) {
+        }
+
+        return publishError(err);
     };
 });
