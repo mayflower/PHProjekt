@@ -32,7 +32,7 @@ define([
     return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, Evented], {
         store: null,
         booking: null,
-        lastAction: 0,
+        _actionTimeout: null,
 
         templateString: templateString,
 
@@ -75,27 +75,19 @@ define([
 
         _delete: function(evt) {
             evt.stopPropagation();
-            if (this.lastAction + defaultClickDelay > new Date().getTime()) {
-                return;
-            }
-            unselectAll();
-            clazz.add(this.domNode, 'confirmDeletion');
-            this._setLastAction();
+            this._doClickAction(function() {
+                unselectAll();
+                clazz.add(this.domNode, 'confirmDeletion');
+            });
         },
 
         _confirmDeletion: function(evt) {
             evt.stopPropagation();
-            if (this.lastAction + defaultClickDelay > new Date().getTime()) {
-                return;
-            }
-            this.store.remove(this.booking.id).then(undefined, function(error) {
-                topic.publish('notification', json.parse(error.responseText));
+            this._doClickAction(function() {
+                this.store.remove(this.booking.id).then(undefined, function(error) {
+                    topic.publish('notification', json.parse(error.responseText));
+                });
             });
-            this._setLastAction();
-        },
-
-        _setLastAction: function() {
-            this.lastAction = new Date().getTime();
         },
 
         startup: function() {
@@ -108,20 +100,21 @@ define([
 
         _markSelected: function(evt) {
             evt.stopPropagation();
-            if (this.lastAction + defaultClickDelay > new Date().getTime()) {
-                return;
-            }
             if (clazz.contains(this.domNode, 'confirmDeletion')) {
                 return;
             }
 
             unselectAll();
             clazz.add(this.domNode, 'selected');
-            this._setLastAction();
         },
 
         _edit: function() {
             this.emit('editClick');
+        },
+
+        _doClickAction: function(fun) {
+            clearTimeout(this._actionTimeout);
+            this._actionTimeout = setTimeout(lang.hitch(this, fun), defaultClickDelay);
         }
     });
 });
