@@ -714,6 +714,9 @@ class Calendar2_IndexController extends IndexController
         if (empty($identifier)) {
             $setting    = new Phprojekt_Setting();
             $identifier = $setting->getSetting('holidayIdentifier');
+            if (empty($identifier)) {
+                throw new Zend_Controller_Action_Exception("Please configure your holiday region setting", 500);
+            }
         }
 
         $start = new \DateTime($start);
@@ -727,7 +730,7 @@ class Calendar2_IndexController extends IndexController
             $calc = new \Holiday\Germany($timezone);
             break;
         default:
-            throw new Zend_Controller_Action_Exception("Not a valid identifier $identifier", 500);
+            throw new Zend_Controller_Action_Exception("Not a valid identifier", 500);
         }
 
         $days = array_values($calc->between($start, $end));
