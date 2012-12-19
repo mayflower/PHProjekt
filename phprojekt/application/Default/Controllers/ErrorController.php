@@ -71,10 +71,7 @@ class ErrorController extends Zend_Controller_Action
                 break;
             default:
                 // We only forward exception with 4xx code to the client
-                if ($exception instanceof Zend_Controller_Action_Exception &&
-                        $exception->getCode() >= 400 &&
-                        $exception->getCode() < 500) {
-
+                if ($exception instanceof Zend_Controller_Action_Exception) {
                     $this->getResponse()->setHttpResponseCode($exception->getCode());
                     $viewerror['message'] = $exception->getMessage();
                 } else {
