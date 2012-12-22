@@ -137,12 +137,7 @@ define([
                 if (sendData) {
                     var d = this.store.put(sendData).then(
                         undefined,
-                        function(error) {
-                            topic.publish(
-                                'notification',
-                                json.parse(error.responseText)
-                            );
-                        }
+                        api.defaultErrorHandler
                     );
                 }
             }

@@ -20,7 +20,7 @@ define([
             });
 
             def.resolve(projects);
-        });
+        }, api.defaultErrorHandler);
 
         return def;
     };
@@ -41,7 +41,7 @@ define([
             });
 
             def.resolve(projects);
-        });
+        }, api.defaultErrorHandler);
 
         return def;
     };
