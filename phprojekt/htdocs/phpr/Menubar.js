@@ -7,10 +7,11 @@ define([
     'dijit/_TemplatedMixin',
     'dijit/_WidgetsInTemplateMixin',
     'dijit/_CssStateMixin',
+    'dijit/Tooltip',
     'dojo/topic',
     'dojo/text!phpr/template/menubar.html',
     'phpr/Menubar/WarningIcon'
-], function(declare, lang, on, clazz, widget, template, widgetsInTemplate, cssStateMixin, topic, templateString) {
+], function(declare, lang, on, clazz, widget, template, widgetsInTemplate, cssStateMixin, Tooltip, topic, templateString) {
     return declare([widget, template, widgetsInTemplate, cssStateMixin], {
         templateString: templateString,
         baseClass: 'menuBar',
@@ -24,6 +25,12 @@ define([
                 on(this.startButton, 'click', lang.hitch(this, 'onStartClick')),
                 on(this.bookingsButton, 'click', lang.hitch(this, 'onBookingsClick')),
                 on(this.logoutButton, 'click', lang.hitch(this, '_logout'))
+            );
+            this.own(
+                new Tooltip({
+                    connectId: this.logoutButton,
+                    label: "Log out"
+                })
             );
         },
 
