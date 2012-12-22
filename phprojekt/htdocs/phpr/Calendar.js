@@ -11,6 +11,7 @@ define([
     'phpr/Timehelper'
 ], function(declare, array, clazz, ddate, locale, when, stamp, Calendar, api, timehelper) {
     var specialDayCache = {};
+    var showedHolidayError = false;
 
     function specialDays(month, fun) {
         var key = stamp.toISOString(month, {selector: 'date'});
@@ -29,7 +30,12 @@ define([
                     specialDayCache[key] = data;
                     fun(data);
                 },
-                api.defaultErrorHandler
+                function(err) {
+                    if (!showedHolidayError) {
+                        showedHolidayError = true;
+                        api.defaultErrorHandler(err);
+                    }
+                }
             );
         } else {
             when(specialDayCache[month], fun);
