@@ -510,6 +510,29 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
             }, $db->fetchAll($select));
     }
 
+    public function find()
+    {
+        $args = func_get_args();
+
+        if (1 > count($args)) {
+            throw new Phprojekt_ActiveRecord_Exception('Missing argument');
+        }
+        if (1 < count($args)) {
+            throw new Phprojekt_ActiveRecord_Exception('Too many arguments');
+        }
+        if (is_null($args[0])) {
+            throw new Phprojekt_ActiveRecord_Exception('Argument cannot be NULL');
+        }
+
+        $find = parent::find($args[0]);
+
+        if (!empty($find) && $find->userId !== Phprojekt_Auth::getUserId()) {
+            throw new Phprojekt_Exception_NotAuthorizedException("Not authorized to retrieve item with id $id");
+        }
+
+        return $find;
+    }
+
     /**
      * Returns the sum of booked minutes for the current user
      *
