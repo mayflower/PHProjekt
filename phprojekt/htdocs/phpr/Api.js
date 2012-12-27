@@ -85,29 +85,33 @@ define([
         return exports.getData(modulePermissionsUrl);
     };
 
-    var publishError = function(msg) {
-        topic.publish('notification', {message: msg});
+    var publishError = function(msg, tag) {
+        topic.publish('notification', {message: msg}, tag);
     };
 
-    exports.defaultErrorHandler = function(err) {
-        try {
-            msg = json.parse(err, true);
-            if (msg.message) {
-                return publishError(msg.message);
-            }
-        } catch (e) {
-        }
-
-        try {
-            if (err && err.response && err.response.text) {
-                msg = json.parse(err.response.text, true);
+    exports.errorHandlerForTag = function(tag) {
+        return function(err) {
+            try {
+                msg = json.parse(err, true);
                 if (msg.message) {
-                    return publishError(msg.message);
+                    return publishError(msg.message, tag);
                 }
+            } catch (e) {
             }
-        } catch (e) {
-        }
 
-        return publishError(err);
+            try {
+                if (err && err.response && err.response.text) {
+                    msg = json.parse(err.response.text, true);
+                    if (msg.message) {
+                        return publishError(msg.message, tag);
+                    }
+                }
+            } catch (e) {
+            }
+
+            return publishError(err, tag);
+        };
     };
+
+    exports.defaultErrorHandler = exports.errorHandlerForTag(undefined);
 });
