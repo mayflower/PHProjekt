@@ -18,4 +18,45 @@
  */
 class Timecard_Models_Contract extends Phprojekt_ActiveRecord_Abstract
 {
+
+    /**
+     * Returns an array of ['contract' => Timecard_Models_Contract, 'start' => DateTime, 'end' => DateTime] arrays,
+     * sorted by start.
+     */
+    public static function fetchByUserAndPeriod(Phprojekt_User_User $user, DateTime $start, DateTime $end)
+    {
+        $db = Phprojekt::getInstance()->getDb();
+        $userContractRels = $db->select()->from('user_contract_relation', array('contract_id', 'start', 'end'))
+            ->where('user_id = ?', Phprojekt_Auth::getUserId())
+            ->where('start < ?', $end->format('Y-m-d'))
+            ->where('end >= ?', $start->format('Y-m-d'))
+            ->order('start')
+            ->query()->fetchAll();
+
+        $contractIds = array();
+        foreach ($userContractRels as $r) {
+            $contractIds[] = $r['contract_id'];
+        }
+
+        if (empty($contractIds)) {
+            return array();
+        }
+
+        $contractsById = array();
+        $contract = new self();
+        foreach ($contract->fetchAll('id in (' . implode(',', $contractIds) . ')') as $c) {
+            $contractsById[$c->id] = $c;
+        }
+
+        $ret = array();
+        foreach ($userContractRels as $r) {
+            $ret[] = array(
+                'contract' => $contractsById[$r['contract_id']],
+                'start'    => DateTime::createFromFormat('Y-m-d', $r['start']),
+                'end'      => DateTime::createFromFormat('Y-m-d', $r['end'])
+            );
+        }
+
+        return $ret;
+    }
 }

@@ -370,4 +370,100 @@ class Timecard_IndexController extends IndexController
 
         return $params;
     }
+
+    /**
+     * Retrieve the mintes to work in a specific month based on the contract of the current user.
+     *
+     * Parameters: int month The month in question (1-12). Defaults to the current month.
+     *             int year The year. Defaults to the current year.
+     *
+     * Returns: "{minutesToWork: <int>}"
+     */
+    public function minutesToWorkAction()
+    {
+        try {
+            $year = $this->getRequest()->getParam('year', date('Y'));
+            $month = $this->getRequest()->getParam('month', date('m'));
+
+            // We have to use 01 as the day, or php will use the current date of the month. This might cause problems
+            // because Jan. 30 + 1 Month is March 2 (or 1 in leap years) in php.
+            $start = \DateTime::createFromFormat('Y-m-d', $year . '-' . $month . '-01');
+            $end = clone $start;
+            $end->add(new DateInterval('P1M'));
+
+            $contracts = Timecard_Models_Contract::fetchByUserAndPeriod(Phprojekt_Auth::getRealUser(), $start, $end);
+            if (empty($contracts)) {
+                echo Zend_Json::encode(array('minutesToWork' => 0));
+                return;
+            }
+
+            $minutesPerDay = $this->_contractsToMinutesPerDay($contracts, $start, $end);
+            $minutesPerDay = $this->_applyHolidayWeights($minutesPerDay, $start, $end);
+
+            $minutes = 0;
+            foreach ($minutesPerDay as $d) {
+                $minutes += $d;
+            }
+
+            echo Zend_Json::encode(array('minutesToWork' => $minutes));
+        } catch (Phprojekt_Exception_NotAuthorizedException $e) {
+            throw new Zend_Controller_Action_Exception('Not found', 404, $e);
+        }
+    }
+
+    /**
+     * The contracts are only used for $start to $end
+     */
+    private function _contractsToMinutesPerDay(array $contracts, DateTime $start, DateTime $end)
+    {
+        $minutesPerDay = array();
+        foreach ($contracts as $c) {
+            $period = new DatePeriod(
+                $s = $this->_dateMax($c['start'], $start),
+                new DateInterval('P1D'),
+                $e = $this->_dateMin($c['end'], $end)
+            );
+
+            foreach ($period as $d) {
+                if ($d->format('N') >= 6) {
+                    // Weekend
+                    continue;
+                }
+                $minutesPerDay[$d->format('Y-m-d')] = $c['contract']->hoursPerWeek * 60 / 5;
+            }
+        }
+
+        return $minutesPerDay;
+    }
+
+    private function _applyHolidayWeights(array $minutesPerDay, DateTime $start, DateTime $end)
+    {
+        $holidays = Phprojekt_Auth::getRealUser()->getHolidayCalculator()->between($start, $end);
+        $holidaysByDate = array();
+        foreach ($holidays as $h) {
+            $dateString = $h->format('Y-m-d');
+            if (array_key_exists($dateString, $minutesPerDay)) {
+                $minutesPerDay[$dateString] *= (1 - $h->weight);
+            }
+        }
+
+        return $minutesPerDay;
+    }
+
+    private function _dateBefore(DateTime $a, DateTime $b)
+    {
+        return (int) $a->format('Y') < (int) $b->format('Y') ||
+               (int) $a->format('m') < (int) $b->format('m') ||
+               (int) $a->format('d') < (int) $b->format('d');
+    }
+
+    private function _dateMax(DateTime $a, DateTime $b)
+    {
+        return $this->_dateBefore($a, $b) ? $b : $a;
+    }
+
+    private function _dateMin(DateTime $a, DateTime $b)
+    {
+        return $this->_dateBefore($a, $b) ? $a : $b;
+    }
 }
