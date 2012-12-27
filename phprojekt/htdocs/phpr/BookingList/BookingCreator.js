@@ -137,8 +137,10 @@ define([
                 this.emit("create", data);
                 if (sendData) {
                     var d = this.store.put(sendData).then(
-                        undefined,
-                        api.defaultErrorHandler
+                        function() {
+                            topic.publish('notification/clear', 'bookingCreator');
+                        },
+                        api.errorHandlerForTag('bookingCreator')
                     );
                 }
             }
