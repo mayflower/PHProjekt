@@ -275,8 +275,6 @@ abstract class Phprojekt_RestController extends Zend_Rest_Controller
             $where = $filterClass->getWhere();
         }
 
-
-
         return $this->_getNewFilterWhere($where);
     }
 
