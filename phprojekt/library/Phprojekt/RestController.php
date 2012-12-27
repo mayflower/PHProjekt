@@ -117,15 +117,26 @@ abstract class Phprojekt_RestController extends Zend_Rest_Controller
     public function getAction()
     {
         $id = (int) $this->_getParam('id');
-        $record = $this->_newModelObject();
-        if (!empty($id)) {
-            $record = $record->find($id);
-            Phprojekt::setCurrentProjectId($record->projectId);
-        }
+        try {
+            $record = $this->_newModelObject();
+            if (!empty($id)) {
+                $record = $record->find($id);
+                if($record->projectId) {
+                    Phprojekt::setCurrentProjectId($record->projectId);
+                }
+            }
 
-        Phprojekt_CompressedSender::send(
-            Zend_Json_Encoder::encode(Phprojekt_Model_Converter::convertModel($record))
-        );
+            if (!$this->_checkGetResult($record)) {
+                $record = false;
+            }
+
+
+            Phprojekt_CompressedSender::send(
+                Zend_Json_Encoder::encode(Phprojekt_Model_Converter::convertModel($record))
+            );
+        } catch (Phprojekt_Exception_NotAuthorizedException $e) {
+            $this->_httpNotFound($e->getMessage());
+        }
     }
 
     public function postAction()
@@ -340,5 +351,15 @@ abstract class Phprojekt_RestController extends Zend_Rest_Controller
     {
         $dt = new Datetime($value);
         return $dt->format('Y-m-d H:i:s');
+    }
+
+    protected function _httpNotFound($message = "Not found")
+    {
+        $this->getResponse()->setHttpResponseCode(404);
+        echo Zend_Json::encode(
+            array(
+                'message' => $message,
+            )
+        );
     }
 }
