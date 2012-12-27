@@ -533,6 +533,12 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
         return $find;
     }
 
+    public function fetchAll($where = null, $order = null, $count = null, $offset = null, $select = null, $join = null)
+    {
+        $where = "($where) AND owner_id = " . (int) Phprojekt_Auth::getUserId();
+        return parent::fetchAll($where, $order, $count, $offset, $select, $join);
+    }
+
     /**
      * Returns the sum of booked minutes for the current user
      *
