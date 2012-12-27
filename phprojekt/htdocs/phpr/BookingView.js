@@ -22,7 +22,11 @@ define([
             this.own(
                 on(w, 'resize', lang.hitch(this, 'resize')),
                 on(this.domNode, 'resize', lang.hitch(this, 'resize')),
-                this.dateChooserContainer.on('dateChange', lang.hitch(this.bookingListContainer, 'set', 'date'))
+                this.dateChooserContainer.on('dateChange', lang.hitch(this.bookingListContainer, 'set', 'date')),
+                this.bookingListContainer.bookingCreator.on('create', lang.hitch(this, function(newEntry) {
+                    this.bookingListContainer.set('date', newEntry.date);
+                    this.dateChooserContainer.setDate(newEntry.date);
+                }))
             );
         },
 

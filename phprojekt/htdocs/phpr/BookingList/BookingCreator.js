@@ -134,6 +134,7 @@ define([
             if (this.form.validate()) {
                 var data = this.form.get('value');
                 var sendData = this._prepareDataForSend(data);
+                this.emit("create", data);
                 if (sendData) {
                     var d = this.store.put(sendData).then(
                         undefined,
