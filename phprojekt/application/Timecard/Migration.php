@@ -51,7 +51,7 @@ class Timecard_Migration extends Phprojekt_Migration_Abstract
      */
     public function upgrade($currentVersion, Zend_Db_Adapter_Abstract $db)
     {
-        date_default_timezone_set('utc');
+        date_default_timezone_set('UTC');
         $this->_db = $db;
         $this->parseDbFile('Timecard');
 
