@@ -681,8 +681,6 @@ class Calendar2_IndexController extends IndexController
      * Request parameters:
      *  datetime    start      => The start of the period to check
      *  datetime    end        => The start of the period to check.
-     *  string      identifier => The name of the calculator to use, usually a
-     *                            country code.
      *  string      tz (optional) => A timezone identifier from the timezone db
      *
      * Response
@@ -693,15 +691,9 @@ class Calendar2_IndexController extends IndexController
      *  }
      */
     public function jsonHolidaysAction() {
-        $identifier = $this->getRequest()->getParam('identifier');
         $start      = $this->getRequest()->getParam('start');
         $end        = $this->getRequest()->getParam('end');
         $tz         = $this->getRequest()->getParam('tz');
-
-        $timezone = Phprojekt_User_User::getUserDateTimeZone();
-        if (empty($timezone)) {
-            $timezone = new \DateTimeZone('UTC');
-        }
 
         if (!Cleaner::validate('isoDate', $start)) {
             throw new Zend_Controller_Action_Exception("Invalid start date", 400);
@@ -711,29 +703,10 @@ class Calendar2_IndexController extends IndexController
             throw new Zend_Controller_Action_Exception("Invalid end date", 400);
         }
 
-        if (empty($identifier)) {
-            $setting    = new Phprojekt_Setting();
-            $identifier = $setting->getSetting('holidayIdentifier');
-            if (empty($identifier)) {
-                throw new Zend_Controller_Action_Exception("Please configure your holiday region setting", 500);
-            }
-        }
-
         $start = new \DateTime($start);
         $end   = new \DateTime($end);
 
-        switch($identifier) {
-        case 'de_DE:by':
-            $calc = new \Holiday\Bavaria($timezone);
-            break;
-        case 'de_DE':
-            $calc = new \Holiday\Germany($timezone);
-            break;
-        default:
-            throw new Zend_Controller_Action_Exception("Not a valid identifier", 500);
-        }
-
-        $days = array_values($calc->between($start, $end));
+        $days = array_values(Phprojekt_Auth::getRealUser()->getHolidayCalculator()->between($start, $end));
         Phprojekt_Converter_Json::echoConvert($days);
     }
 

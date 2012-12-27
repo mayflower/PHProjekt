@@ -390,4 +390,28 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
         }
         return $values;
     }
+
+    public function getHolidayCalculator()
+    {
+        $timezone = Phprojekt_User_User::getUserDateTimeZone();
+        if (empty($timezone)) {
+            $timezone = new \DateTimeZone('UTC');
+        }
+
+        $identifier = $this->getSetting('holidayIdentifier');
+        if (empty($identifier)) {
+            throw new Zend_Controller_Action_Exception("Please configure your holiday region setting", 500);
+        }
+
+        switch($identifier) {
+        case 'de_DE:by':
+            return new \Holiday\Bavaria($timezone);
+            break;
+        case 'de_DE':
+            return new \Holiday\Germany($timezone);
+            break;
+        default:
+            throw new Zend_Controller_Action_Exception("Not a valid identifier", 500);
+        }
+    }
 }
