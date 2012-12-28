@@ -19,6 +19,7 @@ define([
     'phpr/Timehelper',
     'phpr/JsonRestQueryEngine',
     'dojo/_base/lang',
+    'phpr/Timehelper',
     //templates
     'dojo/text!phpr/template/bookingList.html',
     // only used in templates
@@ -31,8 +32,8 @@ define([
     'dijit/form/Form',
     'phpr/DateTextBox'
 ], function(array, declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, locale, html, json, when,
-            JsonRest, Memory, Observable, Cache,
-            date, domConstruct, domClass, DayBlock, time, JsonRestQueryEngine, lang, bookingListTemplate) {
+            JsonRest, Memory, Observable, Cache, date, domConstruct, domClass, DayBlock, time, JsonRestQueryEngine,
+            lang, timehelper, bookingListTemplate) {
     return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
         store: null,
 
@@ -74,6 +75,7 @@ define([
         _setDateAttr: function(date) {
             this.date = date;
             html.set(this.selectedDate, locale.format(date, {selector: 'date', datePattern: 'MMMM yyy'}));
+            this._updateHoursWorked();
             this.bookingCreator.set('date', date);
             this._update();
         },
@@ -108,10 +110,29 @@ define([
                 this.day2dayBlock = {};
 
                 this._addBookingsPartitionedByDay(bookingsByDay);
+                this._updateHoursWorked();
                 this._updating = false;
             }));
 
             this.observer = results.observe(lang.hitch(this, '_storeChanged'), true);
+        },
+
+        _updateHoursWorked: function() {
+            var minutes = 0;
+            array.forEach(this.data, function(booking) {
+                var start = timehelper.datetimeToJsDate(booking.startDatetime),
+                    end = timehelper.timeToJsDate(booking.endTime);
+                end.setFullYear(start.getFullYear());
+                end.setMonth(start.getMonth());
+                end.setDate(start.getDate());
+
+                minutes += date.difference(start, end, 'minute');
+            });
+
+            this.hoursWorked.innerHTML = "" + Math.floor(minutes / 60) + "h";
+            if (minutes !== 0) {
+                this.hoursWorked.innerHTML += " " + minutes % 60 + "m";
+            }
         },
 
         _storeChanged: function(object, removedFrom, insertedInto) {
@@ -128,6 +149,7 @@ define([
                 this.data.splice(insertedInto, 0, object);
             }
 
+            this._updateHoursWorked();
             this._reloadDay(bdate, bdate);
         },
 
