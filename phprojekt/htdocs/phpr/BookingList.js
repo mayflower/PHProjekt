@@ -19,6 +19,7 @@ define([
     'phpr/Timehelper',
     'phpr/JsonRestQueryEngine',
     'dojo/_base/lang',
+    'phpr/Api',
     'phpr/Timehelper',
     //templates
     'dojo/text!phpr/template/bookingList.html',
@@ -33,7 +34,7 @@ define([
     'phpr/DateTextBox'
 ], function(array, declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, locale, html, json, when,
             JsonRest, Memory, Observable, Cache, date, domConstruct, domClass, DayBlock, time, JsonRestQueryEngine,
-            lang, timehelper, bookingListTemplate) {
+            lang, api, timehelper, bookingListTemplate) {
     return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
         store: null,
 
@@ -76,6 +77,7 @@ define([
             this.date = date;
             html.set(this.selectedDate, locale.format(date, {selector: 'date', datePattern: 'MMMM yyy'}));
             this._updateHoursWorked();
+            this._updateHoursToWork();
             this.bookingCreator.set('date', date);
             this._update();
         },
@@ -133,6 +135,20 @@ define([
             if (minutes !== 0) {
                 this.hoursWorked.innerHTML += " " + minutes % 60 + "m";
             }
+        },
+
+        _updateHoursToWork: function() {
+            api.getData(
+                'index.php/Timecard/Index/minutesToWork',
+                {query: {month: this.date.getMonth() + 1, year: this.date.getFullYear()}}
+            ).then(lang.hitch(this, function(data) {
+                var hours = Math.floor(data.minutesToWork / 60),
+                    minutes = data.minutesToWork % 60;
+                this.hoursToWork.innerHTML = "" + hours + "h";
+                if (minutes !== 0) {
+                    this.hoursToWork.innerHTML += " " + minutes + "m";
+                }
+            }));
         },
 
         _storeChanged: function(object, removedFrom, insertedInto) {
