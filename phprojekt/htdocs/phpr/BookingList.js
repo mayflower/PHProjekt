@@ -15,6 +15,7 @@ define([
     'dojo/date',
     'dojo/dom-construct',
     'dojo/dom-class',
+    'dojo/dom-style',
     'phpr/BookingList/DayBlock',
     'phpr/Timehelper',
     'phpr/JsonRestQueryEngine',
@@ -33,8 +34,8 @@ define([
     'dijit/form/Form',
     'phpr/DateTextBox'
 ], function(array, declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, locale, html, json, when,
-            JsonRest, Memory, Observable, Cache, date, domConstruct, domClass, DayBlock, time, JsonRestQueryEngine,
-            lang, api, timehelper, bookingListTemplate) {
+            JsonRest, Memory, Observable, Cache, date, domConstruct, domClass, domStyle, DayBlock, time,
+            JsonRestQueryEngine, lang, api, timehelper, bookingListTemplate) {
     return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
         store: null,
 
@@ -152,6 +153,7 @@ define([
                 if (minutes !== 0) {
                     this.hoursToWork.innerHTML += " " + minutes + "m";
                 }
+                domStyle.set(this.hoursToWorkText, "display", "");
             }));
         },
 
