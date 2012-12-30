@@ -71,6 +71,8 @@ define([
 
         _remove: function(item) {
             this.menu.removeChild(item);
+            // http://bugs.dojotoolkit.org/ticket/10296
+            delete this.menu.focusedChild;
             item.destroyRecursive();
             this.itemCount -= 1;
             if (this.itemCount === 0) {
