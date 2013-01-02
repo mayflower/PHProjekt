@@ -400,6 +400,37 @@ class Timecard_IndexController extends IndexController
         echo Zend_Json::encode(array('minutesToWork' => $minutes));
     }
 
+    public function workBalanceByDayAction()
+    {
+        list($start, $end) = $this->_yearMonthParamToStartEndDT();
+
+        $contracts = Timecard_Models_Contract::fetchByUserAndPeriod(Phprojekt_Auth::getRealUser(), $start, $end);
+        $minutesToWorkPerDay = $this->_contractsToMinutesPerDay($contracts, $start, $end);
+        $minutesToWorkPerDay = $this->_applyHolidayWeights($minutesToWorkPerDay, $start, $end);
+
+        $bookings = Phprojekt::getInstance()->getDb()->select()
+            ->from('timecard', array('date' => 'DATE(start_datetime)', 'minutes'))
+            ->where('DATE(start_datetime) >= ?', $start->format('Y-m-d'))
+            ->where('DATE(start_datetime) < ?', $end->format('Y-m-d'))
+            ->order('date ASC');
+        Phprojekt::getInstance()->getLog()->debug($bookings->assemble());
+        $bookings = $bookings
+            ->query()->fetchAll();
+
+        $ret = array();
+        foreach ($minutesToWorkPerDay as $day => $minutesToWork) {
+            $minutesBooked = 0;
+            while (!empty($bookings) && $bookings[0]['day'] == $day) {
+                $b = array_shift($bookings);
+                $minutesBooked += $b['minutes'];
+            }
+            $ret[$day] = array(
+                'minutesToWork' => $minutesToWork,
+                'minutesBooked' => $minutesBooked,
+            );
+        }
+
+        echo Zend_Json::encode(array('workBalancePerDay' => $ret));
     }
 
     private function _yearMonthParamToStartEndDT()
