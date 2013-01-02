@@ -1,5 +1,5 @@
 <html>
 <body>
-ERROR: <?php var_dump($this->error); ?>
+ERROR: <?php if (is_string($this->error)) {echo $this->error;} else {var_dump($this->error);} ?>
 </body>
 </html>
