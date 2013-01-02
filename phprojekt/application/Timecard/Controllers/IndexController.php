@@ -381,27 +381,25 @@ class Timecard_IndexController extends IndexController
      */
     public function minutesToWorkAction()
     {
-        try {
-            list($start, $end) = $this->_yearMonthParamToStartEndDT();
+        list($start, $end) = $this->_yearMonthParamToStartEndDT();
 
-            $contracts = Timecard_Models_Contract::fetchByUserAndPeriod(Phprojekt_Auth::getRealUser(), $start, $end);
-            if (empty($contracts)) {
-                echo Zend_Json::encode(array('minutesToWork' => 0));
-                return;
-            }
-
-            $minutesPerDay = $this->_contractsToMinutesPerDay($contracts, $start, $end);
-            $minutesPerDay = $this->_applyHolidayWeights($minutesPerDay, $start, $end);
-
-            $minutes = 0;
-            foreach ($minutesPerDay as $d) {
-                $minutes += $d;
-            }
-
-            echo Zend_Json::encode(array('minutesToWork' => $minutes));
-        } catch (Phprojekt_Exception_NotAuthorizedException $e) {
-            throw new Zend_Controller_Action_Exception('Not found', 404, $e);
+        $contracts = Timecard_Models_Contract::fetchByUserAndPeriod(Phprojekt_Auth::getRealUser(), $start, $end);
+        if (empty($contracts)) {
+            echo Zend_Json::encode(array('minutesToWork' => 0));
+            return;
         }
+
+        $minutesPerDay = $this->_contractsToMinutesPerDay($contracts, $start, $end);
+        $minutesPerDay = $this->_applyHolidayWeights($minutesPerDay, $start, $end);
+
+        $minutes = 0;
+        foreach ($minutesPerDay as $d) {
+            $minutes += $d;
+        }
+
+        echo Zend_Json::encode(array('minutesToWork' => $minutes));
+    }
+
     }
 
     private function _yearMonthParamToStartEndDT()
