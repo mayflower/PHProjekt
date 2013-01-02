@@ -427,9 +427,10 @@ class Timecard_IndexController extends IndexController
             foreach ($period as $d) {
                 if ($d->format('N') >= 6) {
                     // Weekend
-                    continue;
+                    $minutesPerDay[$d->format('Y-m-d')] = 0;
+                } else {
+                    $minutesPerDay[$d->format('Y-m-d')] = $c['contract']->hoursPerWeek * 60 / 5;
                 }
-                $minutesPerDay[$d->format('Y-m-d')] = $c['contract']->hoursPerWeek * 60 / 5;
             }
         }
 
