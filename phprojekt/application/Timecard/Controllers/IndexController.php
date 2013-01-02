@@ -382,14 +382,7 @@ class Timecard_IndexController extends IndexController
     public function minutesToWorkAction()
     {
         try {
-            $year = $this->getRequest()->getParam('year', date('Y'));
-            $month = $this->getRequest()->getParam('month', date('m'));
-
-            // We have to use 01 as the day, or php will use the current date of the month. This might cause problems
-            // because Jan. 30 + 1 Month is March 2 (or 1 in leap years) in php.
-            $start = \DateTime::createFromFormat('Y-m-d', $year . '-' . $month . '-01');
-            $end = clone $start;
-            $end->add(new DateInterval('P1M'));
+            list($start, $end) = $this->_yearMonthParamToStartEndDT();
 
             $contracts = Timecard_Models_Contract::fetchByUserAndPeriod(Phprojekt_Auth::getRealUser(), $start, $end);
             if (empty($contracts)) {
@@ -409,6 +402,20 @@ class Timecard_IndexController extends IndexController
         } catch (Phprojekt_Exception_NotAuthorizedException $e) {
             throw new Zend_Controller_Action_Exception('Not found', 404, $e);
         }
+    }
+
+    private function _yearMonthParamToStartEndDT()
+    {
+        $year = $this->getRequest()->getParam('year', date('Y'));
+        $month = $this->getRequest()->getParam('month', date('m'));
+
+        // We have to use 01 as the day, or php will use the current date of the month. This might cause problems
+        // because Jan. 30 + 1 Month is March 2 (or 1 in leap years) in php.
+        $start = \DateTime::createFromFormat('Y-m-d', $year . '-' . $month . '-01');
+        $end = clone $start;
+        $end->add(new DateInterval('P1M'));
+
+        return array($start, $end);
     }
 
     /**
