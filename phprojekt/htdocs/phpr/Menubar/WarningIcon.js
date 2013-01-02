@@ -62,7 +62,7 @@ define([
 
         closeMenu: function() {
             clazz.remove(this.domNode, 'open');
-            this.state = 'open';
+            this.state = 'closed';
         },
 
         isOpen: function() {
