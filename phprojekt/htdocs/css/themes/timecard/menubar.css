@@ -66,6 +66,12 @@
     background-position: 14px 10px;
 }
 
+.timecard .menubar .statisticsButton .menuItem {
+    background-image: url(../../../img/timecard/icon-time.png);
+    background-repeat: no-repeat;
+    background-position: 14px 10px;
+}
+
 .timecard .menubar td.startButton {
     background: #0D639B;
 }
@@ -74,12 +80,19 @@
     background: #799B00;
 }
 
+.timecard .menubar td.statisticsButton {
+    background: #545454;
+}
+
 .timecard .menubarOuter.start {
     border-color: #0D639B;
 }
 
 .timecard .menubarOuter.bookings {
     border-color: #799B00;
+}
+.timecard .menubarOuter.statistics {
+    border-color: #545454;
 }
 
 .timecard .menubar td.button.logoutButton {

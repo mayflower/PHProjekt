@@ -24,6 +24,7 @@ define([
             this.own(
                 on(this.startButton, 'click', lang.hitch(this, 'onStartClick')),
                 on(this.bookingsButton, 'click', lang.hitch(this, 'onBookingsClick')),
+                on(this.statisticsButton, 'click', lang.hitch(this, 'onStatisticsClick')),
                 on(this.logoutButton, 'click', lang.hitch(this, '_logout'))
             );
             this.own(
@@ -42,6 +43,11 @@ define([
         onBookingsClick: function() {
             topic.publish('phpr/showBookings');
             clazz.replace(this.domNode, 'menubarOuter bookings');
+        },
+
+        onStatisticsClick: function() {
+            topic.publish('phpr/showStatistics');
+            clazz.replace(this.domNode, 'menubarOuter statistics');
         },
 
         _logout: function() {
