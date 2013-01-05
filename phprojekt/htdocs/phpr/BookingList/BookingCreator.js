@@ -137,6 +137,8 @@ define([
             return '(' + hours + separator + minutes + '|24' + separator + '00)?';
         },
 
+        _showErrorInWarningIcon: api.errorHandlerForTag('bookingCreator'),
+
         _submit: function(evt) {
             evt.stopPropagation();
             if (this.form.validate()) {
@@ -148,11 +150,29 @@ define([
                         function() {
                             topic.publish('notification/clear', 'bookingCreator');
                         },
-                        api.errorHandlerForTag('bookingCreator')
+                        lang.hitch(this, function(error) {
+                            debugger;
+                            try {
+                                var msg = json.parse(error.responseText, true);
+                                if (msg.message && msg.message.match(/entry.*overlaps.*existing/)) {
+                                    this._markOverlapError();
+                                } else {
+                                    this._showErrorInWarningIcon(error);
+                                }
+                            } catch (e) {
+                                this._showErrorInWarningIcon(error);
+                            }
+                        })
                     );
                 }
             }
             return false;
+        },
+
+        _markOverlapError: function() {
+            this.start.set('state', 'Error');
+            this.end.set('state', 'Error');
+            this.end.set('message', 'The entry overlaps with an existing one');
         },
 
         _prepareDataForSend: function(data) {
