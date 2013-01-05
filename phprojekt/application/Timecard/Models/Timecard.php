@@ -38,6 +38,7 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
      */
     public function save()
     {
+        $this->_checkSaveRights();
         // Prevent http://jira.opensource.mayflower.de/jira/browse/PHPROJEKT-450
         if (is_null($this->notes)) {
             $this->notes = '';
@@ -557,5 +558,19 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
         }
 
         return (int) $select->query()->fetchColumn();
+    }
+
+    private function _checkSaveRights()
+    {
+        if (array_key_exists('ownerId', $this->_originalData) &&
+                $this->_originalData['ownerId'] !== Phprojekt_Auth_Proxy::getEffectiveUserId()) {
+            throw new Phprojekt_Exception_NotAuthorizedException('You are not authorized to modify this entry');
+        }
+
+        if ($this->ownerId !== Phprojekt_Auth_Proxy::getEffectiveUserId()) {
+            throw new Phprojekt_Exception_NotAuthorizedException(
+                'You are not authorized to save an entry under this user'
+            );
+        }
     }
 }
