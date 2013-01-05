@@ -478,6 +478,7 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
      */
     public function findByUri($uri)
     {
+        // fetchAll handles rights here
         $fetch = $this->fetchAll(Phprojekt::getInstance()->getDb()->quoteInto('uri = ?', $uri));
         if (!$fetch) {
             return false;
