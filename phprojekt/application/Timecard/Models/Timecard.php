@@ -232,7 +232,7 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
             $this->_validate->error->addError(array(
                 'field'   => 'ownerId',
                 'label'   => 'ownerId',
-                'message' => 'Unable to safe items for someone that is not you.'
+                'message' => 'Unable to save items for someone that is not you.'
             ));
             return false;
         }
