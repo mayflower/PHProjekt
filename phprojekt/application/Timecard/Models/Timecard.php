@@ -528,7 +528,7 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
 
         $find = parent::find($args[0]);
 
-        if (!empty($find) && $find->userId !== Phprojekt_Auth::getUserId()) {
+        if (!empty($find) && $find->ownerId !== Phprojekt_Auth::getUserId()) {
             throw new Phprojekt_Exception_NotAuthorizedException("Not authorized to retrieve item with id $id");
         }
 
