@@ -122,11 +122,17 @@ define([
         },
 
         _getStartRegexp: function() {
-            return '((\\d{1,2})[:\\. ]?(\\d{2}))';
+            var hours = '([01]?\\d|2[0123])',
+                minutes = '([01-5]\\d)',
+                separator = '[:\\. ]?';
+            return '(' + hours + separator + minutes + '|24' + separator + '00)';
         },
 
         _getEndRegexp: function() {
-            return '((\\d{1,2})[:\\. ]?(\\d{2}))?';
+            var hours = '([01]?\\d|2[0123])',
+                minutes = '([01-5]\\d)',
+                separator = '[:\\. ]?';
+            return '(' + hours + separator + minutes + '|24' + separator + '00)?';
         },
 
         _submit: function(evt) {
