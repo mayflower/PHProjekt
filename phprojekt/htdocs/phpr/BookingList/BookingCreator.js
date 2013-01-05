@@ -103,6 +103,8 @@ define([
             this.start.set('placeHolder', 'Start');
             this.end.set('placeHolder', 'End');
             this.notes.set('placeHolder', 'Notes');
+
+            this.end.validate = this._endValidateFunction(this.end.validate, this.start);
         },
 
         toggleNotes: function() {
@@ -198,6 +200,26 @@ define([
 
         _setDateAttr: function(date) {
             this.date.set('value', date);
+        },
+
+        _endValidateFunction: function(originalValidate, startTextbox) {
+            return function(isFocused) {
+                var valid = originalValidate.apply(this, arguments);
+                if (!valid) {
+                    return valid;
+                }
+
+                var startValue = parseInt(startTextbox.get('value').replace(/\D/g, ''), 10),
+                    endValue = parseInt(this.get('value').replace(/\D/g, ''), 10);
+                if (startValue >= endValue) {
+                    this._maskValidSubsetError = false;
+                    this.focusNode.setAttribute("aria-invalid", "true");
+                    this.set('state', 'Error');
+                    this.set('message', 'End time must be after start time');
+                    return false;
+                }
+                return true;
+            };
         }
     });
 });
