@@ -10,13 +10,14 @@ define([
     'dojo/json',
     'dojo/store/JsonRest',
     'dojo/store/Memory',
+    'dijit/Tooltip',
     'phpr/BookingList/BookingBlock',
     'phpr/Api',
     'phpr/Timehelper',
     'phpr/models/Project',
     'dojo/text!phpr/template/bookingList/bookingCreator.html'
 ], function(declare, lang, array, on, number, clazz, all, topic, json,
-            JsonRest, Memory, BookingBlock, api, time, projects, templateString) {
+            JsonRest, Memory, Tooltip, BookingBlock, api, time, projects, templateString) {
     return declare([BookingBlock], {
         templateString: templateString,
         store: null,
@@ -229,13 +230,31 @@ define([
                     return valid;
                 }
 
-                var startValue = parseInt(startTextbox.get('value').replace(/\D/g, ''), 10),
-                    endValue = parseInt(this.get('value').replace(/\D/g, ''), 10);
+                var endText = this.get('value');
+                var forceTooltip = false;
+                if (endText.match(/^\d{3}$/)) {
+                    if (isFocused) {
+                        // The user might be in the process of entering a 4-digit number with no separator.
+                        return valid;
+                    } else {
+                        // The user just moved his focus elsewhere. this.displayMessage (called by _setMessageAttr) will
+                        // _not_ create a tooltip, because it assumes this already happened after the input was made.
+                        forceTooltip = true;
+                    }
+                }
+
+                var startValue = parseInt(startTextbox.get('value').replace(/D/g, '')),
+                    endValue = parseInt(endText.replace(/\D/g, ''), 10);
                 if (startValue >= endValue) {
                     this._maskValidSubsetError = false;
                     this.focusNode.setAttribute("aria-invalid", "true");
                     this.set('state', 'Error');
-                    this.set('message', 'End time must be after start time');
+                    var message = 'End time must be after start time';
+                    this.set('message', message);
+
+                    if (forceTooltip) {
+                        Tooltip.show(message, this.domNode, this.tooltipPosition, !this.isLeftToRight());
+                    }
                     return false;
                 }
                 return true;
