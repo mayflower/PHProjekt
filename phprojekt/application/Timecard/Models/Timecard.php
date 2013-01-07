@@ -38,7 +38,6 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
      */
     public function save()
     {
-        $this->_checkSaveRights();
         // Prevent http://jira.opensource.mayflower.de/jira/browse/PHPROJEKT-450
         if (is_null($this->notes)) {
             $this->notes = '';
@@ -67,6 +66,8 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
         if (!$this->projectId) {
             $this->projectId = 1;
         }
+
+        $this->_checkSaveRights();
 
         return parent::save();
     }
