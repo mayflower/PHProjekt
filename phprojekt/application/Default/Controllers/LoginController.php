@@ -72,13 +72,20 @@ class LoginController extends Zend_Controller_Action
                 array('keepLogged' => $keepLogged, 'loginServer' => $loginServer)
             );
             if ($success === true) {
+                if (!is_null($legacy) && !Phprojekt_Auth::isAdminUser()) {
+                    Phprojekt_Auth::logout();
+                    $this->view->message  = 'Sorry, legacy login is only allowed for administrators';
+                    $this->view->username = $username;
+                    $this->view->hash     = $hash;
+                    return;
+                }
                 $pageNamespace = new Zend_Session_Namespace('page');
                 $config = Phprojekt::getInstance()->getConfig();
                 $frontendMessage = new Phprojekt_Notification();
                 $frontendMessage->setControllProcess(Phprojekt_Notification::LAST_ACTION_LOGIN);
                 $frontendMessage->saveFrontendMessage();
                 Default_Helpers_Upload::cleanUnusedFiles();
-                if ($legacy !== null) {
+                if (!is_null($legacy)) {
                     $pageNamespace->type = 'legacy';
                 } else {
                     $pageNamespace->type = 'timecard';
