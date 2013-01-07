@@ -152,7 +152,6 @@ define([
                             topic.publish('notification/clear', 'bookingCreator');
                         },
                         lang.hitch(this, function(error) {
-                            debugger;
                             try {
                                 var msg = json.parse(error.responseText, true);
                                 if (msg.message && msg.message.match(/entry.*overlaps.*existing/)) {
