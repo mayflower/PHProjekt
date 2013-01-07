@@ -529,7 +529,7 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
         $find = parent::find($args[0]);
 
         if (!empty($find) && $find->ownerId !== Phprojekt_Auth::getUserId()) {
-            throw new Phprojekt_Exception_NotAuthorizedException("Not authorized to retrieve item with id $id");
+            throw new Phprojekt_Exception_NotAuthorized("Not authorized to retrieve item with id $id");
         }
 
         return $find;
@@ -565,13 +565,11 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
     {
         if (array_key_exists('ownerId', $this->_originalData) &&
                 $this->_originalData['ownerId'] !== Phprojekt_Auth_Proxy::getEffectiveUserId()) {
-            throw new Phprojekt_Exception_NotAuthorizedException('You are not authorized to modify this entry');
+            throw new Phprojekt_Exception_NotAuthorized('You are not authorized to modify this entry');
         }
 
         if ($this->ownerId !== Phprojekt_Auth_Proxy::getEffectiveUserId()) {
-            throw new Phprojekt_Exception_NotAuthorizedException(
-                'You are not authorized to save an entry under this user'
-            );
+            throw new Phprojekt_Exception_NotAuthorized('You are not authorized to save an entry under this user');
         }
     }
 }

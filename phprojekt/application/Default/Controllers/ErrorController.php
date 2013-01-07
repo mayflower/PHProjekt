@@ -74,7 +74,7 @@ class ErrorController extends Zend_Controller_Action
                 if ($exception instanceof Zend_Controller_Action_Exception) {
                     $this->getResponse()->setHttpResponseCode($exception->getCode());
                     $viewerror['message'] = $exception->getMessage();
-                } else if ($exception instanceof Phprojekt_Exception_NotAuthorizedException) {
+                } else if ($exception instanceof Phprojekt_Exception_NotAuthorized) {
                     $this->getResponse()->setHttpResponseCode(403);
                     $viewerror = 'You are not authorized to perform this request';
                     Phprojekt::getInstance()->getLog()->debug($exception->getMessage());

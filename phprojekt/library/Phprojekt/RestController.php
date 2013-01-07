@@ -134,7 +134,7 @@ abstract class Phprojekt_RestController extends Zend_Rest_Controller
             Phprojekt_CompressedSender::send(
                 Zend_Json_Encoder::encode(Phprojekt_Model_Converter::convertModel($record))
             );
-        } catch (Phprojekt_Exception_NotAuthorizedException $e) {
+        } catch (Phprojekt_Exception_NotAuthorized $e) {
             $this->_httpNotFound($e->getMessage());
         }
     }

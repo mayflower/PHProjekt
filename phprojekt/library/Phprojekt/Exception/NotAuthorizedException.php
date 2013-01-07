@@ -16,6 +16,6 @@
 /**
  * An exception thrown when the user is not authorized to access the given resource
  */
-class Phprojekt_Exception_NotAuthorizedException extends Exception
+class Phprojekt_Exception_NotAuthorized extends Exception
 {
 }
