@@ -37,13 +37,31 @@ define([
             this.emit('editCancel');
         },
 
+        _showErrorInWarningIcon: api.errorHandlerForTag('bookingEditor'),
+
         _submit: function(evt) {
             evt.stopPropagation();
             if (this.form.validate()) {
                 var data = this.form.get('value');
                 var sendData = this._prepareDataForSend(lang.mixin({}, this.booking, data));
                 if (sendData) {
-                    this.store.put(sendData);
+                    this.store.put(sendData).then(
+                        function() {
+                            topic.publish('notification/clear', 'bookingEditor');
+                        },
+                        lang.hitch(this, function(error) {
+                            try {
+                                var msg = json.parse(error.responseText, true);
+                                if (msg.message && msg.message.match(/entry.*overlaps.*existing/)) {
+                                    this._markOverlapError();
+                                } else {
+                                    this._showErrorInWarningIcon(error);
+                                }
+                            } catch (e) {
+                                this._showErrorInWarningIcon(error);
+                            }
+                        })
+                    );
                 }
             }
             return false;
