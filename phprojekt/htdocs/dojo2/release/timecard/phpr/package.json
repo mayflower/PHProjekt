@@ -7,8 +7,8 @@
         "dojo": "1.8.0"
     },
     "directories": {
-        "phpr": "."
+        "lib": "."
     },
     "dojoBuild": "phpr.package.js",
-    "main": "main"
+    "main": "run"
 }

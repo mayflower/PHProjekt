@@ -1921,6 +1921,7 @@
 				},
 				{
 					 location:"../phpr",
+					 main:"run",
 					 name:"phpr"
 				}
 		]
@@ -16166,9 +16167,10 @@ define([
     'phpr/ViewManager',
     'dojo/dom-construct',
     'dojo/_base/window',
+    'dojo/window',
     'dojo/parser',
     'dojo/domReady!'
-], function(api, BaseLayout, ViewManager, dom, win) {
+], function(api, BaseLayout, ViewManager, dom, win, window) {
     var started = false;
     var starting = false;
     var viewManager = null;
@@ -16192,7 +16194,7 @@ define([
 
     if (!started && !starting) {
         starting = true;
-        api.config.set('csrfToken', window.csrfToken);
+        api.config.set('csrfToken', window.get(win.doc).csrfToken);
         loadInitData();
     }
 });
@@ -26704,16 +26706,13 @@ define([
             var minutes = 0;
             array.forEach(this.data, function(booking) {
                 var start = timehelper.datetimeToJsDate(booking.startDatetime),
-                    end = timehelper.timeToJsDate(booking.endTime);
-                end.setFullYear(start.getFullYear());
-                end.setMonth(start.getMonth());
-                end.setDate(start.getDate());
+                    end = timehelper.timeToJsDateWithReferenceDate(booking.endTime, start);
 
                 minutes += date.difference(start, end, 'minute');
             });
 
             this.hoursWorked.innerHTML = "" + Math.floor(minutes / 60) + "h";
-            if (minutes !== 0) {
+            if (minutes % 60 !== 0) {
                 this.hoursWorked.innerHTML += " " + minutes % 60 + "m";
             }
         },
@@ -29059,6 +29058,17 @@ define([
         );
     };
 
+    exports.timeToJsDateWithReferenceDate = function(t, referenceDate) {
+        return new Date(
+            referenceDate.getFullYear(),
+            referenceDate.getMonth(),
+            referenceDate.getDate(),
+            stripLeadingZero(t.substr(0, 2)),
+            stripLeadingZero(t.substr(3, 2)),
+            stripLeadingZero(t.substr(6, 2))
+        );
+    };
+
     exports.jsDateToIsoDate = function(date) {
         // Summary:
         //    Convert a js date into ISO date
@@ -30064,7 +30074,7 @@ define([
                         lang.hitch(this, function(error) {
                             try {
                                 var msg = json.parse(error.responseText, true);
-                                if (msg.message && msg.message.match(/entry.*overlaps.*existing/)) {
+                                if (msg.error && msg.error === 'overlappingEntry') {
                                     this._markOverlapError();
                                 } else {
                                     this._showErrorInWarningIcon(error);

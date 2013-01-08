@@ -156,7 +156,7 @@ define("phpr/BookingList/BookingCreator", [
                         lang.hitch(this, function(error) {
                             try {
                                 var msg = json.parse(error.responseText, true);
-                                if (msg.message && msg.message.match(/entry.*overlaps.*existing/)) {
+                                if (msg.error && msg.error === 'overlappingEntry') {
                                     this._markOverlapError();
                                 } else {
                                     this._showErrorInWarningIcon(error);

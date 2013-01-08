@@ -1921,6 +1921,7 @@
 				},
 				{
 					 location:"../phpr",
+					 main:"run",
 					 name:"phpr"
 				}
 		]
