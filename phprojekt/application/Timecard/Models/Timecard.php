@@ -168,9 +168,10 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
                     return false;
                 } else if ($overlaps && $this->id == 0) {
                     $this->_validate->error->addError(array(
-                        'field'   => 'Time period',
-                        'label'   => Phprojekt::getInstance()->translate('Time period'),
-                        'message' => Phprojekt::getInstance()->translate('The entry overlaps with an existing one')));
+                        'field'     => 'Time period',
+                        'label'     => Phprojekt::getInstance()->translate('Time period'),
+                        'message'   => Phprojekt::getInstance()->translate('The entry overlaps with an existing one'),
+                        'error' => 'overlappingEntry'));
                     return false;
                 }
             }

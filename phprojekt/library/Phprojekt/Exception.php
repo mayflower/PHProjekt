@@ -14,10 +14,8 @@
  */
 
 /**
- * An exception thrown when the user is not authorized to access the given resource
+ * General PHProjekt Exception Superclass
  */
-class Phprojekt_Exception_NotAuthorized extends Phprojekt_Exception_Published
+class Phprojekt_Exception extends Exception
 {
-    protected $_type     = "notAuthorized";
-    protected $_httpCode = 403;
 }

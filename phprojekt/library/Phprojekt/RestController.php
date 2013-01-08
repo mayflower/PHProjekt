@@ -161,12 +161,8 @@ abstract class Phprojekt_RestController extends Zend_Rest_Controller
                 )
             );
         } else {
-            $errors       = $model->getError();
-            $errorStrings = array();
-            foreach ($errors as $error) {
-                $errorStrings[] = $error['label'] . ' : ' . $error['message'];
-            }
-            throw new Zend_Controller_Action_Exception('Invalid Data: ' . implode(',', $errorStrings), 422);
+            $errors = $model->getError();
+            throw new Phprojekt_Exception_Validation(array_pop($errors));
         }
     }
 
@@ -202,7 +198,7 @@ abstract class Phprojekt_RestController extends Zend_Rest_Controller
         if (!$model->recordValidate()) {
             $error = $model->getError();
             $error = array_pop($error);
-            throw new Zend_Controller_Action_Exception($error['label'] . ': ' . $error['message'], 400);
+            throw new Phprojekt_Exception_Validation($error);
         }
         $model->save();
 

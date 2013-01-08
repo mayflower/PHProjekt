@@ -74,10 +74,10 @@ class ErrorController extends Zend_Controller_Action
                 if ($exception instanceof Zend_Controller_Action_Exception) {
                     $this->getResponse()->setHttpResponseCode($exception->getCode());
                     $viewerror['message'] = $exception->getMessage();
-                } else if ($exception instanceof Phprojekt_Exception_NotAuthorized) {
-                    $this->getResponse()->setHttpResponseCode(403);
-                    $viewerror['message'] = $exception->getMessage();
-                    Phprojekt::getInstance()->getLog()->debug($exception->getMessage());
+                } else if ($exception instanceof Phprojekt_Exception_Published) {
+                    $this->getResponse()->setHttpResponseCode($exception->getHttpCode());
+                    $viewerror = $exception->toArray();
+                    Phprojekt::getInstance()->getLog()->debug($exception);
                 } else {
                     $this->getResponse()->setHttpResponseCode(500);
                     $logger = Phprojekt::getInstance()->getLog();
