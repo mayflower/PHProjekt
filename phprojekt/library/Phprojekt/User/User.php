@@ -400,7 +400,7 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
 
         $identifier = $this->getSetting('holidayIdentifier');
         if (empty($identifier)) {
-            throw new Zend_Controller_Action_Exception("Please configure your holiday region setting", 500);
+            throw new Zend_Controller_Action_Exception("Please have your admin configure your holiday region", 500);
         }
 
         switch($identifier) {
