@@ -41,7 +41,7 @@ define([
                 }
             );
         } else {
-            when(specialDayCache[month], fun);
+            when(specialDayCache[key], fun);
         }
     }
 
