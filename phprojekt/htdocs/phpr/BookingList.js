@@ -147,13 +147,15 @@ define([
                 'index.php/Timecard/Index/minutesToWork',
                 {query: {month: this.date.getMonth() + 1, year: this.date.getFullYear()}}
             ).then(lang.hitch(this, function(data) {
-                var hours = Math.floor(data.minutesToWork / 60),
-                    minutes = data.minutesToWork % 60;
-                this.hoursToWork.innerHTML = "" + hours + "h";
-                if (minutes !== 0) {
-                    this.hoursToWork.innerHTML += " " + minutes + "m";
+                if (data.minutesToWork !== 0) {
+                    var hours = Math.floor(data.minutesToWork / 60),
+                        minutes = data.minutesToWork % 60;
+                    this.hoursToWork.innerHTML = "" + hours + "h";
+                    if (minutes !== 0) {
+                        this.hoursToWork.innerHTML += " " + minutes + "m";
+                    }
+                    domStyle.set(this.hoursToWorkText, "display", "");
                 }
-                domStyle.set(this.hoursToWorkText, "display", "");
             }));
         },
 
