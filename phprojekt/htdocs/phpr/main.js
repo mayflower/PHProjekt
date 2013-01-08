@@ -4,9 +4,10 @@ define([
     'phpr/ViewManager',
     'dojo/dom-construct',
     'dojo/_base/window',
+    'dojo/window',
     'dojo/parser',
     'dojo/domReady!'
-], function(api, BaseLayout, ViewManager, dom, win) {
+], function(api, BaseLayout, ViewManager, dom, win, window) {
     var started = false;
     var starting = false;
     var viewManager = null;
@@ -30,7 +31,7 @@ define([
 
     if (!started && !starting) {
         starting = true;
-        api.config.set('csrfToken', window.csrfToken);
+        api.config.set('csrfToken', window.get(win.doc).csrfToken);
         loadInitData();
     }
 });
