@@ -1,14 +1,12 @@
 define([
-    'exports',
     'phpr/Api',
     'phpr/BaseLayout',
+    'phpr/ViewManager',
     'dojo/dom-construct',
     'dojo/_base/window',
-    'phpr/ViewManager',
-    'dojo/DeferredList',
-    'dojo/_base/array',
-    'dojo/_base/lang'
-], function(exports, api, BaseLayout, dom, win, ViewManager, DeferredList, array, lang) {
+    'dojo/parser',
+    'dojo/domReady!'
+], function(api, BaseLayout, ViewManager, dom, win) {
     var started = false;
     var starting = false;
     var viewManager = null;
@@ -30,11 +28,9 @@ define([
         });
     };
 
-    exports.startup = function(csrfToken) {
-        if (!started && !starting) {
-            starting = true;
-            api.config.set('csrfToken', csrfToken);
-            loadInitData();
-        }
-    };
+    if (!started && !starting) {
+        starting = true;
+        api.config.set('csrfToken', window.csrfToken);
+        loadInitData();
+    }
 });

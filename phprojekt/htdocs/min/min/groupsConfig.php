@@ -76,8 +76,8 @@ return array(
         "//dojo/release/dojo/dijit/themes/dijit_rtl.css"
     ),
     'timecard' => array(
-        "//dojo2/release/dojo/dijit/themes/claro/claro.css",
-        "//dojo2/release/dojo/dojo/resources/dojo.css",
+        "//dojo2/release/timecard/dijit/themes/claro/claro.css",
+        "//dojo2/release/timecard/dojo/resources/dojo.css",
         "//css/themes/timecard/baseLayout.css",
         "//css/themes/timecard/menubar.css",
         "//css/themes/timecard/basicHtml.css",

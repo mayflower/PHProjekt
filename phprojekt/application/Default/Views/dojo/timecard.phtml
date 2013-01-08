@@ -15,49 +15,48 @@
         var dojoConfig = {
             isDebug: true,
             parseOnLoad: false,
-            bindEncoding: "utf-8",
-            baseUrl: "./",
+            bindEncoding: 'utf-8',
+            baseUrl: './',
             async: true,
             packages: [
 <?php 
     if ($this->compressedDojo) {
 ?>
-                { name: "dojo", location: "dojo2/release/dojo/dojo" },
-                { name: "dijit", location: "dojo2/release/dojo/dijit" },
-                { name: "dojox", location: "dojo2/release/dojo/dojox" },
+                { name: 'dojo', location: 'dojo2/release/timecard/dojo' },
+                { name: 'dijit', location: 'dojo2/release/timecard/dijit' },
+                { name: 'dojox', location: 'dojo2/release/timecard/dojox' },
+                { name: 'phpr', location: 'dojo2/release/timecard/phpr' }
 <?php
     } else {
 ?>
-                { name: "dojo", location: "dojo2/dojo" },
-                { name: "dijit", location: "dojo2/dijit" },
-                { name: "dojox", location: "dojo2/dojox" },
+                { name: 'dojo', location: 'dojo2/dojo' },
+                { name: 'dijit', location: 'dojo2/dijit' },
+                { name: 'dojox', location: 'dojo2/dojox' },
+                { name: 'phpr', location: 'phpr' }
 <?php
     }
 ?>
-                { name: 'phpr', location: 'phpr' }
             ]
         };
+        window.csrfToken = '<?php echo $csrfToken ?>';
     </script>
     <?php
     if (true === $this->isLoggedIn) {
         if ($this->compressedDojo) {
         ?>
-            <script type="text/javascript" src="dojo2/dojo/dojo.js"></script>
+            <script type="text/javascript" src="dojo2/release/timecard/phpr/main.js"></script>
+            <script type="text/javascript" src="dojo2/release/timecard/phpr/run.js"></script>
         <?php
         } else {
         ?>
-            <script type="text/javascript" src="dojo2/release/dojo/dojo/dojo.js.uncompressed.js"></script>
+            <script type="text/javascript" src="dojo2/release/timecard/dojo/dojo.js.uncompressed.js" defer></script>
+            <script type="text/javascript" src="phpr/run.js" defer></script>
         <?php
         }
     }
     ?>
 </head>
 <body class="timecard claro">
-    <script type="text/javascript">
-        require(['phpr/Starter', 'dojo/parser', 'dojo/domReady!'], function(starter) {
-            starter.startup('<?php echo $csrfToken ?>');
-        });
-    </script>
 </body>
 </html>
 <!-- template: index.phml -->
