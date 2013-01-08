@@ -32,6 +32,17 @@ define([
         );
     };
 
+    exports.timeToJsDateWithReferenceDate = function(t, referenceDate) {
+        return new Date(
+            referenceDate.getFullYear(),
+            referenceDate.getMonth(),
+            referenceDate.getDate(),
+            stripLeadingZero(t.substr(0, 2)),
+            stripLeadingZero(t.substr(3, 2)),
+            stripLeadingZero(t.substr(6, 2))
+        );
+    };
+
     exports.jsDateToIsoDate = function(date) {
         // Summary:
         //    Convert a js date into ISO date

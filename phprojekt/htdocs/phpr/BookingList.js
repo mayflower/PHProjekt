@@ -128,10 +128,7 @@ define([
             var minutes = 0;
             array.forEach(this.data, function(booking) {
                 var start = timehelper.datetimeToJsDate(booking.startDatetime),
-                    end = timehelper.timeToJsDate(booking.endTime);
-                end.setFullYear(start.getFullYear());
-                end.setMonth(start.getMonth());
-                end.setDate(start.getDate());
+                    end = timehelper.timeToJsDateWithReferenceDate(booking.endTime, start);
 
                 minutes += date.difference(start, end, 'minute');
             });
