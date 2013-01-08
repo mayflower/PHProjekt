@@ -132,7 +132,7 @@ define([
             });
 
             this.hoursWorked.innerHTML = "" + Math.floor(minutes / 60) + "h";
-            if (minutes !== 0) {
+            if (minutes % 60 !== 0) {
                 this.hoursWorked.innerHTML += " " + minutes % 60 + "m";
             }
         },
