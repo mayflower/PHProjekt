@@ -28,7 +28,7 @@ define([
             ).then(
                 function(data) {
                     data = array.filter(data, function(e) {
-                        return e.type == "holiday"
+                        return e.type == "holiday";
                     });
                     specialDayCache[key] = data;
                     fun(data);
