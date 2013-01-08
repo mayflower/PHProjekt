@@ -1,0 +1,3 @@
+//>>built
+define("phpr/ViewManager","dojo/_base/declare,dijit/Destroyable,dojo/_base/lang,dojo/_base/array,dojo/topic,phpr/BookingView,phpr/StatisticsView".split(","),function(c,d,e,i,f,g,h){return c(d,{baseLayout:null,constructor:function(a){this.baseLayout=a;var a={"phpr/showLiveBooking":"onLiveBooking","phpr/showBookings":"onBookings","phpr/showStatistics":"onStatistics"},b;for(b in a)this.own(f.subscribe(b,e.hitch(this,a[b])))},startup:function(){this.inherited(arguments);this.baseLayout.menubar.onBookingsClick()},
+onLiveBooking:function(){this.baseLayout.mainContent.set("content","imagine a timecard here")},onBookings:function(){this.baseLayout.mainContent.set("content",new g)},onStatistics:function(){this.baseLayout.mainContent.set("content",new h)}})});

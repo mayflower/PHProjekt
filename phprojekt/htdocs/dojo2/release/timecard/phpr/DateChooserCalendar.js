@@ -1,0 +1,2 @@
+//>>built
+define("phpr/DateChooserCalendar",["dojo/_base/declare","phpr/Calendar","dojo/Evented"],function(a,c,d){return a([c,d],{_startedUp:!1,_onMonthSelect:function(b){this.inherited(arguments);this.emit("change",new this.dateClassObj(this.get("currentFocus").getTime()))},_setCurrentFocusAttr:function(b,a){this.inherited(arguments);!0===this._startedUp&&this.emit("change",new this.dateClassObj(b.getTime()))},postCreate:function(){this.inherited(arguments);this._startedUp=!0}})});

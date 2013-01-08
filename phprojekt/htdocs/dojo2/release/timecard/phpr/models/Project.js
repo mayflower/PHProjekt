@@ -1,0 +1,3 @@
+//>>built
+define("phpr/models/Project","exports,dojo/_base/array,dojo/_base/lang,dojo/Deferred,dojo/promise/all,phpr/Api".split(","),function(a,e,f,g,h,d){a.getProjects=function(a){var b={recursive:!0,projectId:1};f.mixin(b,a);var c=new g;d.getData("index.php/Project/Project",{query:b}).then(function(a){var b={};e.forEach(a,function(a){b[a.id]=a});c.resolve(b)},d.defaultErrorHandler);return c};a.getRecentProjects=function(i){var b={count:2};f.mixin(b,i);var c=new g;h({projects:a.getProjects(),recent:d.getData("index.php/Timecard/index/jsonRecentProjects",
+{query:{n:b.count}})}).then(function(a){var b=e.map(a.recent,function(b){return a.projects[b]});c.resolve(b)},d.defaultErrorHandler);return c}});

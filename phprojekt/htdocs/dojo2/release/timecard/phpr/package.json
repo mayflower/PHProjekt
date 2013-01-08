@@ -1,0 +1,14 @@
+{
+    "name": "phprojekt",
+    "version": "1.0.0",
+    "homepage": "http://phprojekt.com",
+    "description": "Phprojekt timecard code",
+    "dependencies": {
+        "dojo": "1.8.0"
+    },
+    "directories": {
+        "phpr": "."
+    },
+    "dojoBuild": "phpr.package.js",
+    "main": "main"
+}
