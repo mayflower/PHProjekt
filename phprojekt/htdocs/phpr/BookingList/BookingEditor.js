@@ -8,7 +8,7 @@ define([
     'dojo/date/locale',
     'dojo/dom-style',
     'dijit/_FocusMixin',
-    'phpr/BookingList/BookingCreator.js',
+    'phpr/BookingList/BookingCreator',
     'phpr/Api',
     'phpr/Timehelper',
     'dojo/text!phpr/template/bookingList/bookingEditor.html'
