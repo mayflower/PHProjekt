@@ -332,45 +332,8 @@ class JsController extends IndexController
                 $this->_subModules[$file] = array();
                 if ($file != 'Core') {
                     $output .= $this->_getModuleScripts($path, $scripts, $file);
-                    if (is_dir($path . $file . '/SubModules/')) {
-                        $subFiles = scandir($path . $file . '/SubModules/');
-                        foreach ($subFiles as $subFile) {
-                            if ($subFile != '.'  && $subFile != '..') {
-                                if (is_dir($path . $file . '/SubModules/' . $subFile . '/Views/dojo/scripts/')) {
-                                    $subScripts = scandir($path . $file . '/SubModules/' . $subFile
-                                        . '/Views/dojo/scripts/');
-                                } else {
-                                    $subScripts = array();
-                                }
-                                $this->_subModules[$file][] = "'" . $subFile . "'";
-                                $output .= $this->_getModuleScripts($path, $subScripts, $file . '/SubModules/' . $subFile);
-                            }
-                        }
-                    }
                 } else {
                     $output .= $this->_getCoreModuleScripts($scripts);
-                    if (is_dir(PHPR_CORE_PATH . '/' . $file . '/SubModules/')) {
-                        $subModulesFiles = scandir(PHPR_CORE_PATH . '/' . $file . '/SubModules/');
-                        foreach ($subModulesFiles as $subModule) {
-                            if ($subModule != '.' && $subModule != '..') {
-                                $subFiles = scandir(PHPR_CORE_PATH . '/' . $file . '/SubModules/' . $subModule);
-                                foreach ($subFiles as $subFile) {
-                                    if ($subFile != '.'  && $subFile != '..') {
-                                        if (is_dir(PHPR_CORE_PATH . '/' . $file . '/SubModules/' . $subModule . '/'
-                                            . $subFile . '/Views/dojo/scripts/')) {
-                                            $subScripts = scandir(PHPR_CORE_PATH . '/' . $file . '/SubModules/'
-                                                . $subModule . '/' . $subFile . '/Views/dojo/scripts/');
-                                        } else {
-                                            $subScripts = array();
-                                        }
-                                        $this->_subModules[$subModule][] = "'" . $subFile . "'";
-                                        $output .= $this->_getModuleScripts($path, $subScripts, $file . '/SubModules/'
-                                            . $subModule . '/' . $subFile);
-                                    }
-                                }
-                            }
-                        }
-                    }
                 }
             }
         }

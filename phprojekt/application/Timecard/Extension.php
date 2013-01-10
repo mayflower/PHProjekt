@@ -24,7 +24,7 @@ class Timecard_Extension extends Phprojekt_Extension_Abstract
 {
     public function getVersion()
     {
-        return '6.2.2';
+        return '6.3.0';
     }
 
     public function getMigration()
