@@ -171,6 +171,7 @@ define([
 
         _markOverlapError: function() {
             this.start.set('state', 'Error');
+            this.end.focus();
             this.end.set('state', 'Error');
             this.end.set('message', 'The entry overlaps with an existing one');
         },
