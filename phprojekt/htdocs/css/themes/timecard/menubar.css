@@ -1,8 +1,9 @@
 .timecard .menubar {
-    font-size: 24px;
+    font-size: 20px;
     border-spacing: 0;
     height: 100%;
     width: 100%;
+    font-family: sans-serif;
 }
 
 .timecard .menubar td.button:first-child {
@@ -38,7 +39,7 @@
 }
 
 .timecard .menubarOuter {
-    height: 44px;
+    height: 40px;
     background: #101110;
     width: 100%;
     position: absolute;
@@ -201,4 +202,9 @@
 
 .timecard .menubar .warningIconButton.open .menu {
     visibility: visible;
+}
+
+.timecard .menubar td.button.logo {
+    width: 150px;
+    padding-top: 8px;
 }
