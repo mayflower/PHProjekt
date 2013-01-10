@@ -1940,7 +1940,7 @@
 		]
 });require({cache:{
 'dojo/main':function(){
-define([
+define("dojo/main", [
 	"./_base/kernel",	// kernel.isAsync
 	"./has",
 	"require",
@@ -2297,7 +2297,7 @@ define(["../has", "./config", "require", "module"], function(has, config, requir
 
 },
 'dojo/has':function(){
-define(["require", "module"], function(require, module){
+define("dojo/has", ["require", "module"], function(require, module){
 	// module:
 	//		dojo/has
 	// summary:
@@ -3690,7 +3690,7 @@ define(["./kernel", "../has", "./lang"], function(dojo, has, lang){
 
 },
 'dojo/ready':function(){
-define(["./_base/kernel", "./has", "require", "./domReady", "./_base/lang"], function(dojo, has, require, domReady, lang){
+define("dojo/ready", ["./_base/kernel", "./has", "require", "./domReady", "./_base/lang"], function(dojo, has, require, domReady, lang){
 	// module:
 	//		dojo/ready
 	// note:
@@ -5354,7 +5354,7 @@ return connect;
 
 },
 'dojo/on':function(){
-define(["./has!dom-addeventlistener?:./aspect", "./_base/kernel", "./has"], function(aspect, dojo, has){
+define("dojo/on", ["./has!dom-addeventlistener?:./aspect", "./_base/kernel", "./has"], function(aspect, dojo, has){
 
 	"use strict";
 	if( 1 ){ // check to make sure we are in a browser, this module should work anywhere
@@ -5953,7 +5953,7 @@ define(["./aspect", "./on"], function(aspect, on){
 
 },
 'dojo/aspect':function(){
-define([], function(){
+define("dojo/aspect", [], function(){
 
 	// module:
 	//		dojo/aspect
@@ -6237,7 +6237,7 @@ define(["./kernel", "../on", "../has", "../dom-geometry"], function(dojo, on, ha
 
 },
 'dojo/dom-geometry':function(){
-define(["./sniff", "./_base/window","./dom", "./dom-style"],
+define("dojo/dom-geometry", ["./sniff", "./_base/window","./dom", "./dom-style"],
 		function(has, win, dom, style){
 	// module:
 	//		dojo/dom-geometry
@@ -7715,7 +7715,7 @@ define(["./kernel", "./lang", "../sniff"], function(dojo, lang, has){
 
 },
 'dojo/keys':function(){
-define(["./_base/kernel", "./sniff"], function(dojo, has){
+define("dojo/keys", ["./_base/kernel", "./sniff"], function(dojo, has){
 
 	// module:
 	//		dojo/keys
@@ -19407,7 +19407,7 @@ define(["dojo/dom-class", "dojo/hccss", "dojo/ready", "dojo/_base/window"], func
 
 },
 'dojo/hccss':function(){
-define([
+define("dojo/hccss", [
 	"require",			// require.toUrl
 	"./_base/config", // config.blankGif
 	"./dom-class", // domClass.add
@@ -20456,7 +20456,7 @@ define([
 },
 'dojo/parser':function(){
 define(
-	["require", "./_base/kernel", "./_base/lang", "./_base/array", "./_base/config", "./_base/html", "./_base/window",
+	"dojo/parser", ["require", "./_base/kernel", "./_base/lang", "./_base/array", "./_base/config", "./_base/html", "./_base/window",
 		"./_base/url", "./_base/json", "./aspect", "./date/stamp", "./Deferred", "./has", "./query", "./on", "./ready"],
 	function(require, dojo, dlang, darray, config, dhtml, dwindow, _Url, djson, aspect, dates, Deferred, has, query, don, ready){
 
@@ -23142,7 +23142,7 @@ define(["./_base/kernel", "./_base/lang", "./_base/array", "./_base/declare", ".
 
 },
 'dojo/i18n':function(){
-define(["./_base/kernel", "require", "./has", "./_base/array", "./_base/config", "./_base/lang", "./_base/xhr", "./json", "module"],
+define("dojo/i18n", ["./_base/kernel", "require", "./has", "./_base/array", "./_base/config", "./_base/lang", "./_base/xhr", "./json", "module"],
 	function(dojo, require, has, array, config, lang, xhr, json, module){
 
 	// module:
@@ -25146,7 +25146,7 @@ define([
 
 },
 'url:dijit/templates/Tooltip.html':"<div class=\"dijitTooltip dijitTooltipLeft\" id=\"dojoTooltip\"\n\t><div class=\"dijitTooltipContainer dijitTooltipContents\" data-dojo-attach-point=\"containerNode\" role='alert'></div\n\t><div class=\"dijitTooltipConnector\" data-dojo-attach-point=\"connectorNode\"></div\n></div>\n",
-'url:phpr/template/menubar.html':"<div class=\"menubarOuter\">\n    <div class=\"menubarMiddle\">\n        <table class=\"menubar\"><tr>\n            <td class=\"bookingsButton button left\" data-dojo-attach-point=\"bookingsButton\"\n                ><div class=\"menuItem\">Booking</div></td>\n            <td style='display: none;' class=\"startButton button left\" data-dojo-attach-point=\"startButton\"\n                ><div class=\"menuItem\">Start</div></td>\n            <td style='display: none;' class=\"statisticsButton button left\" data-dojo-attach-point=\"statisticsButton\"\n                ><div class=\"menuItem\">Statistics</div></td>\n            <td style=\"width: auto;\"><div><b></b></div></td>\n            <td class=\"button right\" data-dojo-type=\"phpr/Menubar/WarningIcon\"><div><b></b></div></td>\n            <td class=\"logoutButton button right\" data-dojo-attach-point=\"logoutButton\"\n                ><div class=\"logoutIcon menuItem\"></div></td>\n            </tr></table>\n    </div>\n</div>\n",
+'url:phpr/template/menubar.html':"<div class=\"menubarOuter\">\n    <div class=\"menubarMiddle\">\n        <table class=\"menubar\"><tr>\n            <td class=\"bookingsButton button left\" data-dojo-attach-point=\"bookingsButton\"\n                ><div class=\"menuItem\">Booking</div></td>\n            <td style='display: none;' class=\"startButton button left\" data-dojo-attach-point=\"startButton\"\n                ><div class=\"menuItem\">Start</div></td>\n            <td style='display: none;' class=\"statisticsButton button left\" data-dojo-attach-point=\"statisticsButton\"\n                ><div class=\"menuItem\">Statistics</div></td>\n            <td style=\"width: auto;\"><div><b></b></div></td>\n            <td class=\"button right\" data-dojo-type=\"phpr/Menubar/WarningIcon\"><div><b></b></div></td>\n            <td class=\"logo button right\">\n                <img src=\"../../../img/timecard/logo.png\" border=\"0\" /></td>\n            <td class=\"logoutButton button right\" data-dojo-attach-point=\"logoutButton\"\n                ><div class=\"logoutIcon menuItem\"></div></td>\n            </tr></table>\n    </div>\n</div>\n",
 'phpr/Menubar/WarningIcon':function(){
 define([
     'dojo/_base/declare',
@@ -28020,7 +28020,7 @@ return supplemental;
 
 },
 'dojo/regexp':function(){
-define(["./_base/kernel", "./_base/lang"], function(dojo, lang){
+define("dojo/regexp", ["./_base/kernel", "./_base/lang"], function(dojo, lang){
 
 // module:
 //		dojo/regexp
