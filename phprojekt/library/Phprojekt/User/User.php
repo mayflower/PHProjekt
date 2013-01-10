@@ -403,7 +403,7 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
             throw new Zend_Controller_Action_Exception("Please have your admin configure your holiday region", 500);
         }
 
-        switch($identifier) {
+        switch ($identifier) {
         case 'de_DE:by':
             return new \Holiday\Bavaria($timezone);
             break;
