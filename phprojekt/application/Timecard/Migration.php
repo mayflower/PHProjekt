@@ -70,15 +70,15 @@ class Timecard_Migration extends Phprojekt_Migration_Abstract
                 "DELETE ir
                    FROM item_rights ir, module m
                   WHERE ir.module_id = m.id
-                    AND m.name NOT IN ('Timecard', 'Project')");
+                    AND m.name NOT IN ('Timecard', 'Project', 'Calendar2')");
             Phprojekt::getInstance()->getDB()->query(
                 "DELETE rmp
                    FROM role_module_permissions rmp, module m
                   WHERE rmp.module_id = m.id
-                    AND m.name NOT IN ('Timecard', 'Project')");
+                    AND m.name NOT IN ('Timecard', 'Project', 'Calendar2')");
             Phprojekt::getInstance()->getDB()->query(
                 "DELETE FROM module
-                  WHERE name NOT IN ('Timecard', 'Project')");
+                  WHERE name NOT IN ('Timecard', 'Project', 'Calendar2')");
         }
     }
 
