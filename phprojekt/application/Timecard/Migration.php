@@ -36,7 +36,7 @@ class Timecard_Migration extends Phprojekt_Migration_Abstract
      */
     public function getCurrentModuleVersion()
     {
-        return '6.2.2';
+        return '6.3.0';
     }
 
     /**
@@ -63,6 +63,22 @@ class Timecard_Migration extends Phprojekt_Migration_Abstract
             );
             // This is mysql-only. Not sure if this is the ultimate way to go here.
             Phprojekt::getInstance()->getDB()->query('ALTER TABLE timecard ADD UNIQUE (uri)');
+        }
+
+        if (Phprojekt::compareVersion($currentVersion, '6.3.0') < 0) {
+            Phprojekt::getInstance()->getDB()->query(
+                "DELETE ir
+                   FROM item_rights ir, module m
+                  WHERE ir.module_id = m.id
+                    AND m.name NOT IN ('Timecard', 'Project')");
+            Phprojekt::getInstance()->getDB()->query(
+                "DELETE rmp
+                   FROM role_module_permissions rmp, module m
+                  WHERE rmp.module_id = m.id
+                    AND m.name NOT IN ('Timecard', 'Project')");
+            Phprojekt::getInstance()->getDB()->query(
+                "DELETE FROM module
+                  WHERE name NOT IN ('Timecard', 'Project')");
         }
     }
 
