@@ -1927,7 +1927,7 @@
 		]
 });require({cache:{
 'dojo/main':function(){
-define("dojo/main", [
+define([
 	"./_base/kernel",	// kernel.isAsync
 	"./has",
 	"require",
@@ -2284,7 +2284,7 @@ define(["../has", "./config", "require", "module"], function(has, config, requir
 
 },
 'dojo/has':function(){
-define("dojo/has", ["require", "module"], function(require, module){
+define(["require", "module"], function(require, module){
 	// module:
 	//		dojo/has
 	// summary:
@@ -3677,7 +3677,7 @@ define(["./kernel", "../has", "./lang"], function(dojo, has, lang){
 
 },
 'dojo/ready':function(){
-define("dojo/ready", ["./_base/kernel", "./has", "require", "./domReady", "./_base/lang"], function(dojo, has, require, domReady, lang){
+define(["./_base/kernel", "./has", "require", "./domReady", "./_base/lang"], function(dojo, has, require, domReady, lang){
 	// module:
 	//		dojo/ready
 	// note:
@@ -5341,7 +5341,7 @@ return connect;
 
 },
 'dojo/on':function(){
-define("dojo/on", ["./has!dom-addeventlistener?:./aspect", "./_base/kernel", "./has"], function(aspect, dojo, has){
+define(["./has!dom-addeventlistener?:./aspect", "./_base/kernel", "./has"], function(aspect, dojo, has){
 
 	"use strict";
 	if( 1 ){ // check to make sure we are in a browser, this module should work anywhere
@@ -5940,7 +5940,7 @@ define(["./aspect", "./on"], function(aspect, on){
 
 },
 'dojo/aspect':function(){
-define("dojo/aspect", [], function(){
+define([], function(){
 
 	// module:
 	//		dojo/aspect
@@ -6224,7 +6224,7 @@ define(["./kernel", "../on", "../has", "../dom-geometry"], function(dojo, on, ha
 
 },
 'dojo/dom-geometry':function(){
-define("dojo/dom-geometry", ["./sniff", "./_base/window","./dom", "./dom-style"],
+define(["./sniff", "./_base/window","./dom", "./dom-style"],
 		function(has, win, dom, style){
 	// module:
 	//		dojo/dom-geometry
@@ -7702,7 +7702,7 @@ define(["./kernel", "./lang", "../sniff"], function(dojo, lang, has){
 
 },
 'dojo/keys':function(){
-define("dojo/keys", ["./_base/kernel", "./sniff"], function(dojo, has){
+define(["./_base/kernel", "./sniff"], function(dojo, has){
 
 	// module:
 	//		dojo/keys
@@ -19394,7 +19394,7 @@ define(["dojo/dom-class", "dojo/hccss", "dojo/ready", "dojo/_base/window"], func
 
 },
 'dojo/hccss':function(){
-define("dojo/hccss", [
+define([
 	"require",			// require.toUrl
 	"./_base/config", // config.blankGif
 	"./dom-class", // domClass.add
@@ -20443,7 +20443,7 @@ define([
 },
 'dojo/parser':function(){
 define(
-	"dojo/parser", ["require", "./_base/kernel", "./_base/lang", "./_base/array", "./_base/config", "./_base/html", "./_base/window",
+	["require", "./_base/kernel", "./_base/lang", "./_base/array", "./_base/config", "./_base/html", "./_base/window",
 		"./_base/url", "./_base/json", "./aspect", "./date/stamp", "./Deferred", "./has", "./query", "./on", "./ready"],
 	function(require, dojo, dlang, darray, config, dhtml, dwindow, _Url, djson, aspect, dates, Deferred, has, query, don, ready){
 
@@ -23129,7 +23129,7 @@ define(["./_base/kernel", "./_base/lang", "./_base/array", "./_base/declare", ".
 
 },
 'dojo/i18n':function(){
-define("dojo/i18n", ["./_base/kernel", "require", "./has", "./_base/array", "./_base/config", "./_base/lang", "./_base/xhr", "./json", "module"],
+define(["./_base/kernel", "require", "./has", "./_base/array", "./_base/config", "./_base/lang", "./_base/xhr", "./json", "module"],
 	function(dojo, require, has, array, config, lang, xhr, json, module){
 
 	// module:
@@ -28007,7 +28007,7 @@ return supplemental;
 
 },
 'dojo/regexp':function(){
-define("dojo/regexp", ["./_base/kernel", "./_base/lang"], function(dojo, lang){
+define(["./_base/kernel", "./_base/lang"], function(dojo, lang){
 
 // module:
 //		dojo/regexp
@@ -30091,6 +30091,7 @@ define([
 
         _markOverlapError: function() {
             this.start.set('state', 'Error');
+            this.end.focus();
             this.end.set('state', 'Error');
             this.end.set('message', 'The entry overlaps with an existing one');
         },
