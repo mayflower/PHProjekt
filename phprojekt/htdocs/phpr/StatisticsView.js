@@ -11,19 +11,21 @@ define([
     return declare([Widget, Templated, WidgetsInTemplate], {
         templateString: templateString,
 
+        year: (new Date()).getFullYear(),
+        month: (new Date()).getMonth(),
+
         buildRendering: function() {
             this.inherited(arguments);
 
-            var data = [{date: new Date(2013, 1, 1, 0, 0, 0), minutes: 500},
-                        {date: new Date(2013, 1, 2, 0, 0, 0), minutes: 270},
-                        {date: new Date(2013, 1, 3, 0, 0, 0), minutes: 568},
-                        {date: new Date(2013, 1, 4, 0, 0, 0), minutes: 436},
-                        {date: new Date(2013, 1, 5, 0, 0, 0), minutes: 830},
-                        {date: new Date(2013, 1, 6, 0, 0, 0), minutes: 100},
-                        {date: new Date(2013, 1, 7, 0, 0, 0), minutes: 1000},
-                        {date: new Date(2013, 1, 8, 0, 0, 0), minutes: 300},
-                        {date: new Date(2013, 1, 9, 0, 0, 0), minutes: 0}],
-                dataCount = 30,
+            api.getData(
+                'index.php/Timecard/index/monthList',
+                {query: {year: this.year, month: this.month + 1}}
+            ).then(dojo.hitch(this, this._renderData));
+        },
+
+        _renderData: function(data) {
+            var days = data.days,
+                dataCount = days.length,
                 maxMinutes = 1000,
                 minutesToWork = 450,
                 displayHeight = domAttr.get(this.bookedTimePerDayGraph, "height"),
@@ -35,20 +37,20 @@ define([
 
             d3.select(this.bookedTimePerDayGraph)
                 .selectAll("rect")
-                .data(data)
+                .data(days)
                 .enter().append("svg:rect")
                     .attr("fill", function(d) {
-                        return d.minutes < minutesToWork ? "grey" : "lightgrey";
+                        return d.sumInMinutes < minutesToWork ? "grey" : "lightgrey";
                     })
                     .attr("x", function(d, i) {
                         return i * (barPadding + barWidth);
                     })
                     .attr("y", function(d) {
-                        return Math.min(heightForTimebars - 2, heightForTimebars - heightPerMinute * d.minutes);
+                        return Math.min(heightForTimebars - 2, heightForTimebars - heightPerMinute * d.sumInMinutes);
                     })
                     .attr("width", barWidth)
                     .attr("height", function(d) {
-                        return Math.max(2, heightPerMinute * d.minutes);
+                        return Math.max(2, heightPerMinute * d.sumInMinutes);
                     });
 
             d3.select(this.bookedTimePerDayGraph)
