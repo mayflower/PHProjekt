@@ -10,6 +10,8 @@
 
 .timecard .mainContent {
     position: absolute;
+    width: 834px;
     top: 42px;
     box-shadow: 0px 0px 5px 0px black;
+    background-color: #1a1919;
 }
