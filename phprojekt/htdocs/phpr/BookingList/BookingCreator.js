@@ -125,6 +125,8 @@ define([
         },
 
         _getStartRegexp: function() {
+            // both used by dojo to validate the input and to extract the time viaa matchings
+            // see _prepareDataForSend and _inputToTime
             var hours = '([01]?\\d|2[0123])',
                 minutes = '([01-5]\\d)',
                 separator = '[:\\. ]?';
@@ -132,6 +134,8 @@ define([
         },
 
         _getEndRegexp: function() {
+            // both used by dojo to validate the input and to extract the time viaa matchings
+            // see _prepareDataForSend and _inputToTime
             var hours = '([01]?\\d|2[0123])',
                 minutes = '([01-5]\\d)',
                 separator = '[:\\. ]?';
@@ -178,8 +182,8 @@ define([
 
         _prepareDataForSend: function(data) {
             var ret = {};
-            var startTime = this._inputToTime(data.start, this._getStartRegexp());
-            var endTime = this._inputToTime(data.end, this._getEndRegexp());
+            var startTime = this._inputToTime(data.start, "^" + this._getStartRegexp() + "$");
+            var endTime = this._inputToTime(data.end, "^" + this._getEndRegexp() + "$");
 
             if (!startTime) {
                 return false;
