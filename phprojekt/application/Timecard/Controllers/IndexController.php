@@ -59,6 +59,21 @@ class Timecard_IndexController extends IndexController
     }
 
     /**
+     * The same as jsonMonthListAction, but use standard json.
+     */
+    public function monthListAction()
+    {
+        $year    = (int) $this->getRequest()->getParam('year', date("Y"));
+        $month   = (int) $this->getRequest()->getParam('month', date("m"));
+        $records = $this->getModelObject()->getMonthRecords($year, $month);
+
+        Phprojekt_CompressedSender::send(
+            Zend_Json::encode(array('days' => $records['data']))
+        );
+    }
+
+
+    /**
      * Returns a list of the bookings in a day.
      *
      * For each booking, the data have:
