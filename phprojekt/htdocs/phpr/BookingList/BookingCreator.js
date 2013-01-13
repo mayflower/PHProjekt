@@ -128,14 +128,14 @@ define([
             var hours = '([01]?\\d|2[0123])',
                 minutes = '([01-5]\\d)',
                 separator = '[:\\. ]?';
-            return '(' + hours + separator + minutes + '|24' + separator + '00)';
+            return '(' + hours + separator + minutes + ')';
         },
 
         _getEndRegexp: function() {
             var hours = '([01]?\\d|2[0123])',
                 minutes = '([01-5]\\d)',
                 separator = '[:\\. ]?';
-            return '(' + hours + separator + minutes + '|24' + separator + '00)?';
+            return '(' + hours + separator + minutes + ')?';
         },
 
         _showErrorInWarningIcon: api.errorHandlerForTag('bookingCreator'),
