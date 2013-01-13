@@ -4,10 +4,10 @@ define([
     'dijit/_Widget',
     'dijit/_TemplatedMixin',
     'dijit/_WidgetsInTemplateMixin',
+    'phpr/Api',
     'dojo/text!phpr/template/statisticsView.html',
-    'd3/d3.v3.js',
-    'phpr/Api'
-], function(declare, domAttr, Widget, Templated, WidgetsInTemplate, templateString, api) {
+    'd3/d3.v3.js'
+], function(declare, domAttr, Widget, Templated, WidgetsInTemplate, api, templateString) {
     return declare([Widget, Templated, WidgetsInTemplate], {
         templateString: templateString,
 
