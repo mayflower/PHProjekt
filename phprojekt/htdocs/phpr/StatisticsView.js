@@ -60,6 +60,18 @@ define([
                     .attr("y1", heightForTimebars - minutesToWork * heightPerMinute)
                     .attr("y2", heightForTimebars - minutesToWork * heightPerMinute)
                     .attr("stroke", "green");
+
+            if (this.year == (new Date()).getFullYear() && this.month == (new Date()).getMonth()) {
+                var currentDate = (new Date()).getDate();
+                d3.select(this.bookedTimePerDayGraph)
+                    .append("line")
+                    .attr("x1", currentDate * (barWidth + barPadding) - (barPadding / 2))
+                    .attr("x2", currentDate * (barWidth + barPadding) - (barPadding / 2))
+                    .attr("y1", 0)
+                    .attr("y2", heightForTimebars)
+                    .attr("stroke", "blue");
+            }
+
         }
     });
 
