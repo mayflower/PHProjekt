@@ -82,6 +82,7 @@ define([
             this.bookingCreator.set('date', date);
             if (monthChanged) {
                 this._update();
+                this._updateHoursToWork();
             }
         },
 
