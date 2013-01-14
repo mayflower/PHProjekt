@@ -490,7 +490,11 @@ class Timecard_IndexController extends IndexController
 
     private function _applyHolidayWeights(array $minutesPerDay, DateTime $start, DateTime $end)
     {
-        $holidays = Phprojekt_Auth::getRealUser()->getHolidayCalculator()->between($start, $end);
+        try {
+            $holidays = Phprojekt_Auth::getRealUser()->getHolidayCalculator()->between($start, $end);
+        } catch (Phprojekt_Exception_HolidayRegionNotSet $e) {
+            return $minutesPerDay;
+        }
         $holidaysByDate = array();
         foreach ($holidays as $h) {
             $dateString = $h->format('Y-m-d');
