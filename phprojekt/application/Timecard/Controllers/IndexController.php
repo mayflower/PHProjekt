@@ -508,9 +508,16 @@ class Timecard_IndexController extends IndexController
 
     private function _dateBefore(DateTime $a, DateTime $b)
     {
-        return (int) $a->format('Y') < (int) $b->format('Y') ||
-               (int) $a->format('m') < (int) $b->format('m') ||
-               (int) $a->format('d') < (int) $b->format('d');
+        $aY = (int) $a->format('Y');
+        $am = (int) $a->format('m');
+        $ad = (int) $a->format('d');
+        $bY = (int) $b->format('Y');
+        $bm = (int) $b->format('m');
+        $bd = (int) $b->format('d');
+
+        return ($aY < $bY) ||
+               ($aY == $bY && ($am < $bm) ||
+                              ($am == $bm && $ad < $bd));
     }
 
     private function _dateMax(DateTime $a, DateTime $b)
