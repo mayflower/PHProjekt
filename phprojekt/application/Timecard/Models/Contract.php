@@ -29,7 +29,7 @@ class Timecard_Models_Contract extends Phprojekt_ActiveRecord_Abstract
         $userContractRels = $db->select()->from('user_contract_relation', array('contract_id', 'start', 'end'))
             ->where('user_id = ?', Phprojekt_Auth::getUserId())
             ->where('start < ?', $end->format('Y-m-d'))
-            ->where('end >= ?', $start->format('Y-m-d'))
+            ->where('end >= ? OR end is NULL', $start->format('Y-m-d'))
             ->order('start')
             ->query()->fetchAll();
 

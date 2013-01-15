@@ -470,9 +470,9 @@ class Timecard_IndexController extends IndexController
         $minutesPerDay = array();
         foreach ($contracts as $c) {
             $period = new DatePeriod(
-                $s = $this->_dateMax($c['start'], $start),
+                $s = empty($c['start']) ? $start : $this->_dateMax($c['start'], $start),
                 new DateInterval('P1D'),
-                $e = $this->_dateMin($c['end'], $end)
+                $e = empty($c['end'])   ? $end   : $this->_dateMin($c['end'], $end)
             );
 
             foreach ($period as $d) {
