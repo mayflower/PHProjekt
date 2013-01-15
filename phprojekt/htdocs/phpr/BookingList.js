@@ -126,10 +126,12 @@ define([
         _updateHoursWorked: function() {
             var minutes = 0;
             array.forEach(this.data, function(booking) {
-                var start = timehelper.datetimeToJsDate(booking.startDatetime),
-                    end = timehelper.timeToJsDateWithReferenceDate(booking.endTime, start);
+                if (booking.endTime) {
+                    var start = timehelper.datetimeToJsDate(booking.startDatetime),
+                        end = timehelper.timeToJsDateWithReferenceDate(booking.endTime, start);
 
-                minutes += date.difference(start, end, 'minute');
+                    minutes += date.difference(start, end, 'minute');
+                }
             });
 
             this.hoursWorked.innerHTML = "" + Math.floor(minutes / 60) + "h";
