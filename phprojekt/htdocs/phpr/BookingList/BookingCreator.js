@@ -190,8 +190,9 @@ define([
             }
 
             if (endTime) {
-                ret.endTime = time.jsDateToIsoTime(endTime) + ':00';
+                endTime = time.jsDateToIsoTime(endTime) + ':00';
             }
+            ret.endTime = endTime;
 
             if (data.id) {
                 ret.id = data.id;
