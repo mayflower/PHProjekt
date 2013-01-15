@@ -79,6 +79,10 @@ class Timecard_Migration extends Phprojekt_Migration_Abstract
             Phprojekt::getInstance()->getDB()->query(
                 "DELETE FROM module
                   WHERE name NOT IN ('Timecard', 'Project', 'Calendar2')");
+            Phprojekt::getInstance()->getDB()->query(
+                "DELETE FROM database_manager
+                  WHERE table_name = 'Project'
+                   ANDN table_field = 'contact_id'");
         }
     }
 
