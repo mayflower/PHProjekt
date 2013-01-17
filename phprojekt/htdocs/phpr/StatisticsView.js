@@ -74,7 +74,7 @@ define([
                     .attr("x2", displayWidth)
                     .attr("y1", greenBarY)
                     .attr("y2", greenBarY)
-                    .attr("stroke", "green");
+                    .attr("stroke", "#6aa700");
 
             if (onCurrentMonth) {
                 var currentDate = (new Date()).getDate();
@@ -84,7 +84,7 @@ define([
                     .attr("x2", todayX)
                     .attr("y1", 0)
                     .attr("y2", heightForTimebars)
-                    .attr("stroke", "blue");
+                    .attr("stroke", "#0d639b");
             }
 
         }
