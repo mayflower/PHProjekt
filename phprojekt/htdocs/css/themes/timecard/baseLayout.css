@@ -15,3 +15,16 @@
     box-shadow: 0px 0px 5px 0px black;
     background-color: #1a1919;
 }
+
+.sectionHeader {
+    font-size: large;
+    text-align: center;
+    background-color: black;
+    color: white;
+    height: 58px;
+    line-height: 58px;
+}
+
+.sectionHeader span {
+    vertical-align: middle;
+}

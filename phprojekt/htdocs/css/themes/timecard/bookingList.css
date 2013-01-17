@@ -228,19 +228,6 @@
     font-weight: normal;
 }
 
-.selectedDate {
-    font-size: large;
-    text-align: center;
-    background-color: black;
-    color: white;
-    height: 58px;
-    line-height: 58px;
-}
-
-.selectedDate span {
-    vertical-align: middle;
-}
-
 .bookingCreator {
     min-height: 30px;
     background-color: black;
