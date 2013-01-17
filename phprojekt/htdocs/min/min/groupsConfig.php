@@ -79,13 +79,14 @@ return array(
         "//dojo2/release/timecard/dijit/themes/claro/claro.css",
         "//dojo2/release/timecard/dojo/resources/dojo.css",
         "//css/themes/timecard/baseLayout.css",
-        "//css/themes/timecard/menubar.css",
         "//css/themes/timecard/basicHtml.css",
-        "//css/themes/timecard/contentPane.css",
-        "//css/themes/timecard/bookingsDateChooser.css",
-        "//css/themes/timecard/scrollbar.css",
         "//css/themes/timecard/bookingList.css",
         "//css/themes/timecard/bookingView.css",
-        "//css/themes/timecard/calendar.css"
+        "//css/themes/timecard/bookingsDateChooser.css",
+        "//css/themes/timecard/calendar.css",
+        "//css/themes/timecard/contentPane.css",
+        "//css/themes/timecard/menubar.css",
+        "//css/themes/timecard/scrollbar.css",
+        "//css/themes/timecard/statistics/thisMonthDiagram.css"
     )
 );
