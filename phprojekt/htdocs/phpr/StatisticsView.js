@@ -33,7 +33,11 @@ define([
                 heightPerMinute = heightForTimebars / maxMinutes,
                 displayWidth = domAttr.get(this.bookedTimePerDayGraph, "width"),
                 barPadding = 2,
-                barWidth = (displayWidth - 40) / dataCount - barPadding;
+                barWidth = (displayWidth - 40) / dataCount - barPadding,
+                greenBarY = heightForTimebars - minutesToWork * heightPerMinute,
+                todayX = (new Date()).getDate() * (barWidth + barPadding) - (barPadding / 2),
+                currentYear = (new Date()).getFullYear(), currentMonth = (new Date()).getMonth(),
+                onCurrentMonth = (this.year == currentYear && this.month == currentMonth);
 
             d3.select(this.bookedTimePerDayGraph)
                 .selectAll("rect")
@@ -57,16 +61,16 @@ define([
                 .append("line")
                     .attr("x1", 0)
                     .attr("x2", displayWidth)
-                    .attr("y1", heightForTimebars - minutesToWork * heightPerMinute)
-                    .attr("y2", heightForTimebars - minutesToWork * heightPerMinute)
+                    .attr("y1", greenBarY)
+                    .attr("y2", greenBarY)
                     .attr("stroke", "green");
 
-            if (this.year == (new Date()).getFullYear() && this.month == (new Date()).getMonth()) {
+            if (onCurrentMonth) {
                 var currentDate = (new Date()).getDate();
                 d3.select(this.bookedTimePerDayGraph)
                     .append("line")
-                    .attr("x1", currentDate * (barWidth + barPadding) - (barPadding / 2))
-                    .attr("x2", currentDate * (barWidth + barPadding) - (barPadding / 2))
+                    .attr("x1", todayX)
+                    .attr("x2", todayX)
                     .attr("y1", 0)
                     .attr("y2", heightForTimebars)
                     .attr("stroke", "blue");
