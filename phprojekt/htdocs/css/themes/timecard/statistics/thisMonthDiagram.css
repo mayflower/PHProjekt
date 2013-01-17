@@ -1,3 +1,7 @@
 svg.thisMonthDiagram .background {
     fill: #252525;
 }
+
+svg.thisMonthDiagram .upperLeftRect {
+    fill: #353535;
+}

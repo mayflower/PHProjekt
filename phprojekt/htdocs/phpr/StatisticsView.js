@@ -37,7 +37,18 @@ define([
                 greenBarY = heightForTimebars - minutesToWork * heightPerMinute,
                 todayX = (new Date()).getDate() * (barWidth + barPadding) - (barPadding / 2),
                 currentYear = (new Date()).getFullYear(), currentMonth = (new Date()).getMonth(),
-                onCurrentMonth = (this.year == currentYear && this.month == currentMonth);
+                onCurrentMonth = (this.year == currentYear && this.month == currentMonth),
+                onPreviousMonth = (this.year < currentYear || this.month < currentMonth);
+
+            if (onCurrentMonth) {
+                domAttr.set(this.upperLeftRect, 'height', greenBarY);
+                domAttr.set(this.upperLeftRect, 'width', todayX);
+            } else if (onPreviousMonth) {
+                domAttr.set(this.upperLeftRect, 'height', greenBarY);
+                domAttr.set(this.upperLeftRect, 'width', displayWidth);
+            } else {
+                domAttr.set(this.upperLeftRect, 'width', 0);
+            }
 
             d3.select(this.bookedTimePerDayGraph)
                 .selectAll("rect")
