@@ -40,7 +40,7 @@ define([
                 .data(days)
                 .enter().append("svg:rect")
                     .attr("fill", function(d) {
-                        return d.sumInMinutes < minutesToWork ? "grey" : "lightgrey";
+                        return d.sumInMinutes < minutesToWork ? "#b5b5b5" : "white";
                     })
                     .attr("x", function(d, i) {
                         return i * (barPadding + barWidth);
