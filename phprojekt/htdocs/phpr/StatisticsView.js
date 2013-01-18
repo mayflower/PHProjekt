@@ -19,6 +19,8 @@ define([
         buildRendering: function() {
             this.inherited(arguments);
 
+            this._updateLabels();
+
             api.getData(
                 'index.php/Timecard/index/monthList',
                 {query: {year: this.year, month: this.month + 1}}
@@ -26,7 +28,6 @@ define([
         },
 
         _renderData: function(data) {
-            this._updateLabels();
             var days = data.days,
                 dataCount = days.length,
                 maxMinutes = 1000,
