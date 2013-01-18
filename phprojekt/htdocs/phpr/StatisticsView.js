@@ -6,9 +6,10 @@ define([
     'dijit/_TemplatedMixin',
     'dijit/_WidgetsInTemplateMixin',
     'phpr/Api',
+    'phpr/Timehelper',
     'dojo/text!phpr/template/statisticsView.html',
     'd3/d3.v3.js'
-], function(declare, domAttr, locale, Widget, Templated, WidgetsInTemplate, api, templateString) {
+], function(declare, domAttr, locale, Widget, Templated, WidgetsInTemplate, api, timehelper, templateString) {
     return declare([Widget, Templated, WidgetsInTemplate], {
         templateString: templateString,
 
@@ -68,7 +69,13 @@ define([
                     .attr("width", barWidth)
                     .attr("height", function(d) {
                         return Math.max(2, heightPerMinute * d.sumInMinutes);
-                    });
+                    })
+                    .append("svg:title")
+                        .text(function(d) {
+                            var date = locale.format(timehelper.dateToJsDate(d.date), {selector: 'date'});
+                            return date + ' (' + d.sumInHours + ')';
+
+                        });
 
             d3.select(this.bookedTimePerDayGraph)
                 .append("line")

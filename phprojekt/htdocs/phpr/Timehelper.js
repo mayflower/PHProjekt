@@ -43,6 +43,14 @@ define([
         );
     };
 
+    exports.dateToJsDate = function(d) {
+        return new Date(
+            stripLeadingZero(d.substr(0, 4)),
+            stripLeadingZero(d.substr(5, 2)),
+            stripLeadingZero(d.substr(8, 2))
+        );
+    };
+
     exports.jsDateToIsoDate = function(date) {
         // Summary:
         //    Convert a js date into ISO date
