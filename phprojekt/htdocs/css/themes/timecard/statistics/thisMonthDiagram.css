@@ -1,7 +1,7 @@
-svg.thisMonthDiagram .background {
+.thisMonthDiagram svg .background {
     fill: #252525;
 }
 
-svg.thisMonthDiagram .upperLeftRect {
+.thisMonthDiagram svg .upperLeftRect {
     fill: #353535;
 }
