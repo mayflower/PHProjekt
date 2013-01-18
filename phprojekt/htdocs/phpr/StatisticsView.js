@@ -1,4 +1,5 @@
 define([
+    'dojo/_base/lang',
     'dojo/_base/declare',
     'dojo/dom-attr',
     'dojo/date/locale',
@@ -9,7 +10,8 @@ define([
     'phpr/Timehelper',
     'dojo/text!phpr/template/statisticsView.html',
     'd3/d3.v3.js'
-], function(declare, domAttr, locale, Widget, Templated, WidgetsInTemplate, api, timehelper, templateString) {
+], function(lang, declare, domAttr, locale, Widget, Templated, WidgetsInTemplate, api, timehelper,
+            templateString) {
     return declare([Widget, Templated, WidgetsInTemplate], {
         templateString: templateString,
 
@@ -24,7 +26,7 @@ define([
             api.getData(
                 'index.php/Timecard/index/monthList',
                 {query: {year: this.year, month: this.month + 1}}
-            ).then(dojo.hitch(this, this._renderData));
+            ).then(lang.hitch(this, this._renderData));
         },
 
         _renderData: function(data) {
