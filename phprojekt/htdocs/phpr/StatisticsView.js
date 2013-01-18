@@ -1,13 +1,14 @@
 define([
     'dojo/_base/declare',
     'dojo/dom-attr',
+    'dojo/date/locale',
     'dijit/_Widget',
     'dijit/_TemplatedMixin',
     'dijit/_WidgetsInTemplateMixin',
     'phpr/Api',
     'dojo/text!phpr/template/statisticsView.html',
     'd3/d3.v3.js'
-], function(declare, domAttr, Widget, Templated, WidgetsInTemplate, api, templateString) {
+], function(declare, domAttr, locale, Widget, Templated, WidgetsInTemplate, api, templateString) {
     return declare([Widget, Templated, WidgetsInTemplate], {
         templateString: templateString,
 
@@ -24,6 +25,7 @@ define([
         },
 
         _renderData: function(data) {
+            this._updateLabels();
             var days = data.days,
                 dataCount = days.length,
                 maxMinutes = 1000,
@@ -87,6 +89,13 @@ define([
                     .attr("stroke", "#0d639b");
             }
 
+        },
+
+        _updateLabels: function() {
+            var first = new Date(this.year, this.month, 1, 0, 0, 0),
+                last = new Date(this.year, this.month + 1, 0, 0, 0, 0);
+            this.firstDayLabel.innerHTML = locale.format(first, {selector: 'date', datePattern: 'EEE d'});
+            this.lastDayLabel.innerHTML = locale.format(last, {selector: 'date', datePattern: 'EEE d'});
         }
     });
 

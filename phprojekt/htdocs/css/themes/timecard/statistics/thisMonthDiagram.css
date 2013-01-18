@@ -5,3 +5,14 @@
 .thisMonthDiagram svg .upperLeftRect {
     fill: #353535;
 }
+
+.statisticsView .firstDayLabel,
+.statisticsView .lastDayLabel {
+    padding-left: 5px;
+    padding-right: 5px;
+
+}
+
+.statisticsView .lastDayLabel {
+    float: right;
+}
