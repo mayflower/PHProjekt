@@ -13,6 +13,18 @@
 
 }
 
+.thisMonthDiagram .firstDayLabel {
+    float: left;
+}
+
 .thisMonthDiagram .lastDayLabel {
     float: right;
+}
+
+.thisMonthDiagram .overtimeLabel {
+    color: #799b00;
+    width: 200px;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
 }
