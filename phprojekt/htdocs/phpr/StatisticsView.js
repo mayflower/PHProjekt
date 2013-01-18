@@ -81,12 +81,12 @@ define([
             if (onCurrentMonth) {
                 var currentDate = (new Date()).getDate();
                 d3.select(this.bookedTimePerDayGraph)
-                    .append("line")
-                    .attr("x1", todayX)
-                    .attr("x2", todayX)
-                    .attr("y1", 0)
-                    .attr("y2", heightForTimebars)
-                    .attr("stroke", "#0d639b");
+                    .append("rect")
+                    .attr("x", todayX - 1)
+                    .attr("width", 2)
+                    .attr("y", 0)
+                    .attr("height", heightForTimebars)
+                    .attr("fill", "#0d639b");
             }
 
         },
