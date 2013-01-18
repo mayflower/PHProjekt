@@ -16,15 +16,14 @@
     background-color: #1a1919;
 }
 
-.sectionHeader {
+.timecard h1 {
     font-size: large;
     text-align: center;
-    background-color: black;
     color: white;
     height: 58px;
     line-height: 58px;
-}
 
-.sectionHeader span {
-    vertical-align: middle;
+    margin-top: 0;
+    display: block;
+    width: 834px;
 }
