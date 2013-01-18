@@ -546,19 +546,17 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
     /**
      * Returns the sum of booked minutes for the current user
      *
-     * @param Datetime      $start The start of the period to consider. Only Date part is used.
-     * @param Datetime|null $end The end of the period to consider. Only Date part is used. If omitted or null, all
-     *                              bookings after $start are considered. Bookings on $end will not be included.
+     * @param int $year The year
+     * @param int $month The month
      **/
-    public static function getBookedMinutes($start, $end = null)
+    public static function getBookedMinutesInMonth($year, $month)
     {
         $table  = new self();
         $select = $table->select()
             ->from($table, array('minutes' => 'SUM(minutes)'))
-            ->where('DATE(start_datetime) >= ?', $start->format('Y-m-d'));
-        if (!is_null($end)) {
-            $select->where('DATE(start_datetime) < ?', $end->format('Y-m-d'));
-        }
+            ->where('YEAR(start_datetime) = ?', $year)
+            ->where('MONTH(start_datetime) = ?', $month)
+            ->where('owner_id = ?', Phprojekt_Auth_Proxy::getEffectiveUserId());
 
         return (int) $select->query()->fetchColumn();
     }

@@ -327,20 +327,10 @@ class Timecard_IndexController extends IndexController
      */
     public function minutesBookedAction()
     {
-        $utc = new DatetimeZone('utc');
+        $year = (int) $this->getRequest()->getParam('year', date('Y'));
+        $month = (int) $this->getRequest()->getParam('month', date('m'));
 
-        $start = $this->getRequest()->getParam('start', null);
-        if (is_null($start)) {
-            throw new Zend_Controller_Action_Exception('Missing "start" parameter', 404);
-        }
-        $start = new DateTime($start, $utc);
-
-        $end = $this->getRequest()->getParam('end', null);
-        if (!is_null($end)) {
-            $end = new Datetime($end, $utc);
-        }
-
-        $minutes = Timecard_Models_Timecard::getBookedMinutes($start, $end);
+        $minutes = Timecard_Models_Timecard::getBookedMinutesInMonth($year, $month);
 
         Phprojekt_CompressedSender::send(
             Zend_Json::encode(
