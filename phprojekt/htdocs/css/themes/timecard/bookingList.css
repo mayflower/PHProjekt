@@ -132,6 +132,19 @@
     float: right;
     display: none;
 }
+
+.bookingEntry:hover .deleteButton,
+.bookingEntry:hover .editButton {
+    display: inline-block;
+}
+.bookingEntry:hover .deleteIcon {
+    background-image: url(../../../img/timecard/icon-trash_inv.png);
+
+}
+.bookingEntry:hover .editIcon {
+    background-image: url(../../../img/timecard/icon-edit_inv.png);
+}
+
 .bookingEntry.selected .deleteButton,
 .bookingEntry.selected .editButton {
     display: inline-block;
@@ -299,15 +312,19 @@
     min-width: 23px;
 }
 
-.dijitIcon.deleteIcon {
+.bookingEntry.selected .dijitIcon.deleteIcon {
     background-image: url(../../../img/timecard/icon-trash.png);
+}
+.dijitIcon.deleteIcon {
     background-repeat: no-repeat;
     min-height: 23px;
     min-width: 23px;
 }
 
-.dijitIcon.editIcon {
+.bookingEntry.selected .dijitIcon.editIcon {
     background-image: url(../../../img/timecard/icon-edit.png);
+}
+.dijitIcon.editIcon {
     background-repeat: no-repeat;
     min-height: 23px;
     min-width: 23px;
