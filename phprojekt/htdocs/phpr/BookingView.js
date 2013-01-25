@@ -33,7 +33,7 @@ define([
 
         resize: function() {
             var winHeight = win.getBox().h;
-            array.forEach([this.bookingListContainer.domNode, this.dateChooserContainer.domNode], function(node) {
+            array.forEach([this.bookingListContainer.domNode, this.sidebar], function(node) {
                 var top = geometry.position(node).y;
                 style.set(node, 'minHeight', (winHeight - top) + 'px');
             });
