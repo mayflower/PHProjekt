@@ -386,12 +386,3 @@
 .timecard .dijitPlaceHolder {
     font-style: normal
 }
-
-.summaryRow {
-    background-color: #2e2e2e;
-    color: white;
-    text-align: center;
-    font-size: larger;
-    padding: 5px;
-    margin-top: 20px;
-}
