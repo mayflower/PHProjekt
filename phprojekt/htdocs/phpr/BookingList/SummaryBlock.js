@@ -1,6 +1,7 @@
 define([
     'dojo/_base/declare',
     'dojo/_base/lang',
+    'dojo/topic',
     'dojo/dom-style',
     'dojo/promise/all',
     'dojo/DeferredList',
@@ -9,9 +10,13 @@ define([
     'phpr/Api',
     'phpr/Timehelper',
     'dojo/text!phpr/template/bookingList/summaryBlock.html'
-], function(declare, lang, domStyle, all, DeferredList, _WidgetBase, _TemplatedMixin, api, timehelper, templateString) {
+], function(declare, lang, topic, domStyle, all, DeferredList, _WidgetBase, _TemplatedMixin, api, timehelper, templateString) {
     return declare([_WidgetBase, _TemplatedMixin], {
         date: new Date(),
+
+        constructor: function() {
+            topic.subscribe('timecard/bookingCreated', dojo.hitch(this, this._scheduleUpdate));
+        },
 
         templateString: templateString,
 

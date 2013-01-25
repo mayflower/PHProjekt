@@ -8,6 +8,7 @@ define([
     'dojo/promise/all',
     'dojo/topic',
     'dojo/json',
+    'dojo/topic',
     'dojo/store/JsonRest',
     'dojo/store/Memory',
     'dijit/Tooltip',
@@ -16,7 +17,7 @@ define([
     'phpr/Timehelper',
     'phpr/models/Project',
     'dojo/text!phpr/template/bookingList/bookingCreator.html'
-], function(declare, lang, array, on, number, clazz, all, topic, json,
+], function(declare, lang, array, on, number, clazz, all, topic, json, topic,
             JsonRest, Memory, Tooltip, BookingBlock, api, time, projects, templateString) {
     return declare([BookingBlock], {
         templateString: templateString,
@@ -154,6 +155,7 @@ define([
                     var d = this.store.put(sendData).then(
                         function() {
                             topic.publish('notification/clear', 'bookingCreator');
+                            topic.publish('timecard/bookingCreated', sendData);
                         },
                         lang.hitch(this, function(error) {
                             try {
