@@ -14,13 +14,9 @@ define([
     'dojo/store/Cache',
     'dojo/date',
     'dojo/dom-construct',
-    'dojo/dom-class',
-    'dojo/dom-style',
     'phpr/BookingList/DayBlock',
-    'phpr/Timehelper',
     'phpr/JsonRestQueryEngine',
     'dojo/_base/lang',
-    'phpr/Api',
     'phpr/Timehelper',
     //templates
     'dojo/text!phpr/template/bookingList.html',
@@ -33,9 +29,9 @@ define([
     'dijit/form/DateTextBox',
     'dijit/form/Form',
     'phpr/DateTextBox'
-], function(array, declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, locale, html, json, when,
-            JsonRest, Memory, Observable, Cache, date, domConstruct, domClass, domStyle, DayBlock, time,
-            JsonRestQueryEngine, lang, api, timehelper, bookingListTemplate) {
+], function(array, declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, locale, html, json, when, JsonRest,
+            Memory, Observable, Cache, date, domConstruct, DayBlock, JsonRestQueryEngine, lang, timehelper,
+            bookingListTemplate) {
     return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
         store: null,
 
@@ -82,7 +78,6 @@ define([
             this.bookingCreator.set('date', date);
             if (monthChanged) {
                 this._update();
-                this._updateHoursToWork();
             }
         },
 
@@ -116,53 +111,18 @@ define([
                 this.day2dayBlock = {};
 
                 this._addBookingsPartitionedByDay(bookingsByDay);
-                this._updateHoursWorked();
                 this._updating = false;
             }));
 
             this.observer = results.observe(lang.hitch(this, '_storeChanged'), true);
         },
 
-        _updateHoursWorked: function() {
-            var minutes = 0;
-            array.forEach(this.data, function(booking) {
-                if (booking.endTime) {
-                    var start = timehelper.datetimeToJsDate(booking.startDatetime),
-                        end = timehelper.timeToJsDateWithReferenceDate(booking.endTime, start);
-
-                    minutes += date.difference(start, end, 'minute');
-                }
-            });
-
-            this.hoursWorked.innerHTML = "" + Math.floor(minutes / 60) + "h";
-            if (minutes % 60 !== 0) {
-                this.hoursWorked.innerHTML += " " + minutes % 60 + "m";
-            }
-        },
-
-        _updateHoursToWork: function() {
-            api.getData(
-                'index.php/Timecard/Index/minutesToWork',
-                {query: {month: this.date.getMonth() + 1, year: this.date.getFullYear()}}
-            ).then(lang.hitch(this, function(data) {
-                if (data.minutesToWork !== 0) {
-                    var hours = Math.floor(data.minutesToWork / 60),
-                        minutes = data.minutesToWork % 60;
-                    this.hoursToWork.innerHTML = "" + hours + "h";
-                    if (minutes !== 0) {
-                        this.hoursToWork.innerHTML += " " + minutes + "m";
-                    }
-                    domStyle.set(this.hoursToWorkText, "display", "");
-                }
-            }));
-        },
-
         _storeChanged: function(object, removedFrom, insertedInto) {
             object = lang.clone(object);
-            var bdate = time.datetimeToJsDate(object.startDatetime);
+            var bdate = timehelper.datetimeToJsDate(object.startDatetime);
 
             if (removedFrom > -1) {
-                var odate = time.datetimeToJsDate(this.data[removedFrom].startDatetime);
+                var odate = timehelper.datetimeToJsDate(this.data[removedFrom].startDatetime);
                 this.data.splice(removedFrom, 1);
                 this._reloadDay(odate);
             }
@@ -171,7 +131,6 @@ define([
                 this.data.splice(insertedInto, 0, object);
             }
 
-            this._updateHoursWorked();
             this._reloadDay(bdate, bdate);
         },
 
@@ -190,7 +149,7 @@ define([
                 if (highlightDate) {
                     array.some(partitions, function(partition) {
                         return array.some(partition.bookings, function(b) {
-                            var ret = date.compare(time.datetimeToJsDate(b.startDatetime), highlightDate) === 0;
+                            var ret = date.compare(timehelper.datetimeToJsDate(b.startDatetime), highlightDate) === 0;
                             if (ret) {
                                 b.highlight = true;
                             }
@@ -234,8 +193,8 @@ define([
 
             return json.stringify({
                 startDatetime: {
-                    '!ge': time.jsDateToIsoDatetime(start),
-                    '!lt': time.jsDateToIsoDatetime(end)
+                    '!ge': timehelper.jsDateToIsoDatetime(start),
+                    '!lt': timehelper.jsDateToIsoDatetime(end)
                 }
             });
         },
@@ -243,7 +202,7 @@ define([
         _partitionBookingsByDay: function(bookings) {
             var partitions = {};
             array.forEach(bookings, function(b) {
-                var start = time.datetimeToJsDate(b.startDatetime),
+                var start = timehelper.datetimeToJsDate(b.startDatetime),
                     day = new Date(
                     start.getFullYear(),
                     start.getMonth(),

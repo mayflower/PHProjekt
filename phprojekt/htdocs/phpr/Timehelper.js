@@ -93,4 +93,12 @@ define([
 
         return exports.jsDateToIsoDate(date) + ' ' + exports.jsDateToIsoTime(date);
     };
+
+    exports.minutesToHMString = function(minutes) {
+        var ret = "" + Math.floor(minutes / 60) + "h";
+        if (minutes % 60 !== 0) {
+            ret += minutes % 60 + "m";
+        }
+        return ret;
+    };
 });

@@ -2,8 +2,5 @@
     <h1 data-dojo-attach-point="selectedDate"></h1>
     <div data-dojo-attach-point="bookingCreator" data-dojo-type="phpr/BookingList/BookingCreator"></div>
     <div data-dojo-attach-point="content, containerNode"></div>
-    <div data-dojo-attach-point="summaryRow" class="summaryRow"
-        >Total: <span data-dojo-attach-point="hoursWorked"></span
-        ><span data-dojo-attach-point="hoursToWorkText" style="display: none;"> of <span data-dojo-attach-point="hoursToWork"></span
-        > this month.</div>
+    <div class="summaryRow" data-dojo-type="phpr/BookingList/SummaryBlock"></div>
 </div>

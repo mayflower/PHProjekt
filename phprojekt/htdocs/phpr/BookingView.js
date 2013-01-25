@@ -11,7 +11,8 @@ define([
     'dijit/_WidgetsInTemplateMixin',
     'dojo/text!phpr/template/bookingView.html',
     'phpr/BookingsDateChooser',
-    'phpr/BookingList'
+    'phpr/BookingList',
+    'phpr/BookingList/SummaryBlock'
 ], function(declare, array, lang, style, geometry, win, on, widget, template, widgetsInTemplate, templateString) {
     return declare([widget, template, widgetsInTemplate], {
         templateString: templateString,
