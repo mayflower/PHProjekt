@@ -49,6 +49,7 @@ define([
                     this.store.put(sendData).then(
                         function() {
                             topic.publish('notification/clear', 'bookingEditor');
+                            topic.publish('timecard/bookingEdited', sendData);
                         },
                         lang.hitch(this, function(error) {
                             try {

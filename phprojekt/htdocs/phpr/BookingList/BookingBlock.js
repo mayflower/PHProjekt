@@ -86,6 +86,8 @@ define([
             this._doClickAction(function() {
                 this.store.remove(this.booking.id).then(undefined, function(error) {
                     topic.publish('notification', json.parse(error.responseText));
+                }).always(function() {
+                    topic.publish('timecard/bookingDeleted', this.booking);
                 });
             });
         },
