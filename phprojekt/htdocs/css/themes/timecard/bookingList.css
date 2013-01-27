@@ -284,27 +284,6 @@
     width: 436px;
 }
 
-.bookingCreator.bookingEditor .notesIcon {
-    display: none;
-}
-
-.bookingCreator .notesIcon {
-    display: inline-block;
-}
-
-.bookingCreator .notesIcon div {
-    background-image: url(../../../img/timecard/buttonArrows.png);
-    background-position: -51px 53%;
-    width: 15px;
-    height: 15px;
-    vertical-align: middle;
-    display: inline-block;
-}
-
-.bookingCreator .notesIcon:hover div {
-    background-position: -151px 53%;
-}
-
 .dijitIcon.submitIcon {
     background-image: url(../../../img/timecard/icon-add.png);
     background-repeat: no-repeat;

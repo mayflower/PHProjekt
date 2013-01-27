@@ -4,7 +4,6 @@ define([
     'dojo/_base/array',
     'dojo/on',
     'dojo/number',
-    'dojo/dom-class',
     'dojo/promise/all',
     'dojo/topic',
     'dojo/json',
@@ -17,7 +16,7 @@ define([
     'phpr/Timehelper',
     'phpr/models/Project',
     'dojo/text!phpr/template/bookingList/bookingCreator.html'
-], function(declare, lang, array, on, number, clazz, all, topic, json, topic,
+], function(declare, lang, array, on, number, all, topic, json, topic,
             JsonRest, Memory, Tooltip, BookingBlock, api, time, projects, templateString) {
     return declare([BookingBlock], {
         templateString: templateString,
@@ -101,28 +100,11 @@ define([
                     target: 'index.php/Timecard/Timecard/'
                 });
             }
-            this.own(on(this.notesIcon, 'click', lang.hitch(this, 'toggleNotes')));
             this.start.set('placeHolder', 'Start');
             this.end.set('placeHolder', 'End');
             this.notes.set('placeHolder', 'Notes');
 
             this.end.validate = this._endValidateFunction(this.end.validate, this.start);
-        },
-
-        toggleNotes: function() {
-            var opened = true;
-
-            if (clazz.contains(this.notesContainer, 'open')) {
-                opened = false;
-            }
-
-            clazz.toggle(this.notesContainer, 'open');
-
-            if (opened) {
-                this.notes.focus();
-            } else {
-                this.end.focus();
-            }
         },
 
         _getStartRegexp: function() {
