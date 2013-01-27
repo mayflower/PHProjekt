@@ -74,7 +74,6 @@ define([
             var monthChanged = (!this._started ||
                     (date.getFullYear() !== this.date.getFullYear() || date.getMonth() !== this.date.getMonth()));
             this.date = date;
-            html.set(this.selectedDate, locale.format(date, {selector: 'date', datePattern: 'MMMM yyy'}));
             this.bookingCreator.set('date', date);
             if (monthChanged) {
                 this._update();
