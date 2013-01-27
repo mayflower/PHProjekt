@@ -248,7 +248,7 @@
     border-top: 1px solid #4A4A4A;
 }
 
-.bookingCreator .first {
+.bookingCreator .bookingForm {
     line-height: 30px;
     padding-left: 8px;
 }
@@ -266,7 +266,7 @@
 }
 
 
-.bookingCreator .first > * {
+.bookingCreator .bookingForm > * {
     vertical-align: middle;
     line-height: normal;
 }

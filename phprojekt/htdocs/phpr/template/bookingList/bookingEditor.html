@@ -1,43 +1,41 @@
 <div class="bookingCreator">
     <div data-dojo-attach-point="form" data-dojo-type="dijit/form/Form">
-        <table><tr><td>
-            <div class="first">
-                <select data-dojo-attach-point="project"
-                        class="project"
-                        name="project"
-                        data-dojo-type="dijit/form/FilteringSelect"
-                        data-dojo-props="labelType: 'html', searchAttr: 'name', labelAttr: 'label', queryExpr: '*$\{0\}*'">
-                    <option value="1"><span class="projectId">1</span> Unassigned</option>
-                </select>
-                <input type="text"
-                       name="start"
-                       data-dojo-type="dijit/form/ValidationTextBox"
-                       data-dojo-attach-point="start"
-                       data-dojo-props="pattern: this._getStartRegexp, invalidMessage: 'Invalid time format'"
-                       class="time"/>
-                -
-                <input type="text"
-                       name="end"
-                       data-dojo-type="dijit/form/ValidationTextBox"
-                       data-dojo-attach-point="end"
-                       data-dojo-props="pattern: this._getEndRegexp, invalidMessage: 'Invalid time format'"
-                       class="time"/>
-                <input type="text"
-                       name="date"
-                       data-dojo-type="phpr/DateTextBox"
-                       value="today"
-                       data-dojo-attach-point="date"
-                       class="date"/>
-                <button data-dojo-type="dijit/form/Button"
-                        type="submit"
-                        data-dojo-attach-point="submitButton"
-                        class="submitButton"></button>
-                <input type="text"
-                       name="notes"
-                       class="notes"
-                       data-dojo-type="dijit/form/TextBox"
-                       data-dojo-attach-point="notes"/>
-            </div>
+        <table><tr><td class="bookingForm">
+            <select data-dojo-attach-point="project"
+                    class="project"
+                    name="project"
+                    data-dojo-type="dijit/form/FilteringSelect"
+                    data-dojo-props="labelType: 'html', searchAttr: 'name', labelAttr: 'label', queryExpr: '*$\{0\}*'">
+                <option value="1"><span class="projectId">1</span> Unassigned</option>
+            </select>
+            <input type="text"
+                   name="start"
+                   data-dojo-type="dijit/form/ValidationTextBox"
+                   data-dojo-attach-point="start"
+                   data-dojo-props="pattern: this._getStartRegexp, invalidMessage: 'Invalid time format'"
+                   class="time"/>
+            -
+            <input type="text"
+                   name="end"
+                   data-dojo-type="dijit/form/ValidationTextBox"
+                   data-dojo-attach-point="end"
+                   data-dojo-props="pattern: this._getEndRegexp, invalidMessage: 'Invalid time format'"
+                   class="time"/>
+            <input type="text"
+                   name="date"
+                   data-dojo-type="phpr/DateTextBox"
+                   value="today"
+                   data-dojo-attach-point="date"
+                   class="date"/>
+            <button data-dojo-type="dijit/form/Button"
+                    type="submit"
+                    data-dojo-attach-point="submitButton"
+                    class="submitButton"></button>
+            <input type="text"
+                   name="notes"
+                   class="notes"
+                   data-dojo-type="dijit/form/TextBox"
+                   data-dojo-attach-point="notes"/>
         </td><td class="editButtonCell">
             <button data-dojo-type="dijit/form/Button" type="button" data-dojo-attach-point="confirmEditButton"
                 data-dojo-props="iconClass: 'editIcon'"
