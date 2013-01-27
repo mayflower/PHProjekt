@@ -248,8 +248,7 @@
     border-top: 1px solid #4A4A4A;
 }
 
-.bookingCreator .first,
-.bookingCreator .second {
+.bookingCreator .first {
     line-height: 30px;
     padding-left: 8px;
 }
@@ -267,8 +266,7 @@
 }
 
 
-.bookingCreator .first > *,
-.bookingCreator .second > * {
+.bookingCreator .first > * {
     vertical-align: middle;
     line-height: normal;
 }
@@ -318,40 +316,6 @@
 .bookingCreator .project {
     color: black;
     margin-right: 10px;
-}
-
-.bookingCreator .second {
-    height: 0px;
-    margin-bottom: 3px;
-    overflow: hidden;
-    transition-property: height;
-    transition-duration: 100ms;
-    transition-timing-function: linear;
-    -webkit-transition-property: height;
-    -webkit-transition-duration: 100ms;
-    -webkit-transition-timing-function: linear;
-    -moz-transition-property: height;
-    -moz-transition-duration: 100ms;
-    -moz-transition-timing-function: linear;
-    -o-transition-property: height;
-    -o-transition-duration: 100ms;
-    -o-transition-timing-function: linear;
-}
-
-.bookingCreator .second.open {
-    height: 30px;
-    transition-property: height;
-    transition-duration: 100ms;
-    transition-timing-function: linear;
-    -webkit-transition-property: height;
-    -webkit-transition-duration: 100ms;
-    -webkit-transition-timing-function: linear;
-    -moz-transition-property: height;
-    -moz-transition-duration: 100ms;
-    -moz-transition-timing-function: linear;
-    -o-transition-property: height;
-    -o-transition-duration: 100ms;
-    -o-transition-timing-function: linear;
 }
 
 .bookingCreator .time {
