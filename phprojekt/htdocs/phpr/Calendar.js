@@ -8,8 +8,9 @@ define([
     'dojo/date/stamp',
     'dijit/Calendar',
     'phpr/Api',
-    'phpr/Timehelper'
-], function(declare, array, clazz, ddate, locale, when, stamp, Calendar, api, timehelper) {
+    'phpr/Timehelper',
+    'dojo/text!phpr/template/Calendar.html'
+], function(declare, array, clazz, ddate, locale, when, stamp, Calendar, api, timehelper, templateString) {
     var specialDayCache = {};
     var showedHolidayError = false;
 
@@ -46,6 +47,8 @@ define([
     }
 
     return declare([Calendar], {
+        templateString: templateString,
+
         _populateGrid: function() {
             this.inherited(arguments);
             var node;
