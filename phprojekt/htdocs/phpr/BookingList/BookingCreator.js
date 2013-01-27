@@ -100,9 +100,6 @@ define([
                     target: 'index.php/Timecard/Timecard/'
                 });
             }
-            this.start.set('placeHolder', 'Start');
-            this.end.set('placeHolder', 'End');
-            this.notes.set('placeHolder', 'Notes');
 
             this.end.validate = this._endValidateFunction(this.end.validate, this.start);
         },

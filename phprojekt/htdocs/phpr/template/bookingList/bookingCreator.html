@@ -13,14 +13,15 @@
                required="true"
                data-dojo-type="dijit/form/ValidationTextBox"
                data-dojo-attach-point="start"
-               data-dojo-props="pattern: this._getStartRegexp, invalidMessage: 'Invalid time format'"
+               data-dojo-props="pattern: this._getStartRegexp, invalidMessage: 'Invalid time format',
+                                placeholder: 'Start'"
                class="time"/>
         -
         <input type="text"
                name="end"
                data-dojo-type="dijit/form/ValidationTextBox"
                data-dojo-attach-point="end"
-               data-dojo-props="pattern: this._getEndRegexp, invalidMessage: 'Invalid time format'"
+               data-dojo-props="pattern: this._getEndRegexp, invalidMessage: 'Invalid time format', placeholder: 'End'"
                class="time"/>
         <input type="text"
                name="date"
@@ -37,6 +38,7 @@
                name="notes"
                class="notes"
                data-dojo-type="dijit/form/TextBox"
+               data-dojo-props="placeholder: 'Notes'"
                data-dojo-attach-point="notes"/>
     </div>
 </div>
