@@ -101,6 +101,17 @@ define([
                 });
             }
 
+            this.own(on(this.notes, 'keydown', lang.hitch(this, function(event) {
+                if (event.keyIdentifier === "Enter") {
+                    if (event.shiftKey) {
+                        this.notes.set('value', this.notes.get('value') + "\n");
+                    } else {
+                        this.form.submit();
+                    }
+                    event.preventDefault();
+                }
+            })));
+
             this.end.validate = this._endValidateFunction(this.end.validate, this.start);
         },
 
@@ -125,7 +136,10 @@ define([
         _showErrorInWarningIcon: api.errorHandlerForTag('bookingCreator'),
 
         _submit: function(evt) {
-            evt.stopPropagation();
+            if (evt) {
+                evt.stopPropagation();
+            }
+
             if (this.form.validate()) {
                 var data = this.form.get('value');
                 var sendData = this._prepareDataForSend(data);
