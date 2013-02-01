@@ -15,9 +15,9 @@ define([
         date: new Date(),
 
         constructor: function() {
-            topic.subscribe('timecard/bookingCreated', dojo.hitch(this, this._scheduleUpdate));
-            topic.subscribe('timecard/bookingEdited', dojo.hitch(this, this._scheduleUpdate));
-            topic.subscribe('timecard/bookingDeleted', dojo.hitch(this, this._scheduleUpdate));
+            this.own(topic.subscribe('timecard/bookingCreated', dojo.hitch(this, this._scheduleUpdate)));
+            this.own(topic.subscribe('timecard/bookingEdited', dojo.hitch(this, this._scheduleUpdate)));
+            this.own(topic.subscribe('timecard/bookingDeleted', dojo.hitch(this, this._scheduleUpdate)));
         },
 
         templateString: templateString,
