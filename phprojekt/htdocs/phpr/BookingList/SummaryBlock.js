@@ -18,6 +18,10 @@ define([
             this.own(topic.subscribe('timecard/bookingCreated', dojo.hitch(this, this._scheduleUpdate)));
             this.own(topic.subscribe('timecard/bookingEdited', dojo.hitch(this, this._scheduleUpdate)));
             this.own(topic.subscribe('timecard/bookingDeleted', dojo.hitch(this, this._scheduleUpdate)));
+            this.own(topic.subscribe('timecard/selectedDateChanged', dojo.hitch(this, function(date) {
+                this._set('date', date);
+                this._scheduleUpdate();
+            })));
         },
 
         templateString: templateString,
