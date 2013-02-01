@@ -1,9 +1,10 @@
 define([
     'dojo/_base/declare',
+    'dojo/_base/lang',
     'dojo/topic',
     'phpr/Calendar',
     'dojo/Evented'
-], function(declare, topic, Calendar, Evented) {
+], function(declare, lang, topic, Calendar, Evented) {
     return declare([Calendar, Evented], {
         _startedUp: false,
 
