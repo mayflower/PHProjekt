@@ -6,6 +6,7 @@ define([
     'dojo/dom-geometry',
     'dojo/window',
     'dojo/on',
+    'dojo/topic',
     'dijit/_Widget',
     'dijit/_TemplatedMixin',
     'dijit/_WidgetsInTemplateMixin',
@@ -13,7 +14,7 @@ define([
     'phpr/BookingsDateChooser',
     'phpr/BookingList',
     'phpr/BookingList/SummaryBlock'
-], function(declare, array, lang, style, geometry, win, on, widget, template, widgetsInTemplate, templateString) {
+], function(declare, array, lang, style, geometry, win, on, topic, widget, template, widgetsInTemplate, templateString) {
     return declare([widget, template, widgetsInTemplate], {
         templateString: templateString,
 
@@ -23,7 +24,7 @@ define([
             this.own(
                 on(w, 'resize', lang.hitch(this, 'resize')),
                 on(this.domNode, 'resize', lang.hitch(this, 'resize')),
-                this.dateChooserContainer.on('dateChange', lang.hitch(this.bookingListContainer, 'set', 'date')),
+                topic.subscribe('timecard/selectedDateChanged', lang.hitch(this.bookingListContainer, 'set', 'date')),
                 this.bookingListContainer.bookingCreator.on('create', lang.hitch(this, function(newEntry) {
                     this.bookingListContainer.set('date', newEntry.date);
                     this.dateChooserContainer.setDate(newEntry.date);

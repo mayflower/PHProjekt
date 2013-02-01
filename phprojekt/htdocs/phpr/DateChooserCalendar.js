@@ -22,12 +22,12 @@ define([
         _publishDateChange: function() {
             var date = new this.dateClassObj(this.get('currentFocus').getTime());
             topic.publish('timecard/selectedDateChanged', date);
-            this.emit('change', date);
         },
 
         postCreate: function() {
             this.inherited(arguments);
             this._startedUp = true;
+            this.own(this.on('change', lang.hitch(this, this._publishDateChange)));
         }
     });
 });
