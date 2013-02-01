@@ -60,7 +60,7 @@ define([
                 if (toWork === 0) {
                     domStyle.set(this.toWork, 'display', 'none');
                 } else {
-                    domStyle.set(this.toWork, 'display', '');
+                    domStyle.set(this.toWorkText, 'display', '');
                     this.toWork.innerHTML = timehelper.minutesToHMString(toWork);
                 }
             })).otherwise(lang.hitch(this, function() {
