@@ -11,7 +11,7 @@ define([
     'dijit/_TemplatedMixin',
     'phpr/BookingList/BookingBlockWrapper',
     'dojo/text!phpr/template/bookingList/dayBlock.html'
-], function(declare, lang, array, domClass, date, locale, html, time, _WidgetBase, _TemplatedMixin, BookingBlockWrapper,
+], function(declare, lang, array, domClass, date, locale, html, timehelper, _WidgetBase, _TemplatedMixin, BookingBlockWrapper,
     templateString) {
     return declare([_WidgetBase, _TemplatedMixin], {
         day: null,
@@ -30,8 +30,8 @@ define([
         buildRendering: function() {
             this.inherited(arguments);
             this.bookings.sort(function(a, b) {
-                var ta = time.datetimeToJsDate(a.startDatetime).getTime();
-                var tb = time.datetimeToJsDate(b.startDatetime).getTime();
+                var ta = timehelper.datetimeToJsDate(a.startDatetime).getTime();
+                var tb = timehelper.datetimeToJsDate(b.startDatetime).getTime();
                 return ta > tb;
             });
 
