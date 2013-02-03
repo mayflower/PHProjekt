@@ -44,6 +44,7 @@ define([
             this._checkEmpty();
 
             html.set(this.header, locale.format(this.day, {selector: 'date', formatLength: 'long'}));
+            this._updateTotalTime();
 
             if (date.compare(new Date(), this.day, 'date') === 0) {
                 domClass.add(this.header, 'today');
@@ -60,6 +61,14 @@ define([
             } else {
                 domClass.remove(this.body, 'empty');
             }
+        },
+
+        _updateTotalTime: function() {
+            var totalMinutes = 0;
+            array.forEach(this.bookings, function(b) {
+                totalMinutes += parseInt(b.minutes, 10);
+            });
+            html.set(this.total, timehelper.minutesToHMString(totalMinutes));
         }
     });
 });

@@ -14,6 +14,10 @@
     color: #adadad;
 }
 
+.bookingBlockHeader .dayTotal {
+    float: right;
+}
+
 .bookingBlockBody {
     background: #5a5a5a;
 }
