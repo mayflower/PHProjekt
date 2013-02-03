@@ -68,7 +68,12 @@ define([
             array.forEach(this.bookings, function(b) {
                 totalMinutes += parseInt(b.minutes, 10);
             });
-            html.set(this.total, timehelper.minutesToHMString(totalMinutes));
+
+            if (totalMinutes === 0) {
+                this.total.innerHTML = "";
+            } else {
+                html.set(this.total, timehelper.minutesToHMString(totalMinutes));
+            }
         }
     });
 });
