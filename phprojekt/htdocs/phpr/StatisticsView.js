@@ -3,7 +3,7 @@ define([
     'dojo/_base/declare',
     'dojo/dom-attr',
     'dojo/date/locale',
-    'dojo/DeferredList',
+    'dojo/promise/all',
     'dijit/_Widget',
     'dijit/_TemplatedMixin',
     'dijit/_WidgetsInTemplateMixin',
@@ -11,7 +11,7 @@ define([
     'phpr/Timehelper',
     'dojo/text!phpr/template/statisticsView.html',
     'd3/d3.v3.js'
-], function(lang, declare, domAttr, locale, DeferredList, Widget, Templated, WidgetsInTemplate, api, timehelper,
+], function(lang, declare, domAttr, locale, all, Widget, Templated, WidgetsInTemplate, api, timehelper,
             templateString) {
     return declare([Widget, Templated, WidgetsInTemplate], {
         templateString: templateString,
@@ -30,18 +30,18 @@ define([
             ).then(lang.hitch(this, this._renderData));
 
             var theDate = new Date(this.year, this.month, 1, 0, 0, 0);
-            (new DeferredList([
-                api.getData(
+            all({
+                booked: api.getData(
                     'index.php/Timecard/index/minutesBooked',
                     {query: {year: this.year, month: this.month + 1}}
                 ),
-                api.getData(
+                towork: api.getData(
                     'index.php/Timecard/index/minutesToWork',
                     {query: {year: this.year, month: this.month + 1}}
                 )
-            ])).then(lang.hitch(this, function(datas) {
-                var netMinutes = datas[0][1].minutesBooked - datas[1][1].minutesToWork,
-                    text = (netMinutes < 0) ? '-' : '',
+            }).then(lang.hitch(this, function(result) {
+                var netMinutes = result.booked.minutesBooked - result.towork.minutesToWork,
+                    minus = (netMinutes < 0) ? '-' : '',
                     difference = Math.abs(netMinutes);
                 text = [];
                 if (difference >= 60) {
@@ -50,7 +50,6 @@ define([
                 if (difference < 60 || difference % 60 !== 0) {
                     text.push(difference % 60 + 'm');
                 }
-                text += ' Overtime';
 
                 this.overtimeLabel.innerHTML = minus + text.join(" ") + " Overtime";
             }));
