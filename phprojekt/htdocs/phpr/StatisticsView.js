@@ -43,15 +43,16 @@ define([
                 var netMinutes = datas[0][1].minutesBooked - datas[1][1].minutesToWork,
                     text = (netMinutes < 0) ? '-' : '',
                     difference = Math.abs(netMinutes);
+                text = [];
                 if (difference >= 60) {
-                    text += Math.floor(difference / 60) + 'h';
+                    text.push(Math.floor(difference / 60) + 'h');
                 }
                 if (difference < 60 || difference % 60 !== 0) {
-                    text += difference % 60 + 'm';
+                    text.push(difference % 60 + 'm');
                 }
                 text += ' Overtime';
 
-                this.overtimeLabel.innerHTML = text;
+                this.overtimeLabel.innerHTML = minus + text.join(" ") + " Overtime";
             }));
         },
 
