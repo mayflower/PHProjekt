@@ -82,11 +82,11 @@ define([
                 domAttr.set(this.upperLeftRect, 'width', 0);
             }
 
-            d3.select(this.bookedTimePerDayGraph)
-                .selectAll("rect")
-                .data(days)
-                .enter().append("svg:rect")
-                    .attr("fill", function(d) {
+            var svg = d3.select(this.bookedTimePerDayGraph);
+            var update = svg.selectAll()
+                .data(days).enter().append("svg:rect");
+
+            update.attr("fill", function(d) {
                         return d.sumInMinutes < minutesToWork ? "#b5b5b5" : "white";
                     })
                     .attr("x", function(d, i) {
@@ -106,8 +106,7 @@ define([
 
                         });
 
-            d3.select(this.bookedTimePerDayGraph)
-                .append("line")
+            svg.append("line")
                     .attr("x1", 0)
                     .attr("x2", displayWidth)
                     .attr("y1", greenBarY)
@@ -116,8 +115,7 @@ define([
 
             if (onCurrentMonth) {
                 var currentDate = (new Date()).getDate();
-                d3.select(this.bookedTimePerDayGraph)
-                    .append("rect")
+                svg.append("rect")
                     .attr("x", todayX - 1)
                     .attr("width", 2)
                     .attr("y", 0)
@@ -125,6 +123,8 @@ define([
                     .attr("fill", "#0d639b");
             }
 
+            update.exit().remove();
+            svg.exit().remove();
         },
 
         _updateLabels: function() {
