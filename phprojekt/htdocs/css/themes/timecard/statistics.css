@@ -5,3 +5,7 @@
     margin-bottom: 17px;
     margin-right: 4px;
 }
+
+.statisticsView p {
+    margin-bottom: 0px;
+}
