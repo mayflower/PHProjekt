@@ -61,7 +61,7 @@ define([
                 maxMinutes = 1000,
                 minutesToWork = 450,
                 displayHeight = domAttr.get(this.bookedTimePerDayGraph, "height"),
-                heightForTimebars = displayHeight - 20,
+                heightForTimebars = displayHeight;
                 heightPerMinute = heightForTimebars / maxMinutes,
                 displayWidth = domAttr.get(this.bookedTimePerDayGraph, "width"),
                 barPadding = 2,
