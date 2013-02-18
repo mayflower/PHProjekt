@@ -2,6 +2,36 @@
     font-weight: bold;
 }
 
+.dayBlock .helpTextOpen {
+    float: left;
+    font-size: small;
+    color: #1a1919;
+}
+
+.dayBlock .helpTextClose {
+    display: none;
+    float: left;
+    font-size: small;
+    color: #1a1919;
+}
+
+.dayBlock.open .helpTextOpen {
+    display: none;
+}
+
+.dayBlock.open .helpTextClose {
+    display: inherit;
+}
+
+.dayBlock:hover .helpTextOpen,
+.dayBlock:hover .helpTextClose {
+    color: rgb(51, 49, 49);
+}
+
+.bookingBlockFooter:hover {
+    cursor: pointer;
+}
+
 .bookingBlockHeader {
     background: black;
     color: white;
@@ -9,17 +39,44 @@
     padding: 10px;
 }
 
+.bookingBlockHeader {
+    background: black;
+    color: white;
+    text-align: center;
+    padding: 3px;
+}
+
 .bookingBlockHeader.today {
     font-size: large;
     color: #adadad;
 }
 
-.bookingBlockHeader .dayTotal {
-    float: right;
+.bookingBlockFooter {
+    background: black;
+    color: white;
+    text-align: center;
+    padding: 3px;
+    margin-bottom: 2px;
 }
 
 .bookingBlockBody {
-    background: #5a5a5a;
+    background: white;
+    border-bottom: 1px solid grey;
+    max-height: 0px;
+    overflow: hidden;
+    transition: max-height 0.2s;
+    -moz-transition: max-height 0.2s; /* Firefox 4 */
+    -webkit-transition: max-height 0.2s; /* Safari and Chrome */
+    -o-transition: max-height 0.2s; /* Opera */
+}
+
+.dayBlock.open .bookingBlockBody {
+    max-height: 500px;
+    border-bottom: 0px solid grey;
+    transition: max-height 0.2s;
+    -moz-transition: max-height 0.2s; /* Firefox 4 */
+    -webkit-transition: max-height 0.2s; /* Safari and Chrome */
+    -o-transition: max-height 0.2s; /* Opera */
 }
 
 .bookingBlockBody.empty {
@@ -145,8 +202,14 @@
     background-image: url(../../../img/timecard/icon-trash_inv.png);
 
 }
+
 .bookingEntry:hover .editIcon {
     background-image: url(../../../img/timecard/icon-edit_inv.png);
+}
+
+.bookingEntry.confirmDeletion:hover .deleteButton,
+.bookingEntry.confirmDeletion:hover .editButton {
+    display: none;
 }
 
 .bookingEntry.selected .deleteButton,
@@ -306,16 +369,19 @@
     width: 436px;
 }
 
-.bookingEntry.selected .dijitIcon.deleteIcon {
+.bookingEntry.selected .dijitIcon.deleteIcon,
+.bookingEntry.confirmDeletion .deleteIcon {
     background-image: url(../../../img/timecard/icon-trash.png);
 }
+
 .dijitIcon.deleteIcon {
     background-repeat: no-repeat;
     min-height: 23px;
     min-width: 23px;
 }
 
-.bookingEntry.selected .dijitIcon.editIcon {
+.bookingEntry.selected .dijitIcon.editIcon,
+.bookingEditor .dijitIcon.editIcon {
     background-image: url(../../../img/timecard/icon-edit.png);
 }
 .dijitIcon.editIcon {
