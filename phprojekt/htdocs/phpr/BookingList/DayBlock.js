@@ -3,6 +3,7 @@ define([
     'dojo/_base/lang',
     'dojo/_base/array',
     'dojo/dom-class',
+    'dojo/on',
     'dojo/date',
     'dojo/date/locale',
     'dojo/html',
@@ -11,8 +12,8 @@ define([
     'dijit/_TemplatedMixin',
     'phpr/BookingList/BookingBlockWrapper',
     'dojo/text!phpr/template/bookingList/dayBlock.html'
-], function(declare, lang, array, domClass, date, locale, html, timehelper, _WidgetBase, _TemplatedMixin, BookingBlockWrapper,
-    templateString) {
+], function(declare, lang, array, domClass, on, date, locale, html, timehelper, _WidgetBase, _TemplatedMixin,
+    BookingBlockWrapper, templateString) {
     return declare([_WidgetBase, _TemplatedMixin], {
         day: null,
         bookings: null,
@@ -35,7 +36,10 @@ define([
                 return ta > tb;
             });
 
+            var open = false;
             array.forEach(this.bookings, function(b) {
+                open = b.highlight || open;
+
                 var widget = new BookingBlockWrapper({booking: b, store: this.store});
                 widget.placeAt(this.body);
                 this.own(widget);
@@ -43,14 +47,23 @@ define([
 
             this._checkEmpty();
 
-            html.set(this.header, locale.format(this.day, {selector: 'date', formatLength: 'long'}));
+            html.set(this.headerText, locale.format(this.day, {selector: 'date', formatLength: 'long'}));
             this._updateTotalTime();
 
             if (date.compare(new Date(), this.day, 'date') === 0) {
                 domClass.add(this.header, 'today');
+                domClass.add(this.domNode, 'open');
             } else {
                 domClass.remove(this.header, 'today');
             }
+
+            if (open) {
+                domClass.add(this.domNode, 'open');
+            }
+
+            on(this.footer, 'click', lang.hitch(this, function() {
+                domClass.toggle(this.domNode, 'open');
+            }));
         },
 
         _checkEmpty: function() {
@@ -72,7 +85,7 @@ define([
             if (totalMinutes === 0) {
                 this.total.innerHTML = "";
             } else {
-                html.set(this.total, timehelper.minutesToHMString(totalMinutes));
+                html.set(this.total, 'Sum: ' + timehelper.minutesToHMString(totalMinutes));
             }
         }
     });
