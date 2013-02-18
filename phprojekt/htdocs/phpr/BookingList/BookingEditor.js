@@ -40,8 +40,7 @@ define([
 
         _showErrorInWarningIcon: api.errorHandlerForTag('bookingEditor'),
 
-        _submit: function(evt) {
-            evt.stopPropagation();
+        _submit: function() {
             if (this.form.validate()) {
                 var data = this.form.get('value');
                 var sendData = this._prepareDataForSend(lang.mixin({}, this.booking, data));

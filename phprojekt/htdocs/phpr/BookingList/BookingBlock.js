@@ -27,14 +27,18 @@ define([
 
     on(win.doc, 'click', unselectAll);
 
-    var defaultClickDelay = 500;
+    var defaultClickDelay = 300;
 
     return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, Evented], {
         store: null,
         booking: null,
-        _actionTimeout: null,
+        _actionTimeouts: null,
 
         templateString: templateString,
+
+        constructor: function() {
+            this._actionTimeouts = {};
+        },
 
         _setBookingAttr: function (booking) {
             api.projectTitleForId(booking.projectId).then(lang.hitch(this, function(title) {
@@ -74,16 +78,14 @@ define([
         },
 
         _delete: function(evt) {
-            evt.stopPropagation();
-            this._doClickAction(function() {
+            this._doClickAction('delete', function() {
                 unselectAll();
                 clazz.add(this.domNode, 'confirmDeletion');
             });
         },
 
         _confirmDeletion: function(evt) {
-            evt.stopPropagation();
-            this._doClickAction(function() {
+            this._doClickAction('confirm', function() {
                 this.store.remove(this.booking.id).then(undefined, function(error) {
                     topic.publish('notification', json.parse(error.responseText));
                 }).always(function() {
@@ -101,22 +103,23 @@ define([
         },
 
         _markSelected: function(evt) {
-            evt.stopPropagation();
-            if (clazz.contains(this.domNode, 'confirmDeletion')) {
-                return;
-            }
+            this._doClickAction('select', function() {
+                if (clazz.contains(this.domNode, 'confirmDeletion')) {
+                    return;
+                }
 
-            unselectAll();
-            clazz.add(this.domNode, 'selected');
+                unselectAll();
+                clazz.add(this.domNode, 'selected');
+            });
         },
 
         _edit: function() {
             this.emit('editClick');
         },
 
-        _doClickAction: function(fun) {
-            clearTimeout(this._actionTimeout);
-            this._actionTimeout = setTimeout(lang.hitch(this, fun), defaultClickDelay);
+        _doClickAction: function(id, fun) {
+            clearTimeout(this._actionTimeouts[id]);
+            this._actionTimeouts[id] = setTimeout(lang.hitch(this, fun), defaultClickDelay);
         }
     });
 });
