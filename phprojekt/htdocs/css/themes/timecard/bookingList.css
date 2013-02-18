@@ -5,14 +5,14 @@
 .dayBlock .helpTextOpen {
     float: left;
     font-size: small;
-    color: #1a1919;
+    color: white;
 }
 
 .dayBlock .helpTextClose {
     display: none;
     float: left;
     font-size: small;
-    color: #1a1919;
+    color: white;
 }
 
 .dayBlock.open .helpTextOpen {
@@ -25,7 +25,7 @@
 
 .dayBlock:hover .helpTextOpen,
 .dayBlock:hover .helpTextClose {
-    color: rgb(51, 49, 49);
+    color: white;
 }
 
 .bookingBlockFooter:hover {
@@ -37,13 +37,11 @@
     color: white;
     text-align: center;
     padding: 10px;
-}
-
-.bookingBlockHeader {
-    background: black;
-    color: white;
-    text-align: center;
-    padding: 3px;
+    position: relative;
+    -webkit-box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.75);
+    -o-box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: 0px 1px 3px  rgba(0, 0, 0, 0.75);
+    box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.75);
 }
 
 .bookingBlockHeader.today {
@@ -52,11 +50,10 @@
 }
 
 .bookingBlockFooter {
-    background: black;
+    background: rgb(20, 20, 20);
     color: white;
     text-align: center;
     padding: 3px;
-    margin-bottom: 2px;
 }
 
 .bookingBlockBody {
