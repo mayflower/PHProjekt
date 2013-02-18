@@ -27,7 +27,7 @@ define([
 
     on(win.doc, 'click', unselectAll);
 
-    var defaultClickDelay = 500;
+    var defaultClickDelay = 300;
 
     return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, Evented], {
         store: null,
