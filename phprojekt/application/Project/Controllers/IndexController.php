@@ -205,4 +205,15 @@ class Project_IndexController extends IndexController
 
         Phprojekt_Converter_Json::echoConvert($roles);
     }
+
+    /**
+     * Overwrite to hide deleted projects
+     */
+    public function getFilterWhere($where = null)
+    {
+        $where  = parent::getFilterWhere($where);
+        $where  = $where ? '(' . $where . ') AND ' : '';
+        $where .= 'deleted = False';
+        return $where;
+    }
 }

@@ -151,6 +151,10 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
                ->order('path')
                ->order('id');
 
+            if ($this->_activeRecord->hasField('deleted')) {
+                $select->where('tt.deleted = 0');
+            }
+
             if (null !== $filter) {
                 $filter->filter($select, 'tt');
             }

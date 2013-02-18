@@ -371,7 +371,9 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
 
         foreach ($records as $record) {
             $data    = array();
-            $display = $tree->getNodeById($record->projectId)->getDepthDisplay('title');
+            $project = new Project_Models_Project();
+            $project = $project->find($record->projectId);
+            $display = $project->title;
             if (!empty($record->notes)) {
                 if (strlen($record->notes) > 50) {
                     $record->notes = substr($record->notes, 0, 50) . '...';

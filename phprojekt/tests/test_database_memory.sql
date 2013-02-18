@@ -448,6 +448,7 @@ CREATE TABLE `project` (
   `hourly_wage_rate` varchar(10) DEFAULT NULL,
   `budget` varchar(10) DEFAULT NULL,
   `contact_id` int(11) DEFAULT NULL,
+  `deleted` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=MEMORY AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
