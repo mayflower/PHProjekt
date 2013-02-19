@@ -74,6 +74,7 @@ define([
                 onCurrentMonth = (this.year == currentYear && this.month == currentMonth),
                 onPreviousMonth = (this.year < currentYear || this.month < currentMonth);
 
+
             if (onCurrentMonth) {
                 domAttr.set(this.upperLeftRect, 'height', greenBarY);
                 domAttr.set(this.upperLeftRect, 'width', todayX);
@@ -85,10 +86,11 @@ define([
             }
 
             var svg = d3.select(this.bookedTimePerDayGraph);
-            var update = svg.selectAll()
-                .data(days).enter().append("svg:rect");
+            var svgData = svg.selectAll().data(days);
 
-            update.attr("fill", function(d) {
+            svgData.enter()
+                .append("svg:rect")
+                    .attr("fill", function(d) {
                         return d.sumInMinutes < minutesToWork ? "#b5b5b5" : "white";
                     })
                     .attr("x", function(d, i) {
@@ -105,12 +107,16 @@ define([
                         .text(function(d) {
                             var date = locale.format(timehelper.dateToJsDate(d.date), {selector: 'date'});
                             return date + ' (' + d.sumInHours + ')';
-
                         });
 
-            svg.append("line")
-                    .attr("x1", 0)
-                    .attr("x2", displayWidth)
+            svgData.enter()
+                .append("svg:line")
+                    .attr("x1", function(d, i) {
+                        return i * (barPadding + barWidth);
+                    })
+                    .attr("x2", function(d, i) {
+                        return (i + 1) * (barPadding + barWidth);
+                    })
                     .attr("y1", greenBarY)
                     .attr("y2", greenBarY)
                     .attr("stroke", "#6aa700");
