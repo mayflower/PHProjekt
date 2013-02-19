@@ -68,7 +68,7 @@ define([
                 displayWidth = domAttr.get(this.bookedTimePerDayGraph, "width"),
                 barPadding = 2,
                 barWidth = (displayWidth - 40) / dataCount - barPadding,
-                greenBarY = heightForTimebars - minutesToWork * heightPerMinute,
+                heightForMinutesToWork = heightForTimebars - heightPerMinute * minutesToWork,
                 todayX = (new Date()).getDate() * (barWidth + barPadding) - (barPadding / 2),
                 currentYear = (new Date()).getFullYear(), currentMonth = (new Date()).getMonth(),
                 onCurrentMonth = (this.year == currentYear && this.month == currentMonth),
@@ -76,10 +76,10 @@ define([
 
 
             if (onCurrentMonth) {
-                domAttr.set(this.upperLeftRect, 'height', greenBarY);
+                domAttr.set(this.upperLeftRect, 'height', heightForMinutesToWork);
                 domAttr.set(this.upperLeftRect, 'width', todayX);
             } else if (onPreviousMonth) {
-                domAttr.set(this.upperLeftRect, 'height', greenBarY);
+                domAttr.set(this.upperLeftRect, 'height', heightForMinutesToWork);
                 domAttr.set(this.upperLeftRect, 'width', displayWidth);
             } else {
                 domAttr.set(this.upperLeftRect, 'width', 0);
@@ -108,6 +108,14 @@ define([
                             var date = locale.format(timehelper.dateToJsDate(d.date), {selector: 'date'});
                             return date + ' (' + d.sumInHours + ')';
                         });
+
+            var greenBarY = function(d, i) {
+                var date = timehelper.dateToJsDate(d.date);
+                if (locale.isWeekend(date)) {
+                    return heightForTimebars;
+                }
+                return heightForMinutesToWork;
+            };
 
             svgData.enter()
                 .append("svg:line")
