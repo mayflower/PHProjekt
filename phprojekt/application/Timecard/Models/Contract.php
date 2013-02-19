@@ -39,7 +39,7 @@ class Timecard_Models_Contract extends Phprojekt_ActiveRecord_Abstract
         }
 
         if (empty($contractIds)) {
-            return array();
+            throw new Phprojekt_Exception_ContractNotSet();
         }
 
         $contractsById = array();

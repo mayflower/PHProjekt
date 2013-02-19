@@ -1,0 +1,28 @@
+<?php
+/**
+ * This software is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License version 3 as published by the Free Software Foundation
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * @copyright  Copyright (c) 2013 Mayflower GmbH (http://www.mayflower.de)
+ * @license    LGPL v3 (See LICENSE file)
+ */
+
+/**
+ * Exception thrown when a user doesn't have an associated contract.
+ */
+class Phprojekt_Exception_ContractNotSet extends Phprojekt_Exception_Published
+{
+    protected $_type     = 'contractNotSet';
+    protected $_httpCode = 500;
+
+    public function __construct()
+    {
+        parent::__construct("You don't have an associated contract.");
+    }
+}
