@@ -52,7 +52,9 @@ define([
                 }
 
                 this.overtimeLabel.innerHTML = minus + text.join(" ") + " Overtime";
-            }));
+            }), function(err) {
+                api.defaultErrorHandler(err);
+            });
         },
 
         _renderData: function(data) {

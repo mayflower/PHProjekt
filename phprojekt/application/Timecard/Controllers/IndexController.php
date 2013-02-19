@@ -389,11 +389,6 @@ class Timecard_IndexController extends IndexController
         list($start, $end) = $this->_yearMonthParamToStartEndDT();
 
         $contracts = Timecard_Models_Contract::fetchByUserAndPeriod(Phprojekt_Auth::getRealUser(), $start, $end);
-        if (empty($contracts)) {
-            echo Zend_Json::encode(array('minutesToWork' => 0));
-            return;
-        }
-
         $minutesPerDay = $this->_contractsToMinutesPerDay($contracts, $start, $end);
         $minutesPerDay = $this->_applyHolidayWeights($minutesPerDay, $start, $end);
 
