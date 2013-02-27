@@ -130,6 +130,24 @@ define([
                     .attr("y2", greenBarY)
                     .attr("stroke", "#6aa700");
 
+            // vertical lines
+            svgData.enter()
+                .append("svg:line")
+                    .attr("x1", function(d, i) {
+                        return i * (barPadding + barWidth);
+                    })
+                    .attr("x2", function(d, i) {
+                        return (i) * (barPadding + barWidth);
+                    })
+                    .attr("y1", function(d, i) {
+                        if (i === 0) {
+                            return greenBarY(d, i);
+                        }
+                        return greenBarY(days[i - 1], i - 1);
+                    })
+                    .attr("y2", greenBarY)
+                    .attr("stroke", "#6aa700");
+
             if (onCurrentMonth) {
                 var currentDate = (new Date()).getDate();
                 svg.append("rect")
