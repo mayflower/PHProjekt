@@ -117,6 +117,7 @@ define([
                 return heightForMinutesToWork;
             };
 
+            // horizontal lines
             svgData.enter()
                 .append("svg:line")
                     .attr("x1", function(d, i) {
