@@ -12,24 +12,25 @@ define([
     'd3/d3.v3.js'
 ], function(lang, declare, domAttr, locale, all, Widget, Templated, api, timehelper,
             templateString) {
+
+    var maxMinutes = 60 * 15,
+        barPadding = 2;
+
     return declare([Widget, Templated], {
         templateString: templateString,
 
         year: (new Date()).getFullYear(),
         month: (new Date()).getMonth(),
 
-        buildRendering: function() {
-            this.inherited(arguments);
-
-            this._updateLabels();
-
-            api.getData(
+        _getData: function() {
+            return api.getData(
                 'index.php/Timecard/index/monthList',
                 {query: {year: this.year, month: this.month + 1}}
-            ).then(lang.hitch(this, this._renderData));
+            );
+        },
 
-            var theDate = new Date(this.year, this.month, 1, 0, 0, 0);
-            all({
+        _getStatisticsData: function() {
+            return all({
                 booked: api.getData(
                     'index.php/Timecard/index/minutesBooked',
                     {query: {year: this.year, month: this.month + 1}}
@@ -38,51 +39,40 @@ define([
                     'index.php/Timecard/index/minutesToWork',
                     {query: {year: this.year, month: this.month + 1}}
                 )
-            }).then(lang.hitch(this, function(result) {
-                var netMinutes = result.booked.minutesBooked - result.towork.minutesToWork,
-                    minus = (netMinutes < 0) ? '-' : '',
-                    difference = Math.abs(netMinutes);
-                text = [];
-                if (difference >= 60) {
-                    text.push(Math.floor(difference / 60) + 'h');
-                }
-                if (difference < 60 || difference % 60 !== 0) {
-                    text.push(difference % 60 + 'm');
-                }
+            });
+        },
 
-                this.overtimeLabel.innerHTML = minus + text.join(" ") + " Overtime";
+        buildRendering: function() {
+            this.inherited(arguments);
+
+            this._updateLabels();
+
+            this._getData().then(lang.hitch(this, function(data) {
+                this._renderDays(data.days);
+            }));
+
+            this._getStatisticsData().then(lang.hitch(this, function(result) {
+                var overtime = result.booked.minutesBooked - result.towork.minutesToWork;
+                this.overtimeLabel.innerHTML = timehelper.minutesToHMString(overtime) + " Overtime";
             }), function(err) {
                 api.defaultErrorHandler(err);
             });
         },
 
-        _renderData: function(data) {
-            var days = data.days,
-                dataCount = days.length,
-                maxMinutes = 1000,
-                minutesToWork = 450,
-                displayHeight = domAttr.get(this.bookedTimePerDayGraph, "height"),
-                heightForTimebars = displayHeight,
-                heightPerMinute = heightForTimebars / maxMinutes,
-                displayWidth = domAttr.get(this.bookedTimePerDayGraph, "width"),
-                barPadding = 2,
-                barWidth = (displayWidth - 40) / dataCount - barPadding,
-                heightForMinutesToWork = heightForTimebars - heightPerMinute * minutesToWork,
-                todayX = (new Date()).getDate() * (barWidth + barPadding) - (barPadding / 2),
-                currentYear = (new Date()).getFullYear(), currentMonth = (new Date()).getMonth(),
-                onCurrentMonth = (this.year == currentYear && this.month == currentMonth),
-                onPreviousMonth = (this.year < currentYear || this.month < currentMonth);
+        _updateLabels: function() {
+            var first = new Date(this.year, this.month, 1, 0, 0, 0),
+                last = new Date(this.year, this.month + 1, 0, 0, 0, 0);
+            this.firstDayLabel.innerHTML = locale.format(first, {selector: 'date', datePattern: 'EEE d'});
+            this.lastDayLabel.innerHTML = locale.format(last, {selector: 'date', datePattern: 'EEE d'});
+        },
 
+        _days: null,
 
-            if (onCurrentMonth) {
-                domAttr.set(this.upperLeftRect, 'height', heightForMinutesToWork);
-                domAttr.set(this.upperLeftRect, 'width', todayX);
-            } else if (onPreviousMonth) {
-                domAttr.set(this.upperLeftRect, 'height', heightForMinutesToWork);
-                domAttr.set(this.upperLeftRect, 'width', displayWidth);
-            } else {
-                domAttr.set(this.upperLeftRect, 'width', 0);
-            }
+        _renderDays: function(days) {
+            this.days = days;
+            var minutesToWork = 450,
+                heightPerMinute = this._heightForTimebars() / maxMinutes,
+                heightForMinutesToWork = this._heightForTimebars() - heightPerMinute * minutesToWork;
 
             var svg = d3.select(this.bookedTimePerDayGraph);
             var svgData = svg.selectAll().data(days);
@@ -93,12 +83,12 @@ define([
                         return d.sumInMinutes < minutesToWork ? "#b5b5b5" : "white";
                     })
                     .attr("x", function(d, i) {
-                        return i * (barPadding + barWidth);
+                        return i * (barPadding + this._barWidth());
                     })
                     .attr("y", function(d) {
-                        return Math.min(heightForTimebars - 2, heightForTimebars - heightPerMinute * d.sumInMinutes);
+                        return Math.min(this._heightForTimebars() - 2, this._heightForTimebars() - heightPerMinute * d.sumInMinutes);
                     })
-                    .attr("width", barWidth)
+                    .attr("width", this._barWidth())
                     .attr("height", function(d) {
                         return Math.max(2, heightPerMinute * d.sumInMinutes);
                     })
@@ -111,7 +101,7 @@ define([
             var greenBarY = function(d, i) {
                 var date = timehelper.dateToJsDate(d.date);
                 if (locale.isWeekend(date)) {
-                    return heightForTimebars;
+                    return this._heightForTimebars();
                 }
                 return heightForMinutesToWork;
             };
@@ -120,10 +110,10 @@ define([
             svgData.enter()
                 .append("svg:line")
                     .attr("x1", function(d, i) {
-                        return i * (barPadding + barWidth);
+                        return i * (barPadding + this._barWidth());
                     })
                     .attr("x2", function(d, i) {
-                        return (i + 1) * (barPadding + barWidth);
+                        return (i + 1) * (barPadding + this._barWidth());
                     })
                     .attr("y1", greenBarY)
                     .attr("y2", greenBarY)
@@ -133,10 +123,10 @@ define([
             svgData.enter()
                 .append("svg:line")
                     .attr("x1", function(d, i) {
-                        return i * (barPadding + barWidth);
+                        return i * (barPadding + this._barWidth());
                     })
                     .attr("x2", function(d, i) {
-                        return (i) * (barPadding + barWidth);
+                        return (i) * (barPadding + this._barWidth());
                     })
                     .attr("y1", function(d, i) {
                         if (i === 0) {
@@ -153,7 +143,7 @@ define([
                     .attr("x", todayX - 1)
                     .attr("width", 2)
                     .attr("y", 0)
-                    .attr("height", heightForTimebars)
+                    .attr("height", this._heightForTimebars())
                     .attr("fill", "#0d639b");
             }
 
@@ -161,11 +151,36 @@ define([
             svg.exit().remove();
         },
 
-        _updateLabels: function() {
-            var first = new Date(this.year, this.month, 1, 0, 0, 0),
-                last = new Date(this.year, this.month + 1, 0, 0, 0, 0);
-            this.firstDayLabel.innerHTML = locale.format(first, {selector: 'date', datePattern: 'EEE d'});
-            this.lastDayLabel.innerHTML = locale.format(last, {selector: 'date', datePattern: 'EEE d'});
+        // These functions assume _days is set
+        _heightForTimebars: function() {
+            return domAttr.get(this.bookedTimePerDayGraph, "height");
+        },
+
+        _displayWidth: function() {
+            return domAttr.get(this.bookedTimePerDayGraph, "width") - 40;
+        },
+
+        _barWidth: function() {
+            return (this._displayWidth() / this.days.length) - barPadding;
+        },
+
+        _updateUpperLeftRect: function() {
+            var currentYear = (new Date()).getFullYear(),
+                currentMonth = (new Date()).getMonth(),
+                todayX = (new Date()).getDate() * (this._barWidth() + barPadding) - (barPadding / 2);
+
+            var onCurrentMonth = (this.year == currentYear && this.month == currentMonth),
+                onPreviousMonth = (this.year < currentYear || this.month < currentMonth);
+
+            if (onCurrentMonth) {
+                domAttr.set(this.upperLeftRect, 'height', heightForMinutesToWork);
+                domAttr.set(this.upperLeftRect, 'width', todayX);
+            } else if (onPreviousMonth) {
+                domAttr.set(this.upperLeftRect, 'height', heightForMinutesToWork);
+                domAttr.set(this.upperLeftRect, 'width', this._displayWidth());
+            } else {
+                domAttr.set(this.upperLeftRect, 'width', 0);
+            }
         }
     });
 });
