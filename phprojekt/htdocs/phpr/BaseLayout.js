@@ -11,14 +11,6 @@ define([
 ], function(declare, lang, widget, template, widgetsInTemplate, templateString) {
     return declare([widget, template, widgetsInTemplate], {
         baseClass: 'baseLayout',
-        templateString: templateString,
-
-        layout: function() {
-            this.outerBorderContainer.layout.apply(this.outerBorderContainer, arguments);
-        },
-
-        resize: function() {
-            this.outerBorderContainer.resize.apply(this.outerBorderContainer, arguments);
-        }
+        templateString: templateString
     });
 });
