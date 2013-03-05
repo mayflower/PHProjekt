@@ -3459,26 +3459,6 @@ loop:   for (;;) {
         return this;
     }).exps = true;
 
-//  Superfluous reserved words
-
-    reserve('class');
-    reserve('const');
-    reserve('enum');
-    reserve('export');
-    reserve('extends');
-    reserve('import');
-    reserve('super');
-
-    reserve('let');
-    reserve('yield');
-    reserve('implements');
-    reserve('interface');
-    reserve('package');
-    reserve('private');
-    reserve('protected');
-    reserve('public');
-    reserve('static');
-
 
 // Parse JSON
 
