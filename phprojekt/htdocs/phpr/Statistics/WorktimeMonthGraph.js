@@ -63,31 +63,28 @@ define([
 
         _renderDays: function(days) {
             this.days = days;
-            var minutesToWork = 450,
-                heightPerMinute = this._heightForTimebars() / maxMinutes,
-                heightForMinutesToWork = this._heightForTimebars() - heightPerMinute * minutesToWork;
 
             var svg = d3.select(this.bookedTimePerDayGraph);
             var svgData = svg.selectAll().data(days);
 
             svgData.enter()
                 .append("svg:rect")
-                    .attr("fill", function(d) {
-                        return d.sumInMinutes < minutesToWork ? "#b5b5b5" : "white";
-                    })
+                    .attr("fill", lang.hitch(this, function(d) {
+                        return d.sumInMinutes < this._minutesToWork() ? "#b5b5b5" : "white";
+                    }))
                     .attr("x", lang.hitch(this, function(d, i) {
                         return i * (barPadding + this._barWidth());
                     }))
                     .attr("y", lang.hitch(this, function(d) {
                         return Math.min(
                             this._heightForTimebars() - 2,
-                            this._heightForTimebars() - heightPerMinute * d.sumInMinutes
+                            this._heightForTimebars() - this._heightPerMinute() * d.sumInMinutes
                         );
                     }))
                     .attr("width", this._barWidth())
-                    .attr("height", function(d) {
-                        return Math.max(2, heightPerMinute * d.sumInMinutes);
-                    })
+                    .attr("height", lang.hitch(this, function(d) {
+                        return Math.max(2, this._heightPerMinute() * d.sumInMinutes);
+                    }))
                     .append("svg:title")
                         .text(function(d) {
                             var date = locale.format(timehelper.dateToJsDate(d.date), {selector: 'date'});
@@ -99,7 +96,7 @@ define([
                 if (locale.isWeekend(date)) {
                     return this._heightForTimebars();
                 }
-                return heightForMinutesToWork;
+                return this._heightForMinutesToWork();
             });
 
             // horizontal lines
@@ -148,8 +145,20 @@ define([
         },
 
         // These functions assume _days is set
+        _heightPerMinute: function() {
+            return this._heightForTimebars() / maxMinutes;
+        },
+
+        _heightForMinutesToWork: function() {
+            return this._heightForTimebars() - this._heightPerMinute() * this._minutesToWork();
+        },
+
         _heightForTimebars: function() {
             return domAttr.get(this.bookedTimePerDayGraph, "height");
+        },
+
+        _minutesToWork: function() {
+            return 450;
         },
 
         _displayWidth: function() {
@@ -178,10 +187,10 @@ define([
 
         _updateUpperLeftRect: function() {
             if (this._onCurrentMonth(this.year, this.month)) {
-                domAttr.set(this.upperLeftRect, 'height', heightForMinutesToWork);
+                domAttr.set(this.upperLeftRect, 'height', this._heightForMinutesToWork());
                 domAttr.set(this.upperLeftRect, 'width', this._todayX());
             } else if (this._onPreviousMonth(this.year, this.month)) {
-                domAttr.set(this.upperLeftRect, 'height', heightForMinutesToWork);
+                domAttr.set(this.upperLeftRect, 'height', this._heightForMinutesToWork());
                 domAttr.set(this.upperLeftRect, 'width', this._displayWidth());
             } else {
                 domAttr.set(this.upperLeftRect, 'width', 0);
