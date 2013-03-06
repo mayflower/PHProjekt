@@ -30,6 +30,7 @@ define([
 
     return declare([Widget, Templated], {
         templateString: templateString,
+        baseClass: 'thisMonthDiagram',
 
         year: (new Date()).getFullYear(),
         month: (new Date()).getMonth(),
