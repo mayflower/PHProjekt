@@ -3,7 +3,9 @@
     <h1>Diesen Monat</h1>
     <h2>Gearbeitete Zeit</h2>
     <p>Die Anzahl der Stunden pro Tag und die erwartete Stundenanzahl</p>
-    <div data-dojo-type="phpr/Statistics/WorktimeMonthGraph" class="thisMonthDiagram"></div>
+    <div data-dojo-type="dijit/layout/ContentPane" data-dojo-attach-point="monthContainer">
+        <div data-dojo-type="phpr/Statistics/WorktimeMonthGraph"></div>
+    </div>
 
     <img class="buttons" src="../../../img/timecard/statistics_stub_buttons.png">
     <h1>Dieses Jahr</h1>
