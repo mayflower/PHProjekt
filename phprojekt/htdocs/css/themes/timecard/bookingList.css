@@ -3,14 +3,19 @@
 }
 
 .dayBlock .helpTextOpen {
-    float: left;
+    position: absolute;
+    top: 8px;
+    right: 20px;
     font-size: small;
     color: white;
 }
 
 .dayBlock .helpTextClose {
     display: none;
-    float: left;
+    position: absolute;
+    top: 8px;
+    right: 20px;
+    z-index: 3;
     font-size: small;
     color: white;
 }
@@ -28,15 +33,21 @@
     color: white;
 }
 
+.dayBlock {
+    background-color: black;
+}
+
 .bookingBlockFooter:hover {
     cursor: pointer;
 }
 
 .bookingBlockHeader {
     background: black;
+    border-top: 1px solid grey;
     color: white;
     text-align: center;
-    padding: 10px;
+    padding: 8px;
+    height: 15px;
     position: relative;
     -webkit-box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.75);
     -o-box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.75);
@@ -47,18 +58,19 @@
 .bookingBlockHeader.today {
     font-size: large;
     color: #adadad;
+    height: 22px;
 }
 
-.bookingBlockFooter {
-    background: rgb(20, 20, 20);
-    color: white;
-    text-align: center;
-    padding: 3px;
+.bookingBlockHeader .headerText {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    z-index: 3;
 }
 
 .bookingBlockBody {
     background: white;
-    border-bottom: 1px solid grey;
+    margin-left: 10px;
     max-height: 0px;
     overflow: hidden;
     transition: max-height 0.2s;
@@ -69,7 +81,6 @@
 
 .dayBlock.open .bookingBlockBody {
     max-height: 500px;
-    border-bottom: 0px solid grey;
     transition: max-height 0.2s;
     -moz-transition: max-height 0.2s; /* Firefox 4 */
     -webkit-transition: max-height 0.2s; /* Safari and Chrome */
@@ -84,10 +95,10 @@
     background: #eeeeee;
     border: 1px solid black;
     color: black;
-    padding-left: 25px;
-    padding-top: 5px;
+    padding-left: 10px;
+    padding-top: 3px;
     padding-right: 4px;
-    padding-bottom: 5px;
+    padding-bottom: 3px;
     min-height: 24px;
     line-height: 24px;
 }

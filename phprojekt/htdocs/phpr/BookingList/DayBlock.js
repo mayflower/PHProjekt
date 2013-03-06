@@ -36,7 +36,7 @@ define([
                 return ta > tb;
             });
 
-            var open = false;
+            var open = this.open || false;
             array.forEach(this.bookings, function(b) {
                 open = b.highlight || open;
 
@@ -47,23 +47,29 @@ define([
 
             this._checkEmpty();
 
-            html.set(this.headerText, locale.format(this.day, {selector: 'date', formatLength: 'long'}));
+            html.set(this.headerText, locale.format(this.day, {selector: 'date', datePattern: 'd EEEE'}));
             this._updateTotalTime();
 
             if (date.compare(new Date(), this.day, 'date') === 0) {
                 domClass.add(this.header, 'today');
-                domClass.add(this.domNode, 'open');
+                this.set('open', true);
             } else {
                 domClass.remove(this.header, 'today');
+                this.set('open', open);
             }
 
-            if (open) {
-                domClass.add(this.domNode, 'open');
-            }
-
-            on(this.footer, 'click', lang.hitch(this, function() {
+            on(this.header, 'click', lang.hitch(this, function() {
                 domClass.toggle(this.domNode, 'open');
             }));
+        },
+
+        _setOpenAttr: function(o) {
+            this.open = o;
+            if (o) {
+                domClass.add(this.domNode, 'open');
+            } else {
+                domClass.remove(this.domNode, 'open');
+            }
         },
 
         _checkEmpty: function() {
