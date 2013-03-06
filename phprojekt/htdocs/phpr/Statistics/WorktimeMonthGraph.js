@@ -75,12 +75,15 @@ define([
                     .attr("fill", function(d) {
                         return d.sumInMinutes < minutesToWork ? "#b5b5b5" : "white";
                     })
-                    .attr("x", function(d, i) {
+                    .attr("x", lang.hitch(this, function(d, i) {
                         return i * (barPadding + this._barWidth());
-                    })
-                    .attr("y", function(d) {
-                        return Math.min(this._heightForTimebars() - 2, this._heightForTimebars() - heightPerMinute * d.sumInMinutes);
-                    })
+                    }))
+                    .attr("y", lang.hitch(this, function(d) {
+                        return Math.min(
+                            this._heightForTimebars() - 2,
+                            this._heightForTimebars() - heightPerMinute * d.sumInMinutes
+                        );
+                    }))
                     .attr("width", this._barWidth())
                     .attr("height", function(d) {
                         return Math.max(2, heightPerMinute * d.sumInMinutes);
@@ -91,23 +94,23 @@ define([
                             return date + ' (' + d.sumInHours + ')';
                         });
 
-            var greenBarY = function(d, i) {
+            var greenBarY = lang.hitch(this, function(d, i) {
                 var date = timehelper.dateToJsDate(d.date);
                 if (locale.isWeekend(date)) {
                     return this._heightForTimebars();
                 }
                 return heightForMinutesToWork;
-            };
+            });
 
             // horizontal lines
             svgData.enter()
                 .append("svg:line")
-                    .attr("x1", function(d, i) {
+                    .attr("x1", lang.hitch(this, function(d, i) {
                         return i * (barPadding + this._barWidth());
-                    })
-                    .attr("x2", function(d, i) {
+                    }))
+                    .attr("x2", lang.hitch(this, function(d, i) {
                         return (i + 1) * (barPadding + this._barWidth());
-                    })
+                    }))
                     .attr("y1", greenBarY)
                     .attr("y2", greenBarY)
                     .attr("stroke", "#6aa700");
@@ -115,12 +118,12 @@ define([
             // vertical lines
             svgData.enter()
                 .append("svg:line")
-                    .attr("x1", function(d, i) {
+                    .attr("x1", lang.hitch(this, function(d, i) {
                         return i * (barPadding + this._barWidth());
-                    })
-                    .attr("x2", function(d, i) {
+                    }))
+                    .attr("x2", lang.hitch(this, function(d, i) {
                         return (i) * (barPadding + this._barWidth());
-                    })
+                    }))
                     .attr("y1", function(d, i) {
                         if (i === 0) {
                             return greenBarY(d, i);
@@ -130,18 +133,18 @@ define([
                     .attr("y2", greenBarY)
                     .attr("stroke", "#6aa700");
 
-            if (onCurrentMonth) {
+            if (this._onCurrentMonth(this.year, this.month)) {
                 var currentDate = (new Date()).getDate();
                 svg.append("rect")
-                    .attr("x", todayX - 1)
+                    .attr("x", this._todayX() - 1)
                     .attr("width", 2)
                     .attr("y", 0)
                     .attr("height", this._heightForTimebars())
                     .attr("fill", "#0d639b");
             }
 
-            update.exit().remove();
-            svg.exit().remove();
+            //update.exit().remove();
+            //svg.exit().remove();
         },
 
         // These functions assume _days is set
@@ -157,18 +160,27 @@ define([
             return (this._displayWidth() / this.days.length) - barPadding;
         },
 
-        _updateUpperLeftRect: function() {
+        _onCurrentMonth: function(year, month) {
             var currentYear = (new Date()).getFullYear(),
-                currentMonth = (new Date()).getMonth(),
-                todayX = (new Date()).getDate() * (this._barWidth() + barPadding) - (barPadding / 2);
+                currentMonth = (new Date()).getMonth();
+            return (year == currentYear && month == currentMonth);
+        },
 
-            var onCurrentMonth = (this.year == currentYear && this.month == currentMonth),
-                onPreviousMonth = (this.year < currentYear || this.month < currentMonth);
+        _onPreviousMonth: function(year, month) {
+            var currentYear = (new Date()).getFullYear(),
+                currentMonth = (new Date()).getMonth();
+            return (year < currentYear || month < currentMonth);
+        },
 
-            if (onCurrentMonth) {
+        _todayX: function() {
+            return (new Date()).getDate() * (this._barWidth() + barPadding) - (barPadding / 2);
+        },
+
+        _updateUpperLeftRect: function() {
+            if (this._onCurrentMonth(this.year, this.month)) {
                 domAttr.set(this.upperLeftRect, 'height', heightForMinutesToWork);
-                domAttr.set(this.upperLeftRect, 'width', todayX);
-            } else if (onPreviousMonth) {
+                domAttr.set(this.upperLeftRect, 'width', this._todayX());
+            } else if (this._onPreviousMonth(this.year, this.month)) {
                 domAttr.set(this.upperLeftRect, 'height', heightForMinutesToWork);
                 domAttr.set(this.upperLeftRect, 'width', this._displayWidth());
             } else {
