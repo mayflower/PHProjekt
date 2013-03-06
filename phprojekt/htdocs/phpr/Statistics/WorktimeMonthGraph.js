@@ -8,10 +8,22 @@ define([
     'dijit/_TemplatedMixin',
     'phpr/Api',
     'phpr/Timehelper',
+    'phpr/models/Timecard',
     'dojo/text!phpr/template/statistics/WorktimeMonthGraph.html',
     'd3/d3.v3.js'
-], function(lang, declare, domAttr, locale, all, Widget, Templated, api, timehelper,
-            templateString) {
+], function(
+    lang,
+    declare,
+    domAttr,
+    locale,
+    all,
+    Widget,
+    Templated,
+    api,
+    timehelper,
+    timecardModel,
+    templateString
+) {
 
     var maxMinutes = 60 * 15,
         barPadding = 2;
@@ -22,36 +34,16 @@ define([
         year: (new Date()).getFullYear(),
         month: (new Date()).getMonth(),
 
-        _getData: function() {
-            return api.getData(
-                'index.php/Timecard/index/monthList',
-                {query: {year: this.year, month: this.month + 1}}
-            );
-        },
-
-        _getStatisticsData: function() {
-            return all({
-                booked: api.getData(
-                    'index.php/Timecard/index/minutesBooked',
-                    {query: {year: this.year, month: this.month + 1}}
-                ),
-                towork: api.getData(
-                    'index.php/Timecard/index/minutesToWork',
-                    {query: {year: this.year, month: this.month + 1}}
-                )
-            });
-        },
-
         buildRendering: function() {
             this.inherited(arguments);
 
             this._updateLabels();
 
-            this._getData().then(lang.hitch(this, function(data) {
+            timecardModel.getMonthList().then(lang.hitch(this, function(data) {
                 this._renderDays(data.days);
             }));
 
-            this._getStatisticsData().then(lang.hitch(this, function(result) {
+            timecardModel.getMonthStatistics().then(lang.hitch(this, function(result) {
                 var overtime = result.booked.minutesBooked - result.towork.minutesToWork;
                 this.overtimeLabel.innerHTML = timehelper.minutesToHMString(overtime) + " Overtime";
             }), function(err) {
