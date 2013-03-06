@@ -42,6 +42,7 @@ define([
 
             timecardModel.getMonthList().then(lang.hitch(this, function(data) {
                 this._renderDays(data.days);
+                this._updateUpperLeftRect();
             }));
 
             timecardModel.getMonthStatistics().then(lang.hitch(this, function(result) {
