@@ -142,8 +142,6 @@ define([
                     .attr('fill', '#0d639b');
             }
 
-            //update.exit().remove();
-            //svg.exit().remove();
         },
 
         // These functions assume _days is set
