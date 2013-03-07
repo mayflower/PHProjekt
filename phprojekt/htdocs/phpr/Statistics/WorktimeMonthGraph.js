@@ -144,7 +144,7 @@ define([
 
         },
 
-        // These functions assume _days is set
+        // Functions below here assume _days is set
         _heightPerMinute: function() {
             return this._heightForTimebars() / maxMinutes;
         },
