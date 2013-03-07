@@ -110,16 +110,33 @@ define([
 
             this._updateLabels();
 
-            timecardModel.getMonthList().then(lang.hitch(this, function(data) {
-                var minutesBookedByDay = [];
-                array.forEach(data.days, function(entry) {
-                    minutesBookedByDay.push({
-                        date: entry.date,
-                        minutesBooked: entry.sumInMinutes
+            timecardModel.getWorkBalanceByDay().then(lang.hitch(this, function(data) {
+                var entries = [];
+                for (var date in data.workBalancePerDay) {
+                    entries.push({
+                        date: date,
+                        minutesBooked: data.workBalancePerDay[date].minutesBooked,
+                        minutesToWork: data.workBalancePerDay[date].minutesToWork
                     });
-                });
-                new MinutesBookedBlockRenderer(this.bookedTimePerDayGraph, minutesBookedByDay).render()
+                }
+                new MinutesBookedBlockRenderer(this.bookedTimePerDayGraph, entries).render();
+            }), lang.hitch(this, function(error) {
+                // fallback rendering, probably no contract
+                api.defaultErrorHandler(error);
 
+                timecardModel.getMonthList().then(lang.hitch(this, function(data) {
+                    var minutesBookedByDay = [];
+                    array.forEach(data.days, function(entry) {
+                        minutesBookedByDay.push({
+                            date: entry.date,
+                            minutesBooked: entry.sumInMinutes
+                        });
+                    });
+                    new MinutesBookedBlockRenderer(this.bookedTimePerDayGraph, minutesBookedByDay).render();
+                }));
+            }));
+
+            timecardModel.getMonthList().then(lang.hitch(this, function(data) {
                 // Still needed for the toWork-line
                 this._renderDays(data.days);
 
