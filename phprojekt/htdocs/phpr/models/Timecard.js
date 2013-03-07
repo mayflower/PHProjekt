@@ -34,4 +34,12 @@ define([
             { query: opts }
         );
     };
+
+    exports.getWorkBalanceByDay = function(params) {
+        var opts = monthYearDefaultQuery(params);
+        return api.getData(
+            'index.php/Timecard/index/workBalanceByDay',
+            { query: opts }
+        );
+    };
 });
