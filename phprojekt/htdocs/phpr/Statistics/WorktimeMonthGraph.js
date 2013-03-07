@@ -60,6 +60,7 @@ define([
             this.lastDayLabel.innerHTML = locale.format(last, {selector: 'date', datePattern: 'EEE d'});
         },
 
+        // Stores the data by day we got from the server for helper functions.
         _days: null,
 
         _renderDays: function(days) {
