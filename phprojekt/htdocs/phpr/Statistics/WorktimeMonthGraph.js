@@ -47,7 +47,7 @@ define([
 
             timecardModel.getMonthStatistics().then(lang.hitch(this, function(result) {
                 var overtime = result.booked.minutesBooked - result.towork.minutesToWork;
-                this.overtimeLabel.innerHTML = timehelper.minutesToHMString(overtime) + " Overtime";
+                this.overtimeLabel.innerHTML = timehelper.minutesToHMString(overtime) + ' Overtime';
             }), function(err) {
                 api.defaultErrorHandler(err);
             });
@@ -69,24 +69,24 @@ define([
             var svgData = svg.selectAll().data(days);
 
             svgData.enter()
-                .append("svg:rect")
-                    .attr("fill", lang.hitch(this, function(d) {
-                        return d.sumInMinutes < this._minutesToWork() ? "#b5b5b5" : "white";
+                .append('svg:rect')
+                    .attr('fill', lang.hitch(this, function(d) {
+                        return d.sumInMinutes < this._minutesToWork() ? '#b5b5b5' : 'white';
                     }))
-                    .attr("x", lang.hitch(this, function(d, i) {
+                    .attr('x', lang.hitch(this, function(d, i) {
                         return i * (barPadding + this._barWidth());
                     }))
-                    .attr("y", lang.hitch(this, function(d) {
+                    .attr('y', lang.hitch(this, function(d) {
                         return Math.min(
                             this._heightForTimebars() - 2,
                             this._heightForTimebars() - this._heightPerMinute() * d.sumInMinutes
                         );
                     }))
-                    .attr("width", this._barWidth())
-                    .attr("height", lang.hitch(this, function(d) {
+                    .attr('width', this._barWidth())
+                    .attr('height', lang.hitch(this, function(d) {
                         return Math.max(2, this._heightPerMinute() * d.sumInMinutes);
                     }))
-                    .append("svg:title")
+                    .append('svg:title')
                         .text(function(d) {
                             var date = locale.format(timehelper.dateToJsDate(d.date), {selector: 'date'});
                             return date + ' (' + d.sumInHours + ')';
@@ -102,43 +102,43 @@ define([
 
             // horizontal lines
             svgData.enter()
-                .append("svg:line")
-                    .attr("x1", lang.hitch(this, function(d, i) {
+                .append('svg:line')
+                    .attr('x1', lang.hitch(this, function(d, i) {
                         return i * (barPadding + this._barWidth());
                     }))
-                    .attr("x2", lang.hitch(this, function(d, i) {
+                    .attr('x2', lang.hitch(this, function(d, i) {
                         return (i + 1) * (barPadding + this._barWidth());
                     }))
-                    .attr("y1", greenBarY)
-                    .attr("y2", greenBarY)
-                    .attr("stroke", "#6aa700");
+                    .attr('y1', greenBarY)
+                    .attr('y2', greenBarY)
+                    .attr('stroke', '#6aa700');
 
             // vertical lines
             svgData.enter()
-                .append("svg:line")
-                    .attr("x1", lang.hitch(this, function(d, i) {
+                .append('svg:line')
+                    .attr('x1', lang.hitch(this, function(d, i) {
                         return i * (barPadding + this._barWidth());
                     }))
-                    .attr("x2", lang.hitch(this, function(d, i) {
+                    .attr('x2', lang.hitch(this, function(d, i) {
                         return (i) * (barPadding + this._barWidth());
                     }))
-                    .attr("y1", function(d, i) {
+                    .attr('y1', function(d, i) {
                         if (i === 0) {
                             return greenBarY(d, i);
                         }
                         return greenBarY(days[i - 1], i - 1);
                     })
-                    .attr("y2", greenBarY)
-                    .attr("stroke", "#6aa700");
+                    .attr('y2', greenBarY)
+                    .attr('stroke', '#6aa700');
 
             if (this._onCurrentMonth(this.year, this.month)) {
                 var currentDate = (new Date()).getDate();
-                svg.append("rect")
-                    .attr("x", this._todayX() - 1)
-                    .attr("width", 2)
-                    .attr("y", 0)
-                    .attr("height", this._heightForTimebars())
-                    .attr("fill", "#0d639b");
+                svg.append('rect')
+                    .attr('x', this._todayX() - 1)
+                    .attr('width', 2)
+                    .attr('y', 0)
+                    .attr('height', this._heightForTimebars())
+                    .attr('fill', '#0d639b');
             }
 
             //update.exit().remove();
@@ -155,7 +155,7 @@ define([
         },
 
         _heightForTimebars: function() {
-            return domAttr.get(this.bookedTimePerDayGraph, "height");
+            return domAttr.get(this.bookedTimePerDayGraph, 'height');
         },
 
         _minutesToWork: function() {
@@ -163,7 +163,7 @@ define([
         },
 
         _displayWidth: function() {
-            return domAttr.get(this.bookedTimePerDayGraph, "width") - 40;
+            return domAttr.get(this.bookedTimePerDayGraph, 'width') - 40;
         },
 
         _barWidth: function() {
