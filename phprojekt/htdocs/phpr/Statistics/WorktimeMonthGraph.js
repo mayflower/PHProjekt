@@ -1,6 +1,7 @@
 define([
     'dojo/_base/lang',
     'dojo/_base/declare',
+    'dojo/_base/array',
     'dojo/dom-attr',
     'dojo/date/locale',
     'dojo/promise/all',
@@ -14,6 +15,7 @@ define([
 ], function(
     lang,
     declare,
+    array,
     domAttr,
     locale,
     all,
@@ -28,6 +30,77 @@ define([
     var maxMinutes = 60 * 15,
         barPadding = 2;
 
+    var MinutesBookedBlockRenderer = declare(null, {
+
+        constructor: function(svgNode, dayEntries) {
+            this._dayEntries = dayEntries;
+            this._svgNode = svgNode;
+        },
+
+        render: function() {
+            var svg = d3.select(this._svgNode);
+            var svgData = svg.selectAll().data(this._dayEntries);
+
+            svgData.enter()
+                .append('svg:rect')
+                    .attr('fill', this._helpers.fill)
+                    .attr('x', lang.hitch(this, this._x))
+                    .attr('y', lang.hitch(this, this._y))
+                    .attr('width', lang.hitch(this, this._barWidth))
+                    .attr('height', lang.hitch(this, this._height))
+                    .append('svg:title').text(this._helpers.titleText);
+        },
+
+        _x: function(d, i) {
+            return i * (barPadding + this._barWidth());
+        },
+
+        _height: function(d) {
+            return Math.max(2, this._heightPerMinute() * d.minutesBooked);
+        },
+
+        _displayWidth: function() {
+            return domAttr.get(this._svgNode, 'width') - 40;
+        },
+
+        _y: function(d) {
+            var x = Math.min(
+                this._heightForTimebars() - 2,
+                this._heightForTimebars() - this._heightPerMinute() * d.minutesBooked
+            );
+            return x;
+        },
+
+        _heightForTimebars: function() {
+            return domAttr.get(this._svgNode, 'height');
+        },
+
+        _heightPerMinute: function() {
+            return this._heightForTimebars() / maxMinutes;
+        },
+
+        _barWidth: function() {
+            return (this._displayWidth() / this._dayEntries.length) - barPadding;
+        },
+
+        _helpers: {
+            fill: function(entry) {
+                if (!entry.hasOwnProperty('minutesToWork')) {
+                    return "white";
+                }
+                return entry.minutesBooked < entry.minutesToWork ? '#b5b5b5' : 'white';
+            },
+
+            titleText: function(d) {
+                var date = locale.format(timehelper.dateToJsDate(d.date), {selector: 'date'});
+                if (d.minutesBooked !== 0) {
+                    date += ' (' + timehelper.minutesToHMString(d.minutesBooked) + ')';
+                }
+                return date;
+            }
+        }
+    });
+
     return declare([Widget, Templated], {
         templateString: templateString,
         baseClass: 'thisMonthDiagram',
@@ -38,7 +111,18 @@ define([
             this._updateLabels();
 
             timecardModel.getMonthList().then(lang.hitch(this, function(data) {
+                var minutesBookedByDay = [];
+                array.forEach(data.days, function(entry) {
+                    minutesBookedByDay.push({
+                        date: entry.date,
+                        minutesBooked: entry.sumInMinutes
+                    });
+                });
+                new MinutesBookedBlockRenderer(this.bookedTimePerDayGraph, minutesBookedByDay).render()
+
+                // Still needed for the toWork-line
                 this._renderDays(data.days);
+
                 this._updateUpperLeftRect();
             }));
 
@@ -67,30 +151,6 @@ define([
 
             var svg = d3.select(this.bookedTimePerDayGraph);
             var svgData = svg.selectAll().data(days);
-
-            svgData.enter()
-                .append('svg:rect')
-                    .attr('fill', lang.hitch(this, function(d) {
-                        return d.sumInMinutes < this._minutesToWork() ? '#b5b5b5' : 'white';
-                    }))
-                    .attr('x', lang.hitch(this, function(d, i) {
-                        return i * (barPadding + this._barWidth());
-                    }))
-                    .attr('y', lang.hitch(this, function(d) {
-                        return Math.min(
-                            this._heightForTimebars() - 2,
-                            this._heightForTimebars() - this._heightPerMinute() * d.sumInMinutes
-                        );
-                    }))
-                    .attr('width', this._barWidth())
-                    .attr('height', lang.hitch(this, function(d) {
-                        return Math.max(2, this._heightPerMinute() * d.sumInMinutes);
-                    }))
-                    .append('svg:title')
-                        .text(function(d) {
-                            var date = locale.format(timehelper.dateToJsDate(d.date), {selector: 'date'});
-                            return date + ' (' + d.sumInHours + ')';
-                        });
 
             var greenBarY = lang.hitch(this, function(d, i) {
                 var date = timehelper.dateToJsDate(d.date);
