@@ -32,9 +32,6 @@ define([
         templateString: templateString,
         baseClass: 'thisMonthDiagram',
 
-        year: (new Date()).getFullYear(),
-        month: (new Date()).getMonth(),
-
         buildRendering: function() {
             this.inherited(arguments);
 
@@ -54,8 +51,10 @@ define([
         },
 
         _updateLabels: function() {
-            var first = new Date(this.year, this.month, 1, 0, 0, 0),
-                last = new Date(this.year, this.month + 1, 0, 0, 0, 0);
+            var thisYear = (new Date()).getFullYear(),
+                thisMonth = (new Date()).getMonth(),
+                first = new Date(thisYear, thisMonth, 1, 0, 0, 0),
+                last = new Date(thisYear, thisMonth + 1, 0, 0, 0, 0);
             this.firstDayLabel.innerHTML = locale.format(first, {selector: 'date', datePattern: 'EEE d'});
             this.lastDayLabel.innerHTML = locale.format(last, {selector: 'date', datePattern: 'EEE d'});
         },
@@ -132,16 +131,12 @@ define([
                     .attr('y2', greenBarY)
                     .attr('stroke', '#6aa700');
 
-            if (this._onCurrentMonth(this.year, this.month)) {
-                var currentDate = (new Date()).getDate();
-                svg.append('rect')
-                    .attr('x', this._todayX() - 1)
-                    .attr('width', 2)
-                    .attr('y', 0)
-                    .attr('height', this._heightForTimebars())
-                    .attr('fill', '#0d639b');
-            }
-
+            svg.append('rect')
+                .attr('x', this._todayX() - 1)
+                .attr('width', 2)
+                .attr('y', 0)
+                .attr('height', this._heightForTimebars())
+                .attr('fill', '#0d639b');
         },
 
         // Functions below here assume _days is set
@@ -169,32 +164,13 @@ define([
             return (this._displayWidth() / this.days.length) - barPadding;
         },
 
-        _onCurrentMonth: function(year, month) {
-            var currentYear = (new Date()).getFullYear(),
-                currentMonth = (new Date()).getMonth();
-            return (year == currentYear && month == currentMonth);
-        },
-
-        _onPreviousMonth: function(year, month) {
-            var currentYear = (new Date()).getFullYear(),
-                currentMonth = (new Date()).getMonth();
-            return (year < currentYear || month < currentMonth);
-        },
-
         _todayX: function() {
             return (new Date()).getDate() * (this._barWidth() + barPadding) - (barPadding / 2);
         },
 
         _updateUpperLeftRect: function() {
-            if (this._onCurrentMonth(this.year, this.month)) {
-                domAttr.set(this.upperLeftRect, 'height', this._heightForMinutesToWork());
-                domAttr.set(this.upperLeftRect, 'width', this._todayX());
-            } else if (this._onPreviousMonth(this.year, this.month)) {
-                domAttr.set(this.upperLeftRect, 'height', this._heightForMinutesToWork());
-                domAttr.set(this.upperLeftRect, 'width', this._displayWidth());
-            } else {
-                domAttr.set(this.upperLeftRect, 'width', 0);
-            }
+            domAttr.set(this.upperLeftRect, 'height', this._heightForMinutesToWork());
+            domAttr.set(this.upperLeftRect, 'width', this._todayX());
         }
     });
 });
