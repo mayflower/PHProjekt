@@ -30,11 +30,45 @@ define([
     var maxMinutes = 60 * 15,
         barPadding = 2;
 
-    var MinutesBookedBlockRenderer = declare(null, {
+    var GeometryHelper = declare(null, {
+        _svgNode: null,
+        _dayEntries: null,
 
         constructor: function(svgNode, dayEntries) {
             this._dayEntries = dayEntries;
             this._svgNode = svgNode;
+        },
+
+        todayX: function() {
+            return (new Date()).getDate() * (this.barWidth() + barPadding) - (barPadding / 2);
+        },
+
+        barWidth: function() {
+            return (this.displayWidth() / this._dayEntries.length) - barPadding;
+        },
+
+        displayWidth: function() {
+            return domAttr.get(this._svgNode, 'width') - 40;
+        },
+
+        heightPerMinute: function() {
+            return this.heightForTimebars() / maxMinutes;
+        },
+
+        heightForTimebars: function() {
+            return domAttr.get(this._svgNode, 'height');
+        }
+    });
+
+    var MinutesBookedBlockRenderer = declare(null, {
+        _svgNode: null,
+        _dayEntries: null,
+        _helper: null,
+
+        constructor: function(svgNode, dayEntries) {
+            this._dayEntries = dayEntries;
+            this._svgNode = svgNode;
+            this._helper = new GeometryHelper(svgNode, dayEntries);
         },
 
         render: function() {
@@ -43,61 +77,44 @@ define([
 
             svgData.enter()
                 .append('svg:rect')
-                    .attr('fill', this._helpers.fill)
+                    .attr('fill', lang.hitch(this, this._fill))
                     .attr('x', lang.hitch(this, this._x))
                     .attr('y', lang.hitch(this, this._y))
-                    .attr('width', lang.hitch(this, this._barWidth))
+                    .attr('width', lang.hitch(this._helper, this._helper.barWidth))
                     .attr('height', lang.hitch(this, this._height))
-                    .append('svg:title').text(this._helpers.titleText);
+                    .append('svg:title')
+                        .text(lang.hitch(this, this._titleText));
         },
 
         _x: function(d, i) {
-            return i * (barPadding + this._barWidth());
+            return i * (barPadding + this._helper.barWidth());
         },
 
         _height: function(d) {
-            return Math.max(2, this._heightPerMinute() * d.minutesBooked);
-        },
-
-        _displayWidth: function() {
-            return domAttr.get(this._svgNode, 'width') - 40;
+            return Math.max(2, this._helper.heightPerMinute() * d.minutesBooked);
         },
 
         _y: function(d) {
             var x = Math.min(
-                this._heightForTimebars() - 2,
-                this._heightForTimebars() - this._heightPerMinute() * d.minutesBooked
+                this._helper.heightForTimebars() - 2,
+                this._helper.heightForTimebars() - this._helper.heightPerMinute() * d.minutesBooked
             );
             return x;
         },
 
-        _heightForTimebars: function() {
-            return domAttr.get(this._svgNode, 'height');
-        },
-
-        _heightPerMinute: function() {
-            return this._heightForTimebars() / maxMinutes;
-        },
-
-        _barWidth: function() {
-            return (this._displayWidth() / this._dayEntries.length) - barPadding;
-        },
-
-        _helpers: {
-            fill: function(entry) {
-                if (!entry.hasOwnProperty('minutesToWork')) {
-                    return "white";
-                }
-                return entry.minutesBooked < entry.minutesToWork ? '#b5b5b5' : 'white';
-            },
-
-            titleText: function(d) {
-                var date = locale.format(timehelper.dateToJsDate(d.date), {selector: 'date'});
-                if (d.minutesBooked !== 0) {
-                    date += ' (' + timehelper.minutesToHMString(d.minutesBooked) + ')';
-                }
-                return date;
+        _fill: function(entry) {
+            if (!entry.hasOwnProperty('minutesToWork')) {
+                return "white";
             }
+            return entry.minutesBooked < entry.minutesToWork ? '#b5b5b5' : 'white';
+        },
+
+        _titleText: function(d) {
+            var date = locale.format(timehelper.dateToJsDate(d.date), {selector: 'date'});
+            if (d.minutesBooked !== 0) {
+                date += ' (' + timehelper.minutesToHMString(d.minutesBooked) + ')';
+            }
+            return date;
         }
     });
 
