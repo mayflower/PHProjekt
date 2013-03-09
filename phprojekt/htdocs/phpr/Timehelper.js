@@ -45,9 +45,9 @@ define([
 
     exports.dateToJsDate = function(d) {
         return new Date(
-            stripLeadingZero(d.substr(0, 4)),
-            stripLeadingZero(d.substr(5, 2)),
-            stripLeadingZero(d.substr(8, 2))
+            parseInt(d.substr(0, 4), 10),
+            parseInt(d.substr(5, 2), 10) - 1,
+            parseInt(d.substr(8, 2), 10)
         );
     };
 
