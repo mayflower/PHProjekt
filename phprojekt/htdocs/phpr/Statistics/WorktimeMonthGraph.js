@@ -156,6 +156,7 @@ define([
             new MinutesBookedBlockRenderer(this.bookedTimePerDayGraph, entries).render();
 
             this._fillOvertimeLabel();
+            this._renderTodayMarker(new GeometryHelper(this.bookedTimePerDayGraph, entries));
         },
 
         _renderUsingMonthList: function(data) {
@@ -167,6 +168,8 @@ define([
                 });
             });
             new MinutesBookedBlockRenderer(this.bookedTimePerDayGraph, entries).render();
+
+            this._renderTodayMarker(new GeometryHelper(this.bookedTimePerDayGraph, entries));
         },
 
         _fillOvertimeLabel: function() {
@@ -176,6 +179,17 @@ define([
             }), function(err) {
                 api.defaultErrorHandler(err);
             });
+        },
+
+        _renderTodayMarker: function(geometryHelper) {
+            var svg = d3.select(this.bookedTimePerDayGraph);
+
+            svg.append('rect')
+                .attr('x', geometryHelper.todayX() - 1)
+                .attr('width', 2)
+                .attr('y', 0)
+                .attr('height', geometryHelper.heightForTimebars())
+                .attr('fill', '#0d639b');
         },
 
         _updateLabels: function() {
@@ -234,13 +248,6 @@ define([
                     })
                     .attr('y2', greenBarY)
                     .attr('stroke', '#6aa700');
-
-            svg.append('rect')
-                .attr('x', this._todayX() - 1)
-                .attr('width', 2)
-                .attr('y', 0)
-                .attr('height', this._heightForTimebars())
-                .attr('fill', '#0d639b');
         },
 
         // Functions below here assume _days is set
