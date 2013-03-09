@@ -142,13 +142,6 @@ define([
 
                 this._updateUpperLeftRect();
             }));
-
-            timecardModel.getMonthStatistics().then(lang.hitch(this, function(result) {
-                var overtime = result.booked.minutesBooked - result.towork.minutesToWork;
-                this.overtimeLabel.innerHTML = timehelper.minutesToHMString(overtime) + ' Overtime';
-            }), function(err) {
-                api.defaultErrorHandler(err);
-            });
         },
 
         _renderUsingWorkBalance: function(data) {
@@ -161,6 +154,8 @@ define([
                 });
             }
             new MinutesBookedBlockRenderer(this.bookedTimePerDayGraph, entries).render();
+
+            this._fillOvertimeLabel();
         },
 
         _renderUsingMonthList: function(data) {
@@ -172,6 +167,15 @@ define([
                 });
             });
             new MinutesBookedBlockRenderer(this.bookedTimePerDayGraph, entries).render();
+        },
+
+        _fillOvertimeLabel: function() {
+            timecardModel.getMonthStatistics().then(lang.hitch(this, function(result) {
+                var overtime = result.booked.minutesBooked - result.towork.minutesToWork;
+                this.overtimeLabel.innerHTML = timehelper.minutesToHMString(overtime) + ' Overtime';
+            }), function(err) {
+                api.defaultErrorHandler(err);
+            });
         },
 
         _updateLabels: function() {
