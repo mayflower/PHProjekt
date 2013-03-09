@@ -156,11 +156,7 @@ define([
         },
 
         _horizontalY: function(d, i) {
-            var date = timehelper.dateToJsDate(d.date);
-            if (locale.isWeekend(date)) {
-                return this._helper.heightForTimebars();
-            }
-            return this._heightForMinutesToWork();
+            return this._helper.heightForTimebars() - this._helper.heightPerMinute() * d.minutesToWork;
         },
 
         _renderConnectingVerticalLines: function(svgData) {
@@ -186,14 +182,6 @@ define([
                 return this._horizontalY(d, i);
             }
             return this._horizontalY(this._dayEntries[i - 1], i - 1);
-        },
-
-        _heightForMinutesToWork: function() {
-            return this._helper.heightForTimebars() - this._helper.heightPerMinute() * this._minutesToWork();
-        },
-
-        _minutesToWork: function() {
-            return 450;
         }
     });
 
