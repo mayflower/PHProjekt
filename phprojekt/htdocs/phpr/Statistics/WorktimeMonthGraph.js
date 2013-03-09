@@ -127,31 +127,14 @@ define([
 
             this._updateLabels();
 
-            timecardModel.getWorkBalanceByDay().then(lang.hitch(this, function(data) {
-                var entries = [];
-                for (var date in data.workBalancePerDay) {
-                    entries.push({
-                        date: date,
-                        minutesBooked: data.workBalancePerDay[date].minutesBooked,
-                        minutesToWork: data.workBalancePerDay[date].minutesToWork
-                    });
-                }
-                new MinutesBookedBlockRenderer(this.bookedTimePerDayGraph, entries).render();
-            }), lang.hitch(this, function(error) {
-                // fallback rendering, probably no contract
-                api.defaultErrorHandler(error);
-
-                timecardModel.getMonthList().then(lang.hitch(this, function(data) {
-                    var minutesBookedByDay = [];
-                    array.forEach(data.days, function(entry) {
-                        minutesBookedByDay.push({
-                            date: entry.date,
-                            minutesBooked: entry.sumInMinutes
-                        });
-                    });
-                    new MinutesBookedBlockRenderer(this.bookedTimePerDayGraph, minutesBookedByDay).render();
-                }));
-            }));
+            timecardModel.getWorkBalanceByDay().then(
+                lang.hitch(this, this._renderUsingWorkBalance),
+                lang.hitch(this, function(error) {
+                    // fallback rendering, probably no contract
+                    api.defaultErrorHandler(error);
+                    timecardModel.getMonthList().then(lang.hitch(this, this._renderUsingMonthList));
+                })
+            );
 
             timecardModel.getMonthList().then(lang.hitch(this, function(data) {
                 // Still needed for the toWork-line
@@ -166,6 +149,29 @@ define([
             }), function(err) {
                 api.defaultErrorHandler(err);
             });
+        },
+
+        _renderUsingWorkBalance: function(data) {
+            var entries = [];
+            for (var date in data.workBalancePerDay) {
+                entries.push({
+                    date: date,
+                    minutesBooked: data.workBalancePerDay[date].minutesBooked,
+                    minutesToWork: data.workBalancePerDay[date].minutesToWork
+                });
+            }
+            new MinutesBookedBlockRenderer(this.bookedTimePerDayGraph, entries).render();
+        },
+
+        _renderUsingMonthList: function(data) {
+            var entries = [];
+            array.forEach(data.days, function(entry) {
+                entries.push({
+                    date: entry.date,
+                    minutesBooked: entry.sumInMinutes
+                });
+            });
+            new MinutesBookedBlockRenderer(this.bookedTimePerDayGraph, entries).render();
         },
 
         _updateLabels: function() {
