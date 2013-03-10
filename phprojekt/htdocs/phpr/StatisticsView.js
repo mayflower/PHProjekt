@@ -68,27 +68,29 @@ define([
                 displayWidth = domAttr.get(this.bookedTimePerDayGraph, "width"),
                 barPadding = 2,
                 barWidth = (displayWidth - 40) / dataCount - barPadding,
-                greenBarY = heightForTimebars - minutesToWork * heightPerMinute,
+                heightForMinutesToWork = heightForTimebars - heightPerMinute * minutesToWork,
                 todayX = (new Date()).getDate() * (barWidth + barPadding) - (barPadding / 2),
                 currentYear = (new Date()).getFullYear(), currentMonth = (new Date()).getMonth(),
                 onCurrentMonth = (this.year == currentYear && this.month == currentMonth),
                 onPreviousMonth = (this.year < currentYear || this.month < currentMonth);
 
+
             if (onCurrentMonth) {
-                domAttr.set(this.upperLeftRect, 'height', greenBarY);
+                domAttr.set(this.upperLeftRect, 'height', heightForMinutesToWork);
                 domAttr.set(this.upperLeftRect, 'width', todayX);
             } else if (onPreviousMonth) {
-                domAttr.set(this.upperLeftRect, 'height', greenBarY);
+                domAttr.set(this.upperLeftRect, 'height', heightForMinutesToWork);
                 domAttr.set(this.upperLeftRect, 'width', displayWidth);
             } else {
                 domAttr.set(this.upperLeftRect, 'width', 0);
             }
 
             var svg = d3.select(this.bookedTimePerDayGraph);
-            var update = svg.selectAll()
-                .data(days).enter().append("svg:rect");
+            var svgData = svg.selectAll().data(days);
 
-            update.attr("fill", function(d) {
+            svgData.enter()
+                .append("svg:rect")
+                    .attr("fill", function(d) {
                         return d.sumInMinutes < minutesToWork ? "#b5b5b5" : "white";
                     })
                     .attr("x", function(d, i) {
@@ -105,13 +107,44 @@ define([
                         .text(function(d) {
                             var date = locale.format(timehelper.dateToJsDate(d.date), {selector: 'date'});
                             return date + ' (' + d.sumInHours + ')';
-
                         });
 
-            svg.append("line")
-                    .attr("x1", 0)
-                    .attr("x2", displayWidth)
+            var greenBarY = function(d, i) {
+                var date = timehelper.dateToJsDate(d.date);
+                if (locale.isWeekend(date)) {
+                    return heightForTimebars;
+                }
+                return heightForMinutesToWork;
+            };
+
+            // horizontal lines
+            svgData.enter()
+                .append("svg:line")
+                    .attr("x1", function(d, i) {
+                        return i * (barPadding + barWidth);
+                    })
+                    .attr("x2", function(d, i) {
+                        return (i + 1) * (barPadding + barWidth);
+                    })
                     .attr("y1", greenBarY)
+                    .attr("y2", greenBarY)
+                    .attr("stroke", "#6aa700");
+
+            // vertical lines
+            svgData.enter()
+                .append("svg:line")
+                    .attr("x1", function(d, i) {
+                        return i * (barPadding + barWidth);
+                    })
+                    .attr("x2", function(d, i) {
+                        return (i) * (barPadding + barWidth);
+                    })
+                    .attr("y1", function(d, i) {
+                        if (i === 0) {
+                            return greenBarY(d, i);
+                        }
+                        return greenBarY(days[i - 1], i - 1);
+                    })
                     .attr("y2", greenBarY)
                     .attr("stroke", "#6aa700");
 
