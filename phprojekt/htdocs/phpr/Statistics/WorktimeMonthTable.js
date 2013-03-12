@@ -43,6 +43,10 @@ define([
             ]];
 
             array.forEach(data.days, function(day, idx) {
+                if (parseInt(day.sumInMinutes, 10) === 0) {
+                    return;
+                }
+
                 var date = timeHelper.dateToJsDate(day.date);
                 d.items.push({
                     id: idx + 1,
