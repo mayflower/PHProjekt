@@ -104,7 +104,7 @@ define([
 
         _fill: function(entry) {
             if (!entry.hasOwnProperty('minutesToWork')) {
-                return "white";
+                return 'white';
             }
             return entry.minutesBooked < entry.minutesToWork ? '#b5b5b5' : 'white';
         },
