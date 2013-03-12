@@ -215,7 +215,7 @@ define([
             renderTimeToWorkLine(this.bookedTimePerDayGraph, entries);
 
             this._fillOvertimeLabel();
-            this._renderTodayMarker(new GeometryHelper(this.bookedTimePerDayGraph, entries));
+            this._renderTodayMarker(this.bookedTimePerDayGraph, entries);
         },
 
         _renderUsingMonthList: function(data) {
@@ -232,7 +232,7 @@ define([
             });
             renderMinutesBookedBlocks(this.bookedTimePerDayGraph, entries);
 
-            this._renderTodayMarker(new GeometryHelper(this.bookedTimePerDayGraph, entries));
+            this._renderTodayMarker(this.bookedTimePerDayGraph, entries);
         },
 
         _fillOvertimeLabel: function() {
@@ -248,14 +248,15 @@ define([
             });
         },
 
-        _renderTodayMarker: function(geometryHelper) {
-            var svg = d3.select(this.bookedTimePerDayGraph);
+        _renderTodayMarker: function(domNode, entries) {
+            var svg = d3.select(this.bookedTimePerDayGraph),
+                helper = new GeometryHelper(domNode, entries);
 
             svg.append('rect')
-                .attr('x', geometryHelper.todayX() - 1)
+                .attr('x', helper.todayX() - 1)
                 .attr('width', 2)
                 .attr('y', 0)
-                .attr('height', geometryHelper.heightForTimebars())
+                .attr('height', helper.heightForTimebars())
                 .attr('fill', '#0d639b');
         },
 
