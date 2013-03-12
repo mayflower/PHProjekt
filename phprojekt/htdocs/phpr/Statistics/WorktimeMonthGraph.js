@@ -112,72 +112,68 @@ define([
         };
     })();
 
-    var TimeToWorkRenderer = declare(null, {
-        _svgNode: null,
-        _dayEntries: null,
-        _helper: null,
+    var renderTimeToWorkLine = (function() {
+        var dayEntries,
+            helper;
 
-        constructor: function(svgNode, dayEntries) {
-            this._svgNode = svgNode;
-            this._dayEntries = dayEntries;
-            this._helper = new GeometryHelper(svgNode, dayEntries);
-        },
-
-        render: function() {
-            var svg = d3.select(this._svgNode);
-            var svgData = svg.selectAll().data(this._dayEntries);
-
-            this._renderHorizontalLines(svgData);
-            this._renderConnectingVerticalLines(svgData);
-        },
-
-        _renderHorizontalLines: function(svgData) {
+        var renderHorizontalLines = function(svgData) {
             svgData.enter()
                 .append('svg:line')
-                    .attr('x1', lang.hitch(this, this._horizontalX1))
-                    .attr('x2', lang.hitch(this, this._horizontalX2))
-                    .attr('y1', lang.hitch(this, this._horizontalY))
-                    .attr('y2', lang.hitch(this, this._horizontalY))
+                    .attr('x1', horizontalX1)
+                    .attr('x2', horizontalX2)
+                    .attr('y1', horizontalY)
+                    .attr('y2', horizontalY)
                     .attr('stroke', '#6aa700');
-        },
+        };
 
-        _horizontalX1: function(d, i) {
-            return i * (barPadding + this._helper.barWidth());
-        },
+        var horizontalX1 = function(d, i) {
+            return i * (barPadding + helper.barWidth());
+        };
 
-        _horizontalX2: function(d, i) {
-            return (i + 1) * (barPadding + this._helper.barWidth());
-        },
+        var horizontalX2 = function(d, i) {
+            return (i + 1) * (barPadding + helper.barWidth());
+        };
 
-        _horizontalY: function(d, i) {
-            return this._helper.heightForTimebars() - this._helper.heightPerMinute() * d.minutesToWork;
-        },
+        var horizontalY = function(d, i) {
+            return helper.heightForTimebars() - helper.heightPerMinute() * d.minutesToWork;
+        };
 
-        _renderConnectingVerticalLines: function(svgData) {
+        var renderConnectingVerticalLines = function(svgData) {
             svgData.enter()
                 .append('svg:line')
-                    .attr('x1', lang.hitch(this, this._verticalX1))
-                    .attr('x2', lang.hitch(this, this._verticalX2))
-                    .attr('y1', lang.hitch(this, this._verticalY1))
-                    .attr('y2', lang.hitch(this, this._horizontalY))
+                    .attr('x1', verticalX1)
+                    .attr('x2', verticalX2)
+                    .attr('y1', verticalY1)
+                    .attr('y2', horizontalY)
                     .attr('stroke', '#6aa700');
-        },
+        };
 
-        _verticalX1: function(d, i) {
-            return i * (barPadding + this._helper.barWidth());
-        },
+        var verticalX1 = function(d, i) {
+            return i * (barPadding + helper.barWidth());
+        };
 
-        _verticalX2: function(d, i) {
-            return (i) * (barPadding + this._helper.barWidth());
-        },
+        var verticalX2 = function(d, i) {
+            return (i) * (barPadding + helper.barWidth());
+        };
 
-        _verticalY1: function(d, i) {
+        var verticalY1 = function(d, i) {
             if (i === 0) {
-                return this._horizontalY(d, i);
+                return horizontalY(d, i);
             }
-            return this._horizontalY(this._dayEntries[i - 1], i - 1);
-        }
-    });
+            return horizontalY(dayEntries[i - 1], i - 1);
+        };
+
+        return function(svgNode, dayEntriesList) {
+            dayEntries = dayEntriesList;
+            helper = new GeometryHelper(svgNode, dayEntries);
+
+            var svg = d3.select(svgNode);
+            var svgData = svg.selectAll().data(dayEntries);
+
+            renderHorizontalLines(svgData);
+            renderConnectingVerticalLines(svgData);
+        };
+    })();
 
     return declare([Widget, Templated], {
         templateString: templateString,
@@ -216,7 +212,7 @@ define([
                 });
             }
             renderMinutesBookedBlocks(this.bookedTimePerDayGraph, entries);
-            new TimeToWorkRenderer(this.bookedTimePerDayGraph, entries).render();
+            renderTimeToWorkLine(this.bookedTimePerDayGraph, entries);
 
             this._fillOvertimeLabel();
             this._renderTodayMarker(new GeometryHelper(this.bookedTimePerDayGraph, entries));
