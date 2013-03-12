@@ -192,6 +192,10 @@ define([
         buildRendering: function() {
             this.inherited(arguments);
 
+            if (this._destroyed === true) {
+                return;
+            }
+
             this._updateLabels();
 
             timecardModel.getWorkBalanceByDay().then(
@@ -205,6 +209,10 @@ define([
         },
 
         _renderUsingWorkBalance: function(data) {
+            if (this._destroyed === true) {
+                return;
+            }
+
             var entries = [];
             for (var date in data.workBalancePerDay) {
                 entries.push({
@@ -221,6 +229,10 @@ define([
         },
 
         _renderUsingMonthList: function(data) {
+            if (this._destroyed === true) {
+                return;
+            }
+
             var entries = [];
             array.forEach(data.days, function(entry) {
                 entries.push({
@@ -235,6 +247,10 @@ define([
 
         _fillOvertimeLabel: function() {
             timecardModel.getMonthStatistics().then(lang.hitch(this, function(result) {
+                if (this._destroyed === true) {
+                    return;
+                }
+
                 var overtime = result.booked.minutesBooked - result.towork.minutesToWork;
                 this.overtimeLabel.innerHTML = timehelper.minutesToHMString(overtime) + ' Overtime';
             }), function(err) {
