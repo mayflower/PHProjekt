@@ -60,63 +60,57 @@ define([
         }
     });
 
-    var MinutesBookedBlockRenderer = declare(null, {
-        _svgNode: null,
-        _dayEntries: null,
-        _helper: null,
+    var renderMinutesBookedBlocks = (function() {
+        var helper;
 
-        constructor: function(svgNode, dayEntries) {
-            this._dayEntries = dayEntries;
-            this._svgNode = svgNode;
-            this._helper = new GeometryHelper(svgNode, dayEntries);
-        },
+        var x = function(d, i) {
+            return i * (barPadding + helper.barWidth());
+        };
 
-        render: function() {
-            var svg = d3.select(this._svgNode);
-            var svgData = svg.selectAll().data(this._dayEntries);
+        var height = function(d) {
+            return Math.max(2, helper.heightPerMinute() * d.minutesBooked);
+        };
 
-            svgData.enter()
-                .append('svg:rect')
-                    .attr('fill', lang.hitch(this, this._fill))
-                    .attr('x', lang.hitch(this, this._x))
-                    .attr('y', lang.hitch(this, this._y))
-                    .attr('width', lang.hitch(this._helper, this._helper.barWidth))
-                    .attr('height', lang.hitch(this, this._height))
-                    .append('svg:title')
-                        .text(lang.hitch(this, this._titleText));
-        },
-
-        _x: function(d, i) {
-            return i * (barPadding + this._helper.barWidth());
-        },
-
-        _height: function(d) {
-            return Math.max(2, this._helper.heightPerMinute() * d.minutesBooked);
-        },
-
-        _y: function(d) {
+        var y = function(d) {
             var x = Math.min(
-                this._helper.heightForTimebars() - 2,
-                this._helper.heightForTimebars() - this._helper.heightPerMinute() * d.minutesBooked
+                helper.heightForTimebars() - 2,
+                helper.heightForTimebars() - helper.heightPerMinute() * d.minutesBooked
             );
             return x;
-        },
+        };
 
-        _fill: function(entry) {
+        var fill = function(entry) {
             if (!entry.hasOwnProperty('minutesToWork')) {
                 return 'white';
             }
             return entry.minutesBooked < entry.minutesToWork ? '#b5b5b5' : 'white';
-        },
+        };
 
-        _titleText: function(d) {
+        var titleText = function(d) {
             var date = locale.format(timehelper.dateToJsDate(d.date), {selector: 'date'});
             if (d.minutesBooked !== 0) {
                 date += ' (' + timehelper.minutesToHMString(d.minutesBooked) + ')';
             }
             return date;
-        }
-    });
+        };
+
+        return function(svgNode, dayEntries) {
+            helper = new GeometryHelper(svgNode, dayEntries);
+
+            var svg = d3.select(svgNode),
+                svgData = svg.selectAll().data(dayEntries);
+
+            svgData.enter()
+                .append('svg:rect')
+                    .attr('fill', fill)
+                    .attr('x', x)
+                    .attr('y', y)
+                    .attr('width', lang.hitch(helper, helper.barWidth))
+                    .attr('height', height)
+                    .append('svg:title')
+                        .text(titleText);
+        };
+    })();
 
     var TimeToWorkRenderer = declare(null, {
         _svgNode: null,
@@ -221,7 +215,7 @@ define([
                     minutesToWork: data.workBalancePerDay[date].minutesToWork
                 });
             }
-            new MinutesBookedBlockRenderer(this.bookedTimePerDayGraph, entries).render();
+            renderMinutesBookedBlocks(this.bookedTimePerDayGraph, entries);
             new TimeToWorkRenderer(this.bookedTimePerDayGraph, entries).render();
 
             this._fillOvertimeLabel();
@@ -240,7 +234,7 @@ define([
                     minutesBooked: entry.sumInMinutes
                 });
             });
-            new MinutesBookedBlockRenderer(this.bookedTimePerDayGraph, entries).render();
+            renderMinutesBookedBlocks(this.bookedTimePerDayGraph, entries);
 
             this._renderTodayMarker(new GeometryHelper(this.bookedTimePerDayGraph, entries));
         },
