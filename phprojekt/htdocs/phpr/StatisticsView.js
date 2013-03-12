@@ -1,6 +1,7 @@
 define([
     'dojo/_base/declare',
     'dojo/_base/lang',
+    'dojo/dom-class',
     'dijit/_Widget',
     'dijit/_TemplatedMixin',
     'dijit/_WidgetsInTemplateMixin',
@@ -11,6 +12,7 @@ define([
 ], function(
     declare,
     lang,
+    clazz,
     Widget,
     Templated,
     WidgetsInTemplate,
@@ -25,15 +27,20 @@ define([
 
         buildRendering: function() {
             this.inherited(arguments);
-            this.own(on(this.monthViewToggle, 'click', lang.hitch(this, '_onMonthViewToggle')));
+            this.own(on(this.monthViewGraphBtn, 'click', lang.hitch(this, '_onMonthViewGraph')));
+            this.own(on(this.monthViewTableBtn, 'click', lang.hitch(this, '_onMonthViewTable')));
         },
 
-        _onMonthViewToggle: function() {
-            if (this.monthViewState === 'graph') {
-                this._setMonthTable();
-            } else {
-                this._setMonthGraph();
-            }
+        _onMonthViewGraph: function() {
+            clazz.remove(this.monthViewTableBtn, 'active');
+            clazz.add(this.monthViewGraphBtn, 'active');
+            this._setMonthGraph();
+        },
+
+        _onMonthViewTable: function() {
+            clazz.add(this.monthViewTableBtn, 'active');
+            clazz.remove(this.monthViewGraphBtn, 'active');
+            this._setMonthTable();
         },
 
         _setMonthTable: function() {
