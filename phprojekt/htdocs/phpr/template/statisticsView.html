@@ -3,14 +3,8 @@
     <h1>Diesen Monat</h1>
     <h2>Gearbeitete Zeit</h2>
     <p>Die Anzahl der Stunden pro Tag und die erwartete Stundenanzahl</p>
-    <div class="thisMonthDiagram">
-        <svg height="72" width="834" data-dojo-attach-point="bookedTimePerDayGraph">
-            <rect class="background" height="72" width="834"/>
-            <rect class="upperLeftRect" data-dojo-attach-point="upperLeftRect"/>
-        </svg>
-        <span class="firstDayLabel" data-dojo-attach-point="firstDayLabel"></span>
-        <span class="lastDayLabel" data-dojo-attach-point="lastDayLabel"></span>
-        <div class="overtimeLabel" data-dojo-attach-point="overtimeLabel"></div>
+    <div data-dojo-type="dijit/layout/ContentPane" data-dojo-attach-point="monthContainer">
+        <div data-dojo-type="phpr/Statistics/WorktimeMonthGraph"></div>
     </div>
 
     <img class="buttons" src="../../../img/timecard/statistics_stub_buttons.png">
