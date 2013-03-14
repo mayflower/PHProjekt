@@ -31,7 +31,7 @@ class Project_Migration extends Phprojekt_Migration_Abstract
      */
     public function getCurrentModuleVersion()
     {
-        return '6.2.1';
+        return '6.3.0';
     }
 
     public function afterVersionStep($oldVersion, $newVersion)
