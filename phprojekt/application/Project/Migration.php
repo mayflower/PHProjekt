@@ -69,25 +69,23 @@ HERE
     {
         $this->_db = $db;
 
-        if (is_null($currentVersion) || Phprojekt::compareVersion($currentVersion, '6.1.4') < 0) {
-            $obj =& $this;
-            $before = function ($oldVersion, $newVersion) use ($obj) {
-                $obj->beforeVersionStep($oldVersion, $newVersion);
-            };
-            $after = function ($oldVersion, $newVersion) use ($obj) {
-                $obj->afterVersionStep($oldVersion, $newVersion);
-            };
+        $obj =& $this;
+        $before = function ($oldVersion, $newVersion) use ($obj) {
+            $obj->beforeVersionStep($oldVersion, $newVersion);
+        };
+        $after = function ($oldVersion, $newVersion) use ($obj) {
+            $obj->afterVersionStep($oldVersion, $newVersion);
+        };
 
-            $dbParser = new Phprojekt_DbParser(
-                array('useExtraData' => false),
-                Phprojekt::getInstance()->getDb()
-            );
-            $dbParser->parseSingleModuleData('Project', null, array('before' => $before, 'after' => $after));
+        $dbParser = new Phprojekt_DbParser(
+            array('useExtraData' => false),
+            Phprojekt::getInstance()->getDb()
+        );
+        $dbParser->parseSingleModuleData('Project', null, array('before' => $before, 'after' => $after));
 
-            Phprojekt::getInstance()->getCache()->clean(
-                Zend_Cache::CLEANING_MODE_ALL
-            );
-        }
+        Phprojekt::getInstance()->getCache()->clean(
+            Zend_Cache::CLEANING_MODE_ALL
+        );
 
         if (is_null($currentVersion) || Phprojekt::compareVersion($currentVersion, '6.2.1') < 0) {
             $this->repairUserRightsOnRoot();
