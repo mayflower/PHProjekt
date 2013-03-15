@@ -1,3 +1,28 @@
+.statisticsView .buttons-outer {
+    list-style: none;
+    float: right;
+    margin-top: 19px;
+    margin-bottom: 17px;
+    margin-right: 4px;
+}
+
+.statisticsView .buttons-outer>li {
+    float: left;
+    line-height: 8px;
+}
+
+.statisticsView .buttons-outer>li>img {
+    height: 12px;
+    width: 17px;
+    margin: 3px 4px 3px 4px;
+}
+
+.statisticsView .buttons-outer>li:hover,
+.statisticsView .buttons-outer>li.active {
+    background-color: #353535;
+}
+
+
 .statisticsView .buttons {
     float: right;
     height: 22px;
