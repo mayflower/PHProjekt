@@ -77,6 +77,7 @@ return array(
     ),
     'timecard' => array(
         "//dojo2/release/timecard/dijit/themes/claro/claro.css",
+        "//dojo2/release/timecard/dojox/grid/resources/claroGrid.css",
         "//dojo2/release/timecard/dojo/resources/dojo.css",
         "//css/themes/timecard/baseLayout.css",
         "//css/themes/timecard/basicHtml.css",
@@ -88,6 +89,7 @@ return array(
         "//css/themes/timecard/menubar.css",
         "//css/themes/timecard/scrollbar.css",
         "//css/themes/timecard/statistics.css",
-        "//css/themes/timecard/statistics/thisMonthDiagram.css"
+        "//css/themes/timecard/statistics/thisMonthDiagram.css",
+        "//css/themes/timecard/statistics/thisMonthTable.css"
     )
 );
