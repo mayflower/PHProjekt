@@ -63,36 +63,36 @@ define([
     var renderMinutesBookedBlocks = (function() {
         var helper;
 
-        var x = function(d, i) {
+        function x(d, i) {
             return i * (barPadding + helper.barWidth());
-        };
+        }
 
-        var height = function(d) {
+        function height(d) {
             return Math.max(2, helper.heightPerMinute() * d.minutesBooked);
-        };
+        }
 
-        var y = function(d) {
+        function y(d) {
             var x = Math.min(
                 helper.heightForTimebars() - 2,
                 helper.heightForTimebars() - helper.heightPerMinute() * d.minutesBooked
             );
             return x;
-        };
+        }
 
-        var fill = function(entry) {
+        function fill(entry) {
             if (!entry.hasOwnProperty('minutesToWork')) {
                 return 'white';
             }
             return entry.minutesBooked < entry.minutesToWork ? '#b5b5b5' : 'white';
-        };
+        }
 
-        var titleText = function(d) {
+        function titleText(d) {
             var date = locale.format(timehelper.dateToJsDate(d.date), {selector: 'date'});
             if (d.minutesBooked !== 0) {
                 date += ' (' + timehelper.minutesToHMString(d.minutesBooked) + ')';
             }
             return date;
-        };
+        }
 
         return function(svgNode, dayEntries) {
             helper = new GeometryHelper(svgNode, dayEntries);
@@ -116,7 +116,7 @@ define([
         var dayEntries,
             helper;
 
-        var renderHorizontalLines = function(svgData) {
+        function renderHorizontalLines(svgData) {
             svgData.enter()
                 .append('svg:line')
                     .attr('x1', horizontalX1)
@@ -124,21 +124,21 @@ define([
                     .attr('y1', horizontalY)
                     .attr('y2', horizontalY)
                     .attr('stroke', '#6aa700');
-        };
+        }
 
-        var horizontalX1 = function(d, i) {
+        function horizontalX1(d, i) {
             return i * (barPadding + helper.barWidth());
-        };
+        }
 
-        var horizontalX2 = function(d, i) {
+        function horizontalX2(d, i) {
             return (i + 1) * (barPadding + helper.barWidth());
-        };
+        }
 
-        var horizontalY = function(d, i) {
+        function horizontalY(d, i) {
             return helper.heightForTimebars() - helper.heightPerMinute() * d.minutesToWork;
-        };
+        }
 
-        var renderConnectingVerticalLines = function(svgData) {
+        function renderConnectingVerticalLines(svgData) {
             svgData.enter()
                 .append('svg:line')
                     .attr('x1', verticalX1)
@@ -146,22 +146,22 @@ define([
                     .attr('y1', verticalY1)
                     .attr('y2', horizontalY)
                     .attr('stroke', '#6aa700');
-        };
+        }
 
-        var verticalX1 = function(d, i) {
+        function verticalX1(d, i) {
             return i * (barPadding + helper.barWidth());
-        };
+        }
 
-        var verticalX2 = function(d, i) {
+        function verticalX2(d, i) {
             return i * (barPadding + helper.barWidth());
-        };
+        }
 
-        var verticalY1 = function(d, i) {
+        function verticalY1(d, i) {
             if (i === 0) {
                 return horizontalY(d, i);
             }
             return horizontalY(dayEntries[i - 1], i - 1);
-        };
+        }
 
         return function(svgNode, dayEntriesList) {
             dayEntries = dayEntriesList;
