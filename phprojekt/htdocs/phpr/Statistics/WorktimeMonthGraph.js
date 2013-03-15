@@ -153,7 +153,7 @@ define([
         };
 
         var verticalX2 = function(d, i) {
-            return (i) * (barPadding + helper.barWidth());
+            return i * (barPadding + helper.barWidth());
         };
 
         var verticalY1 = function(d, i) {
