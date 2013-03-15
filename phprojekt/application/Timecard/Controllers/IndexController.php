@@ -432,6 +432,30 @@ class Timecard_IndexController extends IndexController
         echo Zend_Json::encode(array('workBalancePerDay' => $ret));
     }
 
+    public function projectUserMinutesAction()
+    {
+        $startDate  = new DateTime($this->getRequest()->getParam('start'));
+        $endDate    = new DateTime($this->getRequest()->getParam('end'));
+        $userIds    = explode(',', $this->getRequest()->getParam('users', Phprojekt_Auth::getUserId()));
+
+        foreach ($userIds as $id) {
+            if (preg_match('/^[1-90]\+$/', $id)) {
+                throw new Exception('malformed request');
+            }
+        }
+
+        $entries = Phprojekt::getInstance()->getDb()->select()
+            ->from('timecard', array('project_id', 'user_id' => 'owner_id', 'minutes' => 'SUM(minutes)'))
+            ->where('owner_id in (?)', implode(',', $userIds))
+            ->where('DATE(start_datetime) >= ?', $startDate->format('Y-m-d'))
+            ->where('DATE(start_datetime) < ?', $endDate->format('Y-m-d'))
+            ->group(array('project_id', 'owner_id'))
+            ->order('project_id ASC')
+            ->query()->fetchAll();
+
+        echo Zend_Json::encode(array('projectUserMinutes' => $entries));
+    }
+
     private function _yearMonthParamToStartEndDT()
     {
         $year = $this->getRequest()->getParam('year', date('Y'));
