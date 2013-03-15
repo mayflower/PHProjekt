@@ -419,7 +419,7 @@ class Timecard_IndexController extends IndexController
         $ret = array();
         foreach ($minutesToWorkPerDay as $day => $minutesToWork) {
             $minutesBooked = 0;
-            while (!empty($bookings) && $bookings[0]['day'] == $day) {
+            while (!empty($bookings) && $bookings[0]['date'] == $day) {
                 $b = array_shift($bookings);
                 $minutesBooked += $b['minutes'];
             }
