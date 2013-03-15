@@ -60,130 +60,120 @@ define([
         }
     });
 
-    var MinutesBookedBlockRenderer = declare(null, {
-        _svgNode: null,
-        _dayEntries: null,
-        _helper: null,
+    var renderMinutesBookedBlocks = (function() {
+        var helper;
 
-        constructor: function(svgNode, dayEntries) {
-            this._dayEntries = dayEntries;
-            this._svgNode = svgNode;
-            this._helper = new GeometryHelper(svgNode, dayEntries);
-        },
+        function x(d, i) {
+            return i * (barPadding + helper.barWidth());
+        }
 
-        render: function() {
-            var svg = d3.select(this._svgNode);
-            var svgData = svg.selectAll().data(this._dayEntries);
+        function height(d) {
+            return Math.max(2, helper.heightPerMinute() * d.minutesBooked);
+        }
 
-            svgData.enter()
-                .append('svg:rect')
-                    .attr('fill', lang.hitch(this, this._fill))
-                    .attr('x', lang.hitch(this, this._x))
-                    .attr('y', lang.hitch(this, this._y))
-                    .attr('width', lang.hitch(this._helper, this._helper.barWidth))
-                    .attr('height', lang.hitch(this, this._height))
-                    .append('svg:title')
-                        .text(lang.hitch(this, this._titleText));
-        },
-
-        _x: function(d, i) {
-            return i * (barPadding + this._helper.barWidth());
-        },
-
-        _height: function(d) {
-            return Math.max(2, this._helper.heightPerMinute() * d.minutesBooked);
-        },
-
-        _y: function(d) {
+        function y(d) {
             var x = Math.min(
-                this._helper.heightForTimebars() - 2,
-                this._helper.heightForTimebars() - this._helper.heightPerMinute() * d.minutesBooked
+                helper.heightForTimebars() - 2,
+                helper.heightForTimebars() - helper.heightPerMinute() * d.minutesBooked
             );
             return x;
-        },
+        }
 
-        _fill: function(entry) {
+        function fill(entry) {
             if (!entry.hasOwnProperty('minutesToWork')) {
-                return "white";
+                return 'white';
             }
             return entry.minutesBooked < entry.minutesToWork ? '#b5b5b5' : 'white';
-        },
+        }
 
-        _titleText: function(d) {
+        function titleText(d) {
             var date = locale.format(timehelper.dateToJsDate(d.date), {selector: 'date'});
             if (d.minutesBooked !== 0) {
                 date += ' (' + timehelper.minutesToHMString(d.minutesBooked) + ')';
             }
             return date;
         }
-    });
 
-    var TimeToWorkRenderer = declare(null, {
-        _svgNode: null,
-        _dayEntries: null,
-        _helper: null,
+        return function(svgNode, dayEntries) {
+            helper = new GeometryHelper(svgNode, dayEntries);
 
-        constructor: function(svgNode, dayEntries) {
-            this._svgNode = svgNode;
-            this._dayEntries = dayEntries;
-            this._helper = new GeometryHelper(svgNode, dayEntries);
-        },
+            var svg = d3.select(svgNode),
+                svgData = svg.selectAll().data(dayEntries);
 
-        render: function() {
-            var svg = d3.select(this._svgNode);
-            var svgData = svg.selectAll().data(this._dayEntries);
+            svgData.enter()
+                .append('svg:rect')
+                    .attr('fill', fill)
+                    .attr('x', x)
+                    .attr('y', y)
+                    .attr('width', lang.hitch(helper, helper.barWidth))
+                    .attr('height', height)
+                    .append('svg:title')
+                        .text(titleText);
+        };
+    })();
 
-            this._renderHorizontalLines(svgData);
-            this._renderConnectingVerticalLines(svgData);
-        },
+    var renderTimeToWorkLine = (function() {
+        var dayEntries,
+            helper;
 
-        _renderHorizontalLines: function(svgData) {
+        function renderHorizontalLines(svgData) {
             svgData.enter()
                 .append('svg:line')
-                    .attr('x1', lang.hitch(this, this._horizontalX1))
-                    .attr('x2', lang.hitch(this, this._horizontalX2))
-                    .attr('y1', lang.hitch(this, this._horizontalY))
-                    .attr('y2', lang.hitch(this, this._horizontalY))
+                    .attr('x1', horizontalX1)
+                    .attr('x2', horizontalX2)
+                    .attr('y1', horizontalY)
+                    .attr('y2', horizontalY)
                     .attr('stroke', '#6aa700');
-        },
-
-        _horizontalX1: function(d, i) {
-            return i * (barPadding + this._helper.barWidth());
-        },
-
-        _horizontalX2: function(d, i) {
-            return (i + 1) * (barPadding + this._helper.barWidth());
-        },
-
-        _horizontalY: function(d, i) {
-            return this._helper.heightForTimebars() - this._helper.heightPerMinute() * d.minutesToWork;
-        },
-
-        _renderConnectingVerticalLines: function(svgData) {
-            svgData.enter()
-                .append('svg:line')
-                    .attr('x1', lang.hitch(this, this._verticalX1))
-                    .attr('x2', lang.hitch(this, this._verticalX2))
-                    .attr('y1', lang.hitch(this, this._verticalY1))
-                    .attr('y2', lang.hitch(this, this._horizontalY))
-                    .attr('stroke', '#6aa700');
-        },
-
-        _verticalX1: function(d, i) {
-            return i * (barPadding + this._helper.barWidth());
-        },
-
-        _verticalX2: function(d, i) {
-            return (i) * (barPadding + this._helper.barWidth());
-        },
-
-        _verticalY1: function(d, i) {
-            if (i === 0) {
-                return this._horizontalY(d, i);
-            }
-            return this._horizontalY(this._dayEntries[i - 1], i - 1);
         }
-    });
+
+        function horizontalX1(d, i) {
+            return i * (barPadding + helper.barWidth());
+        }
+
+        function horizontalX2(d, i) {
+            return (i + 1) * (barPadding + helper.barWidth());
+        }
+
+        function horizontalY(d, i) {
+            return helper.heightForTimebars() - helper.heightPerMinute() * d.minutesToWork;
+        }
+
+        function renderConnectingVerticalLines(svgData) {
+            svgData.enter()
+                .append('svg:line')
+                    .attr('x1', verticalX1)
+                    .attr('x2', verticalX2)
+                    .attr('y1', verticalY1)
+                    .attr('y2', horizontalY)
+                    .attr('stroke', '#6aa700');
+        }
+
+        function verticalX1(d, i) {
+            return i * (barPadding + helper.barWidth());
+        }
+
+        function verticalX2(d, i) {
+            return i * (barPadding + helper.barWidth());
+        }
+
+        function verticalY1(d, i) {
+            if (i === 0) {
+                return horizontalY(d, i);
+            }
+            return horizontalY(dayEntries[i - 1], i - 1);
+        }
+
+        return function(svgNode, dayEntriesList) {
+            dayEntries = dayEntriesList;
+            helper = new GeometryHelper(svgNode, dayEntries);
+
+            var svg = d3.select(svgNode);
+            var svgData = svg.selectAll().data(dayEntries);
+
+            renderHorizontalLines(svgData);
+            renderConnectingVerticalLines(svgData);
+        };
+    })();
 
     return declare([Widget, Templated], {
         templateString: templateString,
@@ -191,6 +181,10 @@ define([
 
         buildRendering: function() {
             this.inherited(arguments);
+
+            if (this._destroyed === true) {
+                return;
+            }
 
             this._updateLabels();
 
@@ -205,6 +199,10 @@ define([
         },
 
         _renderUsingWorkBalance: function(data) {
+            if (this._destroyed === true) {
+                return;
+            }
+
             var entries = [];
             for (var date in data.workBalancePerDay) {
                 entries.push({
@@ -213,14 +211,18 @@ define([
                     minutesToWork: data.workBalancePerDay[date].minutesToWork
                 });
             }
-            new MinutesBookedBlockRenderer(this.bookedTimePerDayGraph, entries).render();
-            new TimeToWorkRenderer(this.bookedTimePerDayGraph, entries).render();
+            renderMinutesBookedBlocks(this.bookedTimePerDayGraph, entries);
+            renderTimeToWorkLine(this.bookedTimePerDayGraph, entries);
 
             this._fillOvertimeLabel();
-            this._renderTodayMarker(new GeometryHelper(this.bookedTimePerDayGraph, entries));
+            this._renderTodayMarker(this.bookedTimePerDayGraph, entries);
         },
 
         _renderUsingMonthList: function(data) {
+            if (this._destroyed === true) {
+                return;
+            }
+
             var entries = [];
             array.forEach(data.days, function(entry) {
                 entries.push({
@@ -228,13 +230,17 @@ define([
                     minutesBooked: entry.sumInMinutes
                 });
             });
-            new MinutesBookedBlockRenderer(this.bookedTimePerDayGraph, entries).render();
+            renderMinutesBookedBlocks(this.bookedTimePerDayGraph, entries);
 
-            this._renderTodayMarker(new GeometryHelper(this.bookedTimePerDayGraph, entries));
+            this._renderTodayMarker(this.bookedTimePerDayGraph, entries);
         },
 
         _fillOvertimeLabel: function() {
             timecardModel.getMonthStatistics().then(lang.hitch(this, function(result) {
+                if (this._destroyed === true) {
+                    return;
+                }
+
                 var overtime = result.booked.minutesBooked - result.towork.minutesToWork;
                 this.overtimeLabel.innerHTML = timehelper.minutesToHMString(overtime) + ' Overtime';
             }), function(err) {
@@ -242,14 +248,15 @@ define([
             });
         },
 
-        _renderTodayMarker: function(geometryHelper) {
-            var svg = d3.select(this.bookedTimePerDayGraph);
+        _renderTodayMarker: function(domNode, entries) {
+            var svg = d3.select(this.bookedTimePerDayGraph),
+                helper = new GeometryHelper(domNode, entries);
 
             svg.append('rect')
-                .attr('x', geometryHelper.todayX() - 1)
+                .attr('x', helper.todayX() - 1)
                 .attr('width', 2)
                 .attr('y', 0)
-                .attr('height', geometryHelper.heightForTimebars())
+                .attr('height', helper.heightForTimebars())
                 .attr('fill', '#0d639b');
         },
 

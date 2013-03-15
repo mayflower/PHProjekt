@@ -413,9 +413,8 @@ class Timecard_IndexController extends IndexController
             ->where('DATE(start_datetime) >= ?', $start->format('Y-m-d'))
             ->where('DATE(start_datetime) < ?', $end->format('Y-m-d'))
             ->order('date ASC');
-        Phprojekt::getInstance()->getLog()->debug($bookings->assemble());
-        $bookings = $bookings
-            ->query()->fetchAll();
+
+        $bookings = $bookings->query()->fetchAll();
 
         $ret = array();
         foreach ($minutesToWorkPerDay as $day => $minutesToWork) {

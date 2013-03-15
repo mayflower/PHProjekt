@@ -3,7 +3,12 @@ define([
     'dojo/_base/lang',
     'dojo/promise/all',
     'phpr/Api'
-], function(exports, lang, all, api) {
+], function(
+    exports,
+    lang,
+    all,
+    api
+) {
     function monthYearDefaultQuery(params) {
         var now = new Date();
         var year = now.getFullYear();

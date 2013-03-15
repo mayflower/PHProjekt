@@ -60,6 +60,19 @@
     }
 },
 
-"6.2.1": {}
+"6.2.1": {},
+
+"6.3.0": {
+    "structure": {
+        "project": {
+            "delete": {"contact_id": "_ignored_"}
+        }
+    },
+    "initialData": {
+        "database_manager": {
+            "delete": {"_ignored": "table_name = 'project' and table_field = 'contact_id'"}
+        }
+    }
+}
 
 }

@@ -95,19 +95,19 @@ define([
     };
 
     exports.minutesToHMString = function(minutes) {
-        var ret = "";
+        var ret = '';
 
         if (minutes < 0) {
-            ret += "-";
+            ret += '-';
             minutes = Math.abs(minutes);
         }
 
         if (minutes >= 60) {
-            ret += Math.floor(minutes / 60) + "h";
+            ret += Math.floor(minutes / 60) + 'h';
         }
 
         if (minutes < 60 || minutes % 60 !== 0) {
-            ret += minutes % 60 + "m";
+            ret += minutes % 60 + 'm';
         }
 
         return ret;
