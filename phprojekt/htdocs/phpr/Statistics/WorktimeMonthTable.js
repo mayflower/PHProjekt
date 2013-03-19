@@ -28,7 +28,7 @@ define([
         },
 
         _renderData: function(data) {
-            if (this._destoyed) {
+            if (this._destroyed) {
                 return;
             }
 
