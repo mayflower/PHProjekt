@@ -37,7 +37,11 @@ define([
             this.projectDeferred = this.projectDeferred.then(lang.hitch(this, function(results) {
                 var options = [];
 
+                var first = null;
                 var add = function(p) {
+                    if (first === null) {
+                        first = '' + p.id;
+                    }
                     options.push({
                         id: '' + p.id,
                         name: '' + p.id + ' ' + p.title,
@@ -66,6 +70,9 @@ define([
                 });
 
                 this.project.set('store', store);
+                if (first !== null) {
+                    this.project.set('value', first);
+                }
             }));
         },
 
