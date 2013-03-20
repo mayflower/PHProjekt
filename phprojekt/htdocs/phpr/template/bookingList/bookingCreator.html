@@ -1,12 +1,8 @@
 <div class="bookingCreator">
     <div class="bookingForm" data-dojo-attach-point="form" data-dojo-type="dijit/form/Form">
         <select data-dojo-attach-point="project"
-                class="project"
                 name="project"
-                data-dojo-type="dijit/form/FilteringSelect"
-                data-dojo-props="autoComplete: false, labelType: 'html', searchAttr: 'name', labelAttr: 'label',
-                                 queryExpr: '*$\{0\}*'">
-            <option value="1"><span class="projectId">1</span> Unassigned</option>
+                data-dojo-type="phpr/ProjectChooser">
         </select>
         <input type="text"
                name="start"

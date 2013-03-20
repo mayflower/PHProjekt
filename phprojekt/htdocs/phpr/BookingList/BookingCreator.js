@@ -14,10 +14,14 @@ define([
     'phpr/BookingList/BookingBlock',
     'phpr/Api',
     'phpr/Timehelper',
-    'phpr/models/Project',
-    'dojo/text!phpr/template/bookingList/bookingCreator.html'
+    'dojo/text!phpr/template/bookingList/bookingCreator.html',
+    'phpr/ProjectChooser',
+    'dijit/form/Textarea',
+    'dijit/form/ValidationTextBox',
+    'phpr/DateTextBox',
+    'dijit/form/Form'
 ], function(declare, lang, array, on, number, all, topic, json, topic,
-            JsonRest, Memory, Tooltip, BookingBlock, api, time, projects, templateString) {
+            JsonRest, Memory, Tooltip, BookingBlock, api, time, templateString) {
     return declare([BookingBlock], {
         templateString: templateString,
         store: null,
@@ -28,52 +32,6 @@ define([
 
             this.date.set('value', new Date());
             this.own(this.form.on('submit', lang.hitch(this, this._submit)));
-
-            this.projectDeferred = all({
-                recent: projects.getRecentProjects(),
-                projects: projects.getProjects()
-            });
-
-            this.projectDeferred = this.projectDeferred.then(lang.hitch(this, function(results) {
-                var options = [];
-
-                var first = null;
-                var add = function(p) {
-                    if (first === null) {
-                        first = '' + p.id;
-                    }
-                    options.push({
-                        id: '' + p.id,
-                        name: '' + p.id + ' ' + p.title,
-                        label: '<span class="projectId">' + p.id + '</span> ' + p.title
-                    });
-                };
-
-                array.forEach(results.recent, add);
-
-                if (results.recent.length > 0) {
-                    options.push({label: "<hr />"});
-                }
-
-                options.push({
-                    id: '1',
-                    name: '1 Unassigned',
-                    label: '<span class="projectId">1</span> Unassigned'
-                });
-
-                for (var p in results.projects) {
-                    add(results.projects[p]);
-                }
-
-                var store = new Memory({
-                    data: options
-                });
-
-                this.project.set('store', store);
-                if (first !== null) {
-                    this.project.set('value', first);
-                }
-            }));
         },
 
         _setBookingAttr: function(booking) {
@@ -82,9 +40,7 @@ define([
                     number.format(date.getMinutes(), {pattern: '00'});
             };
 
-            this.projectDeferred.then(lang.hitch(this, function() {
-                this.project.set('value', '' + booking.projectId);
-            }));
+            this.project.set('value', '' + booking.projectId);
             var startDatetime = time.datetimeToJsDate(booking.startDatetime);
             this.start.set('value', formatTimeString(startDatetime));
             this.date.set('value', startDatetime);
