@@ -21,14 +21,7 @@ define([
     //templates
     'dojo/text!phpr/template/bookingList.html',
     // only used in templates
-    'phpr/BookingList/BookingCreator',
-    'dijit/form/FilteringSelect',
-    'dijit/form/ValidationTextBox',
-    'dijit/form/Textarea',
-    'dijit/form/Button',
-    'dijit/form/DateTextBox',
-    'dijit/form/Form',
-    'phpr/DateTextBox'
+    'phpr/BookingList/BookingCreator'
 ], function(array, declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, locale, html, json, when, JsonRest,
             Memory, Observable, Cache, date, domConstruct, DayBlock, JsonRestQueryEngine, lang, timehelper,
             bookingListTemplate) {
