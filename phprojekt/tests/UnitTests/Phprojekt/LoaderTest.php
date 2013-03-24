@@ -60,8 +60,8 @@ class Phprojekt_LoaderTest extends DatabaseTest
      */
     public function testGetModelFromObject()
     {
-        $object = new Todo_Models_Todo();
-        $this->assertEquals('Todo', Phprojekt_Loader::getModelFromObject($object));
+        $object = new Project_Models_Project();
+        $this->assertEquals('Project', Phprojekt_Loader::getModelFromObject($object));
     }
 
     /**
@@ -69,8 +69,8 @@ class Phprojekt_LoaderTest extends DatabaseTest
      */
     public function testGetModuleFromObject()
     {
-        $object = new Todo_Models_Todo();
-        $this->assertEquals('Todo', Phprojekt_Loader::getModuleFromObject($object));
+        $object = new Project_Models_Project();
+        $this->assertEquals('Project', Phprojekt_Loader::getModuleFromObject($object));
     }
 
     /**

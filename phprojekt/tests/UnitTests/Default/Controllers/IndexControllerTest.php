@@ -125,7 +125,6 @@ class Phprojekt_IndexController_Test extends FrontInit
         $this->setRequestUrl('Project/index/jsonGetModulesPermission/');
         $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
-        $this->assertContains('"name":"Note","label":"Note","inProject":true,"rights":{"none":false,', $response);
         $this->assertContains('"name":"Project","label":"Project","inProject":true,"rights":{"none":false,', $response);
     }
 
