@@ -18,7 +18,7 @@
  *
  * This class implements an authentication backend for sabredav
  */
-class WebDAV_Helper_Auth extends Sabre_DAV_Auth_Backend_AbstractBasic
+class Calendar2_Helper_Auth extends Sabre_DAV_Auth_Backend_AbstractBasic
 {
     public function validateUserPass($username, $password)
     {
