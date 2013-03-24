@@ -11,4 +11,4 @@ before_script:
     - mysql -u root phprojekt-test-memory < phprojekt/tests/test_database_memory.sql
 
 script:
-    - phprojekt/vendor/bin/phpunit -c phpunit-travis.xml
+    - phprojekt/vendor/phpunit/phpunit/phpunit.php -c phpunit-travis.xml
