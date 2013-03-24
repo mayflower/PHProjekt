@@ -64,7 +64,21 @@ class Project_IndexController_Test extends FrontInit
         $this->setRequestUrl('Project/index/jsonGetModulesProjectRelation/');
         $this->request->setParam('id', 2);
         $response = $this->getResponse();
-        $this->assertContains('"2":{"id":2,"name":"Todo","label":"Todo","inProject":true}', $response);
+        $this->assertEquals(
+            Zend_Json::encode(
+                array(
+                    'data' => array(
+                        1 => array(
+                            'id' => 1,
+                            'name' => 'Project',
+                            'label' => 'Project',
+                            'inProject' => true
+                        )
+                    )
+                )
+            ),
+            $response
+        );
     }
 
     /**
@@ -87,7 +101,7 @@ class Project_IndexController_Test extends FrontInit
         $items = array(2 => array('projectId' => '2'));
         $this->request->setParam('data', $items);
         $this->request->setParam('nodeId', 1);
-        $response = FrontInit::phprJsonToArray($this->getResponse());
+        $response = Zend_Json::decode($this->getResponse());
         $expected = array(
             'type' => 'error',
             'message' => 'ID 2. Parent: The project can not be saved under itself',

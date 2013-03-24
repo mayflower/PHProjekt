@@ -39,7 +39,7 @@ class Phprojekt_TagController_Test extends FrontInit
         $this->request->setParam('id', 1);
         $this->request->setParam('projectId', 1);
         $response = $this->getResponse();
-        $this->assertEquals('{}&&({"type":"success","message":"The Tags were added correctly","id":0})', $response);
+        $this->assertEquals('{"type":"success","message":"The Tags were added correctly","id":0}', $response);
 
         $tag  = new Phprojekt_Tags();
         $tags = $tag->search("test");
@@ -67,7 +67,7 @@ class Phprojekt_TagController_Test extends FrontInit
         $this->request->setParam('id', 1);
         $this->request->setParam('projectId', 1);
         $response = $this->getResponse();
-        $this->assertEquals('{}&&({"type":"success","message":"The Tags were added correctly","id":0})', $response);
+        $this->assertEquals('{"type":"success","message":"The Tags were added correctly","id":0}', $response);
 
         $tag = new Phprojekt_Tags();
         $tags = $tag->search("test awesome");
@@ -121,7 +121,7 @@ class Phprojekt_TagController_Test extends FrontInit
         $this->request->setParam('id', 2);
         $response = $this->getResponse();
 
-        $this->assertEquals('{}&&({"type":"success","message":"The Tags were deleted correctly","id":0})', $response);
+        $this->assertEquals('{"type":"success","message":"The Tags were deleted correctly","id":0}', $response);
 
         $tags = $tag->search("this");
         $this->assertTrue(empty($tags));
@@ -146,7 +146,7 @@ class Phprojekt_TagController_Test extends FrontInit
         $this->setRequestUrl('Default/Tag/jsonGetTagsByModule/');
         $this->request->setParam('moduleName', 'Project');
         $this->request->setParam('id', 2);
-        $response = FrontInit::phprJsonToArray($this->getResponse());
+        $response = Zend_Json::decode($this->getResponse());
 
         $this->assertEquals(array(
             'metadata' => array(
@@ -171,7 +171,7 @@ class Phprojekt_TagController_Test extends FrontInit
     {
         $this->setRequestUrl('Default/Tag/jsonGetTagsByModule/');
         $this->request->setParam('moduleName', 'Project');
-        $response = FrontInit::phprJsonToArray($this->getResponse());
+        $response = Zend_Json::decode($this->getResponse());
 
         $this->assertEquals(array(
             'metadata' => array(

@@ -355,8 +355,7 @@ class Phprojekt_ActiveRecord_AbstractTest extends DatabaseTest
                           'currentStatus'   => 3,
                           'completePercent' => null,
                           'hourlyWageRate'  => "",
-                          'budget'          => "",
-                          'contactId'       => "");
+                          'budget'          => "");
         $this->assertEquals($expected, $project->toArray());
     }
 

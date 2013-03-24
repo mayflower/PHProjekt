@@ -52,7 +52,7 @@ class Calendar2_Caldav_CalendarBackend_Test extends FrontInit
         $response = $this->getResponse();
         $this->assertContains(IndexController::ADD_TRUE_TEXT, $response);
 
-        $response = Zend_Json::decode(substr($response, 5, -1));
+        $response = Zend_Json::decode($response);
         $this->assertArrayHasKey('id', $response);
         $firstId = $response['id'];
 
@@ -79,7 +79,7 @@ class Calendar2_Caldav_CalendarBackend_Test extends FrontInit
         $response = $this->getResponse();
         $this->assertContains(IndexController::EDIT_TRUE_TEXT, $response);
 
-        $response = Zend_Json::decode(substr($response, 5, -1));
+        $response = Zend_Json::decode($response);
         $this->assertArrayHasKey('id', $response);
         $secondId = $response['id'];
 

@@ -34,7 +34,7 @@ class User_IndexController_Test extends FrontInit
     {
         $this->setRequestUrl('Core/user/jsonGetUsers');
         $this->request->setParam('nodeId', 1);
-        $response = FrontInit::phprJsonToArray($this->getResponse());
+        $response = Zend_Json::decode($this->getResponse());
         $expected = array(
             'data' => array(
                 array('id' => 2, 'display' => ', Luise Marie'),

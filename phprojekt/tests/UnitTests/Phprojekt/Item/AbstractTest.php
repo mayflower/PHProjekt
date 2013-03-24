@@ -454,7 +454,7 @@ class Phprojekt_Item_AbstractTest extends DatabaseTest
         $this->assertArrayHasKey('write', $rights[3]);
         $this->assertEquals($rights[3]['write'], true);
 
-        $module = new Todo_Models_Todo(array('db' => $this->sharedFixture));
+        $module = new Project_Models_Project(array('db' => $this->sharedFixture));
         $this->assertEquals(array(), $module->getUsersRights());
     }
 
