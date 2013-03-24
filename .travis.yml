@@ -6,7 +6,7 @@ env:
     - P6_TEST_CONFIG=configuration-travis.php
 before_script:
     - (cd phprojekt && wget http://getcomposer.org/composer.phar)
-    - (cd phprojekt && php composer.phar install --dev)
+    - (cd phprojekt && php composer.phar install)
     - mysql -u root -e 'create database `phprojekt-test-memory`'
     - mysql -u root phprojekt-test-memory < phprojekt/tests/test_database_memory.sql
 
