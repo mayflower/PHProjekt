@@ -2,6 +2,7 @@ language: php
 php:
     - 5.3
     - 5.4
+    - 5.5
 env:
     - P6_TEST_CONFIG=configuration-travis.php
 before_script:
