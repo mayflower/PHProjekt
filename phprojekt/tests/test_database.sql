@@ -16,6 +16,38 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `contract`
+--
+
+DROP TABLE IF EXISTS `contract`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `contract` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `hours_per_week` float NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `user_contract_relation`
+--
+
+DROP TABLE IF EXISTS `user_contract_relation`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `user_contract_relation` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `contract_id` int(11) DEFAULT NULL,
+  `start` date NOT NULL,
+  `end` date DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `calendar2`
 --
 
@@ -90,33 +122,6 @@ CREATE TABLE `configuration` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `contact`
---
-
-DROP TABLE IF EXISTS `contact`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `contact` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `owner_id` int(11) DEFAULT NULL,
-  `project_id` int(11) NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `email` varchar(255) NOT NULL,
-  `company` varchar(255) NOT NULL,
-  `firstphone` varchar(255) NOT NULL,
-  `secondphone` varchar(255) NOT NULL,
-  `mobilephone` varchar(255) NOT NULL,
-  `street` varchar(255) NOT NULL,
-  `city` varchar(255) NOT NULL,
-  `zipcode` varchar(50) NOT NULL,
-  `country` varchar(255) NOT NULL,
-  `comment` text NOT NULL,
-  `private` int(1) DEFAULT '0',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Table structure for table `database_manager`
 --
 
@@ -145,25 +150,6 @@ CREATE TABLE `database_manager` (
   `is_unique` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=73 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `filemanager`
---
-
-DROP TABLE IF EXISTS `filemanager`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `filemanager` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `owner_id` int(11) DEFAULT NULL,
-  `title` varchar(100) NOT NULL,
-  `comments` text,
-  `project_id` int(11) NOT NULL,
-  `files` text NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `title` (`title`, `project_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -218,33 +204,6 @@ CREATE TABLE `groups_user_relation` (
   `user_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `helpdesk`
---
-
-DROP TABLE IF EXISTS `helpdesk`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `helpdesk` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `owner_id` int(11) NOT NULL,
-  `title` varchar(255) NOT NULL,
-  `assigned` int(11) DEFAULT NULL,
-  `date` date DEFAULT NULL,
-  `project_id` int(11) NOT NULL,
-  `priority` int(2) DEFAULT NULL,
-  `attachments` text,
-  `description` text,
-  `status` int(2) DEFAULT NULL,
-  `due_date` date DEFAULT NULL,
-  `author` int(11) DEFAULT NULL,
-  `solved_by` int(11) DEFAULT NULL,
-  `solved_date` date DEFAULT NULL,
-  `contact_id` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -315,53 +274,6 @@ CREATE TABLE `item_rights` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `minutes`
---
-
-DROP TABLE IF EXISTS `minutes`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `minutes` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `owner_id` int(11) DEFAULT NULL,
-  `project_id` int(11) NOT NULL,
-  `title` varchar(255) DEFAULT NULL,
-  `description` text,
-  `meeting_datetime` datetime DEFAULT NULL,
-  `end_time` time DEFAULT NULL,
-  `place` varchar(255) DEFAULT NULL,
-  `moderator` varchar(255) DEFAULT NULL,
-  `participants_invited` text,
-  `participants_attending` text,
-  `participants_excused` text,
-  `item_status` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `minutes_item`
---
-
-DROP TABLE IF EXISTS `minutes_item`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `minutes_item` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `owner_id` int(11) NOT NULL,
-  `project_id` int(11) NOT NULL,
-  `minutes_id` int(11) NOT NULL,
-  `topic_type` int(11) NOT NULL,
-  `sort_order` int(11) NOT NULL,
-  `title` varchar(255) NOT NULL,
-  `comment` text,
-  `topic_date` date DEFAULT NULL,
-  `user_id` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Table structure for table `module`
 --
 
@@ -410,23 +322,6 @@ CREATE TABLE `module_tab_relation` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `note`
---
-
-DROP TABLE IF EXISTS `note`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `note` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `project_id` int(11) NOT NULL,
-  `title` varchar(255) NOT NULL,
-  `comments` text,
-  `owner_id` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Table structure for table `project`
 --
 
@@ -447,7 +342,6 @@ CREATE TABLE `project` (
   `complete_percent` varchar(4) DEFAULT NULL,
   `hourly_wage_rate` varchar(10) DEFAULT NULL,
   `budget` varchar(10) DEFAULT NULL,
-  `contact_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `title` (`title`, `project_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
@@ -619,7 +513,7 @@ CREATE TABLE `tags_modules_items` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `tag_id` int(11) NOT NULL,
   `module_id` int(11) NOT NULL,
-  `item_id` int(11) NOT NULL
+  `item_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -643,43 +537,6 @@ CREATE TABLE `timecard` (
   `item_id` int(11) DEFAULT NULL,
   `uri` varchar(255) NOT NULL,
   `uid` varchar(255) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `todo`
---
-
-DROP TABLE IF EXISTS `todo`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `todo` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `title` varchar(255) NOT NULL,
-  `notes` text,
-  `owner_id` int(11) DEFAULT NULL,
-  `project_id` int(11) NOT NULL,
-  `start_date` date DEFAULT NULL,
-  `end_date` date DEFAULT NULL,
-  `priority` int(11) DEFAULT NULL,
-  `current_status` int(2) NOT NULL DEFAULT '1',
-  `user_id` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `uploaded_unused_files`
---
-
-DROP TABLE IF EXISTS `uploaded_unused_files`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `uploaded_unused_files` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `created` datetime NOT NULL,
-  `hash` varchar(32) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
