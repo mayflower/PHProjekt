@@ -20,8 +20,6 @@ abstract class Phprojekt_RestController extends Zend_Rest_Controller
 {
     public function init()
     {
-        $this->_helper->viewRenderer->setNoRender(true);
-
         $format = $this->getRequest()->getParam('format', null);
         if (empty($format)) {
             $this->getRequest()->setParam('format', 'json');
@@ -36,6 +34,9 @@ abstract class Phprojekt_RestController extends Zend_Rest_Controller
 
     public function preDispatch()
     {
+        if ($this->getRequest()->getActionName() !== 'index') {
+            $this->_helper->viewRenderer->setNoRender(true);
+        }
         $projectId = $this->getRequest()->getParam('projectId', null);
         if (!is_null($projectId)) {
             Phprojekt::setCurrentProjectId($projectId);
@@ -97,9 +98,7 @@ abstract class Phprojekt_RestController extends Zend_Rest_Controller
 
         $end = is_null($end) ? $recordCount : min($end, $recordCount);
         $this->getResponse()->setHeader('Content-Range', "items {$start}-{$end}/{$recordCount}");
-        Phprojekt_CompressedSender::send(
-            Zend_Json::encode(Phprojekt_Model_Converter::convertModels($records))
-        );
+        $this->view->records = Phprojekt_Model_Converter::convertModels($records);
     }
 
     protected function _getSorting()
