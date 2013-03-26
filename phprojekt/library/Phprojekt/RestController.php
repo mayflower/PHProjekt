@@ -21,6 +21,17 @@ abstract class Phprojekt_RestController extends Zend_Rest_Controller
     public function init()
     {
         $this->_helper->viewRenderer->setNoRender(true);
+
+        $format = $this->getRequest()->getParam('format', null);
+        if (empty($format)) {
+            $this->getRequest()->setParam('format', 'json');
+        }
+
+        $contextSwitch = $this->_helper->getHelper('contextSwitch');
+        $contextSwitch
+            ->setAutoJsonSerialization(false)
+            )->addActionContext('index', 'json')
+            ->initContext();
     }
 
     public function preDispatch()
