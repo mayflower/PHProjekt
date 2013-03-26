@@ -28,7 +28,18 @@ abstract class Phprojekt_RestController extends Zend_Rest_Controller
         $contextSwitch = $this->_helper->getHelper('contextSwitch');
         $contextSwitch
             ->setAutoJsonSerialization(false)
-            )->addActionContext('index', 'json')
+            ->addContext(
+                'csv',
+                array(
+                    'suffix' => 'csv',
+                    'headers' => array(
+                        'Content-Type' => 'application/csv',
+                        'Content-Disposition' => 'inline; filename="export-' . date('Ymd_his') . '.csv"',
+                        'Pragma' => 'no-cache',
+                        'Expires' => '0',
+                    )
+                )
+            )->addActionContext('index', array('json', 'csv'))
             ->initContext();
     }
 
