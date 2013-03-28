@@ -18,7 +18,7 @@ define([
     'dojo/text!phpr/template/bookingList/bookingCreator.html',
     'phpr/TimeBox'
 ], function(declare, lang, array, on, number, all, topic, json, topic,
-            JsonRest, Memory, Tooltip, BookingBlock, api, time, projects, templateString) {
+            JsonRest, Memory, Tooltip, BookingBlock, api, timehelper, projects, templateString) {
     return declare([BookingBlock], {
         templateString: templateString,
         store: null,
@@ -79,12 +79,12 @@ define([
             this.projectDeferred.then(lang.hitch(this, function() {
                 this.project.set('value', '' + booking.projectId);
             }));
-            var startDatetime = time.datetimeToJsDate(booking.startDatetime);
+            var startDatetime = timehelper.datetimeToJsDate(booking.startDatetime);
             this.start.set('value', formatTimeString(startDatetime));
             this.date.set('value', startDatetime);
 
             if (booking.endTime) {
-                var endDatetime = time.timeToJsDate(booking.endTime);
+                var endDatetime = timehelper.timeToJsDate(booking.endTime);
                 this.end.set('value', formatTimeString(endDatetime));
             }
 
@@ -186,7 +186,7 @@ define([
             }
 
             if (endTime) {
-                endTime = time.jsDateToIsoTime(endTime) + ':00';
+                endTime = timehelper.jsDateToIsoTime(endTime) + ':00';
             }
             ret.endTime = endTime;
 
@@ -198,7 +198,7 @@ define([
             startDatetime.setHours(startTime.getHours());
             startDatetime.setMinutes(startTime.getMinutes());
 
-            ret.startDatetime = time.jsDateToIsoDatetime(startDatetime) + ':00';
+            ret.startDatetime = timehelper.jsDateToIsoDatetime(startDatetime) + ':00';
 
             ret.notes = data.notes || '';
 
