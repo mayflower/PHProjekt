@@ -15,7 +15,8 @@ define([
     'phpr/Api',
     'phpr/Timehelper',
     'phpr/models/Project',
-    'dojo/text!phpr/template/bookingList/bookingCreator.html'
+    'dojo/text!phpr/template/bookingList/bookingCreator.html',
+    'phpr/TimeBox'
 ], function(declare, lang, array, on, number, all, topic, json, topic,
             JsonRest, Memory, Tooltip, BookingBlock, api, time, projects, templateString) {
     return declare([BookingBlock], {
