@@ -133,24 +133,6 @@ define([
             this.end.validate = this._endValidateFunction(this.end.validate, this.start);
         },
 
-        _getStartRegexp: function() {
-            // both used by dojo to validate the input and to extract the time viaa matchings
-            // see _prepareDataForSend and _inputToTime
-            var hours = '([01]?\\d|2[0123])',
-                minutes = '([01-5]\\d)',
-                separator = '[:\\. ]?';
-            return '(' + hours + separator + minutes + ')';
-        },
-
-        _getEndRegexp: function() {
-            // both used by dojo to validate the input and to extract the time viaa matchings
-            // see _prepareDataForSend and _inputToTime
-            var hours = '([01]?\\d|2[0123])',
-                minutes = '([01-5]\\d)',
-                separator = '[:\\. ]?';
-            return '(' + hours + separator + minutes + ')?';
-        },
-
         _showErrorInWarningIcon: api.errorHandlerForTag('bookingCreator'),
 
         _submit: function(evt) {
@@ -195,8 +177,8 @@ define([
 
         _prepareDataForSend: function(data) {
             var ret = {};
-            var startTime = this._inputToTime(data.start, "^" + this._getStartRegexp() + "$");
-            var endTime = this._inputToTime(data.end, "^" + this._getEndRegexp() + "$");
+            var startTime = timehelper.parseWithTimeRegexp(data.start);
+            var endTime = timehelper.parseWithTimeRegexp(data.end);
 
             if (!startTime) {
                 return false;
@@ -222,19 +204,6 @@ define([
             ret.projectId = data.project || '1';
 
             return ret;
-        },
-
-        _inputToTime: function(input, reg) {
-            if (input.length !== 0) {
-                var matched = input.match(reg);
-                if (matched[2] && matched[3]) {
-                    var date = new Date();
-                    date.setHours(parseInt(matched[2], 10));
-                    date.setMinutes(parseInt(matched[3], 10));
-                    return date;
-                }
-            }
-            return null;
         },
 
         _setDateAttr: function(date) {

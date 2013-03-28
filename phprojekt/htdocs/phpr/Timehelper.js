@@ -120,4 +120,18 @@ define([
 
         return '(' + hours + separator + minutes + ')';
     }();
+
+    exports.parseWithTimeRegexp = function(value) {
+        if (value.length === 0) {
+            return null;
+        }
+
+        var matched = value.match('^' + exports.timeRegexp + '$');
+        if (matched[2] && matched[3]) {
+            var date = new Date();
+            date.setHours(parseInt(matched[2], 10));
+            date.setMinutes(parseInt(matched[3], 10));
+            return date;
+        }
+    };
 });
