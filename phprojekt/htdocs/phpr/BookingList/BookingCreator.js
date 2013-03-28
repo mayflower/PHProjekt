@@ -17,8 +17,25 @@ define([
     'phpr/models/Project',
     'dojo/text!phpr/template/bookingList/bookingCreator.html',
     'phpr/TimeBox'
-], function(declare, lang, array, on, number, all, topic, json, topic,
-            JsonRest, Memory, Tooltip, BookingBlock, api, timehelper, projects, templateString) {
+], function(
+    declare,
+    lang,
+    array,
+    on,
+    number,
+    all,
+    topic,
+    json,
+    topic,
+    JsonRest,
+    Memory,
+    Tooltip,
+    BookingBlock,
+    api,
+    timehelper,
+    projects,
+    templateString
+) {
     return declare([BookingBlock], {
         templateString: templateString,
         store: null,
