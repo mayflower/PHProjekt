@@ -328,14 +328,14 @@
     padding-left: 8px;
 }
 
-.bookingCreator.bookingEditor .submitButton {
+.bookingEditor.bookingCreator .submitButton {
     visibility: hidden;
     height: 0;
     width: 0;
     overflow: hidden;
 }
 
-.bookingCreator .submitButton {
+form .submitButton {
     /*margin: 15px 50px 0px 0;*/
     margin-bottom: 2px;
     line-height: 20px !important;
@@ -350,14 +350,14 @@
     padding: 2px;
 }
 
-.bookingCreater .submitButton:hover {
+form .submitButton:hover {
     -webkit-transition: background-position 0.1s linear;
     -moz-transition: background-position 0.1s linear;
     -o-transition: background-position 0.1s linear;
     transition: background-position 0.1s linear;
 }
 
-.bookingCreator .bookingForm > * {
+.bookingForm > * {
     vertical-align: middle;
     line-height: normal;
 }
@@ -366,10 +366,10 @@
     overflow: hidden !important;
 }
 
-.timecard .bookingCreator .dijitSelect,
-.timecard .bookingCreator .dijitSelect .dijitButtonContents,
-.timecard .bookingCreator .dijitTextBox,
-.timecard .bookingCreator .dijitTextBox .dijitButtonNode {
+.timecard .dijitSelect,
+.timecard .dijitSelect .dijitButtonContents,
+.timecard .dijitTextBox,
+.timecard .dijitTextBox .dijitButtonNode {
     border-radius: 3px;
 }
 
@@ -413,10 +413,22 @@
     width: 5em;
 }
 
-.bookingCreator .date {
+.dijitDateTextBox {
     margin-left: 8px;
     width: 8em;
 }
 .timecard .dijitPlaceHolder {
     font-style: normal
+}
+
+.exportForm .dijit {
+    margin: 8px;
+}
+
+.exportForm {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 460px;
+    padding-left: 120px;
 }
