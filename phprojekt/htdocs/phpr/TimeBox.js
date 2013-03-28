@@ -1,34 +1,27 @@
 define([
     'dojo/_base/declare',
-    'dijit/form/ValidationTextBox'
+    'dijit/form/ValidationTextBox',
+    'phpr/Timehelper'
 ], function(
     declare,
-    ValidationTextBox
+    ValidationTextBox,
+    timehelper
 ) {
-    function pattern(allowEmpty) {
-        var hours = '([01]?\\d|2[0123])',
-            minutes = '([01-5]\\d)',
-            separator = '[:\\. ]?';
-
-        var p = '(' + hours + separator + minutes + ')';
-        if (allowEmpty) {
-            p += '?';
-        }
-
-        return p;
-    }
-
     return declare([ValidationTextBox], {
         allowEmpty: false,
 
         invalidMessage: 'Invalid time format',
 
-        pattern: pattern(false),
+        pattern: timehelper.timeRegexp,
 
         _setAllowEmptyAttr: function(/* boolean */ allowEmpty) {
             this._set('allowEmpty', allowEmpty);
 
-            this.set('pattern', pattern(allowEmpty));
+            var pattern = timehelper.timeRegexp;
+            if (allowEmpty) {
+                pattern += '?';
+            }
+            this.set('pattern', pattern);
         }
     });
 });

@@ -112,4 +112,12 @@ define([
 
         return ret;
     };
+
+    exports.timeRegexp = function() {
+        var hours = '([01]?\\d|2[0123])',
+            minutes = '([01-5]\\d)',
+            separator = '[:\\. ]?';
+
+        return '(' + hours + separator + minutes + ')';
+    }();
 });
