@@ -20,8 +20,24 @@ define([
     'dijit/form/ValidationTextBox',
     'phpr/DateTextBox',
     'dijit/form/Form'
-], function(declare, lang, array, on, number, all, topic, json, topic,
-            JsonRest, Memory, Tooltip, BookingBlock, api, time, templateString) {
+], function(
+    declare,
+    lang,
+    array,
+    on,
+    number,
+    all,
+    topic,
+    json,
+    topic,
+    JsonRest,
+    Memory,
+    Tooltip,
+    BookingBlock,
+    api,
+    time,
+    templateString
+) {
     return declare([BookingBlock], {
         templateString: templateString,
         store: null,
