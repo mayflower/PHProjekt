@@ -53,10 +53,10 @@ define([
 
             if (date.compare(new Date(), this.day, 'date') === 0) {
                 domClass.add(this.header, 'today');
-                this.set('open', true);
-            } else {
-                this.set('open', open);
+                open = true;
             }
+
+            this.set('open', open);
 
             on(this.header, 'click', lang.hitch(this, function() {
                 domClass.toggle(this.domNode, 'open');
