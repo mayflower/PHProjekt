@@ -55,7 +55,6 @@ define([
                 domClass.add(this.header, 'today');
                 this.set('open', true);
             } else {
-                domClass.remove(this.header, 'today');
                 this.set('open', open);
             }
 
