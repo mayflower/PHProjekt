@@ -8,7 +8,8 @@ define([
     'dojo/text!phpr/template/statisticsView.html',
     'dojo/on',
     'phpr/Statistics/WorktimeMonthGraph',
-    'phpr/Statistics/WorktimeMonthTable'
+    'phpr/Statistics/WorktimeMonthTable',
+    'phpr/ProjectChooser'
 ], function(
     declare,
     lang,
