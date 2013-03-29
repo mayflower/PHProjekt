@@ -38,13 +38,11 @@ class Phprojekt_DatabaseManagerTest extends DatabaseTest
 
         $this->_formResult = array(
                         'title','notes','projectId','startDate','endDate',
-                        'priority','currentStatus','completePercent','budget',
-                        'contactId');
+                        'priority','currentStatus','completePercent','budget');
 
         $this->_formLabelResult = array(
                         'Title','Notes','Parent','Start date','End date',
-                        'Priority','Current status','Complete percent','Budget',
-                        'Contact');
+                        'Priority','Current status','Complete percent','Budget');
 
         $this->_listResult = array(
                         'title','startDate','endDate','priority',

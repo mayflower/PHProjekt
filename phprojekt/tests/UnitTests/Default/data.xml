@@ -11,15 +11,11 @@
     <user id="1" username="David"
         firstname="Max" lastname="Mustermann" status="A" admin="1" />
     <module id="1" name="Project" label="Project"
-        save_type="0" version="6.2.1" active="1" />
-    <module id="2" name="Note" label="Note"
-        save_type="0" version="6.0.0" active="1" />
+        save_type="0" version="6.3.0" active="1"/>
     <module id="3" name="Calendar2" label="Calendar" save_type="1"
-        version="6.1.0-dev" active="1"/>
+        version="6.1.0-beta1" active="1"/>
     <module id="4" name="Timecard" label="Timecard" save_type="1"
-        version="6.1.4" active="1"/>
-    <module id="5" name="Filemanager" label="Filemanager" save_type="1"
-        version="6.1.5" active="1"/>
+        version="6.3.0" active="1"/>
     <project_module_permissions
         module_id="1" project_id="1" />
     <project_module_permissions

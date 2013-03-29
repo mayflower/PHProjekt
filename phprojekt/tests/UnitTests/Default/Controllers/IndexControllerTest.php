@@ -125,7 +125,6 @@ class Phprojekt_IndexController_Test extends FrontInit
         $this->setRequestUrl('Project/index/jsonGetModulesPermission/');
         $this->request->setParam('nodeId', 1);
         $response = $this->getResponse();
-        $this->assertContains('"name":"Note","label":"Note","inProject":true,"rights":{"none":false,', $response);
         $this->assertContains('"name":"Project","label":"Project","inProject":true,"rights":{"none":false,', $response);
     }
 
@@ -137,7 +136,7 @@ class Phprojekt_IndexController_Test extends FrontInit
         $this->setRequestUrl('Project/index/jsonGetModulesPermission/');
         $this->request->setParam('nodeId', null);
         $response = $this->getResponse();
-        $this->assertContains('&&({"metadata":[]})', $response);
+        $this->assertContains('{"metadata":[]}', $response);
     }
 
     /**
@@ -255,9 +254,9 @@ class Phprojekt_IndexController_Test extends FrontInit
     {
         $this->setRequestUrl('Project/index/jsonGetExtraActions');
         $response = $this->getResponse();
-        $this->assertContains('{}&&([{"target":1,"action":"jsonDeleteMultiple","label":"Delete","mode":0,'
+        $this->assertContains('[{"target":1,"action":"jsonDeleteMultiple","label":"Delete","mode":0,'
             . '"class":"deleteOption"},{"target":1,"action":"csvExportMultiple","label":"Export","mode":1,'
-            . '"class":"exportOption"}])', $response);
+            . '"class":"exportOption"}]', $response);
     }
 
     /**
@@ -266,7 +265,7 @@ class Phprojekt_IndexController_Test extends FrontInit
     public function testJsonGetConfigurationsAction()
     {
         $this->setRequestUrl('Project/index/jsonGetConfigurations');
-        $response = FrontInit::phprJsonToArray($this->getResponse());
+        $response = Zend_Json::decode($this->getResponse());
         $expected = array(
             array(
                 'name' => 'supportAddress',
@@ -301,7 +300,7 @@ class Phprojekt_IndexController_Test extends FrontInit
     {
         $this->setRequestUrl('Project/index/jsonGetUsersRights/');
         $this->request->setParam('id', 2);
-        $response = FrontInit::phprJsonToArray($this->getResponse());
+        $response = Zend_Json::decode($this->getResponse());
         $expected = array (
             1 => array (
                 'none' => false,

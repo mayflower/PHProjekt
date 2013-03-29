@@ -90,11 +90,6 @@
         form_range="NULL" default_value="NULL" list_position="0" list_align="left"
         list_use_filter="1" alt_position="2" status="1" is_integer="0"
         is_required="0" is_unique="0" />
-    <database_manager table_name='Project' table_field="contact_id" form_tab="1" form_label="Contact"
-        form_type="percentage" form_position="10" form_columns="1" form_regexp="NULL"
-        form_range="NULL" default_value="NULL" list_position="0" list_align="left"
-        list_use_filter="1" alt_position="2" status="1" is_integer="1"
-        is_required="0" is_unique="0" />
     <module_instance id="1" project_id="2" module="Fnord"
         name="Developer Tasks" />
     <module_instance id="2" project_id="2" module="Fnord"

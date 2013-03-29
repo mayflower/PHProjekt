@@ -54,7 +54,7 @@ class Calendar2_IndexController_Test extends FrontInit
         $response = $this->getResponse();
         $this->assertContains(IndexController::ADD_TRUE_TEXT, $response);
 
-        $response = Zend_Json::decode(substr($response, 5, -1));
+        $response = Zend_Json::decode($response, 5, -1);
         $this->assertArrayHasKey('id', $response);
         $id = $response['id'];
 

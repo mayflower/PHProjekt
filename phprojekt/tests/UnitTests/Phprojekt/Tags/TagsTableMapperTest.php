@@ -25,14 +25,6 @@
 /**
  * Tests for Tags
  *
- * @category   PHProjekt
- * @package    UnitTests
- * @subpackage Phprojekt
- * @copyright  Copyright (c) 2012 Mayflower GmbH (http://www.mayflower.de)
- * @license    LGPL v3 (See LICENSE file)
- * @link       http://www.phprojekt.com
- * @since      File available since Release 6.1.4
- * @author     Reno Reckling <reno.reckling@mayflower.de>
  * @group      phprojekt
  * @group      tags
  * @group      phprojekt-tags

@@ -53,7 +53,7 @@ class Timecard_CaldavController extends IndexController
     public function indexAction()
     {
         // Backends
-        $authBackend      = new WebDAV_Helper_Auth();
+        $authBackend      = new Calendar2_Helper_Auth();
         $principalBackend = new Phprojekt_CalDAV_PrincipalBackend();
         $calendarBackend  = new Timecard_CalDAV_CalendarBackend();
 
