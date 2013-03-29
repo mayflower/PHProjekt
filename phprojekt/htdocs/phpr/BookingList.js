@@ -251,8 +251,6 @@ define([
                     e.entry.placed = true;
                     if (index < 2) {
                         w.set('open', true);
-                    } else {
-                        w.set('open', false);
                     }
                 }
             }, this);
