@@ -17,6 +17,7 @@ define([
     return declare([_WidgetBase, _TemplatedMixin], {
         day: null,
         bookings: null,
+        open: false,
 
         // Used when creating new items
         store: null,
