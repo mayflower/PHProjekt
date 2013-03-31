@@ -58,7 +58,8 @@ define([
             var store = new WriteStore({ data: d });
             var grid = new Grid({
                 store: store,
-                structure: layout
+                structure: layout,
+                autoHeight: 15
             });
             this.own(grid);
             grid.placeAt(this.domNode);
