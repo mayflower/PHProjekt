@@ -107,17 +107,9 @@ class Calendar2_IndexController extends IndexController
      */
     public function jsonPeriodListAction()
     {
-        $dateStart = $this->getRequest()->getParam('dateStart');
-        $dateEnd   = $this->getRequest()->getParam('dateEnd');
+        $dateStart = $this->_getDateParam('dateStart');
+        $dateEnd   = $this->_getDateParam('dateEnd');
         $userId    = $this->getRequest()->getParam('userId', (int) Phprojekt_Auth_Proxy::getEffectiveUserId());
-
-        if (!Cleaner::validate('isoDate', $dateStart)) {
-            throw new Zend_Controller_Action_Exception("Invalid dateStart '$dateStart'", 400);
-        }
-
-        if (!Cleaner::validate('isoDate', $dateEnd)) {
-            throw new Zend_Controller_Action_Exception("Invalid dateEnd $dateEnd", 400);
-        }
 
         if (!Cleaner::validate('int', $userId)) {
             throw new Zend_Controller_Action_Exception("Invalid userId '$userId'", 400);
@@ -190,13 +182,10 @@ class Calendar2_IndexController extends IndexController
      */
     public function jsonDayListSelectAction()
     {
-        $date  = $this->getRequest()->getParam('date');
+        $date  = $this->_getDateParam('date');
         $users = $this->getRequest()->getParam('users');
         $users = explode(',', $users);
 
-        if (!Cleaner::validate('isoDate', $date)) {
-            throw new Zend_Controller_Action_Exception("Invalid date '$date'", 400);
-        }
         foreach ($users as $index => $user) {
             if (!Cleaner::validate('int', $user)) {
                 throw new Zend_Controller_Action_Exception("Invalid user '$user'", 400);
