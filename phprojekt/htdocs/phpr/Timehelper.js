@@ -113,13 +113,13 @@ define([
         return ret;
     };
 
-    exports.timeRegexpString = function() {
+    exports.timeRegexpString = (function() {
         var hours = '([01]?\\d|2[0123])',
             minutes = '([01-5]\\d)',
             separator = '[:\\. ]?';
 
         return '(' + hours + separator + minutes + ')';
-    }();
+    })();
 
     exports.parseWithTimeRegexp = function(value) {
         if (value.length === 0) {
