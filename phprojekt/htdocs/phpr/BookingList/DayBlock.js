@@ -3,6 +3,7 @@ define([
     'dojo/_base/lang',
     'dojo/_base/array',
     'dojo/dom-class',
+    'dojo/dom-style',
     'dojo/on',
     'dojo/date',
     'dojo/date/locale',
@@ -12,11 +13,25 @@ define([
     'dijit/_TemplatedMixin',
     'phpr/BookingList/BookingBlockWrapper',
     'dojo/text!phpr/template/bookingList/dayBlock.html'
-], function(declare, lang, array, domClass, on, date, locale, html, timehelper, _WidgetBase, _TemplatedMixin,
-    BookingBlockWrapper, templateString) {
+], function(
+    declare,
+    lang,
+    array,
+    domClass,
+    domStyle,
+    on,
+    date,
+    locale,
+    html,
+    timehelper,
+    _WidgetBase,
+    _TemplatedMixin,
+    BookingBlockWrapper, templateString
+) {
     return declare([_WidgetBase, _TemplatedMixin], {
         day: null,
         bookings: null,
+        open: false,
 
         // Used when creating new items
         store: null,
@@ -52,11 +67,10 @@ define([
 
             if (date.compare(new Date(), this.day, 'date') === 0) {
                 domClass.add(this.header, 'today');
-                this.set('open', true);
-            } else {
-                domClass.remove(this.header, 'today');
-                this.set('open', open);
+                open = true;
             }
+
+            this.set('open', open);
 
             on(this.header, 'click', lang.hitch(this, function() {
                 domClass.toggle(this.domNode, 'open');
@@ -84,15 +98,18 @@ define([
 
         _updateTotalTime: function() {
             var totalMinutes = 0;
+            var unfinished = false;
             array.forEach(this.bookings, function(b) {
-                totalMinutes += parseInt(b.minutes, 10);
+                var minutes = parseInt(b.minutes, 10);
+                if (isNaN(minutes)) {
+                    unfinished = true;
+                    return;
+                }
+                totalMinutes += minutes;
             });
 
-            if (totalMinutes === 0) {
-                this.total.innerHTML = "";
-            } else {
-                html.set(this.total, 'Sum: ' + timehelper.minutesToHMString(totalMinutes));
-            }
+            html.set(this.total, 'Sum: ' + timehelper.minutesToHMString(totalMinutes));
+            domStyle.set(this.total, 'color', unfinished ? 'red' : '');
         }
     });
 });
