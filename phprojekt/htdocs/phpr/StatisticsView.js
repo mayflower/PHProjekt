@@ -65,7 +65,6 @@ define([
             if (evt) {
                 evt.stopPropagation();
             }
-            debugger;
 
             if (this.exportForm.validate()) {
                 var url = 'index.php/Timecard/Timecard/index';
