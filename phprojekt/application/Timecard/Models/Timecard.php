@@ -587,7 +587,7 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
                 array('u' => 'user'),
                 't.owner_id = u.id',
                 array('user' => 'CONCAT(u.firstname, " ", u.lastname)')
-            ) ->where('t.owner_id in (?)', implode(',', $userIds))
+            )->where('t.owner_id in (?)', implode(',', $userIds))
             ->where('DATE(t.start_datetime) >= ?', $startDate->format('Y-m-d'))
             ->where('DATE(t.start_datetime) < ?', $endDate->format('Y-m-d'))
             ->group(array('t.project_id', 't.owner_id'))
