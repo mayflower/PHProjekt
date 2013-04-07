@@ -1282,4 +1282,25 @@ class IndexController extends Zend_Controller_Action
         $this->view->files = $filesForView;
         $this->render('upload');
     }
+
+    /**
+     * Wraps around $this->getRequest()->getParam with validation for Date
+     */
+    protected function _getDateParam($name, $default = null)
+    {
+        return $this->_getRegexpParam('/^\d{4}-\d{2}-\d{2}$/', $name, $default);
+    }
+
+    /**
+     * Calls $this->getRequest()->getParam with the parameters and checks if it matches $regexp.
+     * If not, an exception is thrown
+     */
+    private function _getRegexpParam($regexp, $name, $default = null)
+    {
+        $value = $this->getRequest()->getParam($name, $default);
+        if (preg_match($regexp, $value) !== 1) {
+            throw new Phprojekt_Exception_InvalidParameter($name, $value, $regexp);
+        }
+        return $value;
+    }
 }
