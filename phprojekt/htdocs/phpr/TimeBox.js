@@ -12,12 +12,12 @@ define([
 
         invalidMessage: 'Invalid time format',
 
-        pattern: timehelper.timeRegexp,
+        pattern: timehelper.timeRegexpString,
 
         _setAllowEmptyAttr: function(/* boolean */ allowEmpty) {
             this._set('allowEmpty', allowEmpty);
 
-            var pattern = timehelper.timeRegexp;
+            var pattern = timehelper.timeRegexpString;
             if (allowEmpty) {
                 pattern += '?';
             }

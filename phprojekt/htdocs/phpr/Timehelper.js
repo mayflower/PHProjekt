@@ -113,7 +113,7 @@ define([
         return ret;
     };
 
-    exports.timeRegexp = function() {
+    exports.timeRegexpString = function() {
         var hours = '([01]?\\d|2[0123])',
             minutes = '([01-5]\\d)',
             separator = '[:\\. ]?';
@@ -126,7 +126,7 @@ define([
             return null;
         }
 
-        var matched = value.match('^' + exports.timeRegexp + '$');
+        var matched = value.match('^' + exports.timeRegexpString + '$');
         if (matched[2] && matched[3]) {
             var date = new Date();
             date.setHours(parseInt(matched[2], 10));
