@@ -444,24 +444,7 @@ class Timecard_IndexController extends IndexController
             }
         }
 
-        $entries = Phprojekt::getInstance()->getDb()->select()
-            ->from(
-                array('t' => 'timecard'),
-                array('project_id' => 't.project_id', 'user_id' => 't.owner_id', 'minutes' => 'SUM(t.minutes)')
-            )->join(
-                array('p' => 'project'),
-                't.project_id = p.id',
-                array('project' => 'p.title')
-            )->join(
-                array('u' => 'user'),
-                't.owner_id = u.id',
-                array('user' => 'CONCAT(u.firstname, " ", u.lastname)')
-            ) ->where('t.owner_id in (?)', implode(',', $userIds))
-            ->where('DATE(t.start_datetime) >= ?', $startDate->format('Y-m-d'))
-            ->where('DATE(t.start_datetime) < ?', $endDate->format('Y-m-d'))
-            ->group(array('t.project_id', 't.owner_id'))
-            ->order('t.project_id ASC')
-            ->query()->fetchAll();
+        $entries = Timecard_Models_Timecard::getMinutesForUsersAndProjects($userIds, $startDate, $endDate);
 
         echo Zend_Json::encode(array('projectUserMinutes' => $entries));
     }
