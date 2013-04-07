@@ -439,7 +439,7 @@ class Timecard_IndexController extends IndexController
         $userIds    = explode(',', $this->getRequest()->getParam('users', Phprojekt_Auth::getUserId()));
 
         foreach ($userIds as $id) {
-            if (preg_match('/^\d+$/', $id)) {
+            if (preg_match('/^\d+$/', $id) !== 1) {
                 throw new Exception('malformed request');
             }
         }
