@@ -14,7 +14,9 @@ define([
         var year = now.getFullYear();
         var month = now.getMonth() + 1;
 
-        return lang.mixin({ year: year, month: month }, params);
+        var opts = lang.mixin({ year: year, month: month, projects: [] }, params);
+        opts.projects = opts.projects.join(',');
+        return opts;
     }
 
     exports.getMonthStatistics = function(params) {
