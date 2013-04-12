@@ -21,10 +21,15 @@ define([
 ) {
     return declare([Widget], {
         baseClass: 'statisticsMonthGrid',
+        projects: null,
+
+        constructor: function() {
+            this.projects = [];
+        },
 
         buildRendering: function() {
             this.inherited(arguments);
-            Model.getMonthList().then(lang.hitch(this, '_renderData'));
+            Model.getMonthList({ projects: this.projects }).then(lang.hitch(this, '_renderData'));
         },
 
         _renderData: function(data) {

@@ -3,6 +3,7 @@ define([
     'dojo/_base/declare',
     'dojo/_base/array',
     'dojo/dom-attr',
+    'dojo/dom-construct',
     'dojo/date/locale',
     'dojo/promise/all',
     'dijit/_Widget',
@@ -17,6 +18,7 @@ define([
     declare,
     array,
     domAttr,
+    domConstruct,
     locale,
     all,
     Widget,
@@ -178,22 +180,23 @@ define([
     return declare([Widget, Templated], {
         templateString: templateString,
         baseClass: 'thisMonthDiagram',
+        projects: null,
+
+        constructor: function() {
+            this.projects = [];
+        },
 
         buildRendering: function() {
             this.inherited(arguments);
-
-            if (this._destroyed === true) {
-                return;
-            }
-
+            domConstruct.empty(this.bookedTimePerDayGraph);
             this._updateLabels();
 
-            timecardModel.getWorkBalanceByDay().then(
+            timecardModel.getWorkBalanceByDay(this._getModelParams()).then(
                 lang.hitch(this, this._renderUsingWorkBalance),
                 lang.hitch(this, function(error) {
                     // fallback rendering, probably no contract
                     api.defaultErrorHandler(error);
-                    timecardModel.getMonthList().then(lang.hitch(this, this._renderUsingMonthList));
+                    timecardModel.getMonthList(this._getModelParams()).then(lang.hitch(this, this._renderUsingMonthList));
                 })
             );
         },
@@ -236,7 +239,7 @@ define([
         },
 
         _fillOvertimeLabel: function() {
-            timecardModel.getMonthStatistics().then(lang.hitch(this, function(result) {
+            timecardModel.getMonthStatistics(this._getModelParams()).then(lang.hitch(this, function(result) {
                 if (this._destroyed === true) {
                     return;
                 }
@@ -267,6 +270,10 @@ define([
                 last = new Date(thisYear, thisMonth + 1, 0, 0, 0, 0);
             this.firstDayLabel.innerHTML = locale.format(first, {selector: 'date', datePattern: 'EEE d'});
             this.lastDayLabel.innerHTML = locale.format(last, {selector: 'date', datePattern: 'EEE d'});
+        },
+
+        _getModelParams: function() {
+            return { projects: this.projects };
         }
     });
 });
