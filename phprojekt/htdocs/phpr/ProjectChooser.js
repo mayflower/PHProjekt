@@ -6,9 +6,11 @@ define([
     'dojo/store/Memory',
     'dojo/promise/all',
     'dojo/Deferred',
+    'dojo/when',
     'dijit/form/FilteringSelect',
     'phpr/models/Project',
-    'phpr/Api'
+    'phpr/Api',
+    'phpr/SearchQueryEngine'
 ], function(
     declare,
     lang,
@@ -17,9 +19,11 @@ define([
     Memory,
     all,
     Deferred,
+    when,
     FilteringSelect,
     projects,
-    api
+    api,
+    QueryEngine
 ) {
     return declare([FilteringSelect], {
         renderDeferred: null,
@@ -27,7 +31,6 @@ define([
         labelType: 'html',
         searchAttr: 'name',
         labelAttr: 'label',
-        queryExpr: '*${0}*',
 
         createOptions: function(queryResults) {
             var def = new Deferred();
@@ -91,6 +94,7 @@ define([
                 }
 
                 var store = new Memory({
+                    queryEngine: QueryEngine,
                     data: options
                 });
 
@@ -140,6 +144,158 @@ define([
             var item = this.dropDown.items[node.getAttribute('item')];
             if (item.hasOwnProperty(this.searchAttr)) {
                 return true;
+            }
+        },
+
+        _startSearch: function(/*String*/ text) {
+            // summary:
+            //              Starts a search for elements matching text (text=="" means to return all items),
+            //              and calls onSearch(...) when the search completes, to display the results.
+
+            if (!this.dropDown) {
+                var popupId = this.id + "_popup",
+                    dropDownConstructor = lang.isString(this.dropDownClass) ?
+                        lang.getObject(this.dropDownClass, false) : this.dropDownClass;
+                this.dropDown = new dropDownConstructor({
+                    onChange: lang.hitch(this, this._selectOption),
+                    id: popupId,
+                    dir: this.dir,
+                    textDir: this.textDir
+                });
+                this.focusNode.removeAttribute("aria-activedescendant");
+                this.textbox.setAttribute("aria-owns", popupId); // associate popup with textbox
+            }
+            this._lastInput = text; // Store exactly what was entered by the user.
+
+            this._abortQuery();
+            var _this = this,
+                // Setup parameters to be passed to store.query().
+                // Create a new query to prevent accidentally querying for a hidden
+                // value from FilteringSelect's keyField
+                query = lang.clone(this.query), // #5970
+                options = {
+                    start: 0,
+                    count: this.pageSize,
+                    queryOptions: {         // remove for 2.0
+                        ignoreCase: this.ignoreCase,
+                        deep: true
+                    }
+                },
+                q = text,
+                startQuery = function() {
+                    var resPromise = _this._fetchHandle = _this.store.query(query, options);
+                    if (_this.disabled || _this.readOnly || (q !== _this._lastQuery)) {
+                        return;
+                    } // avoid getting unwanted notify
+                    when(resPromise, function(res) {
+                        _this._fetchHandle = null;
+                        if (!_this.disabled && !_this.readOnly && (q === _this._lastQuery)) { // avoid getting unwanted notify
+                            when(resPromise.total, function(total) {
+                                res.total = total;
+                                var pageSize = _this.pageSize;
+                                if (isNaN(pageSize) || pageSize > res.total) { 
+                                    pageSize = res.total; 
+                                }
+                                // Setup method to fetching the next page of results
+                                res.nextPage = function(direction) {
+                                    //      tell callback the direction of the paging so the screen
+                                    //      reader knows which menu option to shout
+                                    options.direction = direction = direction !== false;
+                                    options.count = pageSize;
+                                    if (direction) {
+                                        options.start += res.length;
+                                        if (options.start >= res.total) {
+                                            options.count = 0;
+                                        }
+                                    } else {
+                                        options.start -= pageSize;
+                                        if (options.start < 0) {
+                                            options.count = Math.max(pageSize + options.start, 0);
+                                            options.start = 0;
+                                        }
+                                    }
+                                    if (options.count <= 0) {
+                                        res.length = 0;
+                                        _this.onSearch(res, query, options);
+                                    } else {
+                                        startQuery();
+                                    }
+                                };
+                                _this.onSearch(res, query, options);
+                            });
+                        }
+                    }, function(err) {
+                        _this._fetchHandle = null;
+                        if (!_this._cancelingQuery) {     // don't treat canceled query as an error
+                            console.error(_this.declaredClass + ' ' + err.toString());
+                        }
+                    });
+                };
+
+            lang.mixin(options, this.fetchProperties);
+
+            // set _lastQuery, *then* start the timeout
+            // otherwise, if the user types and the last query returns before the timeout,
+            // _lastQuery won't be set and their input gets rewritten
+            this._lastQuery = query[this.searchAttr] = q;
+            this._queryDeferHandle = this.defer(startQuery, this.searchDelay);
+        },
+
+        _setDisplayedValueAttr: function(/*String*/ label, /*Boolean?*/ priorityChange) {
+            // summary:
+            //              Hook so set('displayedValue', label) works.
+            // description:
+            //              Sets textbox to display label. Also performs reverse lookup
+            //              to set the hidden value.  label should corresponding to item.searchAttr.
+
+            if (label === null) {
+                label = '';
+            }
+
+            // This is called at initialization along with every custom setter.
+            // Usually (or always?) the call can be ignored.   If it needs to be
+            // processed then at least make sure that the XHR request doesn't trigger an onChange()
+            // event, even if it returns after creation has finished
+            if (!this._created) {
+                if (!("displayedValue" in this.params)) {
+                    return;
+                }
+                priorityChange = false;
+            }
+
+            // Do a reverse lookup to map the specified displayedValue to the hidden value.
+            // Note that if there's a custom labelFunc() this code
+            if (this.store) {
+                this.closeDropDown();
+                var query = lang.clone(this.query); // #6196: populate query with user-specifics
+
+                // Generate query
+                var q = this._getDisplayQueryString(label);
+                this._lastQuery = query[this.searchAttr] = q;
+
+                // If the label is not valid, the callback will never set it,
+                // so the last valid value will get the warning textbox.   Set the
+                // textbox value now so that the impending warning will make
+                // sense to the user
+                this.textbox.value = label;
+                this._lastDisplayedValue = label;
+                this._set("displayedValue", label);     // for watch("displayedValue") notification
+                var _this = this;
+                var options = {
+                    ignoreCase: this.ignoreCase,
+                    deep: true
+                };
+                lang.mixin(options, this.fetchProperties);
+                this._fetchHandle = this.store.query(query, options);
+                when(this._fetchHandle, function(result) {
+                    _this._fetchHandle = null;
+                    _this._callbackSetLabel(result || [], query, options, priorityChange);
+                }, function(err) {
+                    _this._fetchHandle = null;
+                    if (!_this._cancelingQuery) {     // don't treat canceled query as an error
+                        console.error('dijit.form.FilteringSelect: ' + err.toString());
+                    }
+                });
             }
         }
     });
