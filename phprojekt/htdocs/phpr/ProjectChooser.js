@@ -5,6 +5,7 @@ define([
     'dojo/dom-class',
     'dojo/store/Memory',
     'dojo/promise/all',
+    'dojo/Deferred',
     'dijit/form/FilteringSelect',
     'phpr/models/Project',
     'phpr/Api'
@@ -15,58 +16,78 @@ define([
     clazz,
     Memory,
     all,
+    Deferred,
     FilteringSelect,
     projects,
     api
 ) {
     return declare([FilteringSelect], {
-        projectDeferred: null,
+        renderDeferred: null,
         autoComplete: false,
         labelType: 'html',
         searchAttr: 'name',
         labelAttr: 'label',
         queryExpr: '*${0}*',
 
-        buildRendering: function() {
-            this.inherited(arguments);
-            this.projectDeferred = all({
-                recent: projects.getRecentProjects(),
-                projects: projects.getProjects()
-            });
+        createOptions: function(queryResults) {
+            var def = new Deferred();
+            var options = [];
+            var this_ = this;
 
-            this.projectDeferred = this.projectDeferred.then(lang.hitch(this, function(results) {
-                if (this._destroyed === true) {
-                    return;
-                }
-
-                var options = [];
-
-                var first = null;
-                var add = function(p) {
-                    if (first === null) {
-                        first = '' + p.id;
-                    }
-                    options.push({
-                        id: '' + p.id,
-                        name: '' + p.id + ' ' + p.title,
-                        label: '<span class="projectId">' + p.id + '</span> ' + p.title
-                    });
+            var first = true;
+            var add = function(p) {
+                var opt = {
+                    id: '' + p.id,
+                    name: '' + p.id + ' ' + p.title,
+                    label: '<span class="projectId">' + p.id + '</span> ' + p.title
                 };
 
-                array.forEach(results.recent, add);
-
-                if (results.recent.length > 0) {
-                    options.push({label: "<hr />"});
+                if (first) {
+                    first = false;
+                    this_.postStoreSet = function() {
+                        this.set('value', '' + p.id);
+                    };
                 }
 
-                options.push({
-                    id: '1',
-                    name: '1 Unassigned',
-                    label: '<span class="projectId">1</span> Unassigned'
-                });
+                options.push(opt);
+            };
 
-                for (var p in results.projects) {
-                    add(results.projects[p]);
+            array.forEach(queryResults.recent, add);
+
+            if (queryResults.recent.length > 0) {
+                options.push({label: '<hr />'});
+            }
+
+            add({
+                id: '1',
+                title: 'Unassigned'
+            });
+
+            for (var p in queryResults.projects) {
+                add(queryResults.projects[p]);
+            }
+
+            def.resolve(options);
+
+            return def;
+        },
+
+        buildRendering: function() {
+            this.inherited(arguments);
+            clazz.add(this.domNode, 'project');
+            this.renderOptions();
+        },
+
+        renderOptions: function() {
+            var def = this.renderDeferred = new Deferred();
+            var projectDeferred = all({
+                recent: projects.getRecentProjects(),
+                projects: projects.getProjects()
+            }).then(
+                lang.hitch(this, this.createOptions)
+            ).then(lang.hitch(this, function(options) {
+                if (this._destroyed === true) {
+                    return;
                 }
 
                 var store = new Memory({
@@ -74,22 +95,26 @@ define([
                 });
 
                 this.set('store', store);
-                if (first !== null && this.get('value') !== '') {
-                    this.set('value', first);
-                }
+                this.postStoreSet();
+                this.renderDeferred = null;
+                def.resolve();
             }));
-            clazz.add(this.domNode, 'project');
         },
 
-        _setValueAttr: function() {
+        postStoreSet: function() {
+        },
+
+        _setCreateOptionsAttr: function() {
             var this_ = this;
             var args = arguments;
-            if (this.projectDeferred) {
-                this.projectDeferred.then(function() {
+            if (this.renderDeferred && this._started === true) {
+                this.renderDeferred.then(function() {
                     this_.inherited(args);
+                    this_.renderOptions();
                 });
-            } else {
+            } else if (this._started === true) {
                 this.inherited(arguments);
+                this_.renderOptions();
             }
         }
     });
