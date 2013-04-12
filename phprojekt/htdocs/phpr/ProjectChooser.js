@@ -116,6 +116,31 @@ define([
                 this.inherited(arguments);
                 this_.renderOptions();
             }
+        },
+
+        _selectOption: function(node) {
+            // this is just a workaround to avoid setting the value if we select a separator
+            if (this._hasSearchAttr(node)) {
+                this.inherited(arguments);
+            }
+        },
+
+        _announceOption: function(node) {
+            // this is just a workaround to avoid setting the value if we select a separator
+            if (this._hasSearchAttr(node)) {
+                this.inherited(arguments);
+            }
+        },
+
+        _hasSearchAttr: function(node) {
+            if (!node) {
+                return false;
+            }
+
+            var item = this.dropDown.items[node.getAttribute('item')];
+            if (item.hasOwnProperty(this.searchAttr)) {
+                return true;
+            }
         }
     });
 });
