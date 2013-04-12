@@ -32,6 +32,14 @@ define([
         searchAttr: 'name',
         labelAttr: 'label',
 
+        constructor: function() {
+            this.connect(this, '_openResultList', function(results) {
+                if (results.length > 0) {
+                    this.dropDown.selectFirstNode();
+                }
+            });
+        },
+
         createOptions: function(queryResults) {
             var def = new Deferred();
             var options = [];
