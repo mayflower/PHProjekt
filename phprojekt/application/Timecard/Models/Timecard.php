@@ -298,7 +298,7 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
      *
      * @return array
      */
-    public function getMonthRecords($year, $month)
+    public function getMonthRecords($year, $month, Array $projects = array())
     {
         $userId = (int) Phprojekt_Auth_Proxy::getEffectiveUserId();
 
@@ -306,8 +306,14 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
         $select->from("timecard")
             ->where("owner_id = ?", $userId)
             ->where("YEAR(start_datetime) = ?", $year)
-            ->where("MONTH(start_datetime) = ?", $month)
-            ->order("start_datetime ASC");
+            ->where("MONTH(start_datetime) = ?", $month);
+
+        if (!empty($projects)) {
+            $select->where('project_id IN (?)', $projects);
+        }
+
+        $select->order("start_datetime ASC");
+
         $records = $select->query()->fetchAll();
 
         // Get all the hours for this month
@@ -549,7 +555,7 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
      * @param int $year The year
      * @param int $month The month
      **/
-    public static function getBookedMinutesInMonth($year, $month)
+    public static function getBookedMinutesInMonth($year, $month, Array $projects = array())
     {
         $table  = new self();
         $select = $table->select()
@@ -557,6 +563,10 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
             ->where('YEAR(start_datetime) = ?', $year)
             ->where('MONTH(start_datetime) = ?', $month)
             ->where('owner_id = ?', Phprojekt_Auth_Proxy::getEffectiveUserId());
+
+        if (!empty($projects)) {
+            $select->where('project_id IN (?)', $projects);
+        }
 
         return (int) $select->query()->fetchColumn();
     }
