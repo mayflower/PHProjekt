@@ -327,10 +327,15 @@ class Timecard_IndexController extends IndexController
      */
     public function minutesBookedAction()
     {
-        $year = (int) $this->getRequest()->getParam('year', date('Y'));
+        $year  = (int) $this->getRequest()->getParam('year', date('Y'));
         $month = (int) $this->getRequest()->getParam('month', date('m'));
 
-        $minutes = Timecard_Models_Timecard::getBookedMinutesInMonth($year, $month);
+        $start = (new DateTime)->setDate($year, $month, 1);
+        $end   = (new DateTime)->setDate($year, $month+1, -1);
+        $start->setTime(0,0,0);
+        $end->setTime(23,59,59);
+
+        $minutes = Timecard_Models_Timecard::getBookedMinutes($start, $end);
 
         Phprojekt_CompressedSender::send(
             Zend_Json::encode(
