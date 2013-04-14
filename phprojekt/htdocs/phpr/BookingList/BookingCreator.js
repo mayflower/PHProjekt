@@ -177,8 +177,8 @@ define([
 
         _prepareDataForSend: function(data) {
             var ret = {};
-            var startTime = timehelper.parseWithTimeRegexp(data.start);
-            var endTime = timehelper.parseWithTimeRegexp(data.end);
+            var startTime = timehelper.parseTime(data.start);
+            var endTime = timehelper.parseTime(data.end);
 
             if (!startTime) {
                 return false;

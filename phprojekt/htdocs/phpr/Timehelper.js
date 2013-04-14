@@ -121,7 +121,7 @@ define([
         return '(' + hours + separator + minutes + ')';
     })();
 
-    exports.parseWithTimeRegexp = function(value) {
+    exports.parseTime = function(value) {
         if (value.length === 0) {
             return null;
         }
