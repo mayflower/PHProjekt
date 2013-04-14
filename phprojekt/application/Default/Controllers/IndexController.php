@@ -1284,22 +1284,15 @@ class IndexController extends Zend_Controller_Action
     }
 
     /**
-     * Wraps around $this->getRequest()->getParam with validation for Date
+     * Retrieves the given parameter and validates it as a date string.
+     *
+     * If it doesn't match, a Phprojekt_Exception_InvalidParameter is thrown.
      */
-    protected function _getDateParam($name, $default = null)
-    {
-        return $this->_getRegexpParam('/^\d{4}-\d{2}-\d{2}$/', $name, $default);
-    }
-
-    /**
-     * Calls $this->getRequest()->getParam with the parameters and checks if it matches $regexp.
-     * If not, an exception is thrown
-     */
-    private function _getRegexpParam($regexp, $name, $default = null)
+    protected function _getDateStringParam($name, $default = null)
     {
         $value = $this->getRequest()->getParam($name, $default);
-        if (preg_match($regexp, $value) !== 1) {
-            throw new Phprojekt_Exception_InvalidParameter($name, $value, $regexp);
+        if (!Cleaner::validate('isoDate', $dateStart)) {
+            throw new Phprojekt_Exception_InvalidParameter($name, $value, 'yyyy-mm-dd');
         }
         return $value;
     }
