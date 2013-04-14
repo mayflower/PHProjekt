@@ -83,7 +83,6 @@ define([
             });
             this.own(grid);
             grid.placeAt(this.domNode);
-            grid.startup();
         }
     });
 });
