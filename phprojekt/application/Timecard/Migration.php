@@ -82,7 +82,7 @@ class Timecard_Migration extends Phprojekt_Migration_Abstract
             Phprojekt::getInstance()->getDB()->query(
                 "DELETE FROM database_manager
                   WHERE table_name = 'Project'
-                   ANDN table_field = 'contact_id'");
+                    AND table_field = 'contact_id'");
         }
     }
 
