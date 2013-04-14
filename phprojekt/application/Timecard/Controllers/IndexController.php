@@ -444,7 +444,7 @@ class Timecard_IndexController extends IndexController
             }
         }
 
-        $entries = Timecard_Models_Timecard::getMinutesForUsersAndProjects($userIds, $startDate, $endDate);
+        $entries = Timecard_Models_Timecard::getProjectMinutesByUsers($userIds, $startDate, $endDate);
 
         echo Zend_Json::encode(array('projectUserMinutes' => $entries));
     }

@@ -573,7 +573,7 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
         }
     }
 
-    public static function getMinutesByUserAndProject($userIds, $startDate, $endDate)
+    public static function getProjectMinutesByUsers($userIds, $startDate, $endDate)
     {
         return Phprojekt::getInstance()->getDb()->select()
             ->from(
