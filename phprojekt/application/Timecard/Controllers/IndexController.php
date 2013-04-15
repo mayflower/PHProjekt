@@ -47,6 +47,7 @@ class Timecard_IndexController extends IndexController
      *
      * The return is in JSON format.
      *
+     * @deprecated
      * @return void
      */
     public function jsonMonthListAction()
