@@ -327,14 +327,7 @@ class Timecard_IndexController extends IndexController
      */
     public function minutesBookedAction()
     {
-        $year  = (int) $this->getRequest()->getParam('year', date('Y'));
-        $month = (int) $this->getRequest()->getParam('month', date('m'));
-
-        $start = (new DateTime)->setDate($year, $month, 1);
-        $end   = (new DateTime)->setDate($year, $month+1, -1);
-        $start->setTime(0,0,0);
-        $end->setTime(23,59,59);
-
+        list($start, $end) = $this->_yearMonthParamToStartEndDT();
         $minutes = Timecard_Models_Timecard::getBookedMinutes($start, $end);
 
         Phprojekt_CompressedSender::send(
