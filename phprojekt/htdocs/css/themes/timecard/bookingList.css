@@ -328,14 +328,14 @@
     padding-left: 8px;
 }
 
-.bookingEditor.bookingCreator .submitButton {
+.bookingEditor.bookingCreator .button {
     visibility: hidden;
     height: 0;
     width: 0;
     overflow: hidden;
 }
 
-form .submitButton {
+form .button {
     /*margin: 15px 50px 0px 0;*/
     margin-bottom: 2px;
     line-height: 20px !important;
@@ -350,7 +350,7 @@ form .submitButton {
     padding: 2px;
 }
 
-form .submitButton:hover {
+form .button:hover {
     -webkit-transition: background-position 0.1s linear;
     -moz-transition: background-position 0.1s linear;
     -o-transition: background-position 0.1s linear;
@@ -398,7 +398,7 @@ form .submitButton:hover {
     min-width: 23px;
 }
 
-.submitButton .dijitButtonNode,
+.button .dijitButtonNode,
 .deleteButton .dijitButtonNode,
 .editButton .dijitButtonNode {
     border: none;
