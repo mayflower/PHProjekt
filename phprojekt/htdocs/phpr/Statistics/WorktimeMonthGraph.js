@@ -188,6 +188,11 @@ define([
 
         buildRendering: function() {
             this.inherited(arguments);
+
+            if (this._destroyed) {
+                return;
+            }
+
             domConstruct.empty(this.bookedTimePerDayGraph);
             this._updateLabels();
 
