@@ -33,7 +33,7 @@ define([
     return declare([Widget, Templated, WidgetsInTemplate], {
         templateString: templateString,
         activeMonthWidget: null,
-        monthState: null,
+        monthState: 'graph',
         projectChooser: null,
 
         buildRendering: function() {
@@ -83,8 +83,6 @@ define([
                 }
             }, domConstruct.create('select'));
             this.projectChooserContainer.set('content', this.projectChooser);
-
-            this._setMonthGraph();
 
             this.own(on(this.monthViewGraphBtn, 'click', lang.hitch(this, '_onMonthViewGraph')));
             this.own(on(this.monthViewTableBtn, 'click', lang.hitch(this, '_onMonthViewTable')));
