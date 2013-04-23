@@ -86,7 +86,7 @@ define([
 
             this.own(on(this.monthViewGraphBtn, 'click', lang.hitch(this, '_onMonthViewGraph')));
             this.own(on(this.monthViewTableBtn, 'click', lang.hitch(this, '_onMonthViewTable')));
-            this.own(on(this.projectChooser, 'change', lang.hitch(this, '_onProjectChange')));
+            this.own(on(this.projectChooser, 'change', lang.hitch(this, '_updateMonthWidget')));
         },
 
         _onMonthViewGraph: function() {
@@ -128,7 +128,7 @@ define([
             }
         },
 
-        _onProjectChange: function() {
+        _updateMonthWidget: function() {
             switch (this.monthState) {
                 case 'table':
                     this._setMonthTable();
