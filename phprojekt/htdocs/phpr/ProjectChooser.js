@@ -164,6 +164,18 @@ define([
         },
 
         _startSearch: function(/*String*/ text) {
+            /** ATTENTION
+             * This copies the inherited functions from _SearchMixin and _AutocompleteMixin and changes the query building
+             * where the original passes a custom query build with this.queryExpr to the queryEngine, we just
+             * pass on the input values because the custom build query is not usefull for our improved queryEngine.
+             * In particular this line from the original function has been removed:
+             * q = filter.patternToRegExp(qs, this.ignoreCase);
+             * q.toString = function(){ return qs; };
+             *
+             * We need to copy two functions into one because we can't insert our code into the middle of a heritance
+             * chain...
+             */
+
             // summary:
             //              Starts a search for elements matching text (text=="" means to return all items),
             //              and calls onSearch(...) when the search completes, to display the results.
@@ -258,6 +270,15 @@ define([
         },
 
         _setDisplayedValueAttr: function(/*String*/ label, /*Boolean?*/ priorityChange) {
+            /** ATTENTION
+             * This copies the inherited function from dijit/FilteringSelect and changes the query building
+             * where FilteringSelect passes a custom query build with this.queryExpr to the queryEngine, we just
+             * pass on the input values because the custom build query is not usefull for our improved queryEngine.
+             * In particular this line from the original function has been removed:
+             * q = filter.patternToRegExp(qs, this.ignoreCase);
+             * q.toString = function(){ return qs; };
+             */
+
             // summary:
             //              Hook so set('displayedValue', label) works.
             // description:
