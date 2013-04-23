@@ -298,15 +298,15 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
      *
      * @return array
      */
-    public function getMonthRecords($year, $month)
+    public function getRecords(\DateTime $start, \DateTime $end)
     {
         $userId = (int) Phprojekt_Auth_Proxy::getEffectiveUserId();
 
         $select = Phprojekt::getInstance()->getDb()->select();
         $select->from("timecard")
             ->where("owner_id = ?", $userId)
-            ->where("YEAR(start_datetime) = ?", $year)
-            ->where("MONTH(start_datetime) = ?", $month)
+            ->where('DATE(start_datetime) >= ?', $start->format('Y-m-d 00:00:00'))
+            ->where('DATE(start_datetime) < ?', $end->format('Y-m-d 00:00:00'))
             ->order("start_datetime ASC");
         $records = $select->query()->fetchAll();
 
