@@ -29,6 +29,11 @@ define([
 
         buildRendering: function() {
             this.inherited(arguments);
+
+            if (this._destroyed) {
+                return;
+            }
+
             Model.getMonthList({ projects: this.projects }).then(lang.hitch(this, '_renderData'));
         },
 

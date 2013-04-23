@@ -30,65 +30,65 @@ define([
     monthTable,
     projectChooser
 ) {
+    var StatisticsProjectChooser = declare([projectChooser], {
+        createOptions: function(queryResults) {
+            var def = new Deferred();
+            var options = [];
+
+            var first = null;
+            var add = function(p) {
+                options.push({
+                    id: '' + p.id,
+                    name: '' + p.id + ' ' + p.title,
+                    label: '<span class="projectId">' + p.id + '</span> ' + p.title
+                });
+            };
+
+            array.forEach(queryResults.recent, add);
+
+            if (queryResults.recent.length > 0) {
+                options.push({ label: '<hr/>' });
+            }
+
+            options.push({
+                id: '-1',
+                name: 'All',
+                label: 'All'
+            });
+
+            add({
+                id: '1',
+                title: 'Unassigned'
+            });
+
+            for (var p in queryResults.projects) {
+                add(queryResults.projects[p]);
+            }
+
+            def.resolve(options);
+
+            return def;
+        },
+        postStoreSet: function() {
+            this.set('value', '-1');
+        }
+    });
+
     return declare([Widget, Templated, WidgetsInTemplate], {
         templateString: templateString,
         activeMonthWidget: null,
-        monthState: null,
+        monthState: 'graph',
         projectChooser: null,
 
         buildRendering: function() {
             this.inherited(arguments);
 
-            this.projectChooser = new projectChooser({
-                createOptions: function(queryResults) {
-                    var def = new Deferred();
-                    var options = [];
-
-                    var first = null;
-                    var add = function(p) {
-                        options.push({
-                            id: '' + p.id,
-                            name: '' + p.id + ' ' + p.title,
-                            label: '<span class="projectId">' + p.id + '</span> ' + p.title
-                        });
-                    };
-
-                    array.forEach(queryResults.recent, add);
-
-                    if (queryResults.recent.length > 0) {
-                        options.push({ label: '<hr/>' });
-                    }
-
-                    options.push({
-                        id: '-1',
-                        name: 'All',
-                        label: 'All'
-                    });
-
-                    add({
-                        id: '1',
-                        title: 'Unassigned'
-                    });
-
-                    for (var p in queryResults.projects) {
-                        add(queryResults.projects[p]);
-                    }
-
-                    def.resolve(options);
-
-                    return def;
-                },
-                postStoreSet: function() {
-                    this.set('value', '-1');
-                }
-            }, domConstruct.create('select'));
+            this.projectChooser = new StatisticsProjectChooser({}, domConstruct.create('select'));
             this.projectChooserContainer.set('content', this.projectChooser);
-
-            this._setMonthGraph();
 
             this.own(on(this.monthViewGraphBtn, 'click', lang.hitch(this, '_onMonthViewGraph')));
             this.own(on(this.monthViewTableBtn, 'click', lang.hitch(this, '_onMonthViewTable')));
-            this.own(on(this.projectChooser, 'change', lang.hitch(this, '_onProjectChange')));
+            this.own(on(this.projectChooser, 'change', lang.hitch(this, '_updateMonthWidget')));
         },
 
         _onMonthViewGraph: function() {
@@ -130,7 +130,7 @@ define([
             }
         },
 
-        _onProjectChange: function() {
+        _updateMonthWidget: function() {
             switch (this.monthState) {
                 case 'table':
                     this._setMonthTable();

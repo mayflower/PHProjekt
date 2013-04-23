@@ -188,7 +188,11 @@ define([
 
         buildRendering: function() {
             this.inherited(arguments);
-            domConstruct.empty(this.bookedTimePerDayGraph);
+
+            if (this._destroyed) {
+                return;
+            }
+
             this._updateLabels();
 
             timecardModel.getWorkBalanceByDay(this._getModelParams()).then(

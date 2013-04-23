@@ -31,6 +31,7 @@ define([
         labelType: 'html',
         searchAttr: 'name',
         labelAttr: 'label',
+        dataLoaded: false,
 
         constructor: function() {
             this.connect(this, '_openResultList', function(results) {
@@ -107,6 +108,7 @@ define([
                 });
 
                 this.set('store', store);
+                this.dataLoaded = true;
                 this.postStoreSet();
                 this.renderDeferred = null;
                 def.resolve();
@@ -114,6 +116,12 @@ define([
         },
 
         postStoreSet: function() {
+        },
+
+        _setValueAttr: function() {
+            if (this.dataLoaded) {
+                this.inherited(arguments);
+            }
         },
 
         _setCreateOptionsAttr: function() {
