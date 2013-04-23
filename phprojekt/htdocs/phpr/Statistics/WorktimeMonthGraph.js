@@ -193,7 +193,6 @@ define([
                 return;
             }
 
-            domConstruct.empty(this.bookedTimePerDayGraph);
             this._updateLabels();
 
             timecardModel.getWorkBalanceByDay(this._getModelParams()).then(
