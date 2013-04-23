@@ -28,6 +28,7 @@ define([
         searchAttr: 'name',
         labelAttr: 'label',
         queryExpr: '*${0}*',
+        dataLoaded: false,
 
         createOptions: function(queryResults) {
             var def = new Deferred();
@@ -95,6 +96,7 @@ define([
                 });
 
                 this.set('store', store);
+                this.dataLoaded = true;
                 this.postStoreSet();
                 this.renderDeferred = null;
                 def.resolve();
@@ -102,6 +104,12 @@ define([
         },
 
         postStoreSet: function() {
+        },
+
+        _setValueAttr: function() {
+            if (this.dataLoaded) {
+                this.inherited(arguments);
+            }
         },
 
         _setCreateOptionsAttr: function() {
