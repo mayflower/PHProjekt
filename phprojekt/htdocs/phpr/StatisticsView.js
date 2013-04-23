@@ -30,6 +30,50 @@ define([
     monthTable,
     projectChooser
 ) {
+    var StatisticsProjectChooser = declare([projectChooser], {
+        createOptions: function(queryResults) {
+            var def = new Deferred();
+            var options = [];
+
+            var first = null;
+            var add = function(p) {
+                options.push({
+                    id: '' + p.id,
+                    name: '' + p.id + ' ' + p.title,
+                    label: '<span class="projectId">' + p.id + '</span> ' + p.title
+                });
+            };
+
+            array.forEach(queryResults.recent, add);
+
+            if (queryResults.recent.length > 0) {
+                options.push({ label: '<hr/>' });
+            }
+
+            options.push({
+                id: '-1',
+                name: 'All',
+                label: 'All'
+            });
+
+            add({
+                id: '1',
+                title: 'Unassigned'
+            });
+
+            for (var p in queryResults.projects) {
+                add(queryResults.projects[p]);
+            }
+
+            def.resolve(options);
+
+            return def;
+        },
+        postStoreSet: function() {
+            this.set('value', '-1');
+        }
+    });
+
     return declare([Widget, Templated, WidgetsInTemplate], {
         templateString: templateString,
         activeMonthWidget: null,
@@ -39,49 +83,7 @@ define([
         buildRendering: function() {
             this.inherited(arguments);
 
-            this.projectChooser = new projectChooser({
-                createOptions: function(queryResults) {
-                    var def = new Deferred();
-                    var options = [];
-
-                    var first = null;
-                    var add = function(p) {
-                        options.push({
-                            id: '' + p.id,
-                            name: '' + p.id + ' ' + p.title,
-                            label: '<span class="projectId">' + p.id + '</span> ' + p.title
-                        });
-                    };
-
-                    array.forEach(queryResults.recent, add);
-
-                    if (queryResults.recent.length > 0) {
-                        options.push({ label: '<hr/>' });
-                    }
-
-                    options.push({
-                        id: '-1',
-                        name: 'All',
-                        label: 'All'
-                    });
-
-                    add({
-                        id: '1',
-                        title: 'Unassigned'
-                    });
-
-                    for (var p in queryResults.projects) {
-                        add(queryResults.projects[p]);
-                    }
-
-                    def.resolve(options);
-
-                    return def;
-                },
-                postStoreSet: function() {
-                    this.set('value', '-1');
-                }
-            }, domConstruct.create('select'));
+            this.projectChooser = new StatisticsProjectChooser({}, domConstruct.create('select'));
             this.projectChooserContainer.set('content', this.projectChooser);
 
             this.own(on(this.monthViewGraphBtn, 'click', lang.hitch(this, '_onMonthViewGraph')));
