@@ -52,7 +52,7 @@ class Timecard_IndexController extends IndexController
      */
     public function jsonMonthListAction()
     {
-        list($start, $end) = $this->_yearMonthParamToStartEndDT();
+        list($start, $end) = $this->_paramToStartEndDT();
         $records = $this->getModelObject()->getRecords($start, $end);
 
         Phprojekt_Converter_Json::echoConvert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);
@@ -63,7 +63,7 @@ class Timecard_IndexController extends IndexController
      */
     public function monthListAction()
     {
-        list($start, $end) = $this->_yearMonthParamToStartEndDT();
+        list($start, $end) = $this->_paramToStartEndDT();
         $records = $this->getModelObject()->getRecords($start, $end);
 
         Phprojekt_CompressedSender::send(
@@ -326,7 +326,7 @@ class Timecard_IndexController extends IndexController
      */
     public function minutesBookedAction()
     {
-        list($start, $end) = $this->_yearMonthParamToStartEndDT();
+        list($start, $end) = $this->_paramToStartEndDT();
         $minutes = Timecard_Models_Timecard::getBookedMinutes($start, $end);
 
         Phprojekt_CompressedSender::send(
@@ -383,9 +383,9 @@ class Timecard_IndexController extends IndexController
      */
     public function minutesToWorkAction()
     {
-        list($start, $end) = $this->_yearMonthParamToStartEndDT();
+        list($start, $end) = $this->_paramTostartEndDT();
 
-        $contracts = Timecard_Models_Contract::fetchByUserAndPeriod(Phprojekt_Auth::getRealUser(), $start, $end);
+        $contracts     = Timecard_Models_Contract::fetchByUserAndPeriod(Phprojekt_Auth::getRealUser(), $start, $end);
         $minutesPerDay = $this->_contractsToMinutesPerDay($contracts, $start, $end);
         $minutesPerDay = $this->_applyHolidayWeights($minutesPerDay, $start, $end);
 
@@ -399,7 +399,7 @@ class Timecard_IndexController extends IndexController
 
     public function workBalanceByDayAction()
     {
-        list($start, $end) = $this->_yearMonthParamToStartEndDT();
+        list($start, $end) = $this->_paramToStartEndDT();
 
         $contracts = Timecard_Models_Contract::fetchByUserAndPeriod(Phprojekt_Auth::getRealUser(), $start, $end);
         $minutesToWorkPerDay = $this->_contractsToMinutesPerDay($contracts, $start, $end);
@@ -427,6 +427,18 @@ class Timecard_IndexController extends IndexController
         }
 
         echo Zend_Json::encode(array('workBalancePerDay' => $ret));
+    }
+
+    private function _paramToStartEndDT()
+    {
+        $start = (new \DateTime())->modify('first day of this month');
+        $start = new \DateTime($this->getRequest()->getParam('start', $start->format('Y-m-d')));
+
+        $end = clone $start;
+        $end = $end->modify('first day of next month');
+        $end = new \DateTime($this->getRequest()->getParam('end', $end->format('Y-m-d')));
+
+        return [$start, $end];
     }
 
     private function _yearMonthParamToStartEndDT()
