@@ -9,8 +9,9 @@ define([
     'dijit/_TemplatedMixin',
     'phpr/Api',
     'phpr/Timehelper',
+    'phpr/models/Timecard',
     'dojo/text!phpr/template/bookingList/summaryBlock.html'
-], function(declare, lang, topic, domStyle, all, DeferredList, _WidgetBase, _TemplatedMixin, api, timehelper, templateString) {
+], function(declare, lang, topic, domStyle, all, DeferredList, _WidgetBase, _TemplatedMixin, api, timehelper, timecardModel, templateString) {
     return declare([_WidgetBase, _TemplatedMixin], {
         date: new Date(),
 
@@ -49,17 +50,13 @@ define([
 
         _update: function() {
 
-            var bookedPromise = api.getData(
-                'index.php/Timecard/index/minutesBooked',
-                {query: {year: this.date.getFullYear(), month: this.date.getMonth() + 1}}
-            ).then(lang.hitch(this, function(data) {
+            var bookedPromise = timecardModel.getMinutesBooked()
+            .then(lang.hitch(this, function(data) {
                 this.booked.innerHTML = timehelper.minutesToHMString(data.minutesBooked);
             }));
 
-            var toWorkPromise = api.getData(
-                    'index.php/Timecard/index/minutesToWork',
-                    {query: {year: this.date.getFullYear(), month: this.date.getMonth() + 1}}
-            ).then(lang.hitch(this, function(data) {
+            var toWorkPromise = timecardModel.getMinutesToWork()
+            .then(lang.hitch(this, function(data) {
                 var toWork = data.minutesToWork;
                 if (toWork === 0) {
                     domStyle.set(this.toWork, 'display', 'none');

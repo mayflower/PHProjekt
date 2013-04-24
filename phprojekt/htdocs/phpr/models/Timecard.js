@@ -17,18 +17,26 @@ define([
         return lang.mixin({ year: year, month: month }, params);
     }
 
+    exports.getMinutesBooked = function(params) {
+        var opts = monthYearDefaultQuery(params);
+        return api.getData(
+                'index.php/Timecard/index/minutesBooked',
+                { query: opts });
+    };
+
+    exports.getMinutesToWork = function(params) {
+        var opts = monthYearDefaultQuery(params);
+        return api.getData(
+                'index.php/Timecard/index/minutesToWork',
+                { query: opts });
+    };
+
     exports.getMonthStatistics = function(params) {
         var opts = monthYearDefaultQuery(params);
 
         return all({
-            booked: api.getData(
-                'index.php/Timecard/index/minutesBooked',
-                { query: opts }
-            ),
-            towork: api.getData(
-                'index.php/Timecard/index/minutesToWork',
-                { query: opts }
-            )
+            booked: this.getMinutesBooked(params),
+            towork: this.getMinutesToWork(params)
         });
     };
 
