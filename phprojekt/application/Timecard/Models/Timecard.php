@@ -303,51 +303,19 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
         $userId = (int) Phprojekt_Auth_Proxy::getEffectiveUserId();
 
         $select = Phprojekt::getInstance()->getDb()->select();
-        $select->from("timecard")
+
+        /* already initialize sum to 0 so we don't need to check if for it */
+        $select->from("timecard",
+            array('date' => 'DATE(start_datetime)',
+                  'sumInMinutes' => 'SUM(minutes)'))
             ->where("owner_id = ?", $userId)
-            ->where('DATE(start_datetime) >= ?', $start->format('Y-m-d 00:00:00'))
-            ->where('DATE(start_datetime) < ?', $end->format('Y-m-d 00:00:00'))
+            ->where('DATE(start_datetime) >= ?', $start->format('Y-m-d'))
+            ->where('DATE(start_datetime) < ?', $end->format('Y-m-d'))
+            ->group('DATE(start_datetime)')
             ->order("start_datetime ASC");
         $records = $select->query()->fetchAll();
 
-        // Get all the hours for this month
-        $sortRecords = array();
-        foreach ($records as $record) {
-            $date = date('Y-m-d', strtotime($record['start_datetime']));
-            if (!isset($sortRecords[$date])) {
-                $sortRecords[$date]['sum']        = 0;
-                $sortRecords[$date]['openPeriod'] = 0;
-            }
-            if ($record['minutes'] == 0 && null === $record['end_time']) {
-                $sortRecords[$date]['openPeriod'] = 1;
-            }
-            $sortRecords[$date]['sum'] += (int) $record['minutes'];
-        }
-
-        $endDayofTheMonth = date("t", mktime(0, 0, 0, $month, 1, $year));
-        $datas            = array();
-        for ($i = 1; $i <= $endDayofTheMonth; $i++) {
-            $day   = $i;
-            $day   = str_pad($day, 2, "0", STR_PAD_LEFT);
-            $month = str_pad($month, 2, "0", STR_PAD_LEFT);
-            $date  = $year . '-' . $month . '-' . $day;
-
-            $data         = array();
-            $data['date'] = $date;
-            $data['week'] = date("w", strtotime($date));
-            if (isset($sortRecords[$date])) {
-                $data['sumInMinutes'] = $sortRecords[$date]['sum'];
-                $data['sumInHours']   = self::convertTime($sortRecords[$date]['sum']);
-                $data['openPeriod']   = $sortRecords[$date]['openPeriod'];
-            } else {
-                $data['sumInMinutes'] = 0;
-                $data['sumInHours']   = 0;
-                $data['openPeriod']   = 0;
-            }
-            $datas[] = $data;
-        }
-
-        return array('data' => $datas);
+        return array('data' => $records);
     }
 
     /**
