@@ -46,7 +46,7 @@ define([
         return false;
     };
 
-    exports.projectTitleForId = (function() {
+    exports.projectTitleForId = function(id) {
         var titlesById = null;
         var def = new Deferred();
 
@@ -63,7 +63,7 @@ define([
             def = null;
         });
 
-        return function(id) {
+        exports.projectTitleForId = function(id) {
             if (id == 1) {
                 var d = new Deferred();
                 d.resolve('Unassigned');
@@ -78,7 +78,9 @@ define([
                 return d;
             }
         };
-    })();
+
+        return exports.projectTitleForId(id);
+    };
 
     exports.getModulePermissions = function(projectId) {
         var modulePermissionsUrl = 'index.php/Default/index/jsonGetModulesPermission/nodeId/' + projectId;
