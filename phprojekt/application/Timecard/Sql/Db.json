@@ -108,6 +108,22 @@
 
 "6.3.0":
 {
+    "structure":
+    {
+        "project_manager_relation":
+        {
+            "create":
+            {
+                "userId": {"type": "int", "notNull": "true"},
+                "projectId": {"type": "int", "notNull": "true"}
+            },
+            "createIndex":
+            {
+                "columns": ["userId", "projectId"],
+                "unqiue": "true"
+            }
+        }
+    }
 }
 
 }

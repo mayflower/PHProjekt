@@ -89,8 +89,8 @@ class Phprojekt_Table
     public function createTable($tableName, $fields, $keys = array())
     {
         $tableName = strtolower($tableName);
-        $sqlString = "CREATE TABLE " . $this->_db->quoteIdentifier((string) $tableName) . " (";
 
+        $definitions = array();
         if (is_array($fields) && !empty($fields)) {
             foreach ($fields as $fieldName => $fieldDefinition) {
                 if (!isset($fieldDefinition['length'])) {
@@ -105,8 +105,7 @@ class Phprojekt_Table
                 if (!isset($fieldDefinition['default_no_quote'])) {
                     $fieldDefinition['default_no_quote'] = false;
                 }
-                $sqlString .= $fieldName;
-                $sqlString .= $this->_getTypeDefinition($fieldDefinition) . ", ";
+                $definitions[] = $fieldName . $this->_getTypeDefinition($fieldDefinition);
             }
         } else {
             return false;
@@ -114,18 +113,13 @@ class Phprojekt_Table
 
         if (isset($keys)) {
             foreach ($keys as $keyName => $keyFields) {
-                $sqlString .= $keyName . " (";
-                foreach ($keyFields as $oneKey) {
-                   $sqlString .= $oneKey . ", ";
-                }
-                $sqlString = substr($sqlString, 0, -2);
-                $sqlString .= "),";
+                $definitions[] = sprintf('%s (%s) ', $keyName, implode(',', $keyFields));
             }
-            $sqlString = substr($sqlString, 0, -1);
-        } else {
-            $sqlString = substr($sqlString, 0, -2);
         }
-        $sqlString .= ") DEFAULT CHARSET=utf8";
+
+        $sqlString = sprintf("CREATE TABLE %s (%s) DEFAULT CHARSET=utf8",
+            $this->_db->quoteIdentifier((string) $tableName),
+            implode(',', $definitions));
 
         try {
             $this->_db->getConnection()->exec($sqlString);

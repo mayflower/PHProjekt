@@ -4,6 +4,8 @@ define([
     'dojo/_base/array',
     'dojo/dom-class',
     'dojo/dom-construct',
+    'dojo/json',
+    'dojo/io-query',
     'dijit/_Widget',
     'dijit/_TemplatedMixin',
     'dijit/_WidgetsInTemplateMixin',
@@ -13,6 +15,7 @@ define([
     'phpr/Statistics/WorktimeMonthGraph',
     'phpr/Statistics/WorktimeMonthTable',
     'phpr/ProjectChooser',
+    'phpr/Timehelper',
     'dijit/layout/ContentPane'
 ], function(
     declare,
@@ -20,6 +23,8 @@ define([
     array,
     clazz,
     domConstruct,
+    json,
+    ioQuery,
     Widget,
     Templated,
     WidgetsInTemplate,
@@ -28,7 +33,8 @@ define([
     Deferred,
     monthGraph,
     monthTable,
-    projectChooser
+    projectChooser,
+    timehelper
 ) {
     var StatisticsProjectChooser = declare([projectChooser], {
         createOptions: function(queryResults) {
@@ -89,6 +95,8 @@ define([
             this.own(on(this.monthViewGraphBtn, 'click', lang.hitch(this, '_onMonthViewGraph')));
             this.own(on(this.monthViewTableBtn, 'click', lang.hitch(this, '_onMonthViewTable')));
             this.own(on(this.projectChooser, 'change', lang.hitch(this, '_updateMonthWidget')));
+
+            this.own(this.exportForm.on('submit', lang.hitch(this, this._openExport)));
         },
 
         _onMonthViewGraph: function() {
@@ -139,6 +147,27 @@ define([
                     this._setMonthGraph();
                     break;
             }
+        },
+
+        _openExport: function(evt) {
+            if (evt) {
+                evt.stopPropagation();
+            }
+
+            if (this.exportForm.validate()) {
+                var url = 'index.php/Timecard/Timecard/index';
+                var data = this.exportForm.get('value');
+
+                var query = {format: 'csv'};
+                query.filter = json.stringify({
+                    startDatetime: {
+                        '!ge': timehelper.jsDateToIsoDatetime(data.start),
+                        '!lt': timehelper.jsDateToIsoDatetime(data.end)
+                    }
+                });
+                window.open(url + '?' + ioQuery.objectToQuery(query));
+            }
+            return false;
         }
     });
 
