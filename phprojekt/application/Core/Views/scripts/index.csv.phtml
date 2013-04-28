@@ -1,0 +1,7 @@
+<?php
+$df = fopen('php://output', 'w');
+fputcsv($df, array_keys(reset($this->records)));
+foreach ($this->records as $row) {
+    fputcsv($df, $row);
+}
+fclose($df);
