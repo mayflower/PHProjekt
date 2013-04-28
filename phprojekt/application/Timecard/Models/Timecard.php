@@ -295,11 +295,16 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
      *
      * @param integer $year   Year for the request
      * @param integer $month  Month for the request
+     * @param Array $projects Filter projects by array items, if null, no filter is applied
      *
      * @return array
      */
-    public function getMonthRecords($year, $month, Array $projects = array())
+    public function getMonthRecords($year, $month, Array $projects = null)
     {
+        if ($projects !== null && empty($projects)) {
+            return array('data' => array());
+        }
+
         $userId = (int) Phprojekt_Auth_Proxy::getEffectiveUserId();
 
         $select = Phprojekt::getInstance()->getDb()->select();
@@ -308,7 +313,7 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
             ->where("YEAR(start_datetime) = ?", $year)
             ->where("MONTH(start_datetime) = ?", $month);
 
-        if (!empty($projects)) {
+        if ($projects !== null && !empty($projects)) {
             $select->where('project_id IN (?)', $projects);
         }
 
@@ -554,9 +559,16 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
      *
      * @param int $year The year
      * @param int $month The month
+     * @param Array $projects Filter projects by id's from array, if null, no filter is applied
+     *
+     * @return int
      **/
-    public static function getBookedMinutesInMonth($year, $month, Array $projects = array())
+    public static function getBookedMinutesInMonth($year, $month, Array $projects = null)
     {
+        if ($projects !== null && empty($projects)) {
+            return 0;
+        }
+
         $table  = new self();
         $select = $table->select()
             ->from($table, array('minutes' => 'SUM(minutes)'))
@@ -564,7 +576,7 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
             ->where('MONTH(start_datetime) = ?', $month)
             ->where('owner_id = ?', Phprojekt_Auth_Proxy::getEffectiveUserId());
 
-        if (!empty($projects)) {
+        if ($projects !== null && !empty($projects)) {
             $select->where('project_id IN (?)', $projects);
         }
 
