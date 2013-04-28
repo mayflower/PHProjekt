@@ -35,17 +35,6 @@ define([
         return xhr.get(url, params);
     };
 
-    exports.isGlobalModule = function(module) {
-        var globals = config.get('globalModules');
-        for (var id in globals) {
-            if (globals[id].name == module) {
-                return true;
-            }
-        }
-
-        return false;
-    };
-
     exports.projectTitleForId = function(id) {
         var titlesById = null;
         var def = new Deferred();
