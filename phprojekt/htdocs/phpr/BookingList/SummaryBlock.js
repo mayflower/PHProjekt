@@ -49,6 +49,16 @@ define([
         },
 
         _update: function() {
+            timecardModel.getMinutesBookedTotal()
+            .then(lang.hitch(this, function(data) {
+                this.bookedTotal.innerHTML = timehelper.minutesToHMString(data.minutesBooked);
+            }));
+
+            timecardModel.getMinutesToWorkTotal()
+            .then(lang.hitch(this, function(data) {
+                domStyle.set(this.toWorkTextTotal, 'display', '');
+                this.toWorkTotal.innerHTML = timehelper.minutesToHMString(data.minutesToWork);
+            }));
 
             var bookedPromise = timecardModel.getMinutesBooked()
             .then(lang.hitch(this, function(data) {

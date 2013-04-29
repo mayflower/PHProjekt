@@ -28,11 +28,23 @@ define([
         }, params);
     }
 
+    exports.getMinutesBookedTotal = function(params) {
+        return api.getData(
+                'index.php/Timecard/index/minutesBooked',
+                { query: params });
+    }
+
     exports.getMinutesBooked = function(params) {
         var opts = startEndDefaultQuery(params);
         return api.getData(
                 'index.php/Timecard/index/minutesBooked',
                 { query: opts });
+    };
+
+    exports.getMinutesToWorkTotal = function(params) {
+        return api.getData(
+                'index.php/Timecard/index/minutesToWork',
+                { query: params });
     };
 
     exports.getMinutesToWork = function(params) {
