@@ -19,6 +19,44 @@
 class Timecard_Models_Contract extends Phprojekt_ActiveRecord_Abstract
 {
 
+    public static function fetchByUser(Phprojekt_User_User $user, $limit = null)
+    {
+        $db     = Phprojekt::getInstance()->getDb();
+        $select = $db->select()->from(
+            array('ucr' => 'user_contract_relation'),
+            array('ucr.start', 'ucr.end'))
+            ->join(array('c' => 'contract'), 'ucr.contract_id = c.id')
+            ->where('ucr.user_id = ?', Phprojekt_Auth::getUserId())
+            ->order('ucr.start DESC');
+
+        if (null !== $limit && is_numeric($limit) && $limit >= 0) {
+            $select->limit($limit);
+        }
+
+        $result = [];
+        foreach($select->query()->fetchAll() as $c) {
+            $e = array(
+                'id'           => (int) $c['id'],
+                'name'         => $c['name'],
+                'isCurrent'    => null === $c['end'],
+                'hoursPerWeek' => (float) $c['hours_per_week'],
+                'start'        => new \DateTime($c['start']),
+                'end'          => null);
+
+            if (null !== $c['end']) {
+                $e['end'] = new \DateTime($c['end']);
+            }
+
+            $result[] = $e;
+        }
+
+        if (empty($result)) {
+            throw new Phprojekt_Exception_ContractNotSet();
+        }
+
+        return $result;
+    }
+
     /**
      * Returns an array of ['contract' => Timecard_Models_Contract, 'start' => DateTime, 'end' => DateTime] arrays,
      * sorted by start.

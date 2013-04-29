@@ -431,12 +431,13 @@ class Timecard_IndexController extends IndexController
 
     private function _paramToStartEndDT()
     {
-        $start = (new \DateTime())->modify('first day of this month');
-        $start = new \DateTime($this->getRequest()->getParam('start', $start->format('Y-m-d')));
+        $start = $this->getRequest()->getParam('start');
 
-        $end = clone $start;
-        $end = $end->modify('first day of next month');
-        $end = new \DateTime($this->getRequest()->getParam('end', $end->format('Y-m-d')));
+        /* either given start day or the start day of the contract. */
+        $first = array_pop(Timecard_Models_Contract::fetchByUser(Phprojekt_Auth::getRealUser()));
+        $start = (null === $start) ? $first['start'] : new \DateTime($start);
+
+        $end = new \DateTime($this->getRequest()->getParam('end', 'today'));
 
         return [$start, $end];
     }
