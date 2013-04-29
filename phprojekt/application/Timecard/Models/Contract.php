@@ -21,40 +21,7 @@ class Timecard_Models_Contract extends Phprojekt_ActiveRecord_Abstract
 
     public static function fetchByUser(Phprojekt_User_User $user, $limit = null)
     {
-        $db     = Phprojekt::getInstance()->getDb();
-        $select = $db->select()->from(
-            array('ucr' => 'user_contract_relation'),
-            array('ucr.start', 'ucr.end'))
-            ->join(array('c' => 'contract'), 'ucr.contract_id = c.id')
-            ->where('ucr.user_id = ?', Phprojekt_Auth::getUserId())
-            ->order('ucr.start DESC');
-
-        if (null !== $limit && is_numeric($limit) && $limit >= 0) {
-            $select->limit($limit);
-        }
-
-        $result = [];
-        foreach($select->query()->fetchAll() as $c) {
-            $e = array(
-                'id'           => (int) $c['id'],
-                'name'         => $c['name'],
-                'isCurrent'    => null === $c['end'],
-                'hoursPerWeek' => (float) $c['hours_per_week'],
-                'start'        => new \DateTime($c['start']),
-                'end'          => null);
-
-            if (null !== $c['end']) {
-                $e['end'] = new \DateTime($c['end']);
-            }
-
-            $result[] = $e;
-        }
-
-        if (empty($result)) {
-            throw new Phprojekt_Exception_ContractNotSet();
-        }
-
-        return $result;
+        return self::fetchByUserAndPeriod($user, null, null);
     }
 
     /**
@@ -64,12 +31,20 @@ class Timecard_Models_Contract extends Phprojekt_ActiveRecord_Abstract
     public static function fetchByUserAndPeriod(Phprojekt_User_User $user, DateTime $start, DateTime $end)
     {
         $db = Phprojekt::getInstance()->getDb();
-        $userContractRels = $db->select()->from('user_contract_relation', array('contract_id', 'start', 'end'))
+        $select = $db->select();
+        $select->from('user_contract_relation', array('contract_id', 'start', 'end'))
             ->where('user_id = ?', Phprojekt_Auth::getUserId())
-            ->where('start < ?', $end->format('Y-m-d'))
-            ->where('end >= ? OR end is NULL', $start->format('Y-m-d'))
-            ->order('start')
-            ->query()->fetchAll();
+            ->order('start');
+
+        if (null !== $start) {
+            $select->where('end >= ? OR end is NULL', $start->format('Y-m-d'));
+        }
+
+        if (null !== $end) {
+            $select->where('start < ?', $end->format('Y-m-d'));
+        }
+
+        $userContractRels = $select->query()->fetchAll();
 
         $contractIds = array();
         foreach ($userContractRels as $r) {
