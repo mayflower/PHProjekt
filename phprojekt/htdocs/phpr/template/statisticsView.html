@@ -1,5 +1,5 @@
 <div class="statisticsView">
-    <h1>Export</h1>
+    <h2>Export</h2>
     <div class="exportForm" data-dojo-attach-point="exportForm" data-dojo-type="dijit/form/Form">
         <input type="text"
                 name="start"
@@ -18,7 +18,6 @@
                 type="submit"
                 data-dojo-props="baseClass:'button'">Export to CSV</button>
     </div>
-
     <ul class="buttons-outer">
         <li data-dojo-attach-point="monthViewGraphBtn" class="buttons-inner active">
             <img class="button" src="../../../img/timecard/icon-graphics.png">
@@ -27,11 +26,25 @@
             <img class="button" src="../../../img/timecard/table-icon.png">
         </li>
     </ul>
-    <h1>Diesen Monat</h1>
     <h2>Gearbeitete Zeit</h2>
     <p>Die Anzahl der Stunden pro Tag und die erwartete Stundenanzahl</p>
     <div data-dojo-type="dijit/layout/ContentPane" data-dojo-attach-point="monthContainer">
         <div data-dojo-type="phpr/Statistics/WorktimeMonthGraph"></div>
+    </div>
+
+    <h1>Projektzeiten</h1>
+    <ul class="buttons-outer">
+        <li data-dojo-attach-point="projectViewGraphBtn" class="buttons-inner">
+            <img class="button" src="../../../img/timecard/icon-graphics.png">
+        </li>
+        <li data-dojo-attach-point="projectViewTableBtn" class="buttons-inner active">
+            <img class="button" src="../../../img/timecard/table-icon.png">
+        </li>
+    </ul>
+    <h2>Gearbeitete Zeit pro Projekt</h2>
+    <p>Die Anzahl der Stunden pro Projekt</p>
+    <div data-dojo-type="dijit/layout/ContentPane" data-dojo-attach-point="projectContainer">
+        <div data-dojo-type="phpr/Statistics/ProjectUserTimeTable"></div>
     </div>
 
     <img class="buttons" src="../../../img/timecard/statistics_stub_buttons.png">

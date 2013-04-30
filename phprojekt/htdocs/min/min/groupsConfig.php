@@ -90,6 +90,7 @@ return array(
         "//css/themes/timecard/scrollbar.css",
         "//css/themes/timecard/statistics.css",
         "//css/themes/timecard/statistics/thisMonthDiagram.css",
-        "//css/themes/timecard/statistics/thisMonthTable.css"
+        "//css/themes/timecard/statistics/thisMonthTable.css",
+        "//css/themes/timecard/statistics/projectUserTimeTable.css"
     )
 );

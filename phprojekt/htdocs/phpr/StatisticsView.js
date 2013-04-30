@@ -11,7 +11,8 @@ define([
     'dojo/on',
     'phpr/Statistics/WorktimeMonthGraph',
     'phpr/Statistics/WorktimeMonthTable',
-    'phpr/Timehelper'
+    'phpr/Timehelper',
+    'phpr/Statistics/ProjectUserTimeTable'
 ], function(
     declare,
     lang,
