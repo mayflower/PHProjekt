@@ -23,7 +23,6 @@ define([
     // only used in templates
     'phpr/BookingList/BookingCreator',
     'dijit/form/FilteringSelect',
-    'dijit/form/ValidationTextBox',
     'dijit/form/Textarea',
     'dijit/form/Button',
     'dijit/form/DateTextBox',
