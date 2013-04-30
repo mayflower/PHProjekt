@@ -118,19 +118,21 @@ define([
 
         _storeChanged: function(object, removedFrom, insertedInto) {
             object = lang.clone(object);
-            var bdate = timehelper.datetimeToJsDate(object.startDatetime);
+            var newDate = timehelper.datetimeToJsDate(object.startDatetime);
 
             if (removedFrom > -1) {
-                var odate = timehelper.datetimeToJsDate(this.data[removedFrom].startDatetime);
+                var originalDate = timehelper.datetimeToJsDate(this.data[removedFrom].startDatetime);
                 this.data.splice(removedFrom, 1);
-                this._reloadDay(odate);
+                if (date.compare(newDate, originalDate, 'date') !== 0) {
+                    this._reloadDay(originalDate);
+                }
             }
 
             if (insertedInto > -1) {
                 this.data.splice(insertedInto, 0, object);
             }
 
-            this._reloadDay(bdate, bdate);
+            this._reloadDay(newDate, newDate);
         },
 
         _reloadDay: function(startDatetime, highlightDate) {
@@ -249,8 +251,6 @@ define([
                     e.entry.placed = true;
                     if (index < 2) {
                         w.set('open', true);
-                    } else {
-                        w.set('open', false);
                     }
                 }
             }, this);

@@ -19,26 +19,6 @@
 class Phprojekt
 {
     /**
-     * The first part of the version number.
-     */
-    const VERSION_MAJOR = 6;
-
-    /**
-     * The second part of the version number.
-     */
-    const VERSION_MINOR = 2;
-
-    /**
-     * The third part of the version number.
-     */
-    const VERSION_RELEASE = 1;
-
-    /**
-     * The extra part of the version number.
-     */
-    const VERSION_EXTRA = null;
-
-    /**
      * Name of the Registry for current project.
      */
     const CURRENT_PROJECT = 'currentProjectId';
@@ -46,7 +26,7 @@ class Phprojekt
     /**
      * Copyright.
      */
-    const COPYRIGHT = 'PHProjekt 6.1.0 - Copyright (c) 2011 Mayflower GmbH';
+    const COPYRIGHT = 'PHProjekt 6.3.0 - Copyright (c) 2013 Mayflower GmbH';
 
     /**
      * Default Max size in bytes that is allowed to be uploaded per file.

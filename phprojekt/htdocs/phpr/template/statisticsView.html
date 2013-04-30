@@ -1,5 +1,23 @@
 <div class="statisticsView">
-    <h1>Diesen Monat</h1>
+    <h2>Export</h2>
+    <div class="exportForm" data-dojo-attach-point="exportForm" data-dojo-type="dijit/form/Form">
+        <input type="text"
+                name="start"
+                value="today"
+                data-dojo-type="phpr/DateTextBox"
+                class="date"
+                data-dojo-props="placeholder:'Start date'">
+        -
+        <input type="text"
+                name="end"
+                value="today"
+                data-dojo-type="phpr/DateTextBox"
+                class="date"
+                data-dojo-props="placeholder:'End date'">
+        <button data-dojo-type="dijit/form/Button"
+                type="submit"
+                data-dojo-props="baseClass:'button'">Export to CSV</button>
+    </div>
     <ul class="buttons-outer">
         <li data-dojo-attach-point="monthViewGraphBtn" class="buttons-inner active">
             <img class="button" src="../../../img/timecard/icon-graphics.png">

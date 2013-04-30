@@ -73,7 +73,7 @@ class Timecard_IndexController_Test extends FrontInit
         $this->setRequestUrl('Timecard/index/jsonDayList/');
         $this->request->setParam('date', '2009-05-17');
         $response = $this->getResponse();
-        $parsed   = FrontInit::phprJsonToArray($response);
+        $parsed   = Zend_Json::decode($response);
         $expected = array(
             "data" => array(
                 array(
@@ -122,7 +122,7 @@ class Timecard_IndexController_Test extends FrontInit
         $this->setRequestUrl('Timecard/index/jsonDayList/');
         $this->request->setParam('date', '2009-07-03');
         $response = $this->getResponse();
-        $parsed   = FrontInit::phprJsonToArray($response);
+        $parsed   = Zend_Json::decode($response);
         $expected = array(
             "data" => array(
                 array(
@@ -314,7 +314,7 @@ class Timecard_IndexController_Test extends FrontInit
         // Will return empty data
         $this->setRequestUrl('Timecard/index/jsonGetFavoritesProjects/');
         $response = $this->getResponse();
-        $this->assertContains('{}&&({"metadata":[]})', $response);
+        $this->assertContains('{"metadata":[]}', $response);
     }
 
     /**
@@ -332,7 +332,7 @@ class Timecard_IndexController_Test extends FrontInit
 
         $this->_reset();
         $this->setRequestUrl('Timecard/index/jsonGetFavoritesProjects/');
-        $response = FrontInit::phprJsonToArray($this->getResponse());
+        $response = Zend_Json::decode($this->getResponse());
 
         $expected = array(
             array(
