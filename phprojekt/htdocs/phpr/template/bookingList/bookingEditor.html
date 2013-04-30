@@ -10,18 +10,17 @@
             </select>
             <input type="text"
                    name="start"
-                   data-dojo-type="dijit/form/ValidationTextBox"
+                   required="true"
+                   data-dojo-type="phpr/TimeBox"
                    data-dojo-attach-point="start"
-                   data-dojo-props="pattern: this._getStartRegexp, invalidMessage: 'Invalid time format',
-                                    placeholder:'Start'"
+                   data-dojo-props="placeholder: 'Start'"
                    class="time"/>
             -
             <input type="text"
                    name="end"
-                   data-dojo-type="dijit/form/ValidationTextBox"
+                   data-dojo-type="phpr/TimeBox"
                    data-dojo-attach-point="end"
-                   data-dojo-props="pattern: this._getEndRegexp, invalidMessage: 'Invalid time format',
-                                    placeholder: 'End'"
+                   data-dojo-props="placeholder: 'End'"
                    class="time"/>
             <input type="text"
                    name="date"
