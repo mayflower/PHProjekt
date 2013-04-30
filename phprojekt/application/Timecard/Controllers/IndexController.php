@@ -434,8 +434,8 @@ class Timecard_IndexController extends IndexController
 
     public function projectUserMinutesAction()
     {
-        $startDate  = new DateTime($this->_getDateParam('start'));
-        $endDate    = new DateTime($this->_getDateParam('end'));
+        $startDate  = new DateTime($this->_getDateStringParam('start'));
+        $endDate    = new DateTime($this->_getDateStringParam('end'));
         $userIds    = explode(',', $this->getRequest()->getParam('users', Phprojekt_Auth::getUserId()));
 
         foreach ($userIds as $id) {

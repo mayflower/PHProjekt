@@ -107,8 +107,8 @@ class Calendar2_IndexController extends IndexController
      */
     public function jsonPeriodListAction()
     {
-        $dateStart = $this->_getDateParam('dateStart');
-        $dateEnd   = $this->_getDateParam('dateEnd');
+        $dateStart = $this->_getDateStringParam('dateStart');
+        $dateEnd   = $this->_getDateStringParam('dateEnd');
         $userId    = $this->getRequest()->getParam('userId', (int) Phprojekt_Auth_Proxy::getEffectiveUserId());
 
         if (!Cleaner::validate('int', $userId)) {
@@ -182,7 +182,7 @@ class Calendar2_IndexController extends IndexController
      */
     public function jsonDayListSelectAction()
     {
-        $date  = $this->_getDateParam('date');
+        $date  = $this->_getDateStringParam('date');
         $users = $this->getRequest()->getParam('users');
         $users = explode(',', $users);
 
