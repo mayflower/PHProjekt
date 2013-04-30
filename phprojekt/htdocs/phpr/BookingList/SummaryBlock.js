@@ -60,6 +60,9 @@ define([
                     'index.php/Timecard/index/minutesToWork',
                     {query: {year: this.date.getFullYear(), month: this.date.getMonth() + 1}}
             ).then(lang.hitch(this, function(data) {
+                if (this._destroyed) {
+                    return;
+                }
                 var toWork = data.minutesToWork;
                 if (toWork === 0) {
                     domStyle.set(this.toWork, 'display', 'none');
@@ -68,6 +71,9 @@ define([
                     this.toWork.innerHTML = timehelper.minutesToHMString(toWork);
                 }
             })).otherwise(lang.hitch(this, function() {
+                if (this._destroyed) {
+                    return;
+                }
                 domStyle.set(this.toWork, 'display', 'none');
             }));
 
