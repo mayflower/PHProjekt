@@ -13,20 +13,14 @@ define([
     var viewManager = null;
 
     var loadInitData = function() {
+        var baseLayout = new BaseLayout({}, dom.create('div', null, win.body()));
+        baseLayout.startup();
 
-        api.getData('index.php/Core/module/jsonGetGlobalModules').then(function(data) {
-            var globalModules = data.data;
-            api.config.set('globalModules', globalModules);
+        viewManager = new ViewManager(baseLayout);
+        viewManager.startup();
 
-            var baseLayout = new BaseLayout({}, dom.create('div', null, win.body()));
-            baseLayout.startup();
-
-            viewManager = new ViewManager(baseLayout);
-            viewManager.startup();
-
-            started = true;
-            starting = false;
-        });
+        started = true;
+        starting = false;
     };
 
     if (!started && !starting) {

@@ -594,4 +594,27 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
             throw new Phprojekt_Exception_NotAuthorized('You are not authorized to save an entry under this user');
         }
     }
+
+    public static function getProjectMinutesByUsers($userIds, $startDate, $endDate)
+    {
+        return Phprojekt::getInstance()->getDb()->select()
+            ->from(
+                array('t' => 'timecard'),
+                array('project_id' => 't.project_id', 'user_id' => 't.owner_id', 'minutes' => 'SUM(t.minutes)')
+            )->join(
+                array('p' => 'project'),
+                't.project_id = p.id',
+                array('project' => 'p.title')
+            )->join(
+                array('u' => 'user'),
+                't.owner_id = u.id',
+                array('user' => 'CONCAT(u.firstname, " ", u.lastname)')
+            )->where('t.owner_id in (?)', implode(',', $userIds))
+            ->where('DATE(t.start_datetime) >= ?', $startDate->format('Y-m-d'))
+            ->where('DATE(t.start_datetime) < ?', $endDate->format('Y-m-d'))
+            ->group(array('t.project_id', 't.owner_id'))
+            ->order('t.project_id ASC')
+            ->query()->fetchAll();
+    }
+
 }
