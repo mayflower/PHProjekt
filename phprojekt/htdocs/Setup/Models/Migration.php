@@ -101,13 +101,6 @@ class Setup_Models_Migration
     private $_contacts = array();
 
     /**
-     * Relation: Todo ID in p5 to Todo ID in p6.
-     *
-     * @var array
-     */
-    private $_todos = array();
-
-    /**
      * Relation: Helpdesk ID in p5 to Helpdesk ID in p6.
      *
      * @var array
@@ -202,7 +195,7 @@ class Setup_Models_Migration
      */
     public static function getModulesToMigrate()
     {
-        return array('System', 'Todo', 'Note', 'Calendar', 'Filemanager', 'Contact', 'Helpdesk', 'Timecard', 'Words');
+        return array('System', 'Note', 'Calendar', 'Filemanager', 'Contact', 'Helpdesk', 'Timecard', 'Words');
     }
 
     /**
@@ -289,22 +282,6 @@ class Setup_Models_Migration
         // Save words
         $this->_saveSession('migratedSearchWord', $this->_searchWord);
 
-    }
-
-    /**
-     * Migrate the Todo module.
-     *
-     * @return void
-     */
-    public function migrateTodo()
-    {
-        $this->_migrateTodos();
-
-        $this->_executeItemRightsInsert();
-        $this->_executeSearchDisplayInsert();
-
-        // Save words
-        $this->_saveSession('migratedSearchWord', $this->_searchWord);
     }
 
     /**
@@ -899,104 +876,6 @@ HERE
     }
 
     /**
-     * Migrate P5 todos.
-     *
-     * @return void
-     */
-    private function _migrateTodos()
-    {
-        $run   = true;
-        $start = 0;
-        $end   = self::ROWS_PER_QUERY;
-
-        $userIdRelation = array();
-
-        while ($run) {
-            $todos = $this->_dbOrig->query("SELECT * FROM " . PHPR_DB_PREFIX . "todo ORDER BY ID LIMIT "
-                . $start . ", " . $end)->fetchAll();
-            if (empty($todos)) {
-                $run = false;
-            } else {
-                $start = $start + $end;
-            }
-
-            // Multiple inserts
-            $dbFields = array('project_id', 'title', 'notes', 'owner_id', 'priority', 'current_status', 'user_id',
-                'start_date', 'end_date');
-            $dbValues = array();
-
-            foreach ($todos as $todo) {
-                $projectId   = $this->_processParentProjId($todo['project'], $todo['gruppe']);
-                $todo['von'] = $this->_processOwner($todo['von']);
-
-                $todo['status'] = (int) $todo['status'];
-                if ($todo['status'] < 2) {
-                    $todo['status'] = 1;
-                } else if ($todo['status'] > 5) {
-                    $todo['status'] = 5;
-                }
-
-                // Process assigned user
-                $oldAssignedId = $todo['ext'];
-                $todo['ext']   = null;
-                if (!empty($oldAssignedId) && is_numeric($oldAssignedId)) {
-                    // The assigned user exists in the DB?
-                    if (isset($this->_users[$oldAssignedId])) {
-                        // Yes
-                        $todo['ext'] = $this->_users[$oldAssignedId];
-                    }
-                }
-                $userIdRelation[$todo['ID']] = $todo['ext'];
-
-                // If dates are empty strings, don't send the fields; if not,
-                // clean them and fix wrong values as P5 would
-                // show them to the users
-                if (!empty($todo['anfang'])) {
-                    $startDate = Cleaner::sanitize('date', $todo['anfang']);
-                } else {
-                    $startDate = null;
-                }
-                if (!empty($todo['deadline'])) {
-                    $endDate = Cleaner::sanitize('date', $todo['deadline']);
-                } else {
-                    $endDate = null;
-                }
-
-                $dbValues[] = array($projectId, $this->_fix($todo['remark']),
-                    $this->_fix($todo['note'], 65500), $todo['von'], $todo['priority'], $todo['status'],
-                    $todo['ext'], $startDate, $endDate);
-            }
-
-            // Run the multiple inserts
-            if (!empty($dbValues)) {
-                $ids      = $this->_tableManager->insertMultipleRows('todo', $dbFields, $dbValues, true);
-                $moduleId = $this->_getModuleId('Todo');
-                foreach ($todos as $todo) {
-                    // Migrate permissions
-                    $oldTodoId           = $todo['ID'];
-                    $todo['ID']          = array_shift($ids);
-                    $todo['von']         = $this->_processOwner($todo['von']);
-                    $todo['ext']         = $userIdRelation[$oldTodoId];
-                    $todo['p6ProjectId'] = $this->_processParentProjId($todo['project'], $todo['gruppe']);
-
-                    $this->_todos[$oldTodoId] = $todo['ID'];
-                    $this->_migratePermissions('Todo', $todo);
-
-                    // Add search values
-                    $words  = array($this->_fix($todo['remark']), $this->_fix($todo['note'], 65500));
-                    $itemId = $todo['ID'];
-                    $this->_addSearchDisplay($moduleId, $itemId, $todo['p6ProjectId'], $words[0], $words[1]);
-                    $this->_addSearchWords(implode(" ", $words), $moduleId, $itemId);
-                }
-            }
-        }
-
-        // Save data into the session
-        // Todos
-        $this->_saveSession('migratedTodos', $this->_todos);
-    }
-
-    /**
      * Migrate P5 notes.
      *
      * @return void
@@ -1057,9 +936,7 @@ HERE
      */
     private function _migrateTimecard()
     {
-        $this->_todos = $this->_getSession('migratedTodos');
         $this->_helpdesk = $this->_getSession('migratedHelpdesk');
-
         // Multiple inserts
         $dbFields = array('owner_id', 'start_datetime', 'end_time', 'minutes', 'project_id', 'notes', 'module_id',
             'item_id');
@@ -1213,10 +1090,8 @@ HERE
         }
 
         // Clean memory
-        $this->_todos    = array();
         $this->_helpdesk = array();
 
-        $this->_cleanSession('migratedTodos');
         $this->_cleanSession('migratedHelpdesk');
     }
 
@@ -1954,13 +1829,6 @@ HERE
         }
 
         switch ($module) {
-            case 'Todo':
-                // Assigned user: 'ext' field - Give write access to assigned user, if any
-                if (!empty($item['ext'])) {
-                    $assignedId                 = $item['ext'];
-                    $userRightsAdd[$assignedId] = $this->_accessWrite;
-                }
-                break;
             case 'Helpdesk':
                 // Give write access to assigned user, if any. 'assigned' field
                 if (!empty($item['assigned'])) {
@@ -1974,7 +1842,6 @@ HERE
             default:
                 break;
         }
-
         // Add owner with Admin access. This may overwrite previous right assignment for owner, that's ok.
         if ($userVon > 0) {
             $userRightsAdd[$userVon] = $this->_accessAdmin;
@@ -2252,15 +2119,6 @@ HERE
             $itemId   = null;
         } else {
             switch ($data['module']) {
-                case 'todo':
-                case 'Todo':
-                    if (isset($this->_todos[$data['module_id']])) {
-                        $itemId = $this->_todos[$data['module_id']];
-                    } else {
-                        $moduleId = 1;
-                        $itemId   = null;
-                    }
-                    break;
                 case 'Helpdsek':
                 case 'helpdesk':
                     if (isset($this->_helpdesk[$data['module_id']])) {
