@@ -1291,7 +1291,7 @@ class IndexController extends Zend_Controller_Action
     protected function _getDateStringParam($name, $default = null)
     {
         $value = $this->getRequest()->getParam($name, $default);
-        if (!Cleaner::validate('isoDate', $dateStart)) {
+        if (!Cleaner::validate('isoDate', $value)) {
             throw new Phprojekt_Exception_InvalidParameter($name, $value, 'yyyy-mm-dd');
         }
         return $value;
