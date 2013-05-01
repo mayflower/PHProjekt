@@ -493,12 +493,9 @@ class Phprojekt_DbParser
                         }
                         break;
                     case 'delete':
-                        foreach ($rows as $code => $where) {
-                            if (empty($code)) {
-                                $where = null;
-                            }
+                        foreach ($rows as $data) {
                             $data = $this->_convertModulesId($data);
-                            $this->_tableManager->deleteRows($tableName, $where);
+                            $this->_tableManager->deleteRows($tableName, array_shift($data));
                         }
                         break;
                 }
