@@ -798,6 +798,10 @@ HERE
         // their migration until next iteration, and so on, because of 'path' field.
         // Note: 'count($projects)' has to be outside the 'for' sentence because that amount varies after each iteration
         $totalProjects = count($projects);
+
+        // Store the names of the projects under each parent so we can rename duplicates.
+        $projectNamesByParentId = array();
+
         // Following looping structure in the 99% of the cases is iterated just a few times and then interrupted.
         for ($i = 0; $i < $totalProjects; $i++) {
             if ($projectsNotMigrated == count($projects)) {
@@ -810,7 +814,7 @@ HERE
             foreach ($projects as $index => $project) {
                 $oldProjectId = $project['ID'];
                 if (empty($project['parent'])) {
-                    $parentId = (isset($this->_groups[$project['gruppe']])) ? $this->_groups[$project['gruppe']]
+                    $parentId = (isset($this->_groups[$project['gruppe']])) ? (int) $this->_groups[$project['gruppe']]
                         : self::PROJECT_ROOT;
                     if (!isset($paths[$parentId])) {
                         $paths[$parentId] = $paths[self::PROJECT_ROOT] . $parentId . "/";
@@ -820,7 +824,7 @@ HERE
                     $oldParentId = $project['parent'];
                     if (isset($this->_projects[$oldParentId])) {
                         // Yes
-                        $parentId = $this->_projects[$oldParentId];
+                        $parentId = (int) $this->_projects[$oldParentId];
                     } else {
                         // No - Continue to the next iteration of the foreach structure, current project has to be
                         // processed later.
@@ -834,10 +838,22 @@ HERE
 
                 $project['von'] = $this->_processOwner($project['von']);
 
+                $project['name'] = $this->_fix($project['name'], 255);
+
+                // Rename projects with the same name and parent ID
+                if (!array_key_exists($parentId, $projectNamesByParentId)) {
+                    $projectNamesByParentId[$parentId] = array();
+                }
+                if (in_array(strtolower($project['name']), $projectNamesByParentId[$parentId])) {
+                    $project['name'] = $project['name'] . '-' . $oldProjectId;
+                }
+
+                $projectNamesByParentId[$parentId][] = strtolower($project['name']);
+
                 $projectId = $this->_tableManager->insertRow('project', array(
                     'path'             => $paths[$parentId],
                     'project_id'       => $parentId,
-                    'title'            => $this->_fix($project['name'], 255),
+                    'title'            => $project['name'],
                     'notes'            => $this->_fix($project['note'], 65500),
                     'owner_id'         => $project['von'],
                     'start_date'       => $startDate,
@@ -858,7 +874,7 @@ HERE
                 $this->_migratePermissions('Project', $project);
 
                 // Add search values
-                $words  = array($this->_fix($project['name'], 255), $this->_fix($project['note'], 65500));
+                $words  = array($project['name'], $this->_fix($project['note'], 65500));
                 $itemId = $project['ID'];
                 $this->_addSearchDisplay(1, $itemId, $project['p6ProjectId'], $words[0], $words[1]);
                 $this->_addSearchWords(implode(" ", $words), 1, $itemId);
