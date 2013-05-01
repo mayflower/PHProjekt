@@ -101,13 +101,6 @@ class Setup_Models_Migration
     private $_contacts = array();
 
     /**
-     * Relation: Helpdesk ID in p5 to Helpdesk ID in p6.
-     *
-     * @var array
-     */
-    private $_helpdesk = array();
-
-    /**
      * P5 Database.
      *
      * @var Zend_db
@@ -178,13 +171,6 @@ class Setup_Models_Migration
     const USER_TEST    = 2;
     const PROJECT_ROOT = 1;
 
-    // Status constants
-    const HELPDESK_STATUS_OPEN     = 1;
-    const HELPDESK_STATUS_ASSIGNED = 2;
-    const HELPDESK_STATUS_SOLVED   = 3;
-    const HELPDESK_STATUS_VERIFIED = 4;
-    const HELPDESK_STATUS_CLOSED   = 5;
-
     // Pagination
     const ROWS_PER_QUERY = 5000;
 
@@ -195,7 +181,7 @@ class Setup_Models_Migration
      */
     public static function getModulesToMigrate()
     {
-        return array('System', 'Calendar', 'Helpdesk', 'Timecard', 'Words');
+        return array('System', 'Calendar', 'Timecard', 'Words');
     }
 
     /**
@@ -329,22 +315,6 @@ HERE
 
         $c2migration = new Calendar2_Migration();
         $c2migration->upgrade(null, Phprojekt::getInstance()->getDb());
-    }
-
-    /**
-     * Migrate the Helpdesk module.
-     *
-     * @return void
-     */
-    public function migrateHelpdesk()
-    {
-        $this->_migrateHelpdesk();
-
-        $this->_executeItemRightsInsert();
-        $this->_executeSearchDisplayInsert();
-
-        // Save words
-        $this->_saveSession('migratedSearchWord', $this->_searchWord);
     }
 
     /**
@@ -840,7 +810,6 @@ HERE
      */
     private function _migrateTimecard()
     {
-        $this->_helpdesk = $this->_getSession('migratedHelpdesk');
         // Multiple inserts
         $dbFields = array('owner_id', 'start_datetime', 'end_time', 'minutes', 'project_id', 'notes', 'module_id',
             'item_id');
@@ -992,11 +961,6 @@ HERE
         if (!empty($dbValues)) {
             $this->_tableManager->insertMultipleRows('timecard', $dbFields, $dbValues);
         }
-
-        // Clean memory
-        $this->_helpdesk = array();
-
-        $this->_cleanSession('migratedHelpdesk');
     }
 
     private function _timecardTimeToDatetime($date, $time) {
@@ -1188,249 +1152,6 @@ HERE
     }
 
     /**
-     * Migrate P5 Helpdesk.
-     *
-     * @return void
-     */
-    private function _migrateHelpdesk()
-    {
-        $run   = true;
-        $start = 0;
-        $end   = self::ROWS_PER_QUERY;
-
-        $ownerIdRelation  = array();
-        $assignedRelation = array();
-        $this->_contacts  = $this->_getSession('migratedContacts');
-
-        while ($run) {
-            $query = "SELECT * FROM " . PHPR_DB_PREFIX . "rts ORDER BY ID LIMIT "
-                . $start . ", " . $end;
-            $incidents = $this->_dbOrig->query($query)->fetchAll();
-            if (empty($incidents)) {
-                $run = false;
-            } else {
-                $start = $start + $end;
-            }
-
-            // Multiple inserts
-            $dbFields = array('project_id', 'owner_id', 'title', 'assigned', 'date', 'priority', 'attachments',
-                'description', 'status', 'due_date', 'author', 'solved_by', 'solved_date', 'contact_id');
-            $dbValues = array();
-
-            foreach ($incidents as $item) {
-                $projectId = $this->_processParentProjId($item['proj'], $item['gruppe']);
-
-                // Process owner - Id, email or wrong value
-                $owner = $item['von'];
-                // Default value:
-                $ownerId = self::USER_ADMIN;
-                if (is_numeric($owner) && !empty($owner)) {
-                    // Id
-                    $ownerId = (int) $owner;
-                } else if (strpos($owner, '@')) {
-                    // It is apparently an email - Search for the Id
-                    $query   = sprintf("SELECT ID FROM " . PHPR_DB_PREFIX . "users WHERE email = '%s'", $owner);
-                    $userIds = $this->_dbOrig->query($query)->fetchAll();
-                    if (isset($userIds[0]['ID'])) {
-                        $oldOwnerId = $userIds[0]['ID'];
-                        if (isset($this->_users[$oldOwnerId])) {
-                            $ownerId = $this->_users[$oldOwnerId];
-                        }
-                    }
-                }
-
-                // Process assigned user
-                $oldAssignedId = (int) $item['assigned'];
-                if (isset($this->_users[$oldAssignedId])) {
-                    $assignedId = $this->_users[$oldAssignedId];
-                } else {
-                    $assignedId = null;
-                }
-                $assignedRelation[$item['ID']] = $assignedId;
-
-                // Process creation date
-                $date = null;
-                if (!empty($item['submit'])) {
-                    $date = $item['submit'];
-                } else if (isset($item['created']) && !empty($item['created'])) {
-                    $date = $item['created'];
-                }
-                if (!empty($date)) {
-                    $date = $this->_longDateToShortDate($date);
-                }
-
-                // Process priority
-                $priority = $item['priority'];
-                if (is_numeric($priority)) {
-                    // It is an int
-                    $priority = (int) $priority;
-                    if ($priority < 1 || $priority > 10) {
-                        $priority = 5;
-                    }
-                } else {
-                    // Maybe it is a string representing the priority
-                    switch ($priority) {
-                        case 'Hoch':
-                            // High
-                            $priority = 1;
-                            break;
-                        case 'Niedrig':
-                        default:
-                            // Low
-                            $priority = 5;
-                            break;
-                        case 'Keine':
-                            // None
-                            $priority = 10;
-                            break;
-                    }
-                }
-
-                // Process attachment
-                $filenameField   = $item['filename'];
-                $attachmentField = null;
-                if (strpos($filenameField, "|")) {
-                    $tmp = explode('\|', $filenameField);
-                    if (isset($tmp[0]) && isset($tmp[1])) {
-                        $currentFileName = $tmp[1];
-                        $realName        = $tmp[0];
-                        if ($currentFileName != '' && $realName != '') {
-                            $md5Name         = md5(uniqid(rand(), 1));
-                            $attachmentField = $md5Name . '|' . $realName;
-                            $uploadDir       = str_replace('htdocs/setup.php', '', $_SERVER['SCRIPT_FILENAME'])
-                                . 'upload';
-                            // Copy file
-                            $originPath = $this->_p5RootPath . '\\' . PHPR_DOC_PATH . '\\' . $currentFileName;
-                            $targetPath = $uploadDir . '\\' . $md5Name;
-                            if (file_exists($originPath)) {
-                                copy($originPath, $targetPath);
-                            }
-                        }
-                    }
-                }
-
-                // Process description
-                $description  = $this->_fix($item['note'], 65500) . chr(10) . chr(10);
-                $description .= $item['solution'];
-
-                // Process status
-                $status = $item['status'];
-                if (is_numeric($status)) {
-                    $statusNumber = (int) $status;
-                    if ($statusNumber == 7) {
-                        $statusNumber = self::HELPDESK_STATUS_OPEN;
-                    }
-                } else if (!empty($status)) {
-                    // It is apparently a descriptive string
-                    switch ($status) {
-                        case 'erfolgreich geschlossen':
-                            // Succesfully closed
-                            $statusNumber = self::HELPDESK_STATUS_CLOSED;
-                            break;
-                        case 'erfolglos geschlossen':
-                            // Unsuccessfully closed
-                            $statusNumber = self::HELPDESK_STATUS_CLOSED;
-                            break;
-                        case 'in Bearbeitung':
-                            // In treatment
-                            $statusNumber = self::HELPDESK_STATUS_ASSIGNED;
-                            break;
-                        case 'neu':
-                        default:
-                            // New
-                            $statusNumber = self::HELPDESK_STATUS_OPEN;
-                            break;
-                    }
-                } else {
-                    $statusNumber = self::HELPDESK_STATUS_OPEN;
-                }
-
-                // Process due date
-                $dueDate = $item['due_date'];
-                if (!empty($dueDate)) {
-                    // Just in case
-                    $dueDate = Cleaner::sanitize('date', $dueDate);
-                } else {
-                    $dueDate = null;
-                }
-
-                // Process author
-                // Default value:
-                $authorId = $ownerId;
-                if (isset($item['autor']) && !empty($item['autor'])) {
-                    // It is apparently an email - Search for the Id
-                    $author  = $item['autor'];
-                    $query   = sprintf("SELECT ID FROM " . PHPR_DB_PREFIX . "users WHERE email = '%s'", $author);
-                    $userIds = $this->_dbOrig->query($query)->fetchAll();
-                    foreach ($userIds as $userId) {
-                        $oldAuthorId = $userId['ID'];
-                        if (isset($this->_users[$oldAuthorId])) {
-                            $authorId = $this->_users[$oldAuthorId];
-                        }
-                    }
-                }
-                $ownerIdRelation[$item['ID']] = $authorId;
-
-                // Process P5 'solving' fields: 'solved' and 'solve_date'
-                $solvedBy = $item['solved'];
-                if (isset($this->_users[$solvedBy])) {
-                    $solvedBy = $this->_users[$solvedBy];
-                } else {
-                    $solvedBy = null;
-                }
-                if (!empty($item['solve_time'])) {
-                    $solvedDate = $this->_longDateToShortDate($item['solve_time']);
-                } else {
-                    $solvedDate = null;
-                }
-
-                // Process contact
-                $contact = (int) $item['contact'];
-                if (isset($this->_contacts[$contact])) {
-                    $contact = $this->_contacts[$contact];
-                } else {
-                    $contact = null;
-                }
-
-                $dbValues[] = array($projectId, $ownerId, $this->_fix($item['name'], 255), $assignedId,
-                    $date, $priority, $attachmentField, $description, $statusNumber, $dueDate, $authorId, $solvedBy,
-                    $solvedDate, $contact);
-            }
-
-            // Run the multiple inserts
-            if (!empty($dbValues)) {
-                $ids = $this->_tableManager->insertMultipleRows('helpdesk', $dbFields, $dbValues, true);
-
-                foreach ($incidents as $item) {
-                    // Migrate permissions
-                    $oldHelpdeskId       = $item['ID'];
-                    $item['ID']          = array_shift($ids);
-                    $item['von']         = $ownerIdRelation[$oldHelpdeskId];
-                    $item['assigned']    = $assignedRelation[$oldHelpdeskId];
-                    $item['p6ProjectId'] = $this->_processParentProjId($item['proj'], $item['gruppe']);
-                    $this->_helpdesk[$oldHelpdeskId] = $item['ID'];
-                    $this->_migratePermissions('Helpdesk', $item);
-
-                    // Add search values
-                    $moduleId = $this->_getModuleId('Helpdesk');
-                    $words    = array($this->_fix($item['name'], 255), $this->_fix($item['note'], 65500));
-                    $itemId   = $item['ID'];
-                    $this->_addSearchDisplay($moduleId, $itemId, $item['p6ProjectId'], $words[0], $words[1]);
-                    $this->_addSearchWords(implode(" ", $words), $moduleId, $itemId);
-                }
-            }
-        }
-
-        // Clean memory
-        $this->_contacts = array();
-        $this->_cleanSession('migratedContacts');
-
-        // Save data into the session
-        // Helpdesk
-        $this->_saveSession('migratedHelpdesk', $this->_helpdesk);
-    }
-
-    /**
      * Converts the old time format (hhmm) to a time format (hh:mm:ss).
      *
      * @param string $stringTime P5 Time string.
@@ -1553,7 +1274,7 @@ HERE
     /**
      * Migrates the permission from PHProjekt 5.x version to PHProjekt 6.0.
      *
-     * @param string $module Module to grant permissions to: Project / Note / Todo / Filemanager, Helpdesk.
+     * @param string $module Module to grant permissions to: Project / Note / Todo / Filemanager
      * @param array  $item   Item data.
      *
      * @return void
@@ -1576,20 +1297,6 @@ HERE
             $userRightsAdd[$userId] = $access;
         }
 
-        switch ($module) {
-            case 'Helpdesk':
-                // Give write access to assigned user, if any. 'assigned' field
-                if (!empty($item['assigned'])) {
-                    $oldAssignedId = $item['assigned'];
-                    if (isset($this->_users[$oldAssignedId])) {
-                        $assignedId                 = $this->_users[$oldAssignedId];
-                        $userRightsAdd[$assignedId] = $this->_accessWrite;
-                    }
-                }
-                break;
-            default:
-                break;
-        }
         // Add owner with Admin access. This may overwrite previous right assignment for owner, that's ok.
         if ($userVon > 0) {
             $userRightsAdd[$userVon] = $this->_accessAdmin;
@@ -1866,20 +1573,7 @@ HERE
             $moduleId = 1;
             $itemId   = null;
         } else {
-            switch ($data['module']) {
-                case 'Helpdsek':
-                case 'helpdesk':
-                    if (isset($this->_helpdesk[$data['module_id']])) {
-                        $itemId = $this->_helpdesk[$data['module_id']];
-                    } else {
-                        $moduleId = 1;
-                        $itemId   = null;
-                    }
-                    break;
-                default:
-                    $itemId = null;
-                    break;
-            }
+            $itemId = null;
         }
 
         return array($moduleId, $itemId);
