@@ -195,7 +195,7 @@ class Setup_Models_Migration
      */
     public static function getModulesToMigrate()
     {
-        return array('System', 'Note', 'Calendar', 'Filemanager', 'Contact', 'Helpdesk', 'Timecard', 'Words');
+        return array('System', 'Calendar', 'Filemanager', 'Contact', 'Helpdesk', 'Timecard', 'Words');
     }
 
     /**
@@ -282,22 +282,6 @@ class Setup_Models_Migration
         // Save words
         $this->_saveSession('migratedSearchWord', $this->_searchWord);
 
-    }
-
-    /**
-     * Migrate the Note module.
-     *
-     * @return void
-     */
-    public function migrateNote()
-    {
-        $this->_migrateNotes();
-
-        $this->_executeItemRightsInsert();
-        $this->_executeSearchDisplayInsert();
-
-        // Save words
-        $this->_saveSession('migratedSearchWord', $this->_searchWord);
     }
 
     /**
@@ -873,60 +857,6 @@ HERE
         // Save data into the session
         // Projects
         $this->_saveSession('migratedProjects', $this->_projects);
-    }
-
-    /**
-     * Migrate P5 notes.
-     *
-     * @return void
-     */
-    private function _migrateNotes()
-    {
-        $run   = true;
-        $start = 0;
-        $end   = self::ROWS_PER_QUERY;
-
-        while ($run) {
-            $notes = $this->_dbOrig->query("SELECT * FROM " . PHPR_DB_PREFIX . "notes ORDER BY ID LIMIT "
-                . $start . ", " . $end)->fetchAll();
-            if (empty($notes)) {
-                $run = false;
-            } else {
-                $start = $start + $end;
-            }
-
-            // Multiple inserts
-            $dbFields = array('project_id', 'title', 'comments', 'owner_id');
-            $dbValues = array();
-
-            foreach ($notes as $note) {
-                $projectId   = $this->_processParentProjId($note['projekt'], $note['gruppe']);
-                $note['von'] = $this->_processOwner($note['von']);
-
-                $dbValues[] = array($projectId, $this->_fix($note['name'], 255), $this->_fix($note['remark'], 65500),
-                    $note['von']);
-            }
-
-            // Run the multiple inserts
-            if (!empty($dbValues)) {
-                $ids = $this->_tableManager->insertMultipleRows('note', $dbFields, $dbValues, true);
-
-                foreach ($notes as $note) {
-                    // Migrate permissions
-                    $note['von']         = $this->_processOwner($note['von']);
-                    $note['ID']          = array_shift($ids);
-                    $note['p6ProjectId'] = $this->_processParentProjId($note['projekt'], $note['gruppe']);
-                    $this->_migratePermissions('Note', $note);
-
-                    // Add search values
-                    $moduleId = $this->_getModuleId('Note');
-                    $words    = array($this->_fix($note['name'], 255), $this->_fix($note['remark'], 65500));
-                    $itemId   = $note['ID'];
-                    $this->_addSearchDisplay($moduleId, $itemId, $note['p6ProjectId'], $words[0], $words[1]);
-                    $this->_addSearchWords(implode(" ", $words), $moduleId, $itemId);
-                }
-            }
-        }
     }
 
     /**
