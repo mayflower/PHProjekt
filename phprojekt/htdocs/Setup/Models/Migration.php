@@ -195,7 +195,7 @@ class Setup_Models_Migration
      */
     public static function getModulesToMigrate()
     {
-        return array('System', 'Calendar', 'Filemanager', 'Contact', 'Helpdesk', 'Timecard', 'Words');
+        return array('System', 'Calendar', 'Contact', 'Helpdesk', 'Timecard', 'Words');
     }
 
     /**
@@ -329,22 +329,6 @@ HERE
 
         $c2migration = new Calendar2_Migration();
         $c2migration->upgrade(null, Phprojekt::getInstance()->getDb());
-    }
-
-    /**
-     * Migrate the Filemanager module.
-     *
-     * @return void
-     */
-    public function migrateFilemanager()
-    {
-        $this->_migrateFilemanager();
-
-        $this->_executeItemRightsInsert();
-        $this->_executeSearchDisplayInsert();
-
-        // Save words
-        $this->_saveSession('migratedSearchWord', $this->_searchWord);
     }
 
     /**
@@ -1211,82 +1195,6 @@ HERE
 
         // Clean Memory
         $this->_calendars = array();
-    }
-
-    /**
-     * Migrate P5 filemanager.
-     *
-     * @return void
-     */
-    private function _migrateFilemanager()
-    {
-        $run   = true;
-        $start = 0;
-        $end   = self::ROWS_PER_QUERY;
-
-        while ($run) {
-            // Filemanager
-            $files = $this->_dbOrig->query("SELECT * FROM " . PHPR_DB_PREFIX . "dateien ORDER BY ID LIMIT "
-                . $start . ", " . $end)->fetchAll();
-            if (empty($files)) {
-                $run = false;
-            } else {
-                $start = $start + $end;
-            }
-
-            // Multiple inserts
-            $dbFields = array('owner_id', 'title', 'comments', 'project_id', 'files');
-            $dbValues = array();
-
-            foreach ($files as $index => $file) {
-                // Is it a file? (not a folder)
-                if ($file['typ'] == "f") {
-                    $file['von']  = $this->_processOwner($file['von']);
-                    $file['div2'] = $this->_processParentProjId($file['div2'], $file['gruppe']);
-                    $newFilename  = md5(uniqid(rand(), 1));
-                    $uploadDir    = str_replace('htdocs/setup.php', '', $_SERVER['SCRIPT_FILENAME']) . 'upload';
-
-                    // All the required data is filled?
-                    if (!empty($file['tempname']) && !empty($file['filename'])) {
-                        $title = $this->_fix($file['filename'], 100);
-
-                        // Copy file, if it is there
-                        $originPath = PHPR_FILE_PATH . "\\" . $file['tempname'];
-                        $targetPath = $uploadDir . "\\" . $newFilename;
-                        if (file_exists($originPath)) {
-                            copy($originPath, $targetPath);
-                        }
-
-                        $dbValues[] = array($file['von'], $title, $this->_fix($file['remark'], 65500),
-                            $file['div2'], $this->_fix($newFilename . "|" . $file['filename']));
-                    } else {
-                        unset($files[$index]);
-                    }
-                } else {
-                    unset($files[$index]);
-                }
-            }
-
-            // Run the multiple inserts
-            if (!empty($dbValues)) {
-                $ids = $this->_tableManager->insertMultipleRows('filemanager', $dbFields, $dbValues, true);
-
-                foreach ($files as $file) {
-                    // Migrate permissions
-                    $file['von']         = $this->_processOwner($file['von']);
-                    $file['ID']          = array_shift($ids);
-                    $file['p6ProjectId'] = $this->_processParentProjId($file['div2'], $file['gruppe']);
-                    $this->_migratePermissions('Filemanager', $file);
-
-                    // Add search values
-                    $moduleId = $this->_getModuleId('Filemanager');
-                    $words    = array($this->_fix($file['filename'], 100), $this->_fix($file['remark'], 65500));
-                    $itemId   = $file['ID'];
-                    $this->_addSearchDisplay($moduleId, $itemId, $file['p6ProjectId'], $words[0], $words[1]);
-                    $this->_addSearchWords(implode(" ", $words), $moduleId, $itemId);
-                }
-            }
-        }
     }
 
     /**
