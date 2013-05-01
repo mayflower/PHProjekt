@@ -70,7 +70,7 @@
     },
     "initialData": {
         "database_manager": {
-            "delete": {"_ignored": "table_name = 'project' and table_field = 'contact_id'"}
+            "delete": [{"_ignored": "table_name = 'project' and table_field = 'contact_id'"}]
         }
     }
 }
