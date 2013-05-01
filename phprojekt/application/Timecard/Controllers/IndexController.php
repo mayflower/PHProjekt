@@ -475,7 +475,7 @@ class Timecard_IndexController extends IndexController
     private function _projectsParamToArray()
     {
         $projects = trim($this->getRequest()->getParam('projects', ''));
-        return $projects == "" ? array() : explode(',', $projects);
+        return $projects === '' ? null : explode(',', $projects);
     }
 
     /**
