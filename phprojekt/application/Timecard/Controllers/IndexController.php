@@ -53,7 +53,7 @@ class Timecard_IndexController extends IndexController
     {
         $year    = (int) $this->getRequest()->getParam('year', date("Y"));
         $month   = (int) $this->getRequest()->getParam('month', date("m"));
-        $records = $this->getModelObject()->getMonthRecords($year, $month);
+        $records = Timecard_Models_Timecard::getMonthRecords($year, $month);
 
         Phprojekt_Converter_Json::echoConvert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);
     }
