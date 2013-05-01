@@ -195,7 +195,7 @@ class Setup_Models_Migration
      */
     public static function getModulesToMigrate()
     {
-        return array('System', 'Calendar', 'Contact', 'Helpdesk', 'Timecard', 'Words');
+        return array('System', 'Calendar', 'Helpdesk', 'Timecard', 'Words');
     }
 
     /**
@@ -329,16 +329,6 @@ HERE
 
         $c2migration = new Calendar2_Migration();
         $c2migration->upgrade(null, Phprojekt::getInstance()->getDb());
-    }
-
-    /**
-     * Migrate the Contact module.
-     *
-     * @return void
-     */
-    public function migrateContact()
-    {
-        $this->_migrateContacts();
     }
 
     /**
@@ -1195,86 +1185,6 @@ HERE
 
         // Clean Memory
         $this->_calendars = array();
-    }
-
-    /**
-     * Migrate P5 contacts.
-     *
-     * @return void
-     */
-    private function _migrateContacts()
-    {
-        $run   = true;
-        $start = 0;
-        $end   = self::ROWS_PER_QUERY;
-
-        while ($run) {
-            $contacts = $this->_dbOrig->query("SELECT * FROM " . PHPR_DB_PREFIX . "contacts ORDER BY ID LIMIT "
-                . $start . ", " . $end)->fetchAll();
-            if (empty($contacts)) {
-                $run = false;
-            } else {
-                $start = $start + $end;
-            }
-
-            // Multiple inserts
-            $dbFields = array('project_id', 'name', 'email', 'company', 'firstphone', 'secondphone', 'mobilephone',
-                'street', 'city', 'zipcode', 'country', 'comment', 'owner_id', 'private');
-            $dbValues = array();
-
-            foreach ($contacts as $contact) {
-                $contact['von'] = $this->_processOwner($contact['von']);
-
-                // 'Comment' field will have also all fields not supported by P6.
-                $comment = $contact['bemerkung'];
-                if (!empty($contact['email2'])) {
-                    $comment .= chr(10) . 'Email 2: ' . $contact['email2'];
-                }
-                if (!empty($contact['fax'])) {
-                    $comment .= chr(10) . 'Fax: ' . $contact['fax'];
-                }
-                if (!empty($contact['anrede'])) {
-                    $comment .= chr(10) . 'Salutation: ' . $contact['anrede'];
-                }
-                if (!empty($contact['url'])) {
-                    $comment .= chr(10) . 'URL: ' . $contact['url'];
-                }
-                if (!empty($contact['div1'])) {
-                    $comment .= chr(10) . 'User defined field 1: ' . $contact['div1'];
-                }
-                if (!empty($contact['div2'])) {
-                    $comment .= chr(10) . 'User defined field 2: ' . $contact['div2'];
-                }
-
-                // Private
-                if (isset($contact['acc_read']) && $contact['acc_read'] == 'group') {
-                    $private = 0;
-                } else {
-                    $private = 1;
-                }
-
-                $dbValues[] = array(self::PROJECT_ROOT, $this->_fix($contact['vorname'] . ' ' . $contact['nachname']),
-                    $this->_fix($contact['email']), $this->_fix($contact['firma']), $this->_fix($contact['tel1']),
-                    $this->_fix($contact['tel2']), $this->_fix($contact['mobil']), $this->_fix($contact['strasse']),
-                    $this->_fix($contact['stadt']), $this->_fix($contact['plz']), $this->_fix($contact['land']),
-                    $this->_fix($comment), $contact['von'], $private);
-            }
-
-            // Run the multiple inserts
-            if (!empty($dbValues)) {
-                $ids = $this->_tableManager->insertMultipleRows('contact', $dbFields, $dbValues, true);
-
-                foreach ($contacts as $contact) {
-                    $contactId                      = array_shift($ids);
-                    $oldContactId                   = $contact['ID'];
-                    $this->_contacts[$oldContactId] = $contactId;
-                }
-            }
-        }
-
-        // Save data into the session
-        // Contacts
-        $this->_saveSession('migratedContacts', $this->_contacts);
     }
 
     /**
