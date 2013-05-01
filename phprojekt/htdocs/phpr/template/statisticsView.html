@@ -1,4 +1,5 @@
 <div class="statisticsView">
+    <div data-dojo-attach-point="projectChooserContainer" data-dojo-type="dijit/layout/ContentPane"></div>
     <h2>Export</h2>
     <div class="exportForm" data-dojo-attach-point="exportForm" data-dojo-type="dijit/form/Form">
         <input type="text"
@@ -18,6 +19,7 @@
                 type="submit"
                 data-dojo-props="baseClass:'button'">Export to CSV</button>
     </div>
+    <h1>Diesen Monat</h1>
     <ul class="buttons-outer">
         <li data-dojo-attach-point="monthViewGraphBtn" class="buttons-inner active">
             <img class="button" src="../../../img/timecard/icon-graphics.png">
@@ -29,7 +31,6 @@
     <h2>Gearbeitete Zeit</h2>
     <p>Die Anzahl der Stunden pro Tag und die erwartete Stundenanzahl</p>
     <div data-dojo-type="dijit/layout/ContentPane" data-dojo-attach-point="monthContainer">
-        <div data-dojo-type="phpr/Statistics/WorktimeMonthGraph"></div>
     </div>
 
     <h1>Projektzeiten</h1>
@@ -48,13 +49,12 @@
     </div>
 
     <img class="buttons" src="../../../img/timecard/statistics_stub_buttons.png">
-    <h1>Dieses Jahr</h1>
     <h2>Gearbeitete Zeit</h2>
     <p>Die Anzahl der Stunden pro Monat sowie die erwartete Arbeitszeit und Urlaubstage.</p>
     <img src="../../../img/timecard/statistics_stub2.png">
 
-    <img class="buttons" src="../../../img/timecard/statistics_stub_buttons.png">
     <h1>Team in diesem Monat</h1>
+    <img class="buttons" src="../../../img/timecard/statistics_stub_buttons.png">
     <h2>Teamarbeitszeiten</h2>
     <p>Die Überstundenübersicht über einnzelne Teammitglieder. Klicken für Details.</p>
     <img src="../../../img/timecard/statistics_stub3.png">
