@@ -56,7 +56,6 @@ define([
 
             timecardModel.getMinutesToWorkTotal()
             .then(lang.hitch(this, function(data) {
-                domStyle.set(this.toWorkTextTotal, 'display', '');
                 this.toWorkTotal.innerHTML = timehelper.minutesToHMString(data.minutesToWork);
             }));
 
@@ -67,15 +66,7 @@ define([
 
             var toWorkPromise = timecardModel.getMinutesToWork()
             .then(lang.hitch(this, function(data) {
-                var toWork = data.minutesToWork;
-                if (toWork === 0) {
-                    domStyle.set(this.toWork, 'display', 'none');
-                } else {
-                    domStyle.set(this.toWorkText, 'display', '');
-                    this.toWork.innerHTML = timehelper.minutesToHMString(toWork);
-                }
-            })).otherwise(lang.hitch(this, function() {
-                domStyle.set(this.toWork, 'display', 'none');
+                this.toWork.innerHTML = timehelper.minutesToHMString(data.minutesToWork);
             }));
 
             all([bookedPromise, toWorkPromise]).always(lang.hitch(this, function() {
