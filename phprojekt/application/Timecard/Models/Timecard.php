@@ -392,10 +392,10 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
         }
 
         $datas = array();
-        $currentDate  = $startDate;
+        $currentDate  = clone $startDate;
         while ($currentDate <= $endDate) {
-            $currentDate->add(new DateInterval('P1D'));
             $date  = $currentDate->format('Y-m-d');
+            $currentDate->add(new DateInterval('P1D'));
 
             $data         = array();
             $data['date'] = $date;
