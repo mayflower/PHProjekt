@@ -11,7 +11,7 @@ define([
     api,
     timehelper
 ) {
-    function monthYearDefaultQuery(params) {
+    function startEndDateDefaultQuery(params) {
         var start, end;
         params = params || {};
 
@@ -39,20 +39,8 @@ define([
         return ret;
     }
 
-    function startEndDateDefaultQuery(params) {
-        var thisMonth = new Date();
-        thisMonth.setDate(1);
-        var nextMonth = new Date(thisMonth);
-        nextMonth.setMonth(thisMonth.getMonth() + 1);
-
-        return lang.mixin({
-            start: timehelper.jsDateToIsoDate(thisMonth),
-            end: timehelper.jsDateToIsoDate(nextMonth)
-        }, params);
-    }
-
     exports.getMonthStatistics = function(params) {
-        var opts = monthYearDefaultQuery(params);
+        var opts = startEndDateDefaultQuery(params);
 
         return all({
             booked: api.getData(
@@ -67,7 +55,7 @@ define([
     };
 
     exports.getDaysByDateRange = function(params) {
-        var opts = monthYearDefaultQuery(params);
+        var opts = startEndDateDefaultQuery(params);
         return api.getData(
             'index.php/Timecard/index/daysByDateRange',
             { query: opts }
@@ -75,7 +63,7 @@ define([
     };
 
     exports.getWorkBalanceByDay = function(params) {
-        var opts = monthYearDefaultQuery(params);
+        var opts = startEndDateDefaultQuery(params);
         return api.getData(
             'index.php/Timecard/index/workBalanceByDay',
             { query: opts }
