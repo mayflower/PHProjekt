@@ -21,10 +21,12 @@ define([
 ) {
     return declare([Widget], {
         baseClass: 'projectUserTimeTable',
+        startDate: null,
+        endDate: null,
 
         buildRendering: function() {
             this.inherited(arguments);
-            Model.getProjectUserMinutes().then(lang.hitch(this, '_renderData'));
+            Model.getProjectUserMinutes(this._getModelParams()).then(lang.hitch(this, '_renderData'));
         },
 
         _renderData: function(data) {
@@ -83,6 +85,10 @@ define([
             });
             this.own(grid);
             grid.placeAt(this.domNode);
+        },
+
+        _getModelParams: function() {
+            return { startDate: this.startDate, endDate: this.endDate };
         }
     });
 });

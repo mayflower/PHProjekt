@@ -16,8 +16,8 @@ define([
     'phpr/Statistics/WorktimeMonthTable',
     'phpr/ProjectChooser',
     'phpr/Timehelper',
-    'dijit/layout/ContentPane',
-    'phpr/Statistics/ProjectUserTimeTable'
+    'phpr/Statistics/ProjectUserTimeTable',
+    'dijit/layout/ContentPane'
 ], function(
     declare,
     lang,
@@ -35,7 +35,8 @@ define([
     monthGraph,
     monthTable,
     projectChooser,
-    timehelper
+    timehelper,
+    ProjectUserTimeTable
 ) {
     var StatisticsProjectChooser = declare([projectChooser], {
         createOptions: function(queryResults) {
@@ -96,9 +97,12 @@ define([
 
             this.own(on(this.monthViewGraphBtn, 'click', lang.hitch(this, '_onMonthViewGraph')));
             this.own(on(this.monthViewTableBtn, 'click', lang.hitch(this, '_onMonthViewTable')));
-            this.own(on(this.projectChooser, 'change', lang.hitch(this, '_updateMonthWidget')));
-            this.own(on(this.startDate, 'change', lang.hitch(this, '_updateMonthWidget')));
-            this.own(on(this.endDate, 'change', lang.hitch(this, '_updateMonthWidget')));
+            this.own(on(this.projectChooser, 'change', lang.hitch(this, '_updateMonthWidgets')));
+            this.own(on(this.startDate, 'change', lang.hitch(this, '_updateMonthWidgets')));
+            this.own(on(this.endDate, 'change', lang.hitch(this, '_updateMonthWidgets')));
+            this.own(on(this.startDate, 'change', lang.hitch(this, '_setProjectTable')));
+            this.own(on(this.endDate, 'change', lang.hitch(this, '_setProjectTable')));
+            this._setProjectTable();
 
             this.own(this.exportForm.on('submit', lang.hitch(this, this._openExport)));
         },
@@ -116,11 +120,11 @@ define([
         },
 
         _setMonthTable: function() {
-            this._setMonthWidget(new monthTable(this._getMonthWidgetOptions()), 'table');
+            this._setMonthWidget(new monthTable(this._getWidgetOptions()), 'table');
         },
 
         _setMonthGraph: function() {
-            this._setMonthWidget(new monthGraph(this._getMonthWidgetOptions()), 'graph');
+            this._setMonthWidget(new monthGraph(this._getWidgetOptions()), 'graph');
         },
 
         _setMonthWidget: function(widget, state) {
@@ -133,7 +137,11 @@ define([
             this.monthState = state;
         },
 
-        _getMonthWidgetOptions: function() {
+        _setProjectTable: function() {
+            this.projectContainer.set('content', new ProjectUserTimeTable(this._getWidgetOptions()));
+        },
+
+        _getWidgetOptions: function() {
             return {
                 projects: this._getSelectedProjects(),
                 startDate: this.startDate.get('value'),
@@ -150,11 +158,11 @@ define([
             }
         },
 
-        _updateMonthWidget: function() {
-            this._scheduleMonthWidgetUpdate();
+        _updateMonthWidgets: function() {
+            this._scheduleMonthWidgetsUpdate();
         },
 
-        _scheduleMonthWidgetUpdate: function() {
+        _scheduleMonthWidgetsUpdate: function() {
             clearTimeout(this._monthUpdateTimer);
             this._monthUpdateTimer = setTimeout(lang.hitch(this, function() {
                 switch (this.monthState) {
