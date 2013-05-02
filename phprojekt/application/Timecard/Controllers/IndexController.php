@@ -459,6 +459,15 @@ class Timecard_IndexController extends IndexController
     {
         $projects = trim($this->getRequest()->getParam('projects', ''));
         return $projects == "" ? array() : explode(',', $projects);
+
+    private function _getDateFromParam($key) {
+        $d = Cleaner::sanitize('isodate', $this->getRequest()->getParam($key, null));
+
+        if ($d !== null) {
+            return \DateTime::createFromFormat('Y-m-d', $d);
+        }
+
+        return $d;
     }
 
     /**
