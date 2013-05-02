@@ -42,6 +42,9 @@ define([
 
         _setBookingAttr: function (booking) {
             api.projectTitleForId(booking.projectId).then(lang.hitch(this, function(title) {
+                if (this._destroyed) {
+                    return;
+                }
                 html.set(this.project, title);
             }));
 
