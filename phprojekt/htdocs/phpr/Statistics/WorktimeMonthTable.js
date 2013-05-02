@@ -22,6 +22,8 @@ define([
     return declare([Widget], {
         baseClass: 'statisticsMonthGrid',
         projects: null,
+        startDate: null,
+        endDate: null,
 
         constructor: function() {
             this.projects = [];

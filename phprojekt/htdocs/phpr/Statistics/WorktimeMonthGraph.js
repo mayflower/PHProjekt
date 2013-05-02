@@ -182,6 +182,8 @@ define([
         templateString: templateString,
         baseClass: 'thisMonthDiagram',
         projects: null,
+        startDate: null,
+        endDate: null,
 
         constructor: function() {
             this.projects = [];
