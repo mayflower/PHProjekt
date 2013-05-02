@@ -87,13 +87,6 @@ class Setup_Models_Migration
     private $_projects = array();
 
     /**
-     * Relation: Calendar ID in p5 to Calendar ID in p6.
-     *
-     * @var array
-     */
-    private $_calendars = array();
-
-    /**
      * Relation: Contact ID in p5 to Contact ID in p6.
      *
      * @var array
@@ -181,7 +174,7 @@ class Setup_Models_Migration
      */
     public static function getModulesToMigrate()
     {
-        return array('System', 'Calendar', 'Timecard', 'Words');
+        return array('System', 'Timecard', 'Words');
     }
 
     /**
@@ -268,53 +261,6 @@ class Setup_Models_Migration
         // Save words
         $this->_saveSession('migratedSearchWord', $this->_searchWord);
 
-    }
-
-    /**
-     * Migrate the Calendar module.
-     *
-     * @return void
-     */
-    public function migrateCalendar()
-    {
-        Phprojekt::getInstance()->getDb()->query(<<<HERE
-CREATE TABLE `calendar` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `parent_id` int(11) DEFAULT '0',
-  `owner_id` int(11) DEFAULT NULL,
-  `project_id` int(11) NOT NULL,
-  `title` varchar(255) DEFAULT NULL,
-  `place` varchar(255) DEFAULT NULL,
-  `notes` text,
-  `start_datetime` datetime DEFAULT NULL,
-  `end_datetime` datetime DEFAULT NULL,
-  `status` int(1) DEFAULT '0',
-  `rrule` text,
-  `visibility` int(1) DEFAULT '0',
-  `participant_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
-) DEFAULT CHARSET utf8
-HERE
-    );
-        Phprojekt::getInstance()->getDb()->insert(
-            'module',
-            array(
-                'name' => 'Calendar',
-                'label' => 'Calendar',
-                'save_type' => 1,
-                'active' => 1
-            )
-        );
-        $this->_migrateCalendar();
-
-        $this->_executeItemRightsInsert();
-        $this->_executeSearchDisplayInsert();
-
-        // Save words
-        $this->_saveSession('migratedSearchWord', $this->_searchWord);
-
-        $c2migration = new Calendar2_Migration();
-        $c2migration->upgrade(null, Phprojekt::getInstance()->getDb());
     }
 
     /**
@@ -989,169 +935,6 @@ HERE
     }
 
     /**
-     * Migrate P5 events.
-     *
-     * @return void
-     */
-    private function _migrateCalendar()
-    {
-        // Calendar
-        $run      = true;
-        $start    = 0;
-        $end      = self::ROWS_PER_QUERY;
-        $moduleId = $this->_getModuleId('Calendar');
-
-        $sqlString = "SELECT MAX(id) as count FROM " . $this->_db->quoteIdentifier((string) 'calendar');
-        $result    = $this->_db->query($sqlString)->fetchAll();
-        $currentId = (int) $result[0]['count'];
-
-        while ($run) {
-            $events = $this->_dbOrig->query("SELECT * FROM " . PHPR_DB_PREFIX . "termine ORDER BY ID LIMIT "
-                . $start . ", " . $end)->fetchAll();
-            if (empty($events)) {
-                $run = false;
-            } else {
-                $start = $start + $end;
-            }
-
-            // Multiple inserts
-            $dbFields = array('parent_id', 'owner_id', 'project_id', 'title', 'place', 'notes', 'start_datetime',
-                'end_datetime', 'rrule', 'visibility', 'status', 'participant_id');
-            $dbValues = array();
-
-            foreach ($events as $index => $calendar) {
-                // Start and End times
-                if ($calendar['anfang'] == '----') {
-                    // This is because start and end times are not required fields in P5, but they are required in P6.
-                    $calendar['anfang'] = '09:00:00';
-                } else {
-                    $calendar['anfang'] = $this->_stringToTime($calendar['anfang']);
-                }
-                if ($calendar['ende'] == '----') {
-                    // This is because start and end times are not required fields in P5, but they are required in P6.
-                    $calendar['ende'] = '18:00:00';
-                } else {
-                    $calendar['ende'] = $this->_stringToTime($calendar['ende']);
-                }
-
-                $date            = Cleaner::sanitize('date', $calendar['datum']);
-                $calendar['von'] = $this->_processOwner($calendar['von']);
-
-                // Process participant
-                $oldParticipId = $calendar['an'];
-                if (isset($this->_users[$oldParticipId])) {
-                    $participantId = $this->_users[$oldParticipId];
-                } else {
-                    // Don't migrate rows for non existing users
-                    unset($events[$index]);
-                    continue;
-                }
-
-                // Migrate row
-                if (!empty($calendar['anfang']) && !empty($calendar['ende']) && !empty($calendar['datum'])) {
-                    if (!empty($calendar['serie_typ']) && !empty($calendar['serie_bis'])) {
-                        $rrule = $this->_serietypToRrule($calendar['serie_typ'], $calendar['serie_bis'],
-                            $calendar['anfang']);
-                    } else {
-                        $rrule = "";
-                    }
-
-                    // Assign id before exists
-                    $currentId++;
-                    $oldCalendarId                    = $calendar['ID'];
-                    $this->_calendars[$oldCalendarId] = $currentId;
-
-                    // Process parent for this row
-                    if (!empty($calendar['serie_id'])) {
-                        $oldParentId = $calendar['serie_id'];
-                        if (isset($this->_calendars[$oldParentId])) {
-                            $parentId = $this->_calendars[$oldParentId];
-                        } else {
-                            // The P5 parent for this row is probably a deleted row,
-                            // so it will be assigned current key id.
-                            // The rest of the rows that point to the same deleted row,
-                            // will point to the same 'new' row.
-                            $parentId                       = $currentId;
-                            $this->_calendars[$oldParentId] = $currentId;
-                        }
-                    } else {
-                        $parentId = 0;
-                    }
-
-                    // Get visibility
-                    if ($calendar['visi'] == 1 || $calendar['visi'] == 3) {
-                        $visibility = 1; // Private
-                    } else {
-                        $visibility = 0; // Public
-                    }
-
-                    // Get status
-                    $status = 0; // Pending
-                    if ($calendar['partstat'] == 2 || $calendar['von'] == $participantId) {
-                        $status = 1; // Accepted
-                    } else if ($calendar['partstat'] == 3) {
-                        $status = 2; // Rejected
-                    }
-
-                    // Start
-                    $startDatetime = date("Y-m-d H:i:s", $this->_getUtcTime($date . " " . $calendar['anfang'],
-                        $calendar['von']));
-
-                    // End
-                    $endDateime = date("Y-m-d H:i:s", $this->_getUtcTime($date . " " . $calendar['ende'],
-                        $calendar['von']));
-
-                    // @todo: 'ical_ID' field is not being migrated to 'uid' field,
-                    // it will be done when implemented P6 ical
-                    $dbValues[] = array($parentId, $calendar['von'], self::PROJECT_ROOT,
-                        $this->_fix($calendar['event'], 255), $this->_fix($calendar['ort']),
-                        $this->_fix($calendar['remark'], 65500), $startDatetime, $endDateime, $rrule, $visibility,
-                        $status, $participantId);
-                } else {
-                    unset($events[$index]);
-                }
-            }
-
-            // Run the multiple inserts
-            if (!empty($dbValues)) {
-                $ids = $this->_tableManager->insertMultipleRows('calendar', $dbFields, $dbValues, true);
-
-                foreach ($events as $calendar) {
-                    // Migrate permissions
-                    $calendarId = array_shift($ids);
-
-                    // Add owner permission to this item
-                    $userRightsAdd           = array();
-                    $userVon                 = $this->_processOwner($calendar['von']);
-                    $userRightsAdd[$userVon] = $this->_accessAdmin;
-
-                    // Add participant permission to this item, only if it wasn't added before
-                    $oldParticipId = $calendar['an'];
-                    if (isset($this->_users[$oldParticipId])) {
-                        $participantId = $this->_users[$oldParticipId];
-                        if (!isset($userRightsAdd[$participantId])) {
-                            $userRightsAdd[$participantId] = $this->_accessWrite;
-                        }
-                    }
-
-                    // Save permissions according to P6 criterion
-                    $this->_addItemRights($moduleId, $calendarId, $userRightsAdd);
-
-                    // Add search values
-                    $words = array($this->_fix($calendar['event'], 255), $this->_fix($calendar['ort']),
-                        $this->_fix($calendar['remark'], 65500));
-                    $itemId = $calendarId;
-                    $this->_addSearchDisplay($moduleId, $itemId, 1, $words[0], $words[2]);
-                    $this->_addSearchWords(implode(" ", $words), $moduleId, $itemId);
-                }
-            }
-        }
-
-        // Clean Memory
-        $this->_calendars = array();
-    }
-
-    /**
      * Converts the old time format (hhmm) to a time format (hh:mm:ss).
      *
      * @param string $stringTime P5 Time string.
@@ -1376,105 +1159,6 @@ HERE
     }
 
     /**
-     * Converts content of P5 recurrence field 'serie_typ' of 'termine' table to P6 format for 'rrule' field of
-     * 'calendar' table.
-     *
-     * @param string $value Recurrence parameters in P5 format.
-     *
-     * @return string Recurrence parameters in P6 format.
-     */
-    private function _serietypToRrule($value, $endDate, $startTime)
-    {
-        $until = 'UNTIL=' . str_replace('-', '', $endDate) . 'T' . str_replace(':', '', $startTime) . 'Z;';
-        if (substr($value, 0, 2) == 'a:' && strpos($value, 'weekday')) {
-            // Serialized array
-            $value       = unserialize($value);
-            $returnValue ="ERROR on migration";
-
-            // Frequency
-            switch ($value['typ']) {
-                // Daily
-                case 'd':
-                case 'd1':
-                    $returnValue = 'FREQ=DAILY;' . $until . 'INTERVAL=1;';
-                    break;
-                // Weekly
-                case 'w':
-                case 'w1':
-                    $returnValue = 'FREQ=WEEKLY;' . $until . 'INTERVAL=1;';
-                    break;
-                // Every 2 weeks
-                case 'w2':
-                    $returnValue = 'FREQ=WEEKLY;' . $until . 'INTERVAL=2;';
-                    break;
-                // Every 3 weeks
-                case 'w3':
-                    $returnValue = 'FREQ=WEEKLY;' . $until . 'INTERVAL=3;';
-                    break;
-                // Every 4 weeks
-                case 'w4':
-                    $returnValue = 'FREQ=WEEKLY;' . $until . 'INTERVAL=4;';
-                    break;
-                // Monthly
-                case 'm':
-                case 'm1':
-                    $returnValue = 'FREQ=MONTHLY;' . $until . 'INTERVAL=1;';
-                    break;
-                // Annually
-                case 'y':
-                case 'y1':
-                    $returnValue = 'FREQ=YEARLY;' . $until . 'INTERVAL=1;';
-                    break;
-            }
-
-            // Weeks days
-            $returnValue .= 'BYDAY=';
-            $weekDaysList = array(0 => 'MO', 1 => 'TU', 2 => 'WE', 3 => 'TH',
-                                  4 => 'FR', 5 => 'SA', 6 => 'SU');
-            if (isset($value['weekday']) && !empty($value['weekday'])) {
-                $byDay = array_keys($value['weekday']);
-                foreach ($byDay as $position => $day) {
-                    if ($position > 0) {
-                        $returnValue .= ",";
-                    }
-                    $returnValue .= $weekDaysList[$day];
-                }
-            }
-        } else if (strlen($value) <= 2) {
-            // String mode, e.g.: 'd', 'w2'
-            switch (substr($value, 0, 1)) {
-                case 'd':
-                default:
-                    $returnValue = 'FREQ=DAILY;' . $until;
-                    break;
-                case 'w':
-                    $returnValue = 'FREQ=WEEKLY;' . $until;
-                    break;
-                case 'm':
-                    $returnValue = 'FREQ=MONTHLY;' . $until;
-                    break;
-                case 'y':
-                    $returnValue = 'FREQ=YEARLY;' . $until;
-                    break;
-            }
-            if (strlen($value > 1)) {
-                $interval = substr($value, 1, 1);
-            } else {
-                $interval = '1';
-            }
-            $returnValue .= 'INTERVAL=' . $interval . ';';
-
-            // Week day doesn't seem to be used in this case.
-            $returnValue .= 'BYDAY=';
-
-        } else {
-            $returnValue = '';
-        }
-
-        return $returnValue;
-    }
-
-    /**
      * Collect all the values for save  into 'item_rights' table according to received parameters.
      *
      * @param integer $moduleId   ID of the module in 'module' table.
@@ -1594,32 +1278,6 @@ HERE
         } else {
             return $timeZone;
         }
-    }
-
-    /**
-     * Convert the p5 time in UTC
-     *
-     * @param integer $value  P5 time value.
-     * @param integer $userId User ID.
-     *
-     * @return integer UTC time.
-     */
-    private function _getUtcTime($value, $userId)
-    {
-        $timeZone = $this->_timeZone[$userId];
-        if (strstr($timeZone, "_")) {
-            list ($hours, $minutes) = explode("_", $timeZone);
-        } else {
-            $hours   = (int) $timeZone;
-            $minutes = 0;
-        }
-
-        $hoursComplement   = $hours * -1;
-        $minutesComplement = $minutes * -1;
-        $u                 = strtotime($value);
-
-        return mktime(date("H", $u) + $hoursComplement, date("i", $u) + $minutesComplement,
-            date("s", $u) , date("m", $u), date("d", $u), date("Y", $u));
     }
 
     /**
