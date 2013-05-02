@@ -356,6 +356,65 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
         return array('data' => $datas);
     }
 
+    static public function getDateRangeRecords(DateTime $startDate, DateTime $endDate, Array $projects = null) {
+        if ($projects !== null && empty($projects)) {
+            return array();
+        }
+
+        $userId = (int) Phprojekt_Auth_Proxy::getEffectiveUserId();
+
+        $select = Phprojekt::getInstance()->getDb()->select();
+        $select->from("timecard")
+            ->where("owner_id = ?", $userId)
+            ->where("start_datetime >= ?", $startDate->format('Y-m-d'))
+            ->where("start_datetime <= ?", $endDate->format('Y-m-d'));
+
+        if ($projects !== null && !empty($projects)) {
+            $select->where('project_id IN (?)', $projects);
+        }
+
+        $select->order("start_datetime ASC");
+
+        $records = $select->query()->fetchAll();
+
+        // Get all the hours for this month
+        $sortRecords = array();
+        foreach ($records as $record) {
+            $date = date('Y-m-d', strtotime($record['start_datetime']));
+            if (!isset($sortRecords[$date])) {
+                $sortRecords[$date]['sum']        = 0;
+                $sortRecords[$date]['openPeriod'] = 0;
+            }
+            if ($record['minutes'] == 0 && null === $record['end_time']) {
+                $sortRecords[$date]['openPeriod'] = 1;
+            }
+            $sortRecords[$date]['sum'] += (int) $record['minutes'];
+        }
+
+        $datas = array();
+        $currentDate  = $startDate;
+        while ($currentDate <= $endDate) {
+            $currentDate->add(new DateInterval('P1D'));
+            $date  = $currentDate->format('Y-m-d');
+
+            $data         = array();
+            $data['date'] = $date;
+            $data['week'] = date("w", strtotime($date));
+            if (isset($sortRecords[$date])) {
+                $data['sumInMinutes'] = $sortRecords[$date]['sum'];
+                $data['sumInHours']   = self::convertTime($sortRecords[$date]['sum']);
+                $data['openPeriod']   = $sortRecords[$date]['openPeriod'];
+            } else {
+                $data['sumInMinutes'] = 0;
+                $data['sumInHours']   = 0;
+                $data['openPeriod']   = 0;
+            }
+            $datas[] = $data;
+        }
+
+        return array('data' => $datas);
+    }
+
     /**
      * Return an array with all the bookings in the day
      *
