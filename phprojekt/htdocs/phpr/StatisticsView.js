@@ -85,6 +85,7 @@ define([
         activeMonthWidget: null,
         monthState: 'graph',
         projectChooser: null,
+        _monthUpdateTimer: null,
 
         buildRendering: function() {
             this.inherited(arguments);
@@ -139,14 +140,21 @@ define([
         },
 
         _updateMonthWidget: function() {
-            switch (this.monthState) {
-                case 'table':
-                    this._setMonthTable();
-                    break;
-                case 'graph':
-                    this._setMonthGraph();
-                    break;
-            }
+            this._scheduleMonthWidgetUpdate();
+        },
+
+        _scheduleMonthWidgetUpdate: function() {
+            clearTimeout(this._monthUpdateTimer);
+            this._monthUpdateTimer = setTimeout(lang.hitch(this, function() {
+                switch (this.monthState) {
+                    case 'table':
+                        this._setMonthTable();
+                        break;
+                    case 'graph':
+                        this._setMonthGraph();
+                        break;
+                }
+            }), 250);
         },
 
         _openExport: function(evt) {
