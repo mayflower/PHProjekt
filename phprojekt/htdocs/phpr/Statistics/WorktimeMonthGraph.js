@@ -51,7 +51,7 @@ define([
         },
 
         displayWidth: function() {
-            return domAttr.get(this._svgNode, 'width') - 40;
+            return domAttr.get(this._svgNode, 'width');
         },
 
         heightPerMinute: function() {
@@ -234,13 +234,16 @@ define([
             }
 
             var entries = [];
-            array.forEach(data.days, function(entry) {
+            array.forEach(data.days || [], function(entry) {
                 entries.push({
                     date: entry.date,
                     minutesBooked: entry.sumInMinutes
                 });
             });
-            renderMinutesBookedBlocks(this.bookedTimePerDayGraph, entries);
+
+            if (entries.length > 0) {
+                renderMinutesBookedBlocks(this.bookedTimePerDayGraph, entries);
+            }
 
             this._renderTodayMarker(this.bookedTimePerDayGraph, entries);
         },
