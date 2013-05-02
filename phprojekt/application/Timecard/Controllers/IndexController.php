@@ -419,7 +419,12 @@ class Timecard_IndexController extends IndexController
 
     public function workBalanceByDayAction()
     {
-        list($start, $end) = $this->_yearMonthParamToStartEndDT();
+        $start = $this->_getDateFromParam('startDate');
+        $end = $this->_getDateFromParam('endDate');
+
+        if ($start === null || $end === null) {
+            throw new Zend_Controller_Action_Exception('Invalid start or end date', 422);
+        }
 
         $projects = $this->_projectsParamToArray();;
 

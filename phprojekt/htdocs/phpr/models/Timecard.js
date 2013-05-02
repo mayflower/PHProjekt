@@ -54,10 +54,10 @@ define([
         });
     };
 
-    exports.getMonthList = function(params) {
+    exports.getDaysByDateRange = function(params) {
         var opts = monthYearDefaultQuery(params);
         return api.getData(
-            'index.php/Timecard/index/monthList',
+            'index.php/Timecard/index/daysByDateRange',
             { query: opts }
         );
     };
