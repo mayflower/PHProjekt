@@ -18,10 +18,20 @@ define([
         thisMonth.setDate(1);
         var today = new Date();
 
-        return lang.mixin({
+        var ret = lang.mixin({
             start: timehelper.jsDateToIsoDate(thisMonth),
             end: timehelper.jsDateToIsoDate(today)
         }, params);
+
+        if (ret.projects) {
+            if (ret.projects.length > 0) {
+                ret.projects = ret.projects.join(',');
+            } else {
+                delete ret.projects;
+            }
+        }
+
+        return ret;
     }
 
     exports.getMinutesBookedTotal = function(params) {
