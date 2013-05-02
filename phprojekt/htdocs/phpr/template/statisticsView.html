@@ -6,17 +6,17 @@
     <div class="exportForm" data-dojo-attach-point="exportForm" data-dojo-type="dijit/form/Form">
         <input type="text"
                 name="start"
-                data-dojo-type="phpr/DateTextBox"
                 class="date"
                 data-dojo-attach-point="startDate"
-                data-dojo-props="placeholder:'Start date'">
+                data-dojo-type="phpr/DateTextBox"
+                data-dojo-props="placeholder:'Start date', value: 'firstOfMonth'" />
         -
         <input type="text"
                 name="end"
-                data-dojo-type="phpr/DateTextBox"
                 class="date"
                 data-dojo-attach-point="endDate"
-                data-dojo-props="placeholder:'End date'">
+                data-dojo-type="phpr/DateTextBox"
+                data-dojo-props="placeholder:'End date', value: 'lastOfMonth'" />
         <button data-dojo-type="dijit/form/Button"
                 type="submit"
                 data-dojo-props="baseClass:'button'">Export to CSV</button>
