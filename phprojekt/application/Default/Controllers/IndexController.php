@@ -1282,4 +1282,18 @@ class IndexController extends Zend_Controller_Action
         $this->view->files = $filesForView;
         $this->render('upload');
     }
+
+    /**
+     * Retrieves the given parameter and validates it as a date string.
+     *
+     * If it doesn't match, a Phprojekt_Exception_InvalidParameter is thrown.
+     */
+    protected function _getDateStringParam($name, $default = null)
+    {
+        $value = $this->getRequest()->getParam($name, $default);
+        if (!Cleaner::validate('isoDate', $value)) {
+            throw new Phprojekt_Exception_InvalidParameter($name, $value, 'yyyy-mm-dd');
+        }
+        return $value;
+    }
 }

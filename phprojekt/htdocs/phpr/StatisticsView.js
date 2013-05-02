@@ -16,7 +16,8 @@ define([
     'phpr/Statistics/WorktimeMonthTable',
     'phpr/ProjectChooser',
     'phpr/Timehelper',
-    'dijit/layout/ContentPane'
+    'dijit/layout/ContentPane',
+    'phpr/Statistics/ProjectUserTimeTable'
 ], function(
     declare,
     lang,

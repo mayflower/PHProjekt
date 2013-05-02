@@ -15,11 +15,7 @@ define([
     'phpr/Api',
     'phpr/Timehelper',
     'dojo/text!phpr/template/bookingList/bookingCreator.html',
-    'phpr/ProjectChooser',
-    'dijit/form/Textarea',
-    'dijit/form/ValidationTextBox',
-    'phpr/DateTextBox',
-    'dijit/form/Form'
+    'phpr/TimeBox'
 ], function(
     declare,
     lang,
@@ -35,7 +31,7 @@ define([
     Tooltip,
     BookingBlock,
     api,
-    time,
+    timehelper,
     templateString
 ) {
     return declare([BookingBlock], {
@@ -57,12 +53,12 @@ define([
             };
 
             this.project.set('value', '' + booking.projectId);
-            var startDatetime = time.datetimeToJsDate(booking.startDatetime);
+            var startDatetime = timehelper.datetimeToJsDate(booking.startDatetime);
             this.start.set('value', formatTimeString(startDatetime));
             this.date.set('value', startDatetime);
 
             if (booking.endTime) {
-                var endDatetime = time.timeToJsDate(booking.endTime);
+                var endDatetime = timehelper.timeToJsDate(booking.endTime);
                 this.end.set('value', formatTimeString(endDatetime));
             }
 
@@ -92,24 +88,6 @@ define([
             })));
 
             this.end.validate = this._endValidateFunction(this.end.validate, this.start);
-        },
-
-        _getStartRegexp: function() {
-            // both used by dojo to validate the input and to extract the time viaa matchings
-            // see _prepareDataForSend and _inputToTime
-            var hours = '([01]?\\d|2[0123])',
-                minutes = '([01-5]\\d)',
-                separator = '[:\\. ]?';
-            return '(' + hours + separator + minutes + ')';
-        },
-
-        _getEndRegexp: function() {
-            // both used by dojo to validate the input and to extract the time viaa matchings
-            // see _prepareDataForSend and _inputToTime
-            var hours = '([01]?\\d|2[0123])',
-                minutes = '([01-5]\\d)',
-                separator = '[:\\. ]?';
-            return '(' + hours + separator + minutes + ')?';
         },
 
         _showErrorInWarningIcon: api.errorHandlerForTag('bookingCreator'),
@@ -156,15 +134,15 @@ define([
 
         _prepareDataForSend: function(data) {
             var ret = {};
-            var startTime = this._inputToTime(data.start, "^" + this._getStartRegexp() + "$");
-            var endTime = this._inputToTime(data.end, "^" + this._getEndRegexp() + "$");
+            var startTime = timehelper.parseTime(data.start);
+            var endTime = timehelper.parseTime(data.end);
 
             if (!startTime) {
                 return false;
             }
 
             if (endTime) {
-                endTime = time.jsDateToIsoTime(endTime) + ':00';
+                endTime = timehelper.jsDateToIsoTime(endTime) + ':00';
             }
             ret.endTime = endTime;
 
@@ -176,26 +154,13 @@ define([
             startDatetime.setHours(startTime.getHours());
             startDatetime.setMinutes(startTime.getMinutes());
 
-            ret.startDatetime = time.jsDateToIsoDatetime(startDatetime) + ':00';
+            ret.startDatetime = timehelper.jsDateToIsoDatetime(startDatetime) + ':00';
 
             ret.notes = data.notes || '';
 
             ret.projectId = data.project || '1';
 
             return ret;
-        },
-
-        _inputToTime: function(input, reg) {
-            if (input.length !== 0) {
-                var matched = input.match(reg);
-                if (matched[2] && matched[3]) {
-                    var date = new Date();
-                    date.setHours(parseInt(matched[2], 10));
-                    date.setMinutes(parseInt(matched[3], 10));
-                    return date;
-                }
-            }
-            return null;
         },
 
         _setDateAttr: function(date) {
