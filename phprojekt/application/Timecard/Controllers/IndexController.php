@@ -74,13 +74,9 @@ class Timecard_IndexController extends IndexController
     }
 
     public function daysByDateRangeAction() {
-        $startDate = $this->_getDateFromParam('startDate');
-        $endDate = $this->_getDateFromParam('endDate');
-        $projects = $this->_projectsParamToArray();
-
-        if ($startDate === null || $endDate === null) {
-            throw new Zend_Controller_Action_Exception('Invalid start or end Date', 422);
-        }
+        $startDate = new DateTime($this->_getDateStringParam('startDate'));
+        $endDate   = new DateTime($this->_getDateStringParam('endDate'));
+        $projects  = $this->_projectsParamToArray();
 
         $records = Timecard_Models_Timecard::getDateRangeRecords($startDate, $endDate, $projects);
 
@@ -419,14 +415,9 @@ class Timecard_IndexController extends IndexController
 
     public function workBalanceByDayAction()
     {
-        $start = $this->_getDateFromParam('startDate');
-        $end = $this->_getDateFromParam('endDate');
-
-        if ($start === null || $end === null) {
-            throw new Zend_Controller_Action_Exception('Invalid start or end date', 422);
-        }
-
-        $projects = $this->_projectsParamToArray();;
+        $start    = new DateTime($this->_getDateStringParam('startDate'));
+        $end      = new DateTime($this->_getDateStringParam('endDate'));
+        $projects = $this->_projectsParamToArray();
 
         $contracts = Timecard_Models_Contract::fetchByUserAndPeriod(Phprojekt_Auth::getRealUser(), $start, $end);
         $minutesToWorkPerDay = $this->_contractsToMinutesPerDay($contracts, $start, $end);
@@ -463,9 +454,9 @@ class Timecard_IndexController extends IndexController
 
     public function projectUserMinutesAction()
     {
-        $startDate  = new DateTime($this->_getDateStringParam('start'));
-        $endDate    = new DateTime($this->_getDateStringParam('end'));
-        $userIds    = explode(',', $this->getRequest()->getParam('users', Phprojekt_Auth::getUserId()));
+        $startDate = new DateTime($this->_getDateStringParam('startDate'));
+        $endDate   = new DateTime($this->_getDateStringParam('endDate'));
+        $userIds   = explode(',', $this->getRequest()->getParam('users', Phprojekt_Auth::getUserId()));
 
         foreach ($userIds as $id) {
             if (preg_match('/^\d+$/', $id) !== 1) {
@@ -496,16 +487,6 @@ class Timecard_IndexController extends IndexController
     {
         $projects = trim($this->getRequest()->getParam('projects', ''));
         return $projects === '' ? null : explode(',', $projects);
-    }
-
-    private function _getDateFromParam($key) {
-        $d = Cleaner::sanitize('isodate', $this->getRequest()->getParam($key, null));
-
-        if ($d !== null) {
-            return \DateTime::createFromFormat('Y-m-d', $d);
-        }
-
-        return $d;
     }
 
     /**
