@@ -112,4 +112,26 @@ define([
 
         return ret;
     };
+
+    exports.timeRegexpString = (function() {
+        var hours = '([01]?\\d|2[0123])',
+            minutes = '([01-5]\\d)',
+            separator = '[:\\. ]?';
+
+        return '(' + hours + separator + minutes + ')';
+    })();
+
+    exports.parseTime = function(value) {
+        if (value.length === 0) {
+            return null;
+        }
+
+        var matched = value.match('^' + exports.timeRegexpString + '$');
+        if (matched[2] && matched[3]) {
+            var date = new Date();
+            date.setHours(parseInt(matched[2], 10));
+            date.setMinutes(parseInt(matched[3], 10));
+            return date;
+        }
+    };
 });
