@@ -295,11 +295,16 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
      *
      * @param integer $year   Year for the request
      * @param integer $month  Month for the request
+     * @param Array $projects Filter projects by array items, if null, no filter is applied
      *
      * @return array
      */
-    public function getRecords(\DateTime $start, \DateTime $end)
+    public static function getRecords(\DateTime $start, \DateTime $end)
     {
+        if ($projects !== null && empty($projects)) {
+            return array('data' => array());
+        }
+
         $userId = (int) Phprojekt_Auth_Proxy::getEffectiveUserId();
 
         $select = Phprojekt::getInstance()->getDb()->select();
@@ -313,6 +318,13 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
             ->where('DATE(start_datetime) < ?', $end->format('Y-m-d'))
             ->group('DATE(start_datetime)')
             ->order("start_datetime ASC");
+
+        if ($projects !== null && !empty($projects)) {
+            $select->where('project_id IN (?)', $projects);
+        }
+
+        $select->order("start_datetime ASC");
+
         $records = $select->query()->fetchAll();
 
         return array('data' => $records);
@@ -519,12 +531,20 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
      **/
     public static function getBookedMinutes(DateTime $start, DateTime $endExcluded)
     {
+        if ($projects !== null && empty($projects)) {
+            return 0;
+        }
+
         $table  = new self();
         $select = $table->select()
             ->from($table, array('minutes' => 'SUM(minutes)'))
             ->where('start_datetime >= ?', $start->format('Y-m-d H:i:s'))
             ->where('start_datetime < ?', $endExcluded->format('Y-m-d'))
             ->where('owner_id = ?', Phprojekt_Auth_Proxy::getEffectiveUserId());
+
+        if ($projects !== null && !empty($projects)) {
+            $select->where('project_id IN (?)', $projects);
+        }
 
         return (int) $select->query()->fetchColumn();
 
@@ -541,4 +561,27 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
             throw new Phprojekt_Exception_NotAuthorized('You are not authorized to save an entry under this user');
         }
     }
+
+    public static function getProjectMinutesByUsers($userIds, $startDate, $endDate)
+    {
+        return Phprojekt::getInstance()->getDb()->select()
+            ->from(
+                array('t' => 'timecard'),
+                array('project_id' => 't.project_id', 'user_id' => 't.owner_id', 'minutes' => 'SUM(t.minutes)')
+            )->join(
+                array('p' => 'project'),
+                't.project_id = p.id',
+                array('project' => 'p.title')
+            )->join(
+                array('u' => 'user'),
+                't.owner_id = u.id',
+                array('user' => 'CONCAT(u.firstname, " ", u.lastname)')
+            )->where('t.owner_id in (?)', implode(',', $userIds))
+            ->where('DATE(t.start_datetime) >= ?', $startDate->format('Y-m-d'))
+            ->where('DATE(t.start_datetime) < ?', $endDate->format('Y-m-d'))
+            ->group(array('t.project_id', 't.owner_id'))
+            ->order('t.project_id ASC')
+            ->query()->fetchAll();
+    }
+
 }

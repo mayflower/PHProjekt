@@ -64,7 +64,7 @@ class Timecard_IndexController extends IndexController
     public function monthListAction()
     {
         list($start, $end) = $this->_paramToStartEndDT();
-        $records = $this->getModelObject()->getRecords($start, $end);
+        $records = Timecard_Models_Timecard::getRecords($start, $end);
 
         Phprojekt_CompressedSender::send(
             Zend_Json::encode(array('days' => $records['data']))
@@ -401,6 +401,8 @@ class Timecard_IndexController extends IndexController
     {
         list($start, $end) = $this->_paramToStartEndDT();
 
+        $projects = $this->_projectsParamToArray();;
+
         $contracts = Timecard_Models_Contract::fetchByUserAndPeriod(Phprojekt_Auth::getRealUser(), $start, $end);
         $minutesToWorkPerDay = $this->_contractsToMinutesPerDay($contracts, $start, $end);
         $minutesToWorkPerDay = $this->_applyHolidayWeights($minutesToWorkPerDay, $start, $end);
@@ -408,8 +410,13 @@ class Timecard_IndexController extends IndexController
         $bookings = Phprojekt::getInstance()->getDb()->select()
             ->from('timecard', array('date' => 'DATE(start_datetime)', 'minutes'))
             ->where('DATE(start_datetime) >= ?', $start->format('Y-m-d'))
-            ->where('DATE(start_datetime) < ?', $end->format('Y-m-d'))
-            ->order('date ASC');
+            ->where('DATE(start_datetime) < ?', $end->format('Y-m-d'));
+
+        if (!empty($projects)) {
+            $bookings->where('project_id IN (?)', $projects);
+        }
+
+        $bookings->order('date ASC');
 
         $bookings = $bookings->query()->fetchAll();
 
@@ -429,6 +436,23 @@ class Timecard_IndexController extends IndexController
         echo Zend_Json::encode(array('workBalancePerDay' => $ret));
     }
 
+    public function projectUserMinutesAction()
+    {
+        $startDate  = new DateTime($this->_getDateStringParam('start'));
+        $endDate    = new DateTime($this->_getDateStringParam('end'));
+        $userIds    = explode(',', $this->getRequest()->getParam('users', Phprojekt_Auth::getUserId()));
+
+        foreach ($userIds as $id) {
+            if (preg_match('/^\d+$/', $id) !== 1) {
+                throw new Exception('malformed request');
+            }
+        }
+
+        $entries = Timecard_Models_Timecard::getProjectMinutesByUsers($userIds, $startDate, $endDate);
+
+        echo Zend_Json::encode(array('projectUserMinutes' => $entries));
+    }
+
     private function _paramToStartEndDT()
     {
         $start = $this->getRequest()->getParam('start');
@@ -440,6 +464,12 @@ class Timecard_IndexController extends IndexController
         $end = new \DateTime($this->getRequest()->getParam('end', 'today'));
 
         return [$start, $end];
+    }
+
+    private function _projectsParamToArray()
+    {
+        $projects = trim($this->getRequest()->getParam('projects', ''));
+        return $projects === '' ? null : explode(',', $projects);
     }
 
     /**

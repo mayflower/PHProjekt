@@ -3,26 +3,25 @@ define([
     'dojo/_base/lang',
     'dojo/promise/all',
     'dojo/date/locale',
-    'phpr/Api'
+    'phpr/Api',
+    'phpr/Timehelper'
 ], function(
     exports,
     lang,
     all,
     locale,
-    api
+    api,
+    timehelper
 ) {
     function startEndDefaultQuery(params) {
-        var start = new Date();
-        var end   = new Date();
-        start.setDate(1);
+        var thisMonth = new Date();
+        thisMonth.setDate(1);
+        var nextMonth = new Date(thisMonth);
+        nextMonth.setMonth(thisMonth.getMonth() + 1);
 
         return lang.mixin({
-            start: locale.format(start, {
-                selector: 'date',
-                datePattern: 'yyyy-MM-dd'}),
-            end: locale.format(end, {
-                selector: 'date',
-                datePattern: 'yyyy-MM-dd'})
+            start: timehelper.jsDateToIsoDate(thisMonth),
+            end: timehelper.jsDateToIsoDate(nextMonth)
         }, params);
     }
 
@@ -73,6 +72,14 @@ define([
         var opts = startEndDefaultQuery(params);
         return api.getData(
             'index.php/Timecard/index/workBalanceByDay',
+            { query: opts }
+        );
+    };
+
+    exports.getProjectUserMinutes = function(params) {
+        var opts = startEndDateDefaultQuery(params);
+        return api.getData(
+            'index.php/Timecard/index/projectUserMinutes',
             { query: opts }
         );
     };
