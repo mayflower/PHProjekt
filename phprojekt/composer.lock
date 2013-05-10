@@ -1,4 +1,8 @@
 {
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
+    ],
     "hash": "3314aa2dd6cf8efb93a3d71db15591fb",
     "packages": [
         {
@@ -43,12 +47,12 @@
             "version": "1.6.2",
             "source": {
                 "type": "git",
-                "url": "https://github.com/evert/SabreDAV",
+                "url": "https://github.com/fruux/sabre-dav.git",
                 "reference": "1.6.2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/evert/SabreDAV/zipball/1.6.2",
+                "url": "https://api.github.com/repos/fruux/sabre-dav/zipball/1.6.2",
                 "reference": "1.6.2",
                 "shasum": ""
             },
@@ -69,7 +73,7 @@
                 {
                     "name": "Evert Pot",
                     "email": "evert@rooftopsolutions.nl",
-                    "homepage": "http://www.rooftopsolutions.nl/",
+                    "homepage": "http://evertpot.com/",
                     "role": "Developer"
                 }
             ],
@@ -82,7 +86,7 @@
                 "framework",
                 "iCalendar"
             ],
-            "time": "2012-04-15 16:56:34"
+            "time": "2012-04-15 23:56:34"
         },
         {
             "name": "zendframework/zendframework1",
