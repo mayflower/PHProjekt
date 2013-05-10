@@ -15,8 +15,6 @@ define([
         var start = new Date();
         var end   = new Date();
         start.setDate(1);
-        end.setDate(1);
-        end.setMonth(end.getMonth() + 1);
 
         return lang.mixin({
             start: locale.format(start, {
