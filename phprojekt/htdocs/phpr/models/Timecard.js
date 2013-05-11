@@ -76,7 +76,7 @@ define([
     };
 
     exports.getProjectUserMinutes = function(params) {
-        var opts = startEndDateDefaultQuery(params);
+        var opts = startEndDefaultQuery(params);
         return api.getData(
             'index.php/Timecard/index/projectUserMinutes',
             { query: opts }
