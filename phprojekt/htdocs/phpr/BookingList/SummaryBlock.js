@@ -11,7 +11,20 @@ define([
     'phpr/Timehelper',
     'phpr/models/Timecard',
     'dojo/text!phpr/template/bookingList/summaryBlock.html'
-], function(declare, lang, topic, domStyle, all, DeferredList, _WidgetBase, _TemplatedMixin, api, timehelper, timecardModel, templateString) {
+], function(
+    declare,
+    lang,
+    topic,
+    domStyle,
+    all,
+    DeferredList,
+    _WidgetBase,
+    _TemplatedMixin,
+    api,
+    timehelper,
+    timecardModel,
+    templateString
+) {
     return declare([_WidgetBase, _TemplatedMixin], {
         date: new Date(),
 
