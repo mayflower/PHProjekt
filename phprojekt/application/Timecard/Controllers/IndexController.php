@@ -385,7 +385,7 @@ class Timecard_IndexController extends IndexController
     {
         list($start, $end) = $this->_paramToStartEndDT();
 
-        $contracts     = Timecard_Models_Contract::fetchByUserAndPeriod(Phprojekt_Auth::getRealUser(), $start, $end);
+        $contracts     = Timecard_Models_Contract::fetchByUserAndPeriod(Phprojekt_Auth_Proxy::getEffectiveUser(), $start, $end);
         $minutesPerDay = $this->_contractsToMinutesPerDay($contracts, $start, $end);
         $minutesPerDay = $this->_applyHolidayWeights($minutesPerDay, $start, $end);
 
@@ -403,7 +403,7 @@ class Timecard_IndexController extends IndexController
 
         $projects = $this->_projectsParamToArray();;
 
-        $contracts = Timecard_Models_Contract::fetchByUserAndPeriod(Phprojekt_Auth::getRealUser(), $start, $end);
+        $contracts = Timecard_Models_Contract::fetchByUserAndPeriod(Phprojekt_Auth_Proxy::getEffectiveUser(), $start, $end);
         $minutesToWorkPerDay = $this->_contractsToMinutesPerDay($contracts, $start, $end);
         $minutesToWorkPerDay = $this->_applyHolidayWeights($minutesToWorkPerDay, $start, $end);
 
@@ -458,7 +458,7 @@ class Timecard_IndexController extends IndexController
         $start = $this->getRequest()->getParam('start');
 
         /* either given start day or the start day of the contract. */
-        $first = array_pop(Timecard_Models_Contract::fetchByUser(Phprojekt_Auth::getRealUser()));
+        $first = array_pop(Timecard_Models_Contract::fetchByUser(Phprojekt_Auth_Proxy::getEffectiveUser()));
         $start = (null === $start) ? $first['start'] : new \DateTime($start);
 
         $end = new \DateTime($this->getRequest()->getParam('end', 'today'));
@@ -501,7 +501,7 @@ class Timecard_IndexController extends IndexController
     private function _applyHolidayWeights(array $minutesPerDay, DateTime $start, DateTime $end)
     {
         try {
-            $holidays = Phprojekt_Auth::getRealUser()->getHolidayCalculator()->between($start, $end);
+            $holidays = Phprojekt_Auth_Proxy::getEffectiveUser()->getHolidayCalculator()->between($start, $end);
         } catch (Phprojekt_Exception_HolidayRegionNotSet $e) {
             return $minutesPerDay;
         }
