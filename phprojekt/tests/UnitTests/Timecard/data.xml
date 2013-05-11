@@ -10,5 +10,5 @@
         project_id="1" notes="My note"
         module_id="2" item_id="1" uri="onemore@testing" uid="onemore" />
     <contract id="1" name="Standard" hours_per_week="40" />
-    <user_contract_relation id="1" user_id="1" contract_id="1" start="2013-01-01" />
+    <user_contract_relation id="1" user_id="1" contract_id="1" start="2009-05-01" />
 </dataset>
