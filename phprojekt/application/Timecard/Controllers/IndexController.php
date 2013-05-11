@@ -53,7 +53,7 @@ class Timecard_IndexController extends IndexController
     public function jsonMonthListAction()
     {
         list($start, $end) = $this->_paramToStartEndDT();
-        $records = $this->getModelObject()->getRecords($start, $end);
+        $records = Timecard_Models_Timecard::getRecords($start, $end);
 
         Phprojekt_Converter_Json::echoConvert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);
     }
