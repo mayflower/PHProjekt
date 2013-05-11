@@ -461,7 +461,9 @@ class Timecard_IndexController extends IndexController
         $start = $this->getRequest()->getParam('start');
 
         /* either given start day or the start day of the contract. */
-        $first = array_pop(Timecard_Models_Contract::fetchByUser(Phprojekt_Auth_Proxy::getEffectiveUser()));
+        $contracts = Timecard_Models_Contract::fetchByUser(Phprojekt_Auth_Proxy::getEffectiveUser());
+
+        $first = array_pop($contracts);
         $start = (null === $start) ? $first['start'] : new \DateTime($start);
 
         $end = new \DateTime($this->getRequest()->getParam('end', 'today'));
