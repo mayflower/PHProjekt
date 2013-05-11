@@ -51,21 +51,33 @@ define([
         _update: function() {
             timecardModel.getMinutesBookedTotal()
             .then(lang.hitch(this, function(data) {
+                if (this._destroyed) {
+                    return;
+                }
                 this.bookedTotal.innerHTML = timehelper.minutesToHMString(data.minutesBooked);
             }));
 
             timecardModel.getMinutesToWorkTotal()
             .then(lang.hitch(this, function(data) {
+                if (this._destroyed) {
+                    return;
+                }
                 this.toWorkTotal.innerHTML = timehelper.minutesToHMString(data.minutesToWork);
             }));
 
             var bookedPromise = timecardModel.getMinutesBooked()
             .then(lang.hitch(this, function(data) {
+                if (this._destroyed) {
+                    return;
+                }
                 this.booked.innerHTML = timehelper.minutesToHMString(data.minutesBooked);
             }));
 
             var toWorkPromise = timecardModel.getMinutesToWork()
             .then(lang.hitch(this, function(data) {
+                if (this._destroyed) {
+                    return;
+                }
                 this.toWork.innerHTML = timehelper.minutesToHMString(data.minutesToWork);
             }));
 
