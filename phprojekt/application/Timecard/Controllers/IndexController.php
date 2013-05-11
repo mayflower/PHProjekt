@@ -53,7 +53,8 @@ class Timecard_IndexController extends IndexController
     public function jsonMonthListAction()
     {
         list($start, $end) = $this->_paramToStartEndDT();
-        $records           = Timecard_Models_Timecard::getRecords($start, $end);
+        $projects          = $this->_projectsParamToArray();
+        $records           = Timecard_Models_Timecard::getRecords($start, $end, $projects);
 
         Phprojekt_Converter_Json::echoConvert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);
     }
@@ -64,7 +65,8 @@ class Timecard_IndexController extends IndexController
     public function monthListAction()
     {
         list($start, $end) = $this->_paramToStartEndDT();
-        $records           = Timecard_Models_Timecard::getRecords($start, $end);
+        $projects          = $this->_projectsParamToArray();
+        $records           = Timecard_Models_Timecard::getRecords($start, $end, $projects);
 
         Phprojekt_CompressedSender::send(
             Zend_Json::encode(array('days' => $records['data']))

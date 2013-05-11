@@ -299,7 +299,7 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
      *
      * @return array
      */
-    public static function getRecords(\DateTime $start, \DateTime $end)
+    public static function getRecords(\DateTime $start, \DateTime $end, array $projects = [])
     {
         if ($projects !== null && empty($projects)) {
             return array('data' => array());
