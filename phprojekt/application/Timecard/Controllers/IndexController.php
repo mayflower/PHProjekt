@@ -329,7 +329,8 @@ class Timecard_IndexController extends IndexController
     public function minutesBookedAction()
     {
         list($start, $end) = $this->_paramToStartEndDT();
-        $minutes           = Timecard_Models_Timecard::getBookedMinutes($start, $end);
+        $projects          = $this->_projectsParamToArray();
+        $minutes           = Timecard_Models_Timecard::getBookedMinutes($start, $end, $projects);
 
         Phprojekt_CompressedSender::send(
             Zend_Json::encode(
