@@ -19,7 +19,7 @@
 class Timecard_Models_Contract extends Phprojekt_ActiveRecord_Abstract
 {
 
-    public static function fetchByUser(Phprojekt_User_User $user, $limit = null)
+    public static function fetchByUser(Phprojekt_User_User $user)
     {
         return self::fetchByUserAndPeriod($user);
     }
