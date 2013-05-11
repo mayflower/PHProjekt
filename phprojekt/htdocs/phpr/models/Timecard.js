@@ -16,12 +16,11 @@ define([
     function startEndDefaultQuery(params) {
         var thisMonth = new Date();
         thisMonth.setDate(1);
-        var nextMonth = new Date(thisMonth);
-        nextMonth.setMonth(thisMonth.getMonth() + 1);
+        var today = new Date();
 
         return lang.mixin({
             start: timehelper.jsDateToIsoDate(thisMonth),
-            end: timehelper.jsDateToIsoDate(nextMonth)
+            end: timehelper.jsDateToIsoDate(today)
         }, params);
     }
 
