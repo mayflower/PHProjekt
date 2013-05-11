@@ -299,12 +299,14 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
      *
      * @return array
      */
-    public static function getRecords(\DateTime $start, \DateTime $end, array $projects = [])
+    public static function getRecords(\DateTime $start, \DateTime $end, $projects = null)
     {
         if ($projects !== null && empty($projects)) {
             return array('data' => array());
         }
 
+        $start->setTime(0, 0, 0);
+        $end->setTime(0, 0, 0);
         $userId = (int) Phprojekt_Auth_Proxy::getEffectiveUserId();
 
         $select = Phprojekt::getInstance()->getDb()->select();
@@ -325,7 +327,18 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
 
         $select->order("start_datetime ASC");
 
-        $records = $select->query()->fetchAll();
+        $interval = DateInterval::createFromDateString('1 day');
+        $records  = [];
+        foreach(new DatePeriod($start, $interval, $end) as $date) {
+            $formated           = $date->format('Y-m-d');
+            $records[$formated] = ['date' => $formated, 'sumInMinutes' => 0];
+        }
+
+        foreach($select->query()->fetchAll() as $record) {
+            $records[$record['date']] = [
+                'date' => $record['date'],
+                'sumInMinutes' => (int) $record['sumInMinutes']];
+        }
 
         return array('data' => $records);
     }
