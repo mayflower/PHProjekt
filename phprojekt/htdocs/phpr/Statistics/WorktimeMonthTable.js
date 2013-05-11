@@ -22,6 +22,8 @@ define([
     return declare([Widget], {
         baseClass: 'statisticsMonthGrid',
         projects: null,
+        startDate: null,
+        endDate: null,
 
         constructor: function() {
             this.projects = [];
@@ -34,7 +36,11 @@ define([
                 return;
             }
 
-            Model.getMonthList({ projects: this.projects }).then(lang.hitch(this, '_renderData'));
+            Model.getDaysByDateRange({
+                projects: this.projects,
+                startDate: this.startDate,
+                endDate: this.endDate
+            }).then(lang.hitch(this, '_renderData'));
         },
 
         _renderData: function(data) {

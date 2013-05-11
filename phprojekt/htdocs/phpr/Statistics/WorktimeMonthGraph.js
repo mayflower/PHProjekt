@@ -41,8 +41,9 @@ define([
             this._svgNode = svgNode;
         },
 
-        todayX: function() {
-            return (new Date()).getDate() * (this.barWidth() + barPadding) - (barPadding / 2);
+        todayX: function(startDate) {
+            var dayDiff = ((new Date()).getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24);
+            return dayDiff * (this.barWidth() + barPadding) - (barPadding / 2);
         },
 
         barWidth: function() {
@@ -50,7 +51,7 @@ define([
         },
 
         displayWidth: function() {
-            return domAttr.get(this._svgNode, 'width') - 40;
+            return domAttr.get(this._svgNode, 'width');
         },
 
         heightPerMinute: function() {
@@ -181,6 +182,8 @@ define([
         templateString: templateString,
         baseClass: 'thisMonthDiagram',
         projects: null,
+        startDate: null,
+        endDate: null,
 
         constructor: function() {
             this.projects = [];
@@ -200,7 +203,9 @@ define([
                 lang.hitch(this, function(error) {
                     // fallback rendering, probably no contract
                     api.defaultErrorHandler(error);
-                    timecardModel.getMonthList(this._getModelParams()).then(lang.hitch(this, this._renderUsingMonthList));
+                    timecardModel.getDaysByDateRange(
+                        this._getModelParams()
+                    ).then(lang.hitch(this, this._renderUsingDayList), api.defaultErrorHandler);
                 })
             );
         },
@@ -225,19 +230,22 @@ define([
             this._renderTodayMarker(this.bookedTimePerDayGraph, entries);
         },
 
-        _renderUsingMonthList: function(data) {
+        _renderUsingDayList: function(data) {
             if (this._destroyed === true) {
                 return;
             }
 
             var entries = [];
-            array.forEach(data.days, function(entry) {
+            array.forEach(data.days || [], function(entry) {
                 entries.push({
                     date: entry.date,
                     minutesBooked: entry.sumInMinutes
                 });
             });
-            renderMinutesBookedBlocks(this.bookedTimePerDayGraph, entries);
+
+            if (entries.length > 0) {
+                renderMinutesBookedBlocks(this.bookedTimePerDayGraph, entries);
+            }
 
             this._renderTodayMarker(this.bookedTimePerDayGraph, entries);
         },
@@ -256,11 +264,17 @@ define([
         },
 
         _renderTodayMarker: function(domNode, entries) {
+            var today = new Date().getTime();
+
+            if (today > this.endDate.getTime() || today < this.startDate.getTime()) {
+                return;
+            }
+
             var svg = d3.select(this.bookedTimePerDayGraph),
                 helper = new GeometryHelper(domNode, entries);
 
             svg.append('rect')
-                .attr('x', helper.todayX() - 1)
+                .attr('x', helper.todayX(this.startDate) - 1)
                 .attr('width', 2)
                 .attr('y', 0)
                 .attr('height', helper.heightForTimebars())
@@ -268,16 +282,12 @@ define([
         },
 
         _updateLabels: function() {
-            var thisYear = (new Date()).getFullYear(),
-                thisMonth = (new Date()).getMonth(),
-                first = new Date(thisYear, thisMonth, 1, 0, 0, 0),
-                last = new Date(thisYear, thisMonth + 1, 0, 0, 0, 0);
-            this.firstDayLabel.innerHTML = locale.format(first, {selector: 'date', datePattern: 'EEE d'});
-            this.lastDayLabel.innerHTML = locale.format(last, {selector: 'date', datePattern: 'EEE d'});
+            this.firstDayLabel.innerHTML = locale.format(this.startDate, {selector: 'date', datePattern: 'EEE MMM d'});
+            this.lastDayLabel.innerHTML = locale.format(this.endDate, {selector: 'date', datePattern: 'EEE MMM d'});
         },
 
         _getModelParams: function() {
-            return { projects: this.projects };
+            return { projects: this.projects, startDate: this.startDate, endDate: this.endDate };
         }
     });
 });

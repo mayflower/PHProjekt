@@ -11,30 +11,36 @@ define([
     api,
     timehelper
 ) {
-    function monthYearDefaultQuery(params) {
-        var now = new Date();
-        var year = now.getFullYear();
-        var month = now.getMonth() + 1;
-
-        var opts = lang.mixin({ year: year, month: month, projects: [] }, params);
-        opts.projects = opts.projects.join(',');
-        return opts;
-    }
-
     function startEndDateDefaultQuery(params) {
-        var thisMonth = new Date();
-        thisMonth.setDate(1);
-        var nextMonth = new Date(thisMonth);
-        nextMonth.setMonth(thisMonth.getMonth() + 1);
+        var start, end;
+        params = params || {};
 
-        return lang.mixin({
-            start: timehelper.jsDateToIsoDate(thisMonth),
-            end: timehelper.jsDateToIsoDate(nextMonth)
-        }, params);
+        if (params.startDate && params.endDate) {
+            start = params.startDate;
+            end = params.endDate;
+            end.setDate(end.getDate() + 1);
+        } else {
+            start = new Date();
+            end = new Date();
+            start.setDate(1);
+            end.setMonth(end.getMonth() + 1);
+            end.setDate(1);
+        }
+
+        var ret = {
+            startDate: timehelper.jsDateToIsoDate(start),
+            endDate: timehelper.jsDateToIsoDate(end)
+        };
+
+        if (params.projects && params.projects.length > 0) {
+            ret.projects = params.projects.join(',');
+        }
+
+        return ret;
     }
 
     exports.getMonthStatistics = function(params) {
-        var opts = monthYearDefaultQuery(params);
+        var opts = startEndDateDefaultQuery(params);
 
         return all({
             booked: api.getData(
@@ -48,16 +54,16 @@ define([
         });
     };
 
-    exports.getMonthList = function(params) {
-        var opts = monthYearDefaultQuery(params);
+    exports.getDaysByDateRange = function(params) {
+        var opts = startEndDateDefaultQuery(params);
         return api.getData(
-            'index.php/Timecard/index/monthList',
+            'index.php/Timecard/index/daysByDateRange',
             { query: opts }
         );
     };
 
     exports.getWorkBalanceByDay = function(params) {
-        var opts = monthYearDefaultQuery(params);
+        var opts = startEndDateDefaultQuery(params);
         return api.getData(
             'index.php/Timecard/index/workBalanceByDay',
             { query: opts }

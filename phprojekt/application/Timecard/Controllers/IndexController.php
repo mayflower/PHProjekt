@@ -73,6 +73,17 @@ class Timecard_IndexController extends IndexController
         );
     }
 
+    public function daysByDateRangeAction() {
+        $startDate = new DateTime($this->_getDateStringParam('startDate'));
+        $endDate   = new DateTime($this->_getDateStringParam('endDate'));
+        $projects  = $this->_projectsParamToArray();
+
+        $records = Timecard_Models_Timecard::getDateRangeRecords($startDate, $endDate, $projects);
+
+        Phprojekt_CompressedSender::send(
+            Zend_Json::encode(array('days' => $records['data']))
+        );
+    }
 
     /**
      * Returns a list of the bookings in a day.
@@ -404,9 +415,9 @@ class Timecard_IndexController extends IndexController
 
     public function workBalanceByDayAction()
     {
-        list($start, $end) = $this->_yearMonthParamToStartEndDT();
-
-        $projects = $this->_projectsParamToArray();;
+        $start    = new DateTime($this->_getDateStringParam('startDate'));
+        $end      = new DateTime($this->_getDateStringParam('endDate'));
+        $projects = $this->_projectsParamToArray();
 
         $contracts = Timecard_Models_Contract::fetchByUserAndPeriod(Phprojekt_Auth::getRealUser(), $start, $end);
         $minutesToWorkPerDay = $this->_contractsToMinutesPerDay($contracts, $start, $end);
@@ -443,9 +454,9 @@ class Timecard_IndexController extends IndexController
 
     public function projectUserMinutesAction()
     {
-        $startDate  = new DateTime($this->_getDateStringParam('start'));
-        $endDate    = new DateTime($this->_getDateStringParam('end'));
-        $userIds    = explode(',', $this->getRequest()->getParam('users', Phprojekt_Auth::getUserId()));
+        $startDate = new DateTime($this->_getDateStringParam('startDate'));
+        $endDate   = new DateTime($this->_getDateStringParam('endDate'));
+        $userIds   = explode(',', $this->getRequest()->getParam('users', Phprojekt_Auth::getUserId()));
 
         foreach ($userIds as $id) {
             if (preg_match('/^\d+$/', $id) !== 1) {
