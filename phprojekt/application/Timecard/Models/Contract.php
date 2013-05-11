@@ -21,14 +21,14 @@ class Timecard_Models_Contract extends Phprojekt_ActiveRecord_Abstract
 
     public static function fetchByUser(Phprojekt_User_User $user, $limit = null)
     {
-        return self::fetchByUserAndPeriod($user, null, null);
+        return self::fetchByUserAndPeriod($user);
     }
 
     /**
      * Returns an array of ['contract' => Timecard_Models_Contract, 'start' => DateTime, 'end' => DateTime] arrays,
      * sorted by start.
      */
-    public static function fetchByUserAndPeriod(Phprojekt_User_User $user, \DateTime $start, \DateTime $end)
+    public static function fetchByUserAndPeriod(Phprojekt_User_User $user, \DateTime $start = null, \DateTime $end = null)
     {
         $db = Phprojekt::getInstance()->getDb();
         $select = $db->select();
