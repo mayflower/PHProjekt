@@ -1,6 +1,23 @@
-<div>
-    Total: <span data-dojo-attach-point="booked"></span
-    ><span data-dojo-attach-point="toWorkText" style="display: none;"> of <span data-dojo-attach-point="toWork"></span
-    > this month.</span>
+<div class="summary">
+    <table>
+        <thead>
+            <th colspan="2">Overview</th>
+        </thead>
+        <tbody>
+        <tr>
+            <td><strong>Month</strong></td>
+            <td>
+                <span data-dojo-attach-point="booked"></span> of
+                <span data-dojo-attach-point="toWork"></span>
+            </td>
+        </tr>
+        <tr>
+            <td><strong>Total</strong></td>
+            <td>
+                <span data-dojo-attach-point="bookedTotal"></span> of
+                <span data-dojo-attach-point="toWorkTotal"></span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
 </div>
-

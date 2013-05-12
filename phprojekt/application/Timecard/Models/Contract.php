@@ -19,19 +19,32 @@
 class Timecard_Models_Contract extends Phprojekt_ActiveRecord_Abstract
 {
 
+    public static function fetchByUser(Phprojekt_User_User $user)
+    {
+        return self::fetchByUserAndPeriod($user);
+    }
+
     /**
      * Returns an array of ['contract' => Timecard_Models_Contract, 'start' => DateTime, 'end' => DateTime] arrays,
      * sorted by start.
      */
-    public static function fetchByUserAndPeriod(Phprojekt_User_User $user, DateTime $start, DateTime $end)
+    public static function fetchByUserAndPeriod(Phprojekt_User_User $user, \DateTime $start = null, \DateTime $end = null)
     {
         $db = Phprojekt::getInstance()->getDb();
-        $userContractRels = $db->select()->from('user_contract_relation', array('contract_id', 'start', 'end'))
-            ->where('user_id = ?', Phprojekt_Auth::getUserId())
-            ->where('start < ?', $end->format('Y-m-d'))
-            ->where('end >= ? OR end is NULL', $start->format('Y-m-d'))
-            ->order('start')
-            ->query()->fetchAll();
+        $select = $db->select();
+        $select->from('user_contract_relation', array('contract_id', 'start', 'end'))
+            ->where('user_id = ?', $user->id)
+            ->order('start');
+
+        if (null !== $start) {
+            $select->where('end >= ? OR end is NULL', $start->format('Y-m-d'));
+        }
+
+        if (null !== $end) {
+            $select->where('start < ?', $end->format('Y-m-d'));
+        }
+
+        $userContractRels = $select->query()->fetchAll();
 
         $contractIds = array();
         foreach ($userContractRels as $r) {

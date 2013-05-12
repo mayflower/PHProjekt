@@ -32,3 +32,15 @@
     padding: 5px;
     margin-top: 20px;
 }
+
+.summary table {
+    width: 100%;
+}
+
+.summary table th {
+    text-align: center;
+}
+
+.summary tbody tr td:first-child {
+    text-align: right;
+}
