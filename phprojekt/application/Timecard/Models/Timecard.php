@@ -340,7 +340,7 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
                 'sumInMinutes' => (int) $record['sumInMinutes']];
         }
 
-        return array('data' => $records);
+        return array('data' => array_values($records));
     }
 
     /**
