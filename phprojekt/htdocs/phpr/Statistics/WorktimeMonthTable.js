@@ -34,7 +34,7 @@ define([
                 return;
             }
 
-            Model.getMonthList({ projects: this.projects }).then(lang.hitch(this, '_renderData'));
+            Model.getWorkedMinutesPerDay({ projects: this.projects }).then(lang.hitch(this, '_renderData'));
         },
 
         _renderData: function(data) {

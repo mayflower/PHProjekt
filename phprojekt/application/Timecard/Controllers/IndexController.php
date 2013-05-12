@@ -62,7 +62,7 @@ class Timecard_IndexController extends IndexController
     /**
      * The same as jsonMonthListAction, but use standard json.
      */
-    public function monthListAction()
+    public function workedMinutesPerDayAction()
     {
         list($start, $end) = $this->_paramToStartEndDT();
         $projects          = $this->_projectsParamToArray();

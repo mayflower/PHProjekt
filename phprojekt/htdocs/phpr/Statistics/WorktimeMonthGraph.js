@@ -200,7 +200,7 @@ define([
                 lang.hitch(this, function(error) {
                     // fallback rendering, probably no contract
                     api.defaultErrorHandler(error);
-                    timecardModel.getMonthList(this._getModelParams()).then(lang.hitch(this, this._renderUsingMonthList));
+                    timecardModel.getWorkedMinutesPerDay(this._getModelParams()).then(lang.hitch(this, this._renderUsingMonthList));
                 })
             );
         },

@@ -59,10 +59,10 @@ define([
         });
     };
 
-    exports.getMonthList = function(params) {
+    exports.getWorkedMinutesPerDay = function(params) {
         var opts = startEndDefaultQuery(params);
         return api.getData(
-            'index.php/Timecard/index/monthList',
+            'index.php/Timecard/index/workedMinutesPerDay',
             { query: opts }
         );
     };
