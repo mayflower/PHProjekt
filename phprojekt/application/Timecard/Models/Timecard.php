@@ -299,19 +299,27 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
      *
      * @return array
      */
-    static public function getMonthRecords($year, $month, Array $projects = null)
+    public static function getRecords(\DateTime $start, \DateTime $end, array $projects = null)
     {
         if ($projects !== null && empty($projects)) {
             return array('data' => array());
         }
 
+        $start->setTime(0, 0, 0);
+        $end->setTime(0, 0, 0);
         $userId = (int) Phprojekt_Auth_Proxy::getEffectiveUserId();
 
         $select = Phprojekt::getInstance()->getDb()->select();
-        $select->from("timecard")
+
+        /* already initialize sum to 0 so we don't need to check if for it */
+        $select->from("timecard",
+            array('date' => 'DATE(start_datetime)',
+                  'sumInMinutes' => 'SUM(minutes)'))
             ->where("owner_id = ?", $userId)
-            ->where("YEAR(start_datetime) = ?", $year)
-            ->where("MONTH(start_datetime) = ?", $month);
+            ->where('DATE(start_datetime) >= ?', $start->format('Y-m-d'))
+            ->where('DATE(start_datetime) < ?', $end->format('Y-m-d'))
+            ->group('DATE(start_datetime)')
+            ->order("start_datetime ASC");
 
         if ($projects !== null && !empty($projects)) {
             $select->where('project_id IN (?)', $projects);
@@ -319,46 +327,20 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
 
         $select->order("start_datetime ASC");
 
-        $records = $select->query()->fetchAll();
-
-        // Get all the hours for this month
-        $sortRecords = array();
-        foreach ($records as $record) {
-            $date = date('Y-m-d', strtotime($record['start_datetime']));
-            if (!isset($sortRecords[$date])) {
-                $sortRecords[$date]['sum']        = 0;
-                $sortRecords[$date]['openPeriod'] = 0;
-            }
-            if ($record['minutes'] == 0 && null === $record['end_time']) {
-                $sortRecords[$date]['openPeriod'] = 1;
-            }
-            $sortRecords[$date]['sum'] += (int) $record['minutes'];
+        $interval = DateInterval::createFromDateString('1 day');
+        $records  = [];
+        foreach(new DatePeriod($start, $interval, $end) as $date) {
+            $formated           = $date->format('Y-m-d');
+            $records[$formated] = ['date' => $formated, 'sumInMinutes' => 0];
         }
 
-        $endDayofTheMonth = date("t", mktime(0, 0, 0, $month, 1, $year));
-        $datas            = array();
-        for ($i = 1; $i <= $endDayofTheMonth; $i++) {
-            $day   = $i;
-            $day   = str_pad($day, 2, "0", STR_PAD_LEFT);
-            $month = str_pad($month, 2, "0", STR_PAD_LEFT);
-            $date  = $year . '-' . $month . '-' . $day;
-
-            $data         = array();
-            $data['date'] = $date;
-            $data['week'] = date("w", strtotime($date));
-            if (isset($sortRecords[$date])) {
-                $data['sumInMinutes'] = $sortRecords[$date]['sum'];
-                $data['sumInHours']   = self::convertTime($sortRecords[$date]['sum']);
-                $data['openPeriod']   = $sortRecords[$date]['openPeriod'];
-            } else {
-                $data['sumInMinutes'] = 0;
-                $data['sumInHours']   = 0;
-                $data['openPeriod']   = 0;
-            }
-            $datas[] = $data;
+        foreach($select->query()->fetchAll() as $record) {
+            $records[$record['date']] = [
+                'date' => $record['date'],
+                'sumInMinutes' => (int) $record['sumInMinutes']];
         }
 
-        return array('data' => $datas);
+        return array('data' => array_values($records));
     }
 
     /**
@@ -557,13 +539,10 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
     /**
      * Returns the sum of booked minutes for the current user
      *
-     * @param int $year The year
-     * @param int $month The month
-     * @param Array $projects Filter projects by id's from array, if null, no filter is applied
-     *
-     * @return int
+     * @param DateTime $start Start date
+     * @param DateTime $end End date (excluded)
      **/
-    public static function getBookedMinutesInMonth($year, $month, Array $projects = null)
+    public static function getBookedMinutes(\DateTime $start, \DateTime $endExcluded, $projects = null)
     {
         if ($projects !== null && empty($projects)) {
             return 0;
@@ -572,8 +551,8 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
         $table  = new self();
         $select = $table->select()
             ->from($table, array('minutes' => 'SUM(minutes)'))
-            ->where('YEAR(start_datetime) = ?', $year)
-            ->where('MONTH(start_datetime) = ?', $month)
+            ->where('start_datetime >= ?', $start->format('Y-m-d H:i:s'))
+            ->where('start_datetime < ?', $endExcluded->format('Y-m-d'))
             ->where('owner_id = ?', Phprojekt_Auth_Proxy::getEffectiveUserId());
 
         if ($projects !== null && !empty($projects)) {

@@ -293,16 +293,16 @@ class Timecard_IndexController_Test extends FrontInit
     public function testJsonMonthListActionPart2()
     {
         $this->setRequestUrl('Timecard/index/jsonMonthList/');
-        $this->request->setParam('year', 2009);
-        $this->request->setParam('month', 5);
+        $this->request->setParam('start', "2009-05-01");
+        $this->request->setParam('end', "2009-06-01");
         $response = $this->getResponse();
-        $expected = '{"date":"2009-05-01","week":"5","sumInMinutes":0,"sumInHours":0,"openPeriod":0}';
+        $expected = '{"date":"2009-05-01","sumInMinutes":0}';
         $this->assertContains($expected, $response);
 
-        $expected = '{"date":"2009-05-17","week":"0","sumInMinutes":360,"sumInHours":"06:00","openPeriod":0}';
+        $expected = '{"date":"2009-05-17","sumInMinutes":360}';
         $this->assertContains($expected, $response);
 
-        $expected = '{"date":"2009-05-31","week":"0","sumInMinutes":0,"sumInHours":0,"openPeriod":0}';
+        $expected = '{"date":"2009-05-31","sumInMinutes":0}';
         $this->assertContains($expected, $response);
     }
 

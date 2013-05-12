@@ -9,8 +9,22 @@ define([
     'dijit/_TemplatedMixin',
     'phpr/Api',
     'phpr/Timehelper',
+    'phpr/models/Timecard',
     'dojo/text!phpr/template/bookingList/summaryBlock.html'
-], function(declare, lang, topic, domStyle, all, DeferredList, _WidgetBase, _TemplatedMixin, api, timehelper, templateString) {
+], function(
+    declare,
+    lang,
+    topic,
+    domStyle,
+    all,
+    DeferredList,
+    _WidgetBase,
+    _TemplatedMixin,
+    api,
+    timehelper,
+    timecardModel,
+    templateString
+) {
     return declare([_WidgetBase, _TemplatedMixin], {
         date: new Date(),
 
@@ -48,33 +62,36 @@ define([
         },
 
         _update: function() {
+            timecardModel.getMinutesBookedTotal()
+            .then(lang.hitch(this, function(data) {
+                if (this._destroyed) {
+                    return;
+                }
+                this.bookedTotal.innerHTML = timehelper.minutesToHMString(data.minutesBooked);
+            }));
 
-            var bookedPromise = api.getData(
-                'index.php/Timecard/index/minutesBooked',
-                {query: {year: this.date.getFullYear(), month: this.date.getMonth() + 1}}
-            ).then(lang.hitch(this, function(data) {
+            timecardModel.getMinutesToWorkTotal()
+            .then(lang.hitch(this, function(data) {
+                if (this._destroyed) {
+                    return;
+                }
+                this.toWorkTotal.innerHTML = timehelper.minutesToHMString(data.minutesToWork);
+            }));
+
+            var bookedPromise = timecardModel.getMinutesBooked()
+            .then(lang.hitch(this, function(data) {
+                if (this._destroyed) {
+                    return;
+                }
                 this.booked.innerHTML = timehelper.minutesToHMString(data.minutesBooked);
             }));
 
-            var toWorkPromise = api.getData(
-                    'index.php/Timecard/index/minutesToWork',
-                    {query: {year: this.date.getFullYear(), month: this.date.getMonth() + 1}}
-            ).then(lang.hitch(this, function(data) {
+            var toWorkPromise = timecardModel.getMinutesToWork()
+            .then(lang.hitch(this, function(data) {
                 if (this._destroyed) {
                     return;
                 }
-                var toWork = data.minutesToWork;
-                if (toWork === 0) {
-                    domStyle.set(this.toWork, 'display', 'none');
-                } else {
-                    domStyle.set(this.toWorkText, 'display', '');
-                    this.toWork.innerHTML = timehelper.minutesToHMString(toWork);
-                }
-            })).otherwise(lang.hitch(this, function() {
-                if (this._destroyed) {
-                    return;
-                }
-                domStyle.set(this.toWork, 'display', 'none');
+                this.toWork.innerHTML = timehelper.minutesToHMString(data.minutesToWork);
             }));
 
             all([bookedPromise, toWorkPromise]).always(lang.hitch(this, function() {

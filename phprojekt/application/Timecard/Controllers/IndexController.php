@@ -47,13 +47,14 @@ class Timecard_IndexController extends IndexController
      *
      * The return is in JSON format.
      *
+     * @deprecated
      * @return void
      */
     public function jsonMonthListAction()
     {
-        $year    = (int) $this->getRequest()->getParam('year', date("Y"));
-        $month   = (int) $this->getRequest()->getParam('month', date("m"));
-        $records = Timecard_Models_Timecard::getMonthRecords($year, $month);
+        list($start, $end) = $this->_paramToStartEndDT();
+        $projects          = $this->_projectsParamToArray();
+        $records           = Timecard_Models_Timecard::getRecords($start, $end, $projects);
 
         Phprojekt_Converter_Json::echoConvert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);
     }
@@ -61,12 +62,11 @@ class Timecard_IndexController extends IndexController
     /**
      * The same as jsonMonthListAction, but use standard json.
      */
-    public function monthListAction()
+    public function workedMinutesPerDayAction()
     {
-        $year    = (int) $this->getRequest()->getParam('year', date("Y"));
-        $month   = (int) $this->getRequest()->getParam('month', date("m"));
-        $projects = $this->_projectsParamToArray();
-        $records = Timecard_Models_Timecard::getMonthRecords($year, $month, $projects);
+        list($start, $end) = $this->_paramToStartEndDT();
+        $projects          = $this->_projectsParamToArray();
+        $records           = Timecard_Models_Timecard::getRecords($start, $end, $projects);
 
         Phprojekt_CompressedSender::send(
             Zend_Json::encode(array('days' => $records['data']))
@@ -328,11 +328,9 @@ class Timecard_IndexController extends IndexController
      */
     public function minutesBookedAction()
     {
-        $year = (int) $this->getRequest()->getParam('year', date('Y'));
-        $month = (int) $this->getRequest()->getParam('month', date('m'));
-        $projects = $this->_projectsParamToArray();
-
-        $minutes = Timecard_Models_Timecard::getBookedMinutesInMonth($year, $month, $projects);
+        list($start, $end) = $this->_paramToStartEndDT();
+        $projects          = $this->_projectsParamToArray();
+        $minutes           = Timecard_Models_Timecard::getBookedMinutes($start, $end, $projects);
 
         Phprojekt_CompressedSender::send(
             Zend_Json::encode(
@@ -388,9 +386,9 @@ class Timecard_IndexController extends IndexController
      */
     public function minutesToWorkAction()
     {
-        list($start, $end) = $this->_yearMonthParamToStartEndDT();
+        list($start, $end) = $this->_paramToStartEndDT();
 
-        $contracts = Timecard_Models_Contract::fetchByUserAndPeriod(Phprojekt_Auth::getRealUser(), $start, $end);
+        $contracts     = Timecard_Models_Contract::fetchByUserAndPeriod(Phprojekt_Auth_Proxy::getEffectiveUser(), $start, $end);
         $minutesPerDay = $this->_contractsToMinutesPerDay($contracts, $start, $end);
         $minutesPerDay = $this->_applyHolidayWeights($minutesPerDay, $start, $end);
 
@@ -404,11 +402,11 @@ class Timecard_IndexController extends IndexController
 
     public function workBalanceByDayAction()
     {
-        list($start, $end) = $this->_yearMonthParamToStartEndDT();
+        list($start, $end) = $this->_paramToStartEndDT();
 
         $projects = $this->_projectsParamToArray();;
 
-        $contracts = Timecard_Models_Contract::fetchByUserAndPeriod(Phprojekt_Auth::getRealUser(), $start, $end);
+        $contracts = Timecard_Models_Contract::fetchByUserAndPeriod(Phprojekt_Auth_Proxy::getEffectiveUser(), $start, $end);
         $minutesToWorkPerDay = $this->_contractsToMinutesPerDay($contracts, $start, $end);
         $minutesToWorkPerDay = $this->_applyHolidayWeights($minutesToWorkPerDay, $start, $end);
 
@@ -458,18 +456,19 @@ class Timecard_IndexController extends IndexController
         echo Zend_Json::encode(array('projectUserMinutes' => $entries));
     }
 
-    private function _yearMonthParamToStartEndDT()
+    private function _paramToStartEndDT()
     {
-        $year = $this->getRequest()->getParam('year', date('Y'));
-        $month = $this->getRequest()->getParam('month', date('m'));
+        $start = $this->getRequest()->getParam('start');
 
-        // We have to use 01 as the day, or php will use the current date of the month. This might cause problems
-        // because Jan. 30 + 1 Month is March 2 (or 1 in leap years) in php.
-        $start = \DateTime::createFromFormat('Y-m-d', $year . '-' . $month . '-01');
-        $end = clone $start;
-        $end->add(new DateInterval('P1M'));
+        /* either given start day or the start day of the contract. */
+        $contracts = Timecard_Models_Contract::fetchByUser(Phprojekt_Auth_Proxy::getEffectiveUser());
 
-        return array($start, $end);
+        $first = array_pop($contracts);
+        $start = (null === $start) ? $first['start'] : new \DateTime($start);
+
+        $end = new \DateTime($this->getRequest()->getParam('end', 'today'));
+
+        return [$start, $end];
     }
 
     private function _projectsParamToArray()
@@ -507,7 +506,7 @@ class Timecard_IndexController extends IndexController
     private function _applyHolidayWeights(array $minutesPerDay, DateTime $start, DateTime $end)
     {
         try {
-            $holidays = Phprojekt_Auth::getRealUser()->getHolidayCalculator()->between($start, $end);
+            $holidays = Phprojekt_Auth_Proxy::getEffectiveUser()->getHolidayCalculator()->between($start, $end);
         } catch (Phprojekt_Exception_HolidayRegionNotSet $e) {
             return $minutesPerDay;
         }
