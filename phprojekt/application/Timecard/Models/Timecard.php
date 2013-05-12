@@ -560,7 +560,6 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
         }
 
         return (int) $select->query()->fetchColumn();
-
     }
 
     private function _checkSaveRights()
