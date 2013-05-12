@@ -14,9 +14,17 @@ define([
     timehelper
 ) {
     function startEndDefaultQuery(params) {
+        params = params || {};
+
         var thisMonth = new Date();
         thisMonth.setDate(1);
         var today = new Date();
+
+        if (params.end) {
+            var end = new Date(params.end);
+            end.setDate(end.getDate() + 1);
+            params.end = end;
+        }
 
         var ret = lang.mixin({
             start: timehelper.jsDateToIsoDate(thisMonth),
