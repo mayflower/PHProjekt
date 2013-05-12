@@ -29,38 +29,21 @@ class Timecard_IndexController extends IndexController
     }
 
     /**
-     * Returns a list of the days in the month with the sum of bookings per day.
+     * Returns a list of the days in the given range with the sum of bookings per day.
      *
      * For each day in the return, the data have:
      * <pre>
      *  - date         => Iso date.
-     *  - week         => Number of day in the week (0-6).
-     *  - sumInMinutes => Sum of bookings in the day in minutes.
-     *  - sumInHours   => Sum of bookings in the day in HH:mm format.
+     *  - sumInMinutes => Sum of bookings of that day
      * </pre>
      *
      * OPTIONAL request parameters:
      * <pre>
-     *  - integer <b>year</b>  Year to consult.
-     *  - integer <b>month</b> Month to consult.
+     *  - integer <b>start</b>  The start date.
+     *  - integer <b>end</b> The end date (exclusive).
      * </pre>
      *
-     * The return is in JSON format.
-     *
-     * @deprecated
      * @return void
-     */
-    public function jsonMonthListAction()
-    {
-        list($start, $end) = $this->_paramToStartEndDT();
-        $projects          = $this->_projectsParamToArray();
-        $records           = Timecard_Models_Timecard::getRecords($start, $end, $projects);
-
-        Phprojekt_Converter_Json::echoConvert($records, Phprojekt_ModelInformation_Default::ORDERING_LIST);
-    }
-
-    /**
-     * The same as jsonMonthListAction, but use standard json.
      */
     public function workedMinutesPerDayAction()
     {
