@@ -542,7 +542,7 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
      * @param DateTime $start Start date
      * @param DateTime $end End date (excluded)
      **/
-    public static function getBookedMinutes(DateTime $start, DateTime $endExcluded, $projects = null)
+    public static function getBookedMinutes(\DateTime $start, \DateTime $endExcluded, $projects = null)
     {
         if ($projects !== null && empty($projects)) {
             return 0;
