@@ -128,8 +128,7 @@
                 "current_status":   {"type": "int", "length": "2", "notNull": "true", "default": "3"},
                 "complete_percent": {"type": "varchar", "length": "4"},
                 "hourly_wage_rate": {"type": "varchar", "length": "10"},
-                "budget":           {"type": "varchar", "length": "10"},
-                "contact_id":       {"type": "int"}
+                "budget":           {"type": "varchar", "length": "10"}
             }
         },
 
@@ -473,27 +472,6 @@
                     "alt_position":    "0",
                     "status":          "0",
                     "is_integer":      "0",
-                    "is_required":     "0",
-                    "is_unique":       "0"
-                },
-
-                {
-                    "table_name":      "Project",
-                    "table_field":     "contact_id",
-                    "form_tab":        "1",
-                    "form_label":      "Contact",
-                    "form_type":       "selectValues",
-                    "form_position":   "11",
-                    "form_columns":    "1",
-                    "form_regexp":     "NULL",
-                    "form_range":      "Contact#id#name",
-                    "default_value":   "NULL",
-                    "list_position":   "0",
-                    "list_align":      "NULL",
-                    "list_use_filter": "1",
-                    "alt_position":    "9",
-                    "status":          "1",
-                    "is_integer":      "1",
                     "is_required":     "0",
                     "is_unique":       "0"
                 }
