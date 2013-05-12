@@ -292,7 +292,7 @@ class Timecard_IndexController_Test extends FrontInit
      */
     public function testJsonMonthListActionPart2()
     {
-        $this->setRequestUrl('Timecard/index/jsonMonthList/');
+        $this->setRequestUrl('Timecard/index/workedMinutesPerDay/');
         $this->request->setParam('start', "2009-05-01");
         $this->request->setParam('end', "2009-06-01");
         $response = $this->getResponse();
