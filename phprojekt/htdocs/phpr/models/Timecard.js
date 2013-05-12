@@ -28,7 +28,7 @@ define([
         return api.getData(
                 'index.php/Timecard/index/minutesBooked',
                 { query: params });
-    }
+    };
 
     exports.getMinutesBooked = function(params) {
         var opts = startEndDefaultQuery(params);
