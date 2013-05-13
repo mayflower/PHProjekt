@@ -4,6 +4,7 @@ define([
     'dojo/_base/array',
     'dojo/dom-attr',
     'dojo/dom-construct',
+    'dojo/date',
     'dojo/date/locale',
     'dojo/promise/all',
     'dijit/_Widget',
@@ -19,6 +20,7 @@ define([
     array,
     domAttr,
     domConstruct,
+    ddate,
     locale,
     all,
     Widget,
@@ -265,9 +267,9 @@ define([
         },
 
         _renderTodayMarker: function(domNode, entries) {
-            var today = new Date().getTime();
+            var today = new Date();
 
-            if (today > this.endDate.getTime() || today < this.startDate.getTime()) {
+            if (ddate.compare(today, this.endDate, 'date') > 0 || ddate.compare(today, this.startDate, 'date') < 0) {
                 return;
             }
 
