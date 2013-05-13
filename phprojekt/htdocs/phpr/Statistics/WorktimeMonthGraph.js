@@ -45,7 +45,13 @@ define([
 
         todayX: function(startDate) {
             var dayDiff = ((new Date()).getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24);
-            return dayDiff * (this.barWidth() + barPadding) - (barPadding / 2);
+            return Math.min(
+                Math.max(
+                    dayDiff * (this.barWidth() + barPadding) - (barPadding / 2),
+                    0
+                ),
+                this.displayWidth()
+            );
         },
 
         barWidth: function() {
