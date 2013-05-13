@@ -86,6 +86,7 @@ define([
         activeMonthWidget: null,
         monthState: 'graph',
         projectChooser: null,
+        _monthUpdateTimer: null,
 
         buildRendering: function() {
             this.inherited(arguments);
@@ -96,6 +97,8 @@ define([
             this.own(on(this.monthViewGraphBtn, 'click', lang.hitch(this, '_onMonthViewGraph')));
             this.own(on(this.monthViewTableBtn, 'click', lang.hitch(this, '_onMonthViewTable')));
             this.own(on(this.projectChooser, 'change', lang.hitch(this, '_updateMonthWidget')));
+            this.own(on(this.startDate, 'change', lang.hitch(this, '_updateMonthWidget')));
+            this.own(on(this.endDate, 'change', lang.hitch(this, '_updateMonthWidget')));
 
             this.own(this.exportForm.on('submit', lang.hitch(this, this._openExport)));
         },
@@ -113,11 +116,11 @@ define([
         },
 
         _setMonthTable: function() {
-            this._setMonthWidget(new monthTable({ projects: this._getSelectedProjects() }), 'table');
+            this._setMonthWidget(new monthTable(this._getMonthWidgetOptions()), 'table');
         },
 
         _setMonthGraph: function() {
-            this._setMonthWidget(new monthGraph({ projects: this._getSelectedProjects() }), 'graph');
+            this._setMonthWidget(new monthGraph(this._getMonthWidgetOptions()), 'graph');
         },
 
         _setMonthWidget: function(widget, state) {
@@ -130,6 +133,14 @@ define([
             this.monthState = state;
         },
 
+        _getMonthWidgetOptions: function() {
+            return {
+                projects: this._getSelectedProjects(),
+                startDate: this.startDate.get('value'),
+                endDate: this.endDate.get('value')
+            };
+        },
+
         _getSelectedProjects: function() {
             var project = this.projectChooser.get('value');
             if (project === '-1' || project === '') {
@@ -140,14 +151,21 @@ define([
         },
 
         _updateMonthWidget: function() {
-            switch (this.monthState) {
-                case 'table':
-                    this._setMonthTable();
-                    break;
-                case 'graph':
-                    this._setMonthGraph();
-                    break;
-            }
+            this._scheduleMonthWidgetUpdate();
+        },
+
+        _scheduleMonthWidgetUpdate: function() {
+            clearTimeout(this._monthUpdateTimer);
+            this._monthUpdateTimer = setTimeout(lang.hitch(this, function() {
+                switch (this.monthState) {
+                    case 'table':
+                        this._setMonthTable();
+                        break;
+                    case 'graph':
+                        this._setMonthGraph();
+                        break;
+                }
+            }), 250);
         },
 
         _openExport: function(evt) {
