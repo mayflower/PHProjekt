@@ -277,7 +277,10 @@ define([
         },
 
         _getModelParams: function() {
-            return { projects: this.projects };
+            var end = new Date();
+            end.setDate(1);
+            end.setMonth(end.getMonth() + 1);
+            return { projects: this.projects, end: end };
         }
     });
 });
