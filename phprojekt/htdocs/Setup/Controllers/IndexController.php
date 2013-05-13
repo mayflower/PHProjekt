@@ -91,6 +91,7 @@ class IndexController extends Zend_Controller_Action
      */
     public function indexAction()
     {
+        Zend_Session::destroy();
         try {
             $this->_setup->checkServer();
             $message = $this->_setup->getMessage();
