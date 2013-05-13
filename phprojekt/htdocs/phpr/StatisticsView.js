@@ -117,10 +117,18 @@ define([
         },
 
         _setMonthTable: function() {
+            if (this._destoyed) {
+                return;
+            }
+
             this._setMonthWidget(new monthTable(this._getMonthWidgetOptions()), 'table');
         },
 
         _setMonthGraph: function() {
+            if (this._destoyed) {
+                return;
+            }
+
             this._setMonthWidget(new monthGraph(this._getMonthWidgetOptions()), 'graph');
         },
 
