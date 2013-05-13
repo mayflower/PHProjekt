@@ -251,7 +251,10 @@ define([
         },
 
         _fillOvertimeLabel: function() {
-            var opts = lang.mixin(this._getModelParams(), {end: new Date()});
+            var opts = lang.mixin(this._getModelParams(), {
+                end: timehelper.exclude(new Date())
+            });
+
             timecardModel.getMonthStatistics(opts).then(lang.hitch(this, function(result) {
                 if (this._destroyed === true) {
                     return;

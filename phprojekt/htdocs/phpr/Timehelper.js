@@ -134,4 +134,10 @@ define([
             return date;
         }
     };
+
+    exports.exclude = function(date) {
+        var d = new Date(date);
+        d.setDate(d.getDate() - 1);
+        return d;
+    };
 });
