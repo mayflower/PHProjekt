@@ -27,9 +27,12 @@ define([
         }
 
         var ret = lang.mixin({
-            start: timehelper.jsDateToIsoDate(thisMonth),
-            end: timehelper.jsDateToIsoDate(today)
+            start: thisMonth,
+            end: today
         }, params);
+
+        ret.start = timehelper.jsDateToIsoDate(ret.start);
+        ret.end   = timehelper.jsDateToIsoDate(ret.end);
 
         if (ret.projects) {
             if (ret.projects.length > 0) {
