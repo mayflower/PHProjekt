@@ -3,7 +3,9 @@ define([
     'dojo/_base/lang',
     'dojo/topic',
     'dojo/dom-style',
+    'dojo/dom-class',
     'dojo/promise/all',
+    'dojo/date/locale',
     'dojo/DeferredList',
     'dijit/_WidgetBase',
     'dijit/_TemplatedMixin',
@@ -16,7 +18,9 @@ define([
     lang,
     topic,
     domStyle,
+    domClass,
     all,
+    dateLocale,
     DeferredList,
     _WidgetBase,
     _TemplatedMixin,
@@ -62,51 +66,52 @@ define([
         },
 
         _update: function() {
-            timecardModel.getMinutesBookedTotal({
-                end: timehelper.exclude(new Date())
+            if (this._destroyed) {
+                return;
+            }
+
+            var today = timehelper.exclude(new Date());
+
+            var totalBookedPromise = timecardModel.getMinutesBookedTotal({ end: today });
+            var totalToWorkPromise = timecardModel.getMinutesToWorkTotal({ end: today });
+            var monthBookedPromise = timecardModel.getMinutesBooked({ end: today });
+            var monthToWorkPromise = timecardModel.getMinutesToWork({ end: today });
+
+            all({
+                bookedTotal: totalBookedPromise,
+                toWorkTotal: totalToWorkPromise,
+                bookedMonth: monthBookedPromise,
+                toWorkMonth: monthToWorkPromise
             })
             .then(lang.hitch(this, function(data) {
                 if (this._destroyed) {
                     return;
                 }
-                this.bookedTotal.innerHTML = timehelper.minutesToHMString(data.minutesBooked);
-            }));
+                var totalDiff = data.bookedTotal.minutesBooked - data.toWorkTotal.minutesToWork;
+                var monthDiff = data.bookedMonth.minutesBooked - data.toWorkMonth.minutesToWork;
 
-            timecardModel.getMinutesToWorkTotal({
-                end: timehelper.exclude(new Date())
-            })
-            .then(lang.hitch(this, function(data) {
-                if (this._destroyed) {
-                    return;
+                this.monthName.innerHTML = dateLocale.format(new Date(), {
+                    selector: "date",
+                    datePattern: "MMMM y"
+                });
+
+                this.totalDiff.innerHTML     = timehelper.minutesToHMString(totalDiff);
+                this.thisMonthDiff.innerHTML = timehelper.minutesToHMString(monthDiff);
+
+                if (totalDiff < 0) {
+                    domClass.add(this.totalDiff, "negative");
+                } else {
+                    domClass.remove(this.totalDiff, "negative");
                 }
-                this.toWorkTotal.innerHTML = timehelper.minutesToHMString(data.minutesToWork);
-            }));
 
-            var bookedPromise = timecardModel.getMinutesBooked({
-                end: timehelper.exclude(new Date())
-            })
-            .then(lang.hitch(this, function(data) {
-                if (this._destroyed) {
-                    return;
+                if (monthDiff < 0) {
+                    domClass.add(this.thisMonthDiff, "negative");
+                } else {
+                    domClass.remove(this.thisMonthDiff, "negative");
                 }
-                this.booked.innerHTML = timehelper.minutesToHMString(data.minutesBooked);
-            }));
 
-            var toWorkPromise = timecardModel.getMinutesToWork({
-                end: timehelper.exclude(new Date())
-            })
-            .then(lang.hitch(this, function(data) {
-                if (this._destroyed) {
-                    return;
-                }
-                this.toWork.innerHTML = timehelper.minutesToHMString(data.minutesToWork);
-            }));
-
-            all([bookedPromise, toWorkPromise]).always(lang.hitch(this, function() {
                 this.updateScheduled = false;
             }));
-
         }
-
     });
 });
