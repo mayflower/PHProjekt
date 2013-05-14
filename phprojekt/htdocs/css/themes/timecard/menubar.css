@@ -85,6 +85,14 @@
     background: #545454;
 }
 
+.timecard .menubar td.teamStatisticsButton {
+    background: #7E2A2A;
+}
+
+.timecard .menubar td.teamStatisticsButton div.menuItem {
+    padding-left: 10px;
+}
+
 .timecard .menubarOuter.start {
     border-color: #0D639B;
 }
@@ -92,8 +100,13 @@
 .timecard .menubarOuter.bookings {
     border-color: #799B00;
 }
+
 .timecard .menubarOuter.statistics {
     border-color: #545454;
+}
+
+.timecard .menubarOuter.teamStatistics {
+    border-color: #7E2A2A;
 }
 
 .timecard .menubar td.button.logoutButton {
