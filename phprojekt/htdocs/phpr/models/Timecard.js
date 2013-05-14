@@ -13,6 +13,18 @@ define([
     api,
     timehelper
 ) {
+    function convertDates(params) {
+        if (params.start) {
+            params.start = timehelper.jsDateToIsoDate(params.start);
+        }
+
+        if (params.end) {
+            params.end = timehelper.jsDateToIsoDate(params.end);
+        }
+
+        return params;
+    }
+
     function startEndDefaultQuery(params) {
         params = params || {};
 
@@ -20,6 +32,8 @@ define([
         thisMonth.setDate(1);
         var today = new Date();
 
+        /* clone params to ensure that they are not reused */
+        params = lang.clone(params);
         if (params.end) {
             var end = new Date(params.end);
             end.setDate(end.getDate() + 1);
@@ -27,8 +41,8 @@ define([
         }
 
         var ret = lang.mixin({
-            start: timehelper.jsDateToIsoDate(thisMonth),
-            end: timehelper.jsDateToIsoDate(today)
+            start: thisMonth,
+            end: today
         }, params);
 
         if (ret.projects) {
@@ -45,27 +59,27 @@ define([
     exports.getMinutesBookedTotal = function(params) {
         return api.getData(
                 'index.php/Timecard/index/minutesBooked',
-                { query: params });
+                { query: convertDates(params) });
     };
 
     exports.getMinutesBooked = function(params) {
         var opts = startEndDefaultQuery(params);
         return api.getData(
                 'index.php/Timecard/index/minutesBooked',
-                { query: opts });
+                { query: convertDates(opts) });
     };
 
     exports.getMinutesToWorkTotal = function(params) {
         return api.getData(
                 'index.php/Timecard/index/minutesToWork',
-                { query: params });
+                { query: convertDates(params) });
     };
 
     exports.getMinutesToWork = function(params) {
         var opts = startEndDefaultQuery(params);
         return api.getData(
                 'index.php/Timecard/index/minutesToWork',
-                { query: opts });
+                { query: convertDates(opts) });
     };
 
     exports.getMonthStatistics = function(params) {
@@ -81,7 +95,7 @@ define([
         var opts = startEndDefaultQuery(params);
         return api.getData(
             'index.php/Timecard/index/workedMinutesPerDay',
-            { query: opts }
+            { query: convertDates(opts) }
         );
     };
 
@@ -89,7 +103,7 @@ define([
         var opts = startEndDefaultQuery(params);
         return api.getData(
             'index.php/Timecard/index/workBalanceByDay',
-            { query: opts }
+            { query: convertDates(opts) }
         );
     };
 
@@ -97,7 +111,7 @@ define([
         var opts = startEndDefaultQuery(params);
         return api.getData(
             'index.php/Timecard/index/projectUserMinutes',
-            { query: opts }
+            { query: convertDates(opts) }
         );
     };
 });
