@@ -4,6 +4,7 @@ define([
     'dojo/_base/array',
     'dojo/dom-attr',
     'dojo/dom-construct',
+    'dojo/date',
     'dojo/date/locale',
     'dojo/promise/all',
     'dijit/_Widget',
@@ -19,6 +20,7 @@ define([
     array,
     domAttr,
     domConstruct,
+    ddate,
     locale,
     all,
     Widget,
@@ -43,7 +45,13 @@ define([
 
         todayX: function(startDate) {
             var dayDiff = ((new Date()).getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24);
-            return dayDiff * (this.barWidth() + barPadding) - (barPadding / 2);
+            return Math.min(
+                Math.max(
+                    dayDiff * (this.barWidth() + barPadding) - (barPadding / 2),
+                    0
+                ),
+                this.displayWidth()
+            );
         },
 
         barWidth: function() {
@@ -268,9 +276,9 @@ define([
         },
 
         _renderTodayMarker: function(domNode, entries) {
-            var today = new Date().getTime();
+            var today = new Date();
 
-            if (today > this.endDate.getTime() || today < this.startDate.getTime()) {
+            if (ddate.compare(today, this.endDate, 'date') > 0 || ddate.compare(today, this.startDate, 'date') < 0) {
                 return;
             }
 
