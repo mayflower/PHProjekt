@@ -66,6 +66,10 @@ define([
         },
 
         _update: function() {
+            if (this._destroyed) {
+                return;
+            }
+
             var today = timehelper.exclude(new Date());
 
             var totalBookedPromise = timecardModel.getMinutesBookedTotal({ end: today });
