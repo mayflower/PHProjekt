@@ -85,11 +85,11 @@
     background: #545454;
 }
 
-.timecard .menubar td.projectStatisticsButton {
+.timecard .menubar td.teamStatisticsButton {
     background: #7E2A2A;
 }
 
-.timecard .menubar td.projectStatisticsButton div.menuItem {
+.timecard .menubar td.teamStatisticsButton div.menuItem {
     padding-left: 10px;
 }
 
@@ -105,7 +105,7 @@
     border-color: #545454;
 }
 
-.timecard .menubarOuter.projectStatistics {
+.timecard .menubarOuter.teamStatistics {
     border-color: #7E2A2A;
 }
 

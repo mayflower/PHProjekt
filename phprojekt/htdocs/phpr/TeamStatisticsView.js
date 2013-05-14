@@ -5,7 +5,7 @@ define([
     'dijit/_Widget',
     'dijit/_TemplatedMixin',
     'dijit/_WidgetsInTemplateMixin',
-    'dojo/text!phpr/template/projectStatisticsView.html'
+    'dojo/text!phpr/template/teamStatisticsView.html'
 ], function(
     declare,
     lang,
