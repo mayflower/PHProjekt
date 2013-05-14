@@ -34,7 +34,11 @@ define([
                 return;
             }
 
-            Model.getWorkedMinutesPerDay({ projects: this.projects }).then(lang.hitch(this, '_renderData'));
+            Model.getWorkedMinutesPerDay({
+                projects: this.projects,
+                start: this.startDate,
+                end: this.endDate
+            }).then(lang.hitch(this, '_renderData'));
         },
 
         _renderData: function(data) {

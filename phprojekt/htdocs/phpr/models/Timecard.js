@@ -14,14 +14,32 @@ define([
     timehelper
 ) {
     function startEndDefaultQuery(params) {
+        params = params || {};
+
         var thisMonth = new Date();
         thisMonth.setDate(1);
         var today = new Date();
 
-        return lang.mixin({
+        if (params.end) {
+            var end = new Date(params.end);
+            end.setDate(end.getDate() + 1);
+            params.end = end;
+        }
+
+        var ret = lang.mixin({
             start: timehelper.jsDateToIsoDate(thisMonth),
             end: timehelper.jsDateToIsoDate(today)
         }, params);
+
+        if (ret.projects) {
+            if (ret.projects.length > 0) {
+                ret.projects = ret.projects.join(',');
+            } else {
+                delete ret.projects;
+            }
+        }
+
+        return ret;
     }
 
     exports.getMinutesBookedTotal = function(params) {
