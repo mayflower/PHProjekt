@@ -96,6 +96,7 @@ define([
 
             this.own(on(this.monthViewGraphBtn, 'click', lang.hitch(this, '_onMonthViewGraph')));
             this.own(on(this.monthViewTableBtn, 'click', lang.hitch(this, '_onMonthViewTable')));
+            this.own(on(this.filterBtn, 'click', lang.hitch(this, '_onFilter')));
             this.own(on(this.projectChooser, 'change', lang.hitch(this, '_updateMonthWidget')));
             this.own(on(this.startDate, 'change', lang.hitch(this, '_updateMonthWidget')));
             this.own(on(this.endDate, 'change', lang.hitch(this, '_updateMonthWidget')));
@@ -187,6 +188,10 @@ define([
                 window.open(url + '?' + ioQuery.objectToQuery(query));
             }
             return false;
+        },
+
+        _onFilter: function() {
+            clazz.toggle(this.filters, 'open');
         }
     });
 
