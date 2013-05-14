@@ -5,6 +5,7 @@ define([
     'dojo/dom-style',
     'dojo/dom-class',
     'dojo/promise/all',
+    'dojo/date/locale',
     'dojo/DeferredList',
     'dijit/_WidgetBase',
     'dijit/_TemplatedMixin',
@@ -19,6 +20,7 @@ define([
     domStyle,
     domClass,
     all,
+    dateLocale,
     DeferredList,
     _WidgetBase,
     _TemplatedMixin,
@@ -83,6 +85,11 @@ define([
                 }
                 var totalDiff = data.bookedTotal.minutesBooked - data.toWorkTotal.minutesToWork;
                 var monthDiff = data.bookedMonth.minutesBooked - data.toWorkMonth.minutesToWork;
+
+                this.monthName.innerHTML = dateLocale.format(new Date(), {
+                    selector: "date",
+                    datePattern: "MMMM y"
+                });
 
                 this.totalDiff.innerHTML     = timehelper.minutesToHMString(totalDiff);
                 this.thisMonthDiff.innerHTML = timehelper.minutesToHMString(monthDiff);

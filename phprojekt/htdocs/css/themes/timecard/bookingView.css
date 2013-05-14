@@ -49,6 +49,7 @@
 
 .summary table th {
     text-align: center;
+    font-weight: bold;
 }
 
 .summary tbody tr td:first-child {
