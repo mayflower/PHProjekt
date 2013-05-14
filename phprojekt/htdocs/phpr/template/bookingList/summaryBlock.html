@@ -1,21 +1,19 @@
 <div class="summary">
     <table>
         <thead>
-            <th colspan="2">Overview</th>
+            <th colspan="2">Overtime</th>
         </thead>
         <tbody>
         <tr>
-            <td><strong>Month</strong></td>
+            <td><span data-dojo-attach-point="monthName"></span></td>
             <td>
-                <span data-dojo-attach-point="booked"></span> of
-                <span data-dojo-attach-point="toWork"></span>
+                <span data-dojo-attach-point="thisMonthDiff"></span>
             </td>
         </tr>
         <tr>
-            <td><strong>Total</strong></td>
+            <td>Total</td>
             <td>
-                <span data-dojo-attach-point="bookedTotal"></span> of
-                <span data-dojo-attach-point="toWorkTotal"></span>
+                <span data-dojo-attach-point="totalDiff"></span>
             </td>
         </tr>
         </tbody>
