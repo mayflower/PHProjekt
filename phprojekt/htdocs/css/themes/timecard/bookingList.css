@@ -335,7 +335,7 @@
     overflow: hidden;
 }
 
-form .button {
+.submitButton {
     /*margin: 15px 50px 0px 0;*/
     margin-bottom: 2px;
     line-height: 20px !important;
@@ -350,7 +350,7 @@ form .button {
     padding: 2px;
 }
 
-form .button:hover {
+.submitButton:hover {
     -webkit-transition: background-position 0.1s linear;
     -moz-transition: background-position 0.1s linear;
     -o-transition: background-position 0.1s linear;
