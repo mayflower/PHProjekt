@@ -22,7 +22,6 @@ define([
         buildRendering: function() {
             this.inherited(arguments);
             this.own(
-                on(this.startButton, 'click', lang.hitch(this, 'onStartClick')),
                 on(this.bookingsButton, 'click', lang.hitch(this, 'onBookingsClick')),
                 on(this.statisticsButton, 'click', lang.hitch(this, 'onStatisticsClick')),
                 on(this.teamStatisticsButton, 'click', lang.hitch(this, 'onTeamStatisticsClick')),

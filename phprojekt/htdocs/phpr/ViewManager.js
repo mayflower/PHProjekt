@@ -23,7 +23,6 @@ define([
         constructor: function(baseLayout) {
             this.baseLayout = baseLayout;
             var eventmap = {
-                'phpr/showLiveBooking': 'onLiveBooking',
                 'phpr/showBookings': 'onBookings',
                 'phpr/showStatistics': 'onStatistics',
                 'phpr/showTeamStatistics': 'onTeamStatistics'
@@ -39,9 +38,6 @@ define([
             this.baseLayout.menubar.onBookingsClick();
         },
 
-        onLiveBooking: function() {
-            this.baseLayout.mainContent.set('content', 'imagine a timecard here');
-        },
 
         onBookings: function() {
             this.baseLayout.mainContent.set('content', new BookingView());
