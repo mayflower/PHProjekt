@@ -62,7 +62,9 @@ define([
         },
 
         _update: function() {
-            timecardModel.getMinutesBookedTotal()
+            timecardModel.getMinutesBookedTotal({
+                end: timehelper.exclude(new Date())
+            })
             .then(lang.hitch(this, function(data) {
                 if (this._destroyed) {
                     return;
@@ -70,7 +72,9 @@ define([
                 this.bookedTotal.innerHTML = timehelper.minutesToHMString(data.minutesBooked);
             }));
 
-            timecardModel.getMinutesToWorkTotal()
+            timecardModel.getMinutesToWorkTotal({
+                end: timehelper.exclude(new Date())
+            })
             .then(lang.hitch(this, function(data) {
                 if (this._destroyed) {
                     return;
@@ -78,7 +82,9 @@ define([
                 this.toWorkTotal.innerHTML = timehelper.minutesToHMString(data.minutesToWork);
             }));
 
-            var bookedPromise = timecardModel.getMinutesBooked()
+            var bookedPromise = timecardModel.getMinutesBooked({
+                end: timehelper.exclude(new Date())
+            })
             .then(lang.hitch(this, function(data) {
                 if (this._destroyed) {
                     return;
@@ -86,7 +92,9 @@ define([
                 this.booked.innerHTML = timehelper.minutesToHMString(data.minutesBooked);
             }));
 
-            var toWorkPromise = timecardModel.getMinutesToWork()
+            var toWorkPromise = timecardModel.getMinutesToWork({
+                end: timehelper.exclude(new Date())
+            })
             .then(lang.hitch(this, function(data) {
                 if (this._destroyed) {
                     return;

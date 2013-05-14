@@ -226,6 +226,7 @@ define([
 
             this._fillOvertimeLabel();
             this._renderTodayMarker(this.bookedTimePerDayGraph, entries);
+            this._renderFutureDayMarker(this.bookedTimePerDayGraph, entries);
         },
 
         _renderUsingDayList: function(data) {
@@ -246,10 +247,15 @@ define([
             }
 
             this._renderTodayMarker(this.bookedTimePerDayGraph, entries);
+            this._renderFutureDayMarker(this.bookedTimePerDayGraph, entries);
         },
 
         _fillOvertimeLabel: function() {
-            timecardModel.getMonthStatistics(this._getModelParams()).then(lang.hitch(this, function(result) {
+            var opts = lang.mixin(this._getModelParams(), {
+                end: timehelper.exclude(new Date())
+            });
+
+            timecardModel.getMonthStatistics(opts).then(lang.hitch(this, function(result) {
                 if (this._destroyed === true) {
                     return;
                 }
@@ -277,6 +283,17 @@ define([
                 .attr('y', 0)
                 .attr('height', helper.heightForTimebars())
                 .attr('fill', '#0d639b');
+        },
+
+        _renderFutureDayMarker: function(domNode, entries) {
+            var svg = d3.select(this.bookedTimePerDayGraph),
+                helper = new GeometryHelper(domNode, entries);
+            svg.append('rect')
+                .attr('fill', 'rgba(0,0,0,0.2)')
+                .attr('x', helper.todayX(this.startDate))
+                .attr('y', 0)
+                .attr('width', helper.displayWidth() - helper.todayX(this.startDate))
+                .attr('height', helper.heightForTimebars());
         },
 
         _updateLabels: function() {
