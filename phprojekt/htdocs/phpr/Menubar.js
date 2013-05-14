@@ -33,26 +33,36 @@ define([
                     label: "Log out"
                 })
             );
+
+            this.own(topic.subscribe('phpr/changedPage', lang.hitch(this, 'onChangedPage')));
         },
 
-        onStartClick: function() {
-            topic.publish('phpr/showLiveBooking');
-            clazz.replace(this.domNode, 'menubarOuter start');
+        onChangedPage: function(page) {
+            switch (page) {
+                case 'statistics':
+                    clazz.replace(this.domNode, 'menubarOuter statistics');
+                    break;
+                case 'teamStatistics':
+                    clazz.replace(this.domNode, 'menubarOuter teamStatistics');
+                    break;
+                case 'bookings':
+                    clazz.replace(this.domNode, 'menubarOuter bookings');
+                    break;
+                default:
+                    break;
+            }
         },
 
         onBookingsClick: function() {
-            topic.publish('phpr/showBookings');
-            clazz.replace(this.domNode, 'menubarOuter bookings');
+            topic.publish('phpr/changePage', 'bookings');
         },
 
         onStatisticsClick: function() {
-            topic.publish('phpr/showStatistics');
-            clazz.replace(this.domNode, 'menubarOuter statistics');
+            topic.publish('phpr/changePage', 'statistics');
         },
 
         onTeamStatisticsClick: function() {
-            topic.publish('phpr/showTeamStatistics');
-            clazz.replace(this.domNode, 'menubarOuter teamStatistics');
+            topic.publish('phpr/changePage', 'teamStatistics');
         },
 
         _logout: function() {

@@ -19,36 +19,59 @@ define([
 ) {
     return declare(destroyable, {
         baseLayout: null,
+        setterTimeout: null,
 
         constructor: function(baseLayout) {
             this.baseLayout = baseLayout;
-            var eventmap = {
-                'phpr/showBookings': 'onBookings',
-                'phpr/showStatistics': 'onStatistics',
-                'phpr/showTeamStatistics': 'onTeamStatistics'
-            };
-
-            for (var top in eventmap) {
-                this.own(topic.subscribe(top, lang.hitch(this, eventmap[top])));
-            }
+            this.own(topic.subscribe('phpr/changePage', lang.hitch(this, 'onPageChange')));
         },
 
         startup: function() {
             this.inherited(arguments);
-            this.baseLayout.menubar.onBookingsClick();
+            var validHashes = ['statistics', 'teamStatistics', 'bookings'];
+            if (window.location.hash) {
+                var hash = window.location.hash.substring(1);
+                if (validHashes.indexOf(hash) !== -1) {
+                    return this.onPageChange(hash);
+                }
+            }
+            this.onPageChange('bookings');
         },
 
+        onPageChange: function(page) {
+            if (this._destroyed) {
+                return;
+            }
 
-        onBookings: function() {
-            this.baseLayout.mainContent.set('content', new BookingView());
+            var changedTo = page;
+            switch (page) {
+                case 'statistics':
+                    this._setContent(new StatisticsView(), changedTo);
+                    break;
+                case 'teamStatistics':
+                    this._setContent(new TeamStatisticsView(), changedTo);
+                    break;
+                default:
+                    /* Fall through */
+                case 'bookings':
+                    changedTo = 'bookings';
+                    this._setContent(new BookingView(), changedTo);
+                    break;
+            }
+
+            topic.publish('phpr/changedPage', changedTo);
         },
 
-        onStatistics: function() {
-            this.baseLayout.mainContent.set('content', new StatisticsView());
-        },
+        _setContent: function(obj, name) {
+            clearTimeout(this.setterTimeout);
+            this.setterTimeout = setTimeout(lang.hitch(this, function() {
+                if (this._destroyed) {
+                    return;
+                }
 
-        onTeamStatistics: function() {
-            this.baseLayout.mainContent.set('content', new TeamStatisticsView());
+                this.baseLayout.mainContent.set('content', obj);
+                window.location.hash = '#' + name;
+            }), 0);
         }
     });
 });
