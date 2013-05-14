@@ -20,6 +20,7 @@
 .statisticsView .buttons-outer>li:hover,
 .statisticsView .buttons-outer>li.active {
     background-color: #353535;
+    cursor: pointer;
 }
 
 
