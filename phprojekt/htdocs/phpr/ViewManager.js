@@ -5,8 +5,18 @@ define([
     'dojo/_base/array',
     'dojo/topic',
     'phpr/BookingView',
-    'phpr/StatisticsView'
-], function(declare, destroyable, lang, array, topic, BookingView, StatisticsView) {
+    'phpr/StatisticsView',
+    'phpr/TeamStatisticsView'
+], function(
+    declare,
+    destroyable,
+    lang,
+    array,
+    topic,
+    BookingView,
+    StatisticsView,
+    TeamStatisticsView
+) {
     return declare(destroyable, {
         baseLayout: null,
 
@@ -15,7 +25,8 @@ define([
             var eventmap = {
                 'phpr/showLiveBooking': 'onLiveBooking',
                 'phpr/showBookings': 'onBookings',
-                'phpr/showStatistics': 'onStatistics'
+                'phpr/showStatistics': 'onStatistics',
+                'phpr/showTeamStatistics': 'onTeamStatistics'
             };
 
             for (var top in eventmap) {
@@ -38,6 +49,10 @@ define([
 
         onStatistics: function() {
             this.baseLayout.mainContent.set('content', new StatisticsView());
+        },
+
+        onTeamStatistics: function() {
+            this.baseLayout.mainContent.set('content', new TeamStatisticsView());
         }
     });
 });
