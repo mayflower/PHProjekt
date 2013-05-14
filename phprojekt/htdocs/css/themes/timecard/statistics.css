@@ -35,3 +35,30 @@
 .statisticsView p {
     margin-bottom: 0px;
 }
+
+.statisticsView .filters {
+    max-height: 0px;
+    width: 100%;
+    overflow: hidden;
+    background-color: #090909;
+    box-shadow: inset 0px 1px 4px black;
+    -moz-box-shadow: inset 0px 1px 4px black;
+    -webkit-box-shadow: inset 0px 1px 4px black;
+    -o-box-shadow: inset 0px 1px 4px black;
+    transition: max-height 0.2s;
+    -moz-transition: max-height 0.2s; /* Firefox 4 */
+    -webkit-transition: max-height 0.2s; /* Safari and Chrome */
+    -o-transition: max-height 0.2s; /* Opera */
+}
+
+.statisticsView .filters.open {
+    max-height: 170px;
+    transition: max-height 0.2s;
+    -moz-transition: max-height 0.2s; /* Firefox 4 */
+    -webkit-transition: max-height 0.2s; /* Safari and Chrome */
+    -o-transition: max-height 0.2s; /* Opera */
+}
+
+.statisticsView .filters-inner {
+    padding-left: 20px;
+}
