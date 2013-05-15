@@ -90,7 +90,9 @@
 }
 
 .timecard .menubar td.teamStatisticsButton div.menuItem {
-    padding-left: 10px;
+    background-image: url(../../../img/timecard/icon-statistic.png);
+    background-repeat: no-repeat;
+    background-position: 14px 10px;
 }
 
 .timecard .menubarOuter.start {
