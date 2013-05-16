@@ -1,29 +1,38 @@
 <div class="statisticsView">
-    <div class="exportForm" data-dojo-attach-point="exportForm" data-dojo-type="dijit/form/Form">
-        <input type="text"
-                name="start"
-                class="date"
-                data-dojo-type="phpr/DateTextBox"
-                data-dojo-attach-point="startDate"
-                data-dojo-props="placeholder:'Start date', value: 'firstOfMonth'" />
-        -
-        <input type="text"
-                name="end"
-                class="date"
-                data-dojo-type="phpr/DateTextBox"
-                data-dojo-attach-point="endDate"
-                data-dojo-props="placeholder:'End date', value: 'lastOfMonth'" />
+    <div class="filters open" data-dojo-attach-point="filters">
+        <div class="filters-inner">
+            <h3>Filter</h3>
+            <div class="exportForm" data-dojo-attach-point="exportForm" data-dojo-type="dijit/form/Form">
+                <table><tbody>
+                    <tr>
+                        <td>Projekt:</td>
+                        <td>
+                            <div data-dojo-attach-point="projectChooserContainer"
+                                 data-dojo-type="dijit/layout/ContentPane"></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Zeitraum:</td>
+                        <td>
+                            <input type="text"
+                                name="start"
+                                class="date"
+                                data-dojo-type="phpr/DateTextBox"
+                                data-dojo-attach-point="startDate"
+                                data-dojo-props="placeholder:'Start date', value: 'firstOfMonth'" />
+                            -
+                            <input type="text"
+                                name="end"
+                                class="date"
+                                data-dojo-type="phpr/DateTextBox"
+                                data-dojo-attach-point="endDate"
+                                data-dojo-props="placeholder:'End date', value: 'lastOfMonth'" />
+                        </td>
+                    </tr>
+                </tbody></table>
+            </div>
+        </div>
     </div>
-    <h2>Parasoup</h2>
-    <button data-dojo-type="dijit/form/Button"
-        type="submit"
-        data-dojo-props="baseClass:'submitButton'">Export to CSV</button>
-    <div>Hours for Hans on project Parasoup</div>
-    <div>Hours for Fritz on project Parasoup</div>
-    <h2>Parasoup</h2>
-    <button data-dojo-type="dijit/form/Button"
-        type="submit"
-        data-dojo-props="baseClass:'submitButton'">Export to CSV</button>
-    <div>Hours for Hans on project Parasoup</div>
-    <div>Hours for Fritz on project Parasoup</div>
+    <div data-dojo-attach-point="tableContainer" data-dojo-type="dijit/layout/ContentPane">
+    </div>
 </div>
