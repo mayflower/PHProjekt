@@ -101,7 +101,7 @@ define([
             this.own(on(this.startDate, 'change', lang.hitch(this, '_updateMonthWidget')));
             this.own(on(this.endDate, 'change', lang.hitch(this, '_updateMonthWidget')));
 
-            this.own(this.exportForm.on('submit', lang.hitch(this, this._openExport)));
+            this.own(this.exportButton.on('click', lang.hitch(this, this._openExport)));
         },
 
         _onMonthViewGraph: function() {
