@@ -33,7 +33,7 @@ define([
         all({
             projects: exports.getProjects(),
             recent: api.getData(
-                 'index.php/Timecard/index/jsonRecentProjects',
+                 'index.php/Timecard/index/recentProjects',
                  {query: {n: optsDef.count}})
         }).then(function(result) {
             var projects = array.map(result.recent, function(id) {
