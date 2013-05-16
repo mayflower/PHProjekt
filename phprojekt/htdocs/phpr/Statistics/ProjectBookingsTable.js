@@ -56,10 +56,10 @@ define([
 
             var layout = [
                 { name: 'Project', field: 'project', width: '100px' },
-                { name: 'Date', field: 'date', width: '100px'  },
-                { name: 'Start', field: 'start', width: '100px'  },
-                { name: 'End', field: 'end', width: '100px'  },
-                { name: 'Minutes', field: 'minutes', width: '100px'  },
+                { name: 'Date', field: 'date', width: '80px'  },
+                { name: 'Start', field: 'start', width: '65px'  },
+                { name: 'End', field: 'end', width: '65px'  },
+                { name: 'Minutes', field: 'minutes', width: '60px'  },
                 { name: 'User', field: 'user', width: '150px' },
                 { name: 'Notes', field: 'notes', width: '220px' }
             ];
