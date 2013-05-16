@@ -469,6 +469,18 @@ class Timecard_IndexController extends IndexController
         $this->view->records = array('projectUserMinutes' => $entries);
     }
 
+    public function projectMemberBookingsAction()
+    {
+        $projects = $this->_projectsParamToArray();
+        list($start, $end) = $this->_paramToStartEndDT();
+
+        if (!is_array($projects) || empty($projects)) {
+            throw new Exception('No projects specified');
+        }
+
+        $this->view->records = Timecard_Models_Timecard::getMemberBookings($projects, $start, $end);
+    }
+
     private function _paramToStartEndDT()
     {
         $start = $this->getRequest()->getParam('start');
