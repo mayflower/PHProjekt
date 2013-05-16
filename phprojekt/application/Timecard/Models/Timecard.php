@@ -588,7 +588,7 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
                 array('u' => 'user'),
                 't.owner_id = u.id',
                 array('user' => 'CONCAT(u.firstname, " ", u.lastname)')
-            )->where('t.owner_id in (?)', implode(',', $userIds))
+            )->where('t.owner_id in (?)', $userIds)
             ->where('DATE(t.start_datetime) >= ?', $startDate->format('Y-m-d'))
             ->where('DATE(t.start_datetime) < ?', $endDate->format('Y-m-d'))
             ->group(array('t.project_id', 't.owner_id'))
@@ -596,4 +596,50 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
             ->query()->fetchAll();
     }
 
+    public static function getMemberBookings($projectIds, $start, $end)
+    {
+        $results = Phprojekt::getInstance()->getDb()->select()
+            ->from(
+                array('pr' => 'project_manager_relation'),
+                array('projectId' => 'pr.projectId')
+            )->join(
+                array('p' => 'project'),
+                'p.id = pr.projectId',
+                array('project' => 'p.title')
+            )->join(
+                array('t' => 'timecard'),
+                't.project_id = pr.projectId',
+                array(
+                    'start_datetime' => 't.start_datetime',
+                    'end_time' => 't.end_time',
+                    'minutes' => 't.minutes',
+                    'notes' => 't.notes'
+                )
+            )->join(
+                array('u' => 'user'),
+                't.owner_id = u.id',
+                array('user' => 'CONCAT(u.firstname, " ", u.lastname)')
+            )->where('pr.userId = ?', Phprojekt_Auth_Proxy::getEffectiveUserId())
+            ->where('pr.projectId IN (?)', $projectIds)
+            ->where('DATE(t.start_datetime) >= ?', $start->format('Y-m-d'))
+            ->where('DATE(t.start_datetime) < ?', $end->format('Y-m-d'))
+            ->order('t.start_datetime ASC')
+            ->query()->fetchAll();
+
+        $conv = function($value) {
+            $start = new DateTime($value['start_datetime']);
+            return [
+                'date' => $start->format('Y-m-d'),
+                'start' => $start->format('H:i:s'),
+                'end' => $value['end_time'],
+                'user' => $value['user'],
+                'minutes' => $value['minutes'],
+                'projectId' => $value['projectId'],
+                'project' => $value['project'],
+                'notes' => $value['notes']
+            ];
+        };
+
+        return array_map($conv, $results);
+    }
 }
