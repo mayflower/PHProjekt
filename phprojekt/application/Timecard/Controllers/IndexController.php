@@ -417,14 +417,16 @@ class Timecard_IndexController extends IndexController
     {
         list($start, $end) = $this->_paramToStartEndDT();
 
-        $projects = $this->_projectsParamToArray();;
+        $projects = $this->_projectsParamToArray();
 
-        $contracts = Timecard_Models_Contract::fetchByUserAndPeriod(Phprojekt_Auth_Proxy::getEffectiveUser(), $start, $end);
+        $user = Phprojekt_Auth_Proxy::getEffectiveUser();
+        $contracts = Timecard_Models_Contract::fetchByUserAndPeriod($user, $start, $end);
         $minutesToWorkPerDay = $this->_contractsToMinutesPerDay($contracts, $start, $end);
         $minutesToWorkPerDay = $this->_applyHolidayWeights($minutesToWorkPerDay, $start, $end);
 
         $bookings = Phprojekt::getInstance()->getDb()->select()
             ->from('timecard', array('date' => 'DATE(start_datetime)', 'minutes'))
+            ->where('owner_id = ?', $user->id)
             ->where('DATE(start_datetime) >= ?', $start->format('Y-m-d'))
             ->where('DATE(start_datetime) < ?', $end->format('Y-m-d'));
 
