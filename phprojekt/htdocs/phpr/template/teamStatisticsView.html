@@ -2,7 +2,7 @@
     <div class="filters open" data-dojo-attach-point="filters">
         <div class="filters-inner">
             <h3>Filter</h3>
-            <div class="exportForm" data-dojo-attach-point="exportForm" data-dojo-type="dijit/form/Form">
+            <div class="exportForm" data-dojo-attach-point="filterForm" data-dojo-type="dijit/form/Form">
                 <table><tbody>
                     <tr>
                         <td>Projekt:</td>
@@ -27,6 +27,15 @@
                                 data-dojo-type="phpr/DateTextBox"
                                 data-dojo-attach-point="endDate"
                                 data-dojo-props="placeholder:'End date', value: 'lastOfMonth'" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>
+                            <button data-dojo-type="dijit/form/Button"
+                                type="submit"
+                                data-dojo-attach-point="exportButton"
+                                data-dojo-props="baseClass:'submitButton'">Export to CSV</button>
                         </td>
                     </tr>
                 </tbody></table>

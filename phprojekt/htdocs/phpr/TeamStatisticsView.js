@@ -13,6 +13,7 @@ define([
     'phpr/ProjectChooser',
     'phpr/models/Project',
     'phpr/Statistics/ProjectBookingsTable',
+    'phpr/models/Timecard',
     'dijit/layout/ContentPane'
 ], function(
     declare,
@@ -28,7 +29,8 @@ define([
     templateString,
     projectChooser,
     projects,
-    projectBookingsTable
+    projectBookingsTable,
+    timecard
 ) {
     var TeamStatisticsProjectChooser = declare([projectChooser], {
         createOptions: function(queryResults) {
@@ -82,6 +84,8 @@ define([
             this.own(on(this.projectChooser, 'change', lang.hitch(this, '_updateTableWidget')));
             this.own(on(this.startDate, 'change', lang.hitch(this, '_updateTableWidget')));
             this.own(on(this.endDate, 'change', lang.hitch(this, '_updateTableWidget')));
+
+            this.own(this.exportButton.on('click', lang.hitch(this, this._openExport)));
         },
 
         _updateTableWidget: function() {
@@ -114,6 +118,24 @@ define([
                 startDate: this.startDate.get('value'),
                 endDate: this.endDate.get('value')
             };
+        },
+
+        _openExport: function(evt) {
+            if (evt) {
+                evt.stopPropagation();
+            }
+
+            if (this.filterForm.validate()) {
+                var tparams = this._getTableParams();
+                var params = {
+                    projects: tparams.projects,
+                    start: tparams.startDate,
+                    end: tparams.endDate
+                };
+                var url = timecard.getMemberBookingsCSVUrl(params);
+                window.open(url);
+            }
+            return false;
         }
     });
 });
