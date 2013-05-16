@@ -114,4 +114,12 @@ define([
             { query: convertDates(opts) }
         );
     };
+
+    exports.getMemberBookings = function(params) {
+        var opts = startEndDefaultQuery(params);
+        return api.getData(
+            'index.php/Timecard/index/projectMemberBookings',
+            { query: convertDates(opts) }
+        );
+    };
 });
