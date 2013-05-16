@@ -51,10 +51,10 @@ define([
                 items: []
             };
 
-            var layout = [[
+            var layout = [
                 { name: 'Datum', field: 'date' },
                 { name: 'Gearbeitete Zeit in Minuten', field: 'sumInMinutes' }
-            ]];
+            ];
 
             array.forEach(data.days, function(day, idx) {
                 if (parseInt(day.sumInMinutes, 10) === 0) {
