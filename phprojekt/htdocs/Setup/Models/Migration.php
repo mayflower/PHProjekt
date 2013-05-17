@@ -174,7 +174,7 @@ class Setup_Models_Migration
      */
     public static function getModulesToMigrate()
     {
-        return array('System', 'Timecard', 'Words');
+        return array('System', 'Timecard');
     }
 
     /**
