@@ -260,13 +260,13 @@ define([
 
             for (var timestamp in this.day2dayBlock) {
                 entries.push({
-                    ts: timestamp,
+                    ts: parseInt(timestamp, 10),
                     entry: this.day2dayBlock[timestamp]
                 });
             }
 
             entries.sort(function(a, b) {
-                return parseInt(b.ts, 10) > parseInt(a.ts, 10);
+                return b.ts - a.ts;
             });
 
             array.forEach(entries, function(e, index, a) {
