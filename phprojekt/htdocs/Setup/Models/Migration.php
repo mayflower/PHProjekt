@@ -334,7 +334,7 @@ class Setup_Models_Migration
     private function _migrateUsers()
     {
         // User migration
-        $query = "SELECT * FROM " . PHPR_DB_PREFIX . "users";
+        $query = "SELECT * FROM " . PHPR_DB_PREFIX . "users WHERE is_deleted IS NULL";
         $users = $this->_dbOrig->query($query)->fetchAll();
 
         // Just in case
