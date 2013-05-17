@@ -5,8 +5,18 @@ define([
     'dojo/request/xhr',
     'dojo/Deferred',
     'dojo/json',
-    'dojo/topic'
-], function(exports, lang, array, xhr, Deferred, json, topic) {
+    'dojo/topic',
+    'phpr/models/Project'
+], function(
+    exports,
+    lang,
+    array,
+    xhr,
+    Deferred,
+    json,
+    topic,
+    projects
+) {
     var config = (function() {
         var config = {};
 
@@ -39,14 +49,11 @@ define([
         var titlesById = null;
         var def = new Deferred();
 
-        exports.getData(
-            'index.php/Project/Project',
-            {query: {projectId: 1, recursive: true}}
-        ).then(function(projects) {
+        projects.getProjects().then(function(projects) {
             titlesById = {};
-            array.forEach(projects, function(p) {
-                titlesById[p.id] = p.title;
-            });
+            for (var id in projects) {
+                titlesById[id] = projects[id].title;
+            }
 
             def.resolve(titlesById);
             def = null;
