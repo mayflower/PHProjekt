@@ -40,7 +40,7 @@ define([
                 return domConstruct.place(
                     '<span class="info">No bookings for this Project selection.</span>',
                     this.domNode,
-                    'replace'
+                    'only'
                 );
             }
 
