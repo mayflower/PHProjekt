@@ -88,6 +88,7 @@ return array(
         "//css/themes/timecard/contentPane.css",
         "//css/themes/timecard/menubar.css",
         "//css/themes/timecard/scrollbar.css",
+        "//css/themes/timecard/projectChooser.css",
         "//css/themes/timecard/statistics.css",
         "//css/themes/timecard/statistics/thisMonthDiagram.css",
         "//css/themes/timecard/statistics/thisMonthTable.css",
