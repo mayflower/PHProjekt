@@ -154,7 +154,6 @@ class Phprojekt_IndexController_Test extends FrontInit
      */
     public function testJsonGetTranslatedStrings()
     {
-        $this->markTestSkipped('uhm');
         $this->setRequestUrl('Project/index/jsonGetTranslatedStrings');
         $response = $this->getResponse();
         $this->assertContains('ItemId":"Item', $response);
