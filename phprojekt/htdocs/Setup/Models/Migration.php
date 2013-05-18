@@ -87,23 +87,16 @@ class Setup_Models_Migration
     private $_projects = array();
 
     /**
-     * Relation: Contact ID in p5 to Contact ID in p6.
-     *
-     * @var array
-     */
-    private $_contacts = array();
-
-    /**
      * P5 Database.
      *
-     * @var Zend_db
+     * @var Zend_Db_Adapter_Abstract
      */
     private $_dbOrig = null;
 
     /**
      * P6 Database.
      *
-     * @var Zend_db
+     * @var Zend_Db_Adapter_Abstract
      */
     private $_db = null;
 
@@ -152,14 +145,14 @@ class Setup_Models_Migration
     private $_diffToUtc = 0;
 
     /**
-     * Search vlaues.
+     * Search values.
      *
      * @var array
      */
     private $_searchWord    = array();
     private $_searchDisplay = array();
 
-    // Phproject 6 Ids
+    // Phprojekt 6 Ids
     const USER_ADMIN   = 1;
     const USER_TEST    = 2;
     const PROJECT_ROOT = 1;
@@ -168,9 +161,9 @@ class Setup_Models_Migration
     const ROWS_PER_QUERY = 5000;
 
     /**
-     * Return a list of all modules availables for migrate.
+     * Return a list of all modules available for migrate.
      *
-     * @return array
+     * @return Array
      */
     public static function getModulesToMigrate()
     {
@@ -180,10 +173,9 @@ class Setup_Models_Migration
     /**
      * Constructor.
      *
-     * @param string $file The config file of P5.
-     * @param array  $db   Configuration for Zend_Db_Table.
-     *
-     * @return void
+     * @param $file string p5 configuration
+     * @param $diffToUtc int difference to utc
+     * @param $db null|Zend_Db_Adapter_Abstract p6 database
      */
     public function __construct($file, $diffToUtc, $db = null)
     {
@@ -299,11 +291,7 @@ class Setup_Models_Migration
     /**
      * Checks for migration.
      *
-     * @throws Expection If there is an error in the DB connection.
-     *
-     * @param string $file The config file of P5.
-     *
-     * @return void
+     * @throws Exception If there is an error in the DB connection.
      */
     private function _checkFile()
     {
@@ -926,12 +914,12 @@ class Setup_Models_Migration
         $start = sprintf('%04d', $start);
         $end   = sprintf('%04d', $end);
 
-        $starthour = substr($start, 0, 2);
-        $endhour = substr($end, 0, 2);
-        $startminute = substr($start, 2, 2);
-        $endminute = substr($end, 2, 2);
+        $startHour = (int) substr($start, 0, 2);
+        $endHour = (int) substr($end, 0, 2);
+        $startMinute = (int) substr($start, 2, 2);
+        $endMinute = (int) substr($end, 2, 2);
 
-        return ($endhour * 60 + $endminute) - ($starthour * 60 + $startminute);
+        return ($endHour * 60 + $endMinute) - ($startHour * 60 + $startMinute);
     }
 
     /**
@@ -1008,7 +996,7 @@ class Setup_Models_Migration
     /**
      * Collect all the modules.
      *
-     * @return void
+     * @return Array modules in database
      */
     private function _getModules()
     {
@@ -1281,7 +1269,7 @@ class Setup_Models_Migration
     }
 
     /**
-     * Fix string witn utf8 encode and limit the length of the string.
+     * Fix string within utf8 encode and limit the length of the string.
      *
      * @param string  $string Normal string.
      * @param integer $length Maximal length of the string in bytes.
@@ -1332,7 +1320,7 @@ class Setup_Models_Migration
 
     /**
      * Process the data of the item into the search words.
-     * The return array have per word, the count of ocurrences,
+     * The return array have per word, the count of occurrences,
      * and the pair moduleId-itemId where is it.
      *
      * @param string  $string   All the string data of the item.
@@ -1384,7 +1372,7 @@ class Setup_Models_Migration
     }
 
     /**
-     * Insert all the searc_words and search_word_module values.
+     * Insert all the search_words and search_word_module values.
      *
      * @return void
      */
