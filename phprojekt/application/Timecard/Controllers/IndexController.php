@@ -25,10 +25,9 @@ class Timecard_IndexController extends IndexController
             $this->getRequest()->setParam('format', 'json');
         }
 
-        $contextSwitch = $this->_helper->getHelper('contextSwitch');
-        $contextSwitch
+        $this->_helper->getHelper('contextSwitch')
             ->setAutoJsonSerialization(false)
-            ->addContext(
+            ->setContext(
                 'csv',
                 array(
                     'suffix' => 'csv',
@@ -39,7 +38,8 @@ class Timecard_IndexController extends IndexController
                         'Expires' => '0',
                     )
                 )
-            )->setActionContexts(
+            )->clearActionContexts()
+            ->setActionContexts(
                 array(
                     'recentProjects' => array('json', 'csv'),
                     'minutesBooked' => array('json', 'csv'),
@@ -48,8 +48,8 @@ class Timecard_IndexController extends IndexController
                     'workedMinutesPerDay' => array('json', 'csv'),
                     'projectUserMinutes' => array('json', 'csv'),
                     'projectMemberBookings' => array('json', 'csv')
-                )
-            )->initContext();
+                ))
+            ->initContext();
         $viewRenderer = Zend_Controller_Action_HelperBroker::getStaticHelper('viewRenderer');
         $viewRenderer->setViewScriptPathSpec('index.:suffix');
     }
