@@ -51,9 +51,7 @@ class Phprojekt_Table
     /**
      * Initialize a new table admin.
      *
-     * @param array $db Configuration for Zend_Db_Table.
-     *
-     * @return void
+     * @param null|Zend_Db_Adapter_Abstract $db Configuration for Zend_Db_Table.
      */
     public function __construct($db = null)
     {
