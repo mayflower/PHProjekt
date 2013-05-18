@@ -13,13 +13,6 @@
     <testsuites>
         <testsuite name="Phprojekt Test Suite">
             <directory>phprojekt/tests/UnitTests</directory>
-
-            <exclude>phprojekt/tests/UnitTests/Note</exclude>
-            <exclude>phprojekt/tests/UnitTests/Helpdesk</exclude>
-            <exclude>phprojekt/tests/UnitTests/History</exclude>
-            <exclude>phprojekt/tests/UnitTests/Module</exclude>
-            <exclude>phprojekt/tests/UnitTests/Minutes</exclude>
-            <exclude>phprojekt/tests/UnitTests/Selenium</exclude>
         </testsuite>
     </testsuites>
 

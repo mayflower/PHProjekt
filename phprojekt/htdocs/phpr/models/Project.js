@@ -82,11 +82,29 @@ define([
         all({
             projects: exports.getProjects(),
             recent: api.getData(
-                 'index.php/Timecard/index/jsonRecentProjects',
+                 'index.php/Timecard/index/recentProjects',
                  {query: {n: optsDef.count}})
         }).then(function(result) {
             var projects = array.map(result.recent, function(id) {
                 return result.projects[id];
+            });
+
+            def.resolve(projects);
+        }, api.defaultErrorHandler);
+
+        return def;
+    };
+
+    exports.getManagedProjects = function() {
+        var def = new Deferred();
+
+        all({
+            projects: exports.getProjects(),
+            managed: api.getData('index.php/Project/index/managedProjects')
+        }).then(function(result) {
+            var projects = {};
+            array.forEach(result.managed, function(id) {
+                projects[id] = result.projects[id];
             });
 
             def.resolve(projects);

@@ -46,5 +46,6 @@ class Phprojekt_TableTest extends DatabaseTest
         $stm->execute(array(':id' => 1, ':name' => null));
         $this->assertEquals(1,
             $this->getConnection()->getRowCount('test_table'));
+        $table->dropTable('test_table');
     }
 }

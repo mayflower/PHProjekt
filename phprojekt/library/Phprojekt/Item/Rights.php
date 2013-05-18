@@ -127,7 +127,7 @@ class Phprojekt_Item_Rights extends Zend_Db_Table_Abstract
      */
     public static function getItemRights($moduleId, $itemIds, $userId)
     {
-        $values = array_fill_keys($itemIds, array());
+        $values = array_fill_keys($itemIds, 0);
         $where  = sprintf('module_id = %d AND user_id = %d AND item_id IN (%s)',
             (int) $moduleId, (int) $userId, implode(",", $itemIds));
         $obj  = new self();

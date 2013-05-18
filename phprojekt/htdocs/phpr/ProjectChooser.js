@@ -92,10 +92,7 @@ define([
 
         renderOptions: function() {
             var def = this.renderDeferred = new Deferred();
-            var projectDeferred = all({
-                recent: projects.getRecentProjects(),
-                projects: projects.getProjects()
-            }).then(
+            this.getData().then(
                 lang.hitch(this, this.createOptions)
             ).then(lang.hitch(this, function(options) {
                 if (this._destroyed === true) {
@@ -136,6 +133,27 @@ define([
                 this.inherited(arguments);
                 this_.renderOptions();
             }
+        },
+
+        _setGetDataAttr: function() {
+            var this_ = this;
+            var args = arguments;
+            if (this.renderDeferred && this._started === true) {
+                this.renderDeferred.then(function() {
+                    this_.inherited(args);
+                    this_.renderOptions();
+                });
+            } else if (this._started === true) {
+                this.inherited(arguments);
+                this_.renderOptions();
+            }
+        },
+
+        getData: function() {
+            return all({
+                recent: projects.getRecentProjects(),
+                projects: projects.getProjects()
+            });
         },
 
         _selectOption: function(node) {

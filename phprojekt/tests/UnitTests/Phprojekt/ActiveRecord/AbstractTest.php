@@ -67,11 +67,6 @@ class Phprojekt_ActiveRecord_AbstractTest extends DatabaseTest
         $this->assertEquals(5, count($projects));
     }
 
-    public function testCreateHasManyAndBelongsToMany()
-    {
-        $this->markTestIncomplete("functionality has to be reimplemented");
-    }
-
     public function testGetTableName()
     {
        $instance = new Phprojekt_ModuleInstance(array('db' => $this->sharedFixture));
@@ -142,16 +137,6 @@ class Phprojekt_ActiveRecord_AbstractTest extends DatabaseTest
     }
 
     /**
-     * Has Many and belongs to many test
-     *
-     * @return void
-     */
-    public function testHasManyAndBelongsToMany()
-    {
-        $this->markTestIncomplete("functionality has to be reimplemented");
-    }
-
-    /**
      * Belongs to test
      *
      * @todo Inhance
@@ -192,24 +177,6 @@ class Phprojekt_ActiveRecord_AbstractTest extends DatabaseTest
         $actual   = $instance->project;
 
         $this->assertEquals($expected->id, $actual->id);
-    }
-
-    /**
-     * Update hasMany relations
-     */
-    public function testUpdateHasMany()
-    {
-        $this->markTestIncomplete('See issue  #260');
-    }
-
-    /**
-     * Update hasMany relations
-     */
-    public function testUpdateHasManyAndBelongsToMany()
-    {
-        $hmabtm = new Phprojekt_HmabtmTest(array('db' => $this->sharedFixture));
-        $project = new Phprojekt_Project(array('db' => $this->sharedFixture));
-        $this->markTestIncomplete("functionality not implemented");
     }
 
     /**
@@ -295,17 +262,13 @@ class Phprojekt_ActiveRecord_AbstractTest extends DatabaseTest
 
     /**
      * Test, db not given
+     * @expectedException Phprojekt_ActiveRecord_Exception
      *
      * @return void
      */
     public function testDbNotGiven()
     {
-        try {
-            new Phprojekt_Project(array());
-        } catch (Phprojekt_ActiveRecord_Exception $error) {
-            return $error->getMessage();
-        }
-        $this->fail('Phprojekt_ActiveRecord_Exception expected');
+        new Phprojekt_Project(array());
     }
 
     /**

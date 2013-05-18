@@ -379,30 +379,8 @@ class Phprojekt_Item_AbstractTest extends DatabaseTest
         $locale->setLocale('es_AR');
         $item         = new Project_Models_Project(array('db' => $this->sharedFixture));
         $item->budget = '1000,30';
-        $item->budget;
-    }
-
-    /**
-     * Test empty float values
-     */
-    public function testEmptyFloat()
-    {
-        $locale = new Zend_Locale();
-        $locale->setLocale('es_AR');
-        $item         = new Project_Models_Project(array('db' => $this->sharedFixture));
-        $item->budget = '';
-    }
-
-    /**
-     * Test time
-     */
-    public function testTime()
-    {
-        $this->markTestSkipped('Do not use Minute model outside of Minutes test');
-        $item          = new Minutes_Models_Minutes(array('db' => $this->sharedFixture));
-        $item->endTime = '12:00:00';
         $this->assertEquals(array(), $item->getError());
-        $this->assertEquals('12:00:00', $item->endTime);
+        $this->assertEquals('1000,30', $item->budget);
     }
 
     /**
@@ -410,23 +388,10 @@ class Phprojekt_Item_AbstractTest extends DatabaseTest
      */
     public function testHtml()
     {
-        $this->markTestSkipped('Do not use Note model outside of Minutes test');
-        $item           = new Note_Models_Note(array('db' => $this->sharedFixture));
-        $item->comments = '<b>HELLO</b>';
+        $item           = new Project_Models_Project(array('db' => $this->sharedFixture));
+        $item->notes = '<b>HELLO</b>';
         $this->assertEquals(array(), $item->getError());
-        $this->assertEquals('<b>HELLO</b>', $item->comments);
-    }
-
-    /**
-     * Test multipleValues
-     */
-    public function testArray()
-    {
-        $this->markTestSkipped('Do not use Minute model outside of Minutes test');
-        $item                      = new Minutes_Models_Minutes(array('db' => $this->sharedFixture));
-        $item->participantsInvited = array(1,2,3);
-        $this->assertEquals(array(), $item->getError());
-        $this->assertEquals('1,2,3', $item->participantsInvited);
+        $this->assertEquals('<b>HELLO</b>', $item->notes);
     }
 
     /**
@@ -463,14 +428,9 @@ class Phprojekt_Item_AbstractTest extends DatabaseTest
      */
     public function testDelete()
     {
-        $this->markTestSkipped('Do not use Helpdesk model outside of Helpdesk tests');
-        $model              = new Helpdesk_Models_Helpdesk(array('db' => $this->sharedFixture));
-        $model->title       = 'test';
-        $model->projectId   = 1;
-        $model->ownerId     = 1;
-        $model->attachments = '3bc3369dd33d3ab9c03bd76262cff633|LICENSE';
-        $model->status      = 3;
-        $model->author      = 1;
+        $model           = new Project_Models_Project(array('db' => $this->sharedFixture));
+        $model->title    = 'test';
+        $model->ownerId  = 1;
         $model->save();
         $this->assertNotNull($model->id);
 
@@ -482,20 +442,15 @@ class Phprojekt_Item_AbstractTest extends DatabaseTest
 
     public function testSaveRights()
     {
-        $this->markTestSkipped('Do not use Helpdesk model outside of Helpdesk tests');
-        $model = new Helpdesk_Models_Helpdesk(array('db' => $this->sharedFixture));
-        $model->title       = 'test';
-        $model->projectId   = 1;
-        $model->ownerId     = 1;
-        $model->attachments = '3bc3369dd33d3ab9c03bd76262cff633|LICENSE';
-        $model->status      = 3;
-        $model->author      = 1;
+        $model          = new Project_Models_Project(array('db' => $this->sharedFixture));
+        $model->title   = 'test';
+        $model->ownerId = 1;
         $model->save();
         $model->saveRights(array(1 => 255));
         $rights = new Phprojekt_Item_Rights();
-        $this->assertEquals(255, $rights->getItemRight(10, $model->id, 1));
+        $this->assertEquals(255, $rights->getItemRight(1, $model->id, 1));
 
-        $this->assertEquals(0, $rights->getItemRight(10, $model->id, 10));
+        $this->assertEquals(0, $rights->getItemRight(1, $model->id, 10));
     }
 
     /**

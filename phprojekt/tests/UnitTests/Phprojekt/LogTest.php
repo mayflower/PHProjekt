@@ -70,5 +70,6 @@ class Phprojekt_LogTest extends PHPUnit_Framework_TestCase
         $log->log('TEST', Zend_Log::DEBUG);
         $log->log('TEST', Zend_Log::CRIT);
         $log->log('TEST', Zend_Log::INFO);
+        $this->assertSame($this, $this);
     }
 }
