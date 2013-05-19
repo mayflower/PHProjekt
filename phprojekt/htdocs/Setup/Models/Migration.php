@@ -974,8 +974,8 @@ class Setup_Models_Migration
             $contractRelValues[] = [$userId, $contractId, $start, $end === '' ? null : $end];
 
             $specialdayFile = $contract['specialdays_file'];
-            if ($specialdayFile[] === 'specialdays_germany') {
-                $settingValues = [$userId, 0, 'holidayIdentifier', 'de_DE'];
+            if ($specialdayFile === 'specialdays_germany') {
+                $settingValues[] = [$userId, 0, 'holidayIdentifier', 'de_DE'];
             } else if ($specialdayFile === 'specialdays_germany_by') {
                 $settingValues[] = [$userId, 0, 'holidayIdentifier', 'de_DE:by'];
             }
