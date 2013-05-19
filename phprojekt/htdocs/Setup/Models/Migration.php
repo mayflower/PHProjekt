@@ -946,7 +946,6 @@ class Setup_Models_Migration
         $settingFields = array('user_id', 'module_id', 'key_value', 'value');
         $settingValues = array();
 
-        $idx = 0;
         foreach($contracts as $contract) {
             $oldUserId = $contract['user_ID'];
             if (!array_key_exists($oldUserId, $this->_users)) {
