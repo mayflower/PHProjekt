@@ -4,6 +4,7 @@ define([
     'dojo/_base/array',
     'dojo/dom-class',
     'dojo/dom-construct',
+    'dojo/promise/all',
     'dojo/json',
     'dojo/io-query',
     'dijit/_Widget',
@@ -15,6 +16,7 @@ define([
     'phpr/Statistics/WorktimeMonthGraph',
     'phpr/Statistics/WorktimeMonthTable',
     'phpr/ProjectChooser',
+    'phpr/models/Project',
     'phpr/Timehelper',
     'dijit/layout/ContentPane',
     'phpr/Statistics/ProjectUserTimeTable'
@@ -24,6 +26,7 @@ define([
     array,
     clazz,
     domConstruct,
+    all,
     json,
     ioQuery,
     Widget,
@@ -35,6 +38,7 @@ define([
     monthGraph,
     monthTable,
     projectChooser,
+    projects,
     timehelper
 ) {
     var StatisticsProjectChooser = declare([projectChooser], {
@@ -63,11 +67,6 @@ define([
                 label: 'All'
             });
 
-            add({
-                id: '1',
-                title: 'Unassigned'
-            });
-
             for (var p in queryResults.projects) {
                 add(queryResults.projects[p]);
             }
@@ -76,6 +75,14 @@ define([
 
             return def;
         },
+
+        getData: function() {
+            return all({
+                recent: projects.getRecentProjects(),
+                projects: projects.getBookedProjects()
+            });
+        },
+
         postStoreSet: function() {
             this.set('value', '-1');
         }

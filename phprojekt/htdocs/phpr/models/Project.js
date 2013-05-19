@@ -112,4 +112,22 @@ define([
 
         return def;
     };
+
+    exports.getBookedProjects = function() {
+        var def = new Deferred();
+
+        all({
+            projects: exports.getProjects(),
+            booked: api.getData('index.php/Timecard/index/bookedProjects')
+        }).then(function(result) {
+                var projects = {};
+                array.forEach(result.booked, function(id) {
+                    projects[id] = result.projects[id];
+                });
+
+                def.resolve(projects);
+            }, api.defaultErrorHandler);
+
+        return def;
+    };
 });
