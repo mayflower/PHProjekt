@@ -60,11 +60,7 @@ define([
         });
 
         exports.projectTitleForId = function(id) {
-            if (id == 1) {
-                var d = new Deferred();
-                d.resolve('Unassigned');
-                return d;
-            } else if (titlesById === null) {
+            if (titlesById === null) {
                 return def.then(function(idMap) {
                     return idMap[id];
                 });

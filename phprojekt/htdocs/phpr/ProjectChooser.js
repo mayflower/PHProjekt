@@ -70,11 +70,6 @@ define([
                 options.push({label: '<hr />'});
             }
 
-            add({
-                id: '1',
-                title: 'Unassigned'
-            });
-
             for (var p in queryResults.projects) {
                 add(queryResults.projects[p]);
             }
