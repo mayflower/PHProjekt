@@ -3,6 +3,7 @@ define([
     'dojo/_base/lang',
     'dojo/promise/all',
     'dojo/date/locale',
+    'dojo/io-query',
     'phpr/Api',
     'phpr/Timehelper'
 ], function(
@@ -10,6 +11,7 @@ define([
     lang,
     all,
     locale,
+    ioQuery,
     api,
     timehelper
 ) {
@@ -113,5 +115,21 @@ define([
             'index.php/Timecard/index/projectUserMinutes',
             { query: convertDates(opts) }
         );
+    };
+
+    exports.getMemberBookings = function(params) {
+        var opts = startEndDefaultQuery(params);
+        return api.getData(
+            'index.php/Timecard/index/projectMemberBookings',
+            { query: convertDates(opts) }
+        );
+    };
+
+    exports.getMemberBookingsCSVUrl = function(params) {
+        var opts = startEndDefaultQuery(params);
+        opts.format = 'csv';
+        opts.csrfToken = api.config.get('csrfToken');
+        var url = 'index.php/Timecard/index/projectMemberBookings?';
+        return  url + ioQuery.objectToQuery(convertDates(opts));
     };
 });

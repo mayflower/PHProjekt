@@ -35,6 +35,8 @@ class ErrorController extends Zend_Controller_Action
             ->addActionContext('error', 'json')
             ->setAutoJsonSerialization(false)
             ->initContext();
+        $viewRenderer = Zend_Controller_Action_HelperBroker::getStaticHelper('viewRenderer');
+        $viewRenderer->setViewScriptPathSpec(':action.:suffix');
     }
 
     /**
