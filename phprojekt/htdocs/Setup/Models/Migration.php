@@ -929,6 +929,7 @@ class Setup_Models_Migration
                 PHPR_DB_PREFIX . 'user_contract_data',
                 [
                     'user_ID',
+                    'specialdays_file',
                     'workhours_per_week',
                     'enter_company_date',
                     'quit_company_date'
