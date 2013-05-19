@@ -943,6 +943,8 @@ class Setup_Models_Migration
 
         $contractRelFields = ['user_id', 'contract_id', 'start', 'end'];
         $contractRelValues = [];
+        $settingFields = array('user_id', 'module_id', 'key_value', 'value');
+        $settingValues = array();
 
         $idx = 0;
         foreach($contracts as $contract) {
@@ -971,10 +973,20 @@ class Setup_Models_Migration
             }
 
             $contractRelValues[] = [$userId, $contractId, $start, $end === '' ? null : $end];
+
+            $specialdayFile = $contract['specialdays_file'];
+            if ($specialdayFile[] === 'specialdays_germany') {
+                $settingValues = [$userId, 0, 'holidayIdentifier', 'de_DE'];
+            } else if ($specialdayFile === 'specialdays_germany_by') {
+                $settingValues[] = [$userId, 0, 'holidayIdentifier', 'de_DE:by'];
+            }
         }
 
         if (!empty($contractRelValues)) {
             $this->_tableManager->insertMultipleRows('user_contract_relation', $contractRelFields, $contractRelValues);
+        }
+        if (!empty($settingValues)) {
+            $this->_tableManager->insertMultipleRows('setting', $settingFields, $settingValues);
         }
     }
 
