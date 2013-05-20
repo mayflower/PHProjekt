@@ -15,63 +15,44 @@ define([
     all,
     api
 ) {
-    var projectsCache = {};
-    var makeKey = function(params) {
-        var vals = [];
+    exports.getProjects = function() {
+        var opts = {recursive: true, projectId: 1};
 
-        for (var i in params) {
-            if (params.hasOwnProperty(i)) {
-                vals.push(i);
-            }
-        }
-
-        vals.sort();
-
-        var key = '';
-
-        vals.forEach(function(val) {
-            key += json.toJson(val) + '_' + json.toJson(params[val]);
-        });
-
-        return key;
-    };
-
-    exports.getProjects = function(params) {
-        var optsDef = {recursive: true, projectId: 1};
-        lang.mixin(optsDef, params || {});
-
-        var key = makeKey(optsDef);
         var def = new Deferred();
-
-        if (projectsCache.hasOwnProperty(key)) {
-            var item = projectsCache[key];
-            if (item.hasOwnProperty('def')) {
-                return item.def;
-            } else {
-                def.resolve(item.val);
-                return def;
-            }
-        }
-
-        projectsCache[key] = {
-            def: def
-        };
+        var projectsCache;
 
         api.getData('index.php/Project/Project',
-            {query: optsDef}
+            {query: opts}
         ).then(function(result) {
-            var projects = {};
+            var projects = {
+                1: {
+                    id: '1',
+                    title: 'Unassigned'
+                }
+            };
+
             array.forEach(result, function(p) {
                 projects[p.id] = p;
             });
 
-            delete projectsCache[key].def;
-            projectsCache[key].val = projects;
+            projectsCache = projects;
 
-            def.resolve(projects);
+            var d = def;
+            def = null;
+            d.resolve(projects);
         }, api.defaultErrorHandler);
 
-        return def;
+        exports.getProjects = function() {
+            if (def) {
+                return def;
+            } else {
+                var d = new Deferred();
+                d.resolve(projectsCache);
+                return d;
+            }
+        };
+
+        return exports.getProjects();
     };
 
     exports.getRecentProjects = function(params) {
@@ -109,6 +90,24 @@ define([
 
             def.resolve(projects);
         }, api.defaultErrorHandler);
+
+        return def;
+    };
+
+    exports.getBookedProjects = function() {
+        var def = new Deferred();
+
+        all({
+            projects: exports.getProjects(),
+            booked: api.getData('index.php/Timecard/index/bookedProjects')
+        }).then(function(result) {
+                var projects = {};
+                array.forEach(result.booked, function(id) {
+                    projects[id] = result.projects[id];
+                });
+
+                def.resolve(projects);
+            }, api.defaultErrorHandler);
 
         return def;
     };

@@ -42,6 +42,7 @@ class Timecard_IndexController extends IndexController
             ->setActionContexts(
                 array(
                     'recentProjects' => array('json', 'csv'),
+                    'bookedProjects' => array('json', 'csv'),
                     'minutesBooked' => array('json', 'csv'),
                     'minutesToWork' => array('json', 'csv'),
                     'workBalanceByDay' => array('json', 'csv'),
@@ -137,6 +138,16 @@ class Timecard_IndexController extends IndexController
         $ownerId = Phprojekt_Auth_Proxy::getEffectiveUserId();
         $model   = $this->getModelObject();
         $records = $model->getRecentBookedProjects($ownerId, $n);
+        $this->view->records = $records;
+    }
+
+    /**
+     * Returns the n most recent projects used for bookings sorted in desc
+     * order.
+     */
+    public function bookedProjectsAction()
+    {
+        $records = Timecard_Models_Timecard::getBookedProjects();
         $this->view->records = $records;
     }
 
