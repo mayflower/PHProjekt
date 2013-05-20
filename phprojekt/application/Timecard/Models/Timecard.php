@@ -507,6 +507,37 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
             }, $db->fetchAll($select));
     }
 
+    /**
+     * Retreives the project ids of most recent booked projects.
+     *
+     * @param integer $ownerId Booking has to belong to the given owner
+     * @param integer $n       How many recent project_ids
+     *
+     * @return array
+     */
+    public static function getBookedProjects($ownerId = null) {
+        if (is_null($ownerId)) {
+            $ownerId = Phprojekt_Auth_Proxy::getEffectiveUserId();
+        }
+
+        $db     = Phprojekt::getInstance()->getDb();
+        $select = $db->select();
+        $select->distinct()
+            ->from(['t' => 'timecard'], ['project_id' => 't.project_id'])
+            ->join(
+                ['p' => 'project'],
+                't.project_id = p.id',
+                []
+            )->where('t.owner_id = ? ', $ownerId);
+
+        $results = $select->query()->fetchAll();
+        $results =  array_map(
+            function($e) {
+                return (int) $e['project_id'];
+            }, $results);
+        return $results;
+    }
+
     public function find()
     {
         $args = func_get_args();
