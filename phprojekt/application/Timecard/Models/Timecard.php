@@ -563,7 +563,12 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
 
     public function fetchAll($where = null, $order = null, $count = null, $offset = null, $select = null, $join = null)
     {
-        $where = "($where) AND owner_id = " . (int) Phprojekt_Auth_Proxy::getEffectiveUserId();
+        if (null === $where) {
+            $where = "owner_id = " . (int) Phprojekt_Auth_Proxy::getEffectiveUserId();
+        } else {
+            $where = "($where) AND owner_id = " . (int) Phprojekt_Auth_Proxy::getEffectiveUserId();
+        }
+
         return parent::fetchAll($where, $order, $count, $offset, $select, $join);
     }
 
