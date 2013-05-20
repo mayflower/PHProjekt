@@ -673,4 +673,17 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
 
         return array_map($conv, $results);
     }
+
+    public static function getOffsets(DateTime $end)
+    {
+        $userId  = Phprojekt_Auth_Proxy::getEffectiveUserId();
+        $results = Phprojekt::getInstance()->getDb()->select()
+            ->from('timecard_offset', ['date', 'minutes'])
+            ->where('DATE(date) < ?', $end->format('Y-m-d'))
+            ->where('user_id = ?', $userId);
+        $results = $results->query();
+        $results = $results->fetchAll();
+
+        return !empty($results) ? $results : [];
+    }
 }

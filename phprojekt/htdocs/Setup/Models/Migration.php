@@ -932,7 +932,10 @@ class Setup_Models_Migration
                     'specialdays_file',
                     'workhours_per_week',
                     'enter_company_date',
-                    'quit_company_date'
+                    'quit_company_date',
+                    'ptimecontrol_offset_value',
+                    'ptimecontrol_offset_date',
+                    'ptimecontrol_offset_remark'
                 ]
             )->query()->fetchAll();
 
@@ -946,6 +949,8 @@ class Setup_Models_Migration
         $contractRelValues = [];
         $settingFields = array('user_id', 'module_id', 'key_value', 'value');
         $settingValues = array();
+        $offsetFields = array('user_id', 'date', 'minutes', 'remark');
+        $offsetValues = array();
 
         foreach($contracts as $contract) {
             $oldUserId = $contract['user_ID'];
@@ -956,6 +961,10 @@ class Setup_Models_Migration
             $hours = $contract['workhours_per_week'];
             $start = $contract['enter_company_date'];
             $end = $contract['quit_company_date'];
+
+            if (!$this->isDate($start)) {
+                continue;
+            }
 
             $userId = $this->_users[$oldUserId];
             $select = $contractTable->select()->where('hours_per_week = ?', $hours);
@@ -980,6 +989,18 @@ class Setup_Models_Migration
             } else if ($specialdayFile === 'specialdays_germany_by') {
                 $settingValues[] = [$userId, 0, 'holidayIdentifier', 'de_DE:by'];
             }
+
+            $offsetDate = $contract['ptimecontrol_offset_date'];
+            $offsetValue = $contract['ptimecontrol_offset_value'];
+            $offsetRemark = $contract['ptimecontrol_offset_remark'];
+            if ($this->isDate($offsetDate) && $offsetValue !== 0 && $offsetValue !== null) {
+                $offsetDate = new DateTime($offsetDate);
+                $start = new DateTime($start);
+                $offsetDate = $offsetDate < $start ? $start : $offsetDate;
+
+                $minutes = (int) ($offsetValue * 60);
+                $offsetValues[] = [$userId, $offsetDate->format('Y-m-d'), $minutes, $offsetRemark];
+            }
         }
 
         if (!empty($contractRelValues)) {
@@ -988,6 +1009,14 @@ class Setup_Models_Migration
         if (!empty($settingValues)) {
             $this->_tableManager->insertMultipleRows('setting', $settingFields, $settingValues);
         }
+        if (!empty($offsetValues)) {
+            $this->_tableManager->insertMultipleRows('timecard_offset', $offsetFields, $offsetValues);
+        }
+    }
+
+    private function isDate($date)
+    {
+        return 1 === preg_match('/^\d\d\d\d-\d\d-\d\d/', $date);
     }
 
     /**

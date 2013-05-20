@@ -415,11 +415,9 @@ class Timecard_IndexController extends IndexController
         $contracts     = Timecard_Models_Contract::fetchByUserAndPeriod(Phprojekt_Auth_Proxy::getEffectiveUser(), $start, $end);
         $minutesPerDay = $this->_contractsToMinutesPerDay($contracts, $start, $end);
         $minutesPerDay = $this->_applyHolidayWeights($minutesPerDay, $start, $end);
+        $minutesPerDay = $this->_applyOffsets($minutesPerDay, $start, $end);
 
-        $minutes = 0;
-        foreach ($minutesPerDay as $d) {
-            $minutes += $d;
-        }
+        $minutes = array_sum(array_values($minutesPerDay));
 
         $this->view->records = array('minutesToWork' => $minutes);
     }
@@ -554,6 +552,24 @@ class Timecard_IndexController extends IndexController
             if (array_key_exists($dateString, $minutesPerDay)) {
                 $minutesPerDay[$dateString] *= (1 - $h->weight);
             }
+        }
+
+        return $minutesPerDay;
+    }
+
+    private function _applyOffsets(array $minutesPerDay, DateTime $start, DateTime $end)
+    {
+        $offsets = Timecard_Models_Timecard::getOffsets($end);
+        foreach($offsets as $offset) {
+            if ($offset['date'] < $start) {
+                continue;
+            }
+            $dateString = $offset['date']->format('Y-m-d');
+            if (!array_key_exists($dateString, $minutesPerDay)) {
+                $minutesPerDay[$dateString] = 0;
+            }
+
+            $minutesPerDay[$dateString] -= $offset['minutes'];
         }
 
         return $minutesPerDay;

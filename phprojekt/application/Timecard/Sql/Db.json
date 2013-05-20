@@ -123,6 +123,21 @@
                 "columns": ["userId", "projectId"],
                 "unqiue": "true"
             }
+        },
+        "timecard_offset":
+        {
+            "create":
+            {
+                "id": "default",
+                "user_id": {"type": "int", "notNull": "true"},
+                "date": {"type": "date", "notNull": "true"},
+                "minutes": {"type": "int", "notNull": "true"},
+                "remark": {"type": "text"}
+            },
+            "createIndex":
+            {
+                "columns": ["user_id"]
+            }
         }
     }
 }
