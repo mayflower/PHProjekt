@@ -194,7 +194,7 @@ class Phprojekt
      *
      * If don't exists, try to create it.
      *
-     * @return Zend_Db An instance of Zend_Db.
+     * @return Zend_Db_Adapter_Abstract An instance of Zend_Db.
      */
     public function getDb()
     {
