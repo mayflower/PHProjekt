@@ -214,4 +214,20 @@ class Project_Models_Project extends Phprojekt_Item_Abstract
         $tree->setup();
         return $tree;
     }
+
+    public static function getProjectsManagedByUser($userId = null) {
+        if (is_null($userId)) {
+            $userId = Phprojekt_Auth_Proxy::getEffectiveUserId();
+        }
+
+        $select = Phprojekt::getInstance()->getDb()->select();
+        $select->from('project_manager_relation')->where('userId = ?', $userId)->order('projectId ASC');
+
+        $ret = [];
+        foreach($select->query()->fetchAll() as $record) {
+            $ret[] = (int) $record['projectId'];
+        };
+
+        return $ret;
+    }
 }

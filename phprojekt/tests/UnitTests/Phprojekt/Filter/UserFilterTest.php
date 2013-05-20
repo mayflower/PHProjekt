@@ -64,20 +64,4 @@ class Phprojekt_Filter_UserFilterTest extends DatabaseTest
         $tree = $tree->setup($filter);
         $this->assertEquals(1, $tree->getRootNode()->id);
     }
-
-    /**
-     * Test saveToBackingStore function
-     */
-    public function testSaveToFilter()
-    {
-        $user = new Phprojekt_User_User(array('db' => $this->sharedFixture));
-        $user->find(1);
-
-        $record = new Phprojekt_Project(array('db' => $this->sharedFixture));
-        $filter = new Phprojekt_Filter_UserFilter($record, 'title', 'PHProjekt');
-        $tree   = new Phprojekt_Tree_Node_Database($record, 1);
-        $tree   = $tree->setup($filter);
-
-        $filter->saveToBackingStore($user);
-    }
 }

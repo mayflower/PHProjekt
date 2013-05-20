@@ -182,134 +182,33 @@ dojo.declare("phpr.Timecard.Store", null, {
     },
 
     getProjectRange: function() {
-        var cb = new dojo.Deferred();
-        if (this._hasData === true) {
-            cb.callback(this._projectRange);
-        } else {
-            this._dlist.addCallback(dojo.hitch(this, function() {
-                cb.callback(this._projectRange);
-            }));
-        }
-        return cb;
     },
 
     startWorking: function(projectId, notes) {
-        var data = {
-            startDatetime: phpr.date.getIsoDate(this._date) + " " + phpr.date.getIsoTime(new Date()),
-            projectId: projectId || this._unassignedProjectId,
-            notes: notes || ""
-        };
-
-        phpr.send({
-            url: 'index.php/Timecard/index/jsonSave/nodeId/1/id/0',
-            content: data
-        }).then(dojo.hitch(this, function(data) {
-            if (data) {
-                new phpr.handleResponse('serverFeedback', data);
-                if (data.type == 'success') {
-                    this.dataChanged();
-                    this.onWorkingStart();
-                }
-            }
-        }));
     },
 
     stopWorking: function(projectId, notes) {
-        if (!this.hasRunningBooking()) {
-            throw new Error("no running booking");
-        }
-
-        var data = {
-            startDatetime: phpr.date.getIsoDate(this._date) + " " + phpr.date.getIsoTime(this._runningBooking.startTime),
-            endTime: phpr.date.getIsoTime(new Date()),
-            projectId: projectId || this.getLastProjectId(),
-            notes: notes || this._runningBooking.note || ""
-        };
-
-        phpr.send({
-            url: 'index.php/Timecard/index/jsonSave/nodeId/1/id/' + this._runningBooking.id,
-            content: data
-        }).then(dojo.hitch(this, function(data) {
-            if (data) {
-                new phpr.handleResponse('serverFeedback', data);
-                if (data.type == 'success') {
-                    this.dataChanged();
-                    this.onWorkingStop();
-                }
-            }
-        }));
     },
 
     setFavoriteProjects: function(projects) {
-        if (!dojo.isArray(projects)) {
-            throw new Error("Invalid project list");
-        }
-
-        if (projects.length === 0) {
-            projects.push(0);
-        }
-
-        var sendData = {
-            'favorites[]': projects
-        };
-
-        phpr.send({
-            url:     'index.php/Timecard/index/jsonFavoritesSave',
-            content: sendData
-        }).then(dojo.hitch(this, function(data) {
-            if (data) {
-                new phpr.handleResponse('serverFeedback', data);
-                if (data.type == 'success') {
-                    this._updateFavoritesData();
-                }
-            }
-        }));
     },
 
     getLastProjectId: function() {
-        if (this.hasRunningBooking()) {
-            return parseInt(this._runningBooking.projectId, 10);
-        } else {
-            return this._unassignedProjectId;
-        }
     },
 
     getMergedFavoriteProjects: function() {
-        var cb = new dojo.Deferred();
-
-        if (this._hasData === true) {
-            cb.callback(this._mergedFavorites);
-        } else {
-            this._dlist.addCallback(dojo.hitch(this, function() {
-                cb.callback(this._mergedFavorites);
-            }));
-        }
-        return cb;
     },
 
     getFavoriteProjects: function() {
-        var cb = new dojo.Deferred();
-        if (this._hasData === true) {
-            cb.callback(this._favoritesData);
-        } else {
-            this._dlist.addCallback(dojo.hitch(this, function() {
-                cb.callback(this._favoritesData);
-            }));
-        }
-        return cb;
     },
 
     dataChanged: function() {
-        this._updateData();
     },
 
     setDate: function(date) {
-        this._date = date;
-        this.dataChanged();
     },
 
     isLoading: function() {
-        return this._loading === true;
     },
 
     onWorkingStart: function() { },
@@ -331,216 +230,40 @@ dojo.declare("phpr.Timecard.Main", phpr.Default.Main, {
 
         this.gridWidget = phpr.Timecard.Grid;
         this.formWidget = phpr.Timecard.Form;
-        this._store = new phpr.Timecard.Store(this._date);
 
         this._menuCollector = new phpr.Default.System.GarbageCollector();
-
-        dojo.subscribe("Timecard.changeDate", this, "changeDate");
-        dojo.subscribe("phpr.dateChanged", this, "_systemDateChanged");
-        dojo.connect(this._store, "onChange", this, "_dataChanged");
     },
 
     _systemDateChanged: function() {
-        this._store.setDate(new Date());
     },
 
     renderTemplate: function() {
-        // Summary:
-        //   Custom renderTemplate for timecard
-        var view = phpr.viewManager.useDefaultView({blank: true}).clear();
-        this._contentWidget = new phpr.Default.System.TemplateWrapper({
-            templateName: "phpr.Timecard.template.mainContent.html",
-            templateData: {
-                manageFavoritesText: phpr.nls.get('Manage project list'),
-                monthTxt:            phpr.date.getLongTranslateMonth(this._date.getMonth())
-            }
-        });
-        view.centerMainContent.set('content', this._contentWidget);
-        this.garbageCollector.addNode(this._contentWidget);
-
-        // manageFavorites opens a dialog which places itself outside of the regular dom, so we need to clean it up
-        // manually
-        this.garbageCollector.addNode('manageFavorites');
     },
 
     setWidgets: function() {
-        // Summary:
-        //   Custom setWidgets for timecard
-        this._store.dataChanged();
-
-        this.grid = new this.gridWidget(this, this._date);
-        this.form = new this.formWidget(this, this._date);
-        this.setTimecardCaldavClientButton();
     },
 
     _dataChanged: function() {
-        if (this.form) {
-            this.form.updateData();
-        }
-
-        if (this.grid) {
-            this.grid.reload(this._date, true);
-        }
-
-        this._updateMenuButton();
     },
 
     _updateMenuButton: function() {
-        var that = this;
-        if (this._menuButton && this._menuButton.dropDown) {
-            this._menuCollector.collect();
-            this._menuButton.dropDown.destroyDescendants();
-            var button;
-
-            if (this._store.hasRunningBooking()) {
-                this._store.getMergedFavoriteProjects().then(dojo.hitch(this, function(data) {
-                    var range = data;
-                    var l = range.length;
-                    var lastProjectName = "";
-                    var lastProjectId = this._store.getLastProjectId();
-
-                    for (var i = 0; i < l; i++) {
-                        button = new dijit.MenuItem({
-                            label: range[i].name,
-                            onClick: dojo.hitch(this._store, function(id) {
-                                this.stopWorking(id);
-                            }, range[i].id)
-                        });
-
-                        if (range[i].id === lastProjectId) {
-                            lastProjectName = range[i].name;
-                        }
-
-                        this._menuCollector.addNode(button);
-                        this._menuButton.dropDown.addChild(button);
-                    }
-
-                    button = new dijit.MenuItem({
-                        label: "Stop (" + lastProjectName + ")",
-                        onClick: dojo.hitch(this._store, function() {
-                            this.stopWorking();
-                        })
-                    });
-
-                    this._menuCollector.addNode(button);
-                    this._menuButton.dropDown.addChild(button, 0);
-
-                    dojo.addClass(this._menuButton.focusNode, "runningBooking");
-                }));
-            } else {
-                this._menuCollector.addEvent(
-                    dojo.connect(this._menuButton.dropDown, "onOpen", this._store,
-                        function (evt) {
-                            if (!this.hasRunningBooking()) {
-                                dijit.popup.close(that._menuButton.dropDown.currentPopup);
-                                this.startWorking();
-                            }
-                        }));
-                dojo.removeClass(this._menuButton.focusNode, "runningBooking");
-            }
-            button = null;
-        }
     },
 
     formDataChanged: function(newDate, forceReload) {
-        this._store.dataChanged();
     },
 
     setSubGlobalModulesNavigation: function(currentModule) {
     },
 
     getGlobalModuleNavigationButton: function(label) {
-        var moduleName = this.module;
-        var buttonContainer = new phpr.Default.System.TemplateWrapper({
-            templateName: "phpr.Timecard.template.menuButton.html",
-            templateData: { label: label }
-        });
-
-        var button = buttonContainer.menuButton;
-        this._menuButton = button;
-
-        dojo.connect(button, "onClick", function() {
-            phpr.currentProjectId = phpr.rootProjectId;
-            phpr.pageManager.modifyCurrentState(
-                dojo.mixin(dojo.clone(this._emptyState), { moduleName: moduleName }));
-        });
-
-        setTimeout(
-            dojo.hitch(this, function() {
-                this._store.dataChanged();
-            }),
-            15
-        );
-        return button;
     },
 
     changeDate: function(date) {
-        // summary:
-        //    Update the date and reload the views
-        // description:
-        //    Update the date and reload the views
-        this._date = date;
-
-        this.form.setDate(date);
-        this.form.updateData();
-        this.form.drawDayView();
-
-        this.grid.reload(date);
     },
 
     setTimecardCaldavClientButton: function() {
-        // Summary:
-        //    Set the timecardCaldavClient button
-        // Description:
-        //    Set the timecardCaldavClient button
-        this.garbageCollector.collect('timecardCaldavClient');
-
-        var prefix = phpr.getAbsoluteUrl('index.php/Timecard/caldav/index/'),
-            url = prefix + 'calendars/' + phpr.config.currentUserName + '/default/',
-            iosUrl = prefix + 'principals/' + phpr.config.currentUserName + '/',
-            params = {
-                label: 'Timecard Caldav Client',
-                showLabel: true,
-                baseClass: 'positive',
-                disabled: false
-            },
-            timecardCaldavClientButton = new dijit.form.Button(params);
-
-        phpr.viewManager.getView().buttonRow.domNode.appendChild(timecardCaldavClientButton.domNode);
-
-        this.garbageCollector.addNode(timecardCaldavClientButton, 'timecardCaldavClient');
-        this.garbageCollector.addEvent(
-            dojo.connect(
-                timecardCaldavClientButton,
-                'onClick',
-                dojo.hitch(this, 'showTimecardCaldavClientData', url, iosUrl)
-            ),
-            'timecardCaldavClient'
-        );
     },
 
     showTimecardCaldavClientData: function(url, iosUrl) {
-        var content = phpr.fillTemplate(
-            'phpr.Calendar2.template.caldavView.html',
-            {
-                headline: 'Timecard Caldav Client',
-                normalLabel: phpr.nls.get('CalDav url', 'Calendar2'),
-                iosLabel: phpr.nls.get('CalDav url for Apple software', 'Calendar2'),
-                noticeLabel: phpr.nls.get('Notice', 'Calendar2'),
-                notice: phpr.nls.get('Please pay attention to the trailing slash, it is important', 'Calendar2'),
-                normalUrl: url,
-                iosUrl: iosUrl
-            }
-        );
-
-        //draggable = false must be set because otherwise the dialog can not be closed on the ipad
-        //bug: http://bugs.dojotoolkit.org/ticket/13488
-        var dialog = new dijit.Dialog({
-            content: content,
-            draggable: false
-        });
-
-        dialog.show();
-        this.garbageCollector.addNode(dialog, 'timecardCaldavClient');
     }
 });

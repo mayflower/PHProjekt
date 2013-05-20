@@ -205,4 +205,11 @@ class Project_IndexController extends IndexController
 
         Phprojekt_Converter_Json::echoConvert($roles);
     }
+
+    public function managedProjectsAction()
+    {
+        Phprojekt_CompressedSender::send(
+            Zend_Json_Encoder::encode(Project_Models_Project::getProjectsManagedByUser())
+        );
+    }
 }
