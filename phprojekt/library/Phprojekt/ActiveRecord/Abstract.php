@@ -1275,14 +1275,23 @@ abstract class Phprojekt_ActiveRecord_Abstract extends Zend_Db_Table_Abstract
      */
     public static function convertVarFromSql($varName)
     {
-        static $replace = array();
+        static $replace = [];
+        static $replaced = [];
+
+        if (isset($replaced[$varName])) {
+            return $replaced[$varName];
+        }
+
         if (empty($replace)) {
             foreach (range('A','Z') as $char) {
                 $replace['_' . strtolower($char)] = $char;
             }
         }
 
-        return strtr($varName, $replace);
+        $ret = strtr($varName, $replace);
+        $replaced[$varName] = $ret;
+
+        return $ret;
     }
 
     /**

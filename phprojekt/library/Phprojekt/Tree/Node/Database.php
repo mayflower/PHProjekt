@@ -251,14 +251,16 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
         // read access to be able to look at a project.
         $rights       = Phprojekt_Right::getRightsForItems(1, 1, Phprojekt_Auth::getUserId(), $projectIds);
         $currentRight = Phprojekt_Acl::ALL;
+        $idsToDelete  = [];
         foreach ($object as $index => $node) {
             $currentRight = isset($rights[$node->id]) ? $rights[$node->id] : $currentRight;
             /* delete node cannot update the iterator reference, so we check if it's still in the index or already
              * removed */
-            if ((Phprojekt_Acl::READ & $currentRight) <= 0 && isset($object->_index[$node->id])) {
-                $object->deleteNode($object, $node->id);
+            if ((Phprojekt_Acl::READ & $currentRight) <= 0) {
+                $idsToDelete[] = $node->id;
             }
         }
+        $object->deleteNodes($object, $idsToDelete);
 
         return $object;
     }
@@ -268,19 +270,30 @@ class Phprojekt_Tree_Node_Database implements IteratorAggregate
      * database
      *
      * @param Phprojekt_Tree_Node_Database $object Tree class.
-     * @param integer                      $id     IF for delete.
+     * @param Array                        $ids    ids to delete.
      *
      * @return void
      */
-    private function deleteNode(Phprojekt_Tree_Node_Database $object, $id)
+    private function deleteNodes(Phprojekt_Tree_Node_Database $object, Array &$ids = [])
     {
-        if (isset($object->_children[$id])) {
-            unset($object->_children[$id]);
-            unset($object->_index[$id]);
-        } else {
-            foreach ($object->_children as $children) {
-                $this->deleteNode($children, $id);
+        if (empty($ids)) {
+            return;
+        }
+
+        foreach ($object->_children as $children) {
+            $this->deleteNode($children, $ids);
+        }
+
+        foreach($ids as $idx => $id) {
+            if (isset($object->_children[$id])) {
+                unset($object->_children[$id]);
+                unset($object->_index[$id]);
+                unset($ids[$idx]);
             }
+        }
+
+        if (empty($ids)) {
+            return;
         }
     }
 
