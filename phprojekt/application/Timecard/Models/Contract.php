@@ -34,7 +34,7 @@ class Timecard_Models_Contract extends Phprojekt_ActiveRecord_Abstract
         $select = $db->select();
         $select->from('user_contract_relation', array('contract_id', 'start', 'end'))
             ->where('user_id = ?', $user->id)
-            ->order('start');
+            ->order('DATE(start) ASC');
 
         if (null !== $start) {
             $select->where('end >= ? OR end is NULL', $start->format('Y-m-d'));
