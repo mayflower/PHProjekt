@@ -138,6 +138,23 @@
             {
                 "columns": ["user_id"]
             }
+        },
+        "vacation":
+        {
+            "create":
+            {
+                "id": "default",
+                "user_id": {"type": "int", "notNull": "true"},
+                "start": {"type": "date", "notNull": "true"},
+                "end": {"type": "date", "notNull": "true"},
+                "category": {"type": "text"},
+                "paid": {"type": "bool"},
+                "note": {"type": "text"}
+            },
+            "createIndex":
+            {
+                "columns": ["user_id"]
+            }
         }
     }
 }

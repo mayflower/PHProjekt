@@ -264,6 +264,7 @@ class Setup_Models_Migration
     {
         $this->_migrateTimecard();
         $this->_migrateContracts();
+        $this->_migrateVacation();
     }
 
     /**
@@ -1011,6 +1012,45 @@ class Setup_Models_Migration
         }
         if (!empty($offsetValues)) {
             $this->_tableManager->insertMultipleRows('timecard_offset', $offsetFields, $offsetValues);
+        }
+    }
+
+    private function _migrateVacation()
+    {
+        $vacations = $this->_dbOrig->select()
+            ->from(
+                PHPR_DB_PREFIX . 'vacation',
+                [
+                    'id_user',
+                    'begin',
+                    'end',
+                    'category',
+                    'paid',
+                    'note'
+                ]
+            )->query()->fetchAll();
+
+        $vacationFields = ['user_id', 'start', 'end', 'category', 'paid', 'note'];
+        $vacationValues = [];
+
+        foreach($vacations as $vacation) {
+            $oldUserId = $vacation['id_user'];
+            if (!array_key_exists($oldUserId, $this->_users)) {
+                continue;
+            }
+            $userId = $this->_users[$oldUserId];
+            $start = $vacation['begin'];
+            $end = $vacation['end'];
+            if (!$this->isdate($start) || !$this->isDate($end)) {
+                continue;
+            }
+            $category = $vacation['category'];
+            $paid = $vacation['paid'];
+            $note = $vacation['note'];
+            $vacationValues[] = [$userId, $start, $end, $category, $paid, $note];
+        }
+        if (!empty($vacationValues)) {
+            $this->_tableManager->insertMultipleRows('vacation', $vacationFields, $vacationValues);
         }
     }
 
