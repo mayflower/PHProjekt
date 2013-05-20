@@ -38,7 +38,6 @@ define([
             this.own(topic.subscribe('timecard/bookingDeleted', lang.hitch(this, this._scheduleUpdate)));
             this.own(topic.subscribe('timecard/selectedDateChanged', lang.hitch(this, function(date) {
                 this._set('date', date);
-                this._scheduleUpdate();
             })));
         },
 

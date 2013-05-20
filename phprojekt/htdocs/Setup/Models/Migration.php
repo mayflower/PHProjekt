@@ -87,23 +87,16 @@ class Setup_Models_Migration
     private $_projects = array();
 
     /**
-     * Relation: Contact ID in p5 to Contact ID in p6.
-     *
-     * @var array
-     */
-    private $_contacts = array();
-
-    /**
      * P5 Database.
      *
-     * @var Zend_db
+     * @var Zend_Db_Adapter_Abstract
      */
     private $_dbOrig = null;
 
     /**
      * P6 Database.
      *
-     * @var Zend_db
+     * @var Zend_Db_Adapter_Abstract
      */
     private $_db = null;
 
@@ -152,14 +145,14 @@ class Setup_Models_Migration
     private $_diffToUtc = 0;
 
     /**
-     * Search vlaues.
+     * Search values.
      *
      * @var array
      */
     private $_searchWord    = array();
     private $_searchDisplay = array();
 
-    // Phproject 6 Ids
+    // Phprojekt 6 Ids
     const USER_ADMIN   = 1;
     const USER_TEST    = 2;
     const PROJECT_ROOT = 1;
@@ -168,22 +161,21 @@ class Setup_Models_Migration
     const ROWS_PER_QUERY = 5000;
 
     /**
-     * Return a list of all modules availables for migrate.
+     * Return a list of all modules available for migrate.
      *
-     * @return array
+     * @return Array
      */
     public static function getModulesToMigrate()
     {
-        return array('System', 'Timecard', 'Words');
+        return array('System', 'Timecard');
     }
 
     /**
      * Constructor.
      *
-     * @param string $file The config file of P5.
-     * @param array  $db   Configuration for Zend_Db_Table.
-     *
-     * @return void
+     * @param $file string p5 configuration
+     * @param $diffToUtc int difference to utc
+     * @param $db null|Zend_Db_Adapter_Abstract p6 database
      */
     public function __construct($file, $diffToUtc, $db = null)
     {
@@ -271,6 +263,7 @@ class Setup_Models_Migration
     public function migrateTimecard()
     {
         $this->_migrateTimecard();
+        $this->_migrateContracts();
     }
 
     /**
@@ -299,11 +292,7 @@ class Setup_Models_Migration
     /**
      * Checks for migration.
      *
-     * @throws Expection If there is an error in the DB connection.
-     *
-     * @param string $file The config file of P5.
-     *
-     * @return void
+     * @throws Exception If there is an error in the DB connection.
      */
     private function _checkFile()
     {
@@ -334,7 +323,7 @@ class Setup_Models_Migration
     private function _migrateUsers()
     {
         // User migration
-        $query = "SELECT * FROM " . PHPR_DB_PREFIX . "users";
+        $query = "SELECT * FROM " . PHPR_DB_PREFIX . "users WHERE is_deleted IS NULL";
         $users = $this->_dbOrig->query($query)->fetchAll();
 
         // Just in case
@@ -926,89 +915,85 @@ class Setup_Models_Migration
         $start = sprintf('%04d', $start);
         $end   = sprintf('%04d', $end);
 
-        $starthour = substr($start, 0, 2);
-        $endhour = substr($end, 0, 2);
-        $startminute = substr($start, 2, 2);
-        $endminute = substr($end, 2, 2);
+        $startHour = (int) substr($start, 0, 2);
+        $endHour = (int) substr($end, 0, 2);
+        $startMinute = (int) substr($start, 2, 2);
+        $endMinute = (int) substr($end, 2, 2);
 
-        return ($endhour * 60 + $endminute) - ($starthour * 60 + $startminute);
+        return ($endHour * 60 + $endMinute) - ($startHour * 60 + $startMinute);
     }
 
-    /**
-     * Converts the old time format (hhmm) to a time format (hh:mm:ss).
-     *
-     * @param string $stringTime P5 Time string.
-     *
-     * @return string Time string.
-     */
-    private function _stringToTime($stringTime)
-    {
-        $returnNull = false;
+    private function _migrateContracts() {
+        $contracts = $this->_dbOrig->select()
+            ->from(
+                PHPR_DB_PREFIX . 'user_contract_data',
+                [
+                    'user_ID',
+                    'specialdays_file',
+                    'workhours_per_week',
+                    'enter_company_date',
+                    'quit_company_date'
+                ]
+            )->query()->fetchAll();
 
-        if (strlen($stringTime) > 4) {
-            // Fix wrong data as P5 shows it to the user
-            $stringTime = substr($stringTime, 0, 4);
-            if ((int) $stringTime > 2400) {
-                // I haven't check this possibility in P5, this is my criterion
-                $stringTime = "2400";
+        $tableConfig = [
+            Zend_Db_Table_Abstract::NAME => 'contract',
+            Zend_Db_Table_Abstract::ADAPTER => $this->_db
+        ];
+        $contractTable = new Zend_Db_Table($tableConfig);
+
+        $contractRelFields = ['user_id', 'contract_id', 'start', 'end'];
+        $contractRelValues = [];
+        $settingFields = array('user_id', 'module_id', 'key_value', 'value');
+        $settingValues = array();
+
+        foreach($contracts as $contract) {
+            $oldUserId = $contract['user_ID'];
+            if (!array_key_exists($oldUserId, $this->_users)) {
+                continue;
+            }
+
+            $hours = $contract['workhours_per_week'];
+            $start = $contract['enter_company_date'];
+            $end = $contract['quit_company_date'];
+
+            $userId = $this->_users[$oldUserId];
+            $select = $contractTable->select()->where('hours_per_week = ?', $hours);
+            $row = $contractTable->fetchRow($select);
+
+            $contractId = null;
+            if (is_null($row)) {
+                $contractName = 'autoGenerated_' . $hours;
+                $contractId = $this->_tableManager->insertRow('contract', [
+                    'name' => $contractName,
+                    'hours_per_week' => $hours
+                ]);
+            } else {
+                $contractId = $row->id;
+            }
+
+            $contractRelValues[] = [$userId, $contractId, $start, $end === '' ? null : $end];
+
+            $specialdayFile = $contract['specialdays_file'];
+            if ($specialdayFile === 'specialdays_germany') {
+                $settingValues[] = [$userId, 0, 'holidayIdentifier', 'de_DE'];
+            } else if ($specialdayFile === 'specialdays_germany_by') {
+                $settingValues[] = [$userId, 0, 'holidayIdentifier', 'de_DE:by'];
             }
         }
 
-        // Fill the time with zeros at the left until it is reached 4 positions. E.g.: 400 -> 0400
-        $stringTime = str_repeat("0", 4 - strlen($stringTime)) . $stringTime;
-        if ((strlen($stringTime)  == 4) && (is_numeric($stringTime))) {
-            $hour    = substr($stringTime, 0, 2);
-            $minutes = substr($stringTime, 2, 2);
-        } else {
-            $returnNull = true;
+        if (!empty($contractRelValues)) {
+            $this->_tableManager->insertMultipleRows('user_contract_relation', $contractRelFields, $contractRelValues);
         }
-
-        if (!$returnNull) {
-            // Fix wrong data in the way that P5 would show this wrong data to the user
-            if ((int) $minutes > 59) {
-                // Add to $hours as many hours as exceeded minutes (60 exceeded minutes = 1 hour)
-                $addHours = floor((int) $minutes / 60);
-                $hour     = (string) ((int) $hour + $addHours);
-                // Take out equivalent extra minutes
-                $minutes = (string) ((int) $minutes - ($addHours * 60));
-                // Add zeros at the left to reach 2 positions in total for each string variable
-                $hour    = str_repeat("0", 2 - strlen($hour)) . $hour;
-                $minutes = str_repeat("0", 2 - strlen($minutes)) . $minutes;
-            }
-            $time = $hour . ":" . $minutes . ":00";
-        } else {
-            $time = null;
+        if (!empty($settingValues)) {
+            $this->_tableManager->insertMultipleRows('setting', $settingFields, $settingValues);
         }
-
-        return $time;
-    }
-
-    /**
-     * Converts the P5 datetime format YYYYMMDDHHMMSS to P6 date format YYYY-MM-DD.
-     *
-     * @param string $date Date & time in YYYYMMDDHHMMSS format.
-     *
-     * @return string Date in YYYY-MM-DD format.
-     */
-    private function _longDateToShortDate($date)
-    {
-        if (strlen($date) == 14) {
-            $year    = substr($date, 0, 4);
-            $month   = substr($date, 4, 2);
-            $day     = substr($date, 6, 2);
-            $dateOut = $year . "-" . $month . "-" . $day;
-            $dateOut = Cleaner::sanitize('date', $dateOut);
-        } else {
-            $dateOut = null;
-        }
-
-        return $dateOut;
     }
 
     /**
      * Collect all the modules.
      *
-     * @return void
+     * @return Array modules in database
      */
     private function _getModules()
     {
@@ -1281,7 +1266,7 @@ class Setup_Models_Migration
     }
 
     /**
-     * Fix string witn utf8 encode and limit the length of the string.
+     * Fix string within utf8 encode and limit the length of the string.
      *
      * @param string  $string Normal string.
      * @param integer $length Maximal length of the string in bytes.
@@ -1332,7 +1317,7 @@ class Setup_Models_Migration
 
     /**
      * Process the data of the item into the search words.
-     * The return array have per word, the count of ocurrences,
+     * The return array have per word, the count of occurrences,
      * and the pair moduleId-itemId where is it.
      *
      * @param string  $string   All the string data of the item.
@@ -1384,7 +1369,7 @@ class Setup_Models_Migration
     }
 
     /**
-     * Insert all the searc_words and search_word_module values.
+     * Insert all the search_words and search_word_module values.
      *
      * @return void
      */

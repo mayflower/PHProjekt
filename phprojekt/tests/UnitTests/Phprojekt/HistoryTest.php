@@ -136,40 +136,4 @@ class Phprojekt_HistoryTest extends DatabaseTest
         $this->assertEquals($data, $lastData);
         $this->assertequals(1, count($lastData));
     }
-
-    /**
-     * Test delete history
-     */
-    public function testDeleteCall()
-    {
-        $project = new Project_Models_Project(array('db' => $this->sharedFixture));
-        $history = new Phprojekt_History(array('db' => $this->sharedFixture));
-
-        $this->markTestIncomplete("not working");
-        $project->delete();
-
-        $data  = $history->getHistoryData($project, Zend_Registry::get('insertedId'));
-        $array = array('userId'   => '1',
-                       'moduleId' => '1',
-                       'itemId'   => Zend_Registry::get('insertedId'),
-                       'field'    => 'title',
-                       'label'    => 'Title',
-                       'oldValue' => 'EDITED TEST',
-                       'newValue' => '',
-                       'action'   => 'delete',
-                       'datetime' => date("Y-m-d"));
-        $found = 0;
-        foreach ($data as $values) {
-            /* Remove the hour */
-            $values['datetime'] = substr($values['datetime'], 0, 10);
-            $result = array_diff_assoc($values, $array);
-
-            if (empty($result)) {
-                $found = 1;
-            }
-        }
-        if (!$found) {
-            $this->fail('Save delete history error');
-        }
-    }
 }

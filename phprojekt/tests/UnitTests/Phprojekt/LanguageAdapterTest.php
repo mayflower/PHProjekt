@@ -42,11 +42,14 @@ class Phprojekt_LanguageAdapterTest extends PHPUnit_Framework_TestCase
     {
         $reflect = new ReflectionClass('Phprojekt_LanguageAdapter');
         $constants = $reflect->getConstants();
+        $runs = 0;
         foreach ($constants as $value) {
             if (strstr($value, 'inc.php')) {
                 $value = str_replace('.inc.php', '', $value);
                 new Phprojekt_Language(array('locale' => $value));
+                $runs++;
             }
         }
+        $this->assertGreaterThan(0, $runs);
     }
 }

@@ -271,11 +271,6 @@ class Phprojekt_Converter_Json
      */
     private static function _makeJsonString($data)
     {
-        $pageNamespace = new Zend_Session_Namespace('page');
-        if ($pageNamespace->type == "legacy") {
-            return '{}&&(' . Zend_Json::encode($data) . ')';
-        } else {
-            return Zend_Json::encode($data);
-        }
+        return Zend_Json::encode($data);
     }
 }

@@ -18,6 +18,43 @@
  */
 class Timecard_IndexController extends IndexController
 {
+    public function init()
+    {
+        $format = $this->getRequest()->getParam('format', null);
+        if (empty($format)) {
+            $this->getRequest()->setParam('format', 'json');
+        }
+
+        $this->_helper->getHelper('contextSwitch')
+            ->setAutoJsonSerialization(false)
+            ->setContext(
+                'csv',
+                array(
+                    'suffix' => 'csv',
+                    'headers' => array(
+                        'Content-Type' => 'application/csv',
+                        'Content-Disposition' => 'inline; filename="export-' . date('Ymd_his') . '.csv"',
+                        'Pragma' => 'no-cache',
+                        'Expires' => '0',
+                    )
+                )
+            )->clearActionContexts()
+            ->setActionContexts(
+                array(
+                    'recentProjects' => array('json', 'csv'),
+                    'bookedProjects' => array('json', 'csv'),
+                    'minutesBooked' => array('json', 'csv'),
+                    'minutesToWork' => array('json', 'csv'),
+                    'workBalanceByDay' => array('json', 'csv'),
+                    'workedMinutesPerDay' => array('json', 'csv'),
+                    'projectUserMinutes' => array('json', 'csv'),
+                    'projectMemberBookings' => array('json', 'csv')
+                ))
+            ->initContext();
+        $viewRenderer = Zend_Controller_Action_HelperBroker::getStaticHelper('viewRenderer');
+        $viewRenderer->setViewScriptPathSpec('index.:suffix');
+    }
+
     /**
      * Keep in the session the current project id
      *
@@ -51,9 +88,7 @@ class Timecard_IndexController extends IndexController
         $projects          = $this->_projectsParamToArray();
         $records           = Timecard_Models_Timecard::getRecords($start, $end, $projects);
 
-        Phprojekt_CompressedSender::send(
-            Zend_Json::encode(array('days' => $records['data']))
-        );
+        $this->view->records = array('days' => $records['data']);
     }
 
 
@@ -96,14 +131,24 @@ class Timecard_IndexController extends IndexController
      *  to 5
      * </pre>
      */
-    public function jsonRecentProjectsAction()
+    public function recentProjectsAction()
     {
         $n = (int) $this->getRequest()->getParam('n', 5);
 
         $ownerId = Phprojekt_Auth_Proxy::getEffectiveUserId();
         $model   = $this->getModelObject();
         $records = $model->getRecentBookedProjects($ownerId, $n);
-        Phprojekt_Converter_Json::echoConvert($records);
+        $this->view->records = $records;
+    }
+
+    /**
+     * Returns the n most recent projects used for bookings sorted in desc
+     * order.
+     */
+    public function bookedProjectsAction()
+    {
+        $records = Timecard_Models_Timecard::getBookedProjects();
+        $this->view->records = $records;
     }
 
     /**
@@ -315,11 +360,7 @@ class Timecard_IndexController extends IndexController
         $projects          = $this->_projectsParamToArray();
         $minutes           = Timecard_Models_Timecard::getBookedMinutes($start, $end, $projects);
 
-        Phprojekt_CompressedSender::send(
-            Zend_Json::encode(
-                array('minutesBooked' => $minutes)
-            )
-        );
+        $this->view->records = array('minutesBooked' => $minutes);
     }
 
     /**
@@ -380,21 +421,23 @@ class Timecard_IndexController extends IndexController
             $minutes += $d;
         }
 
-        echo Zend_Json::encode(array('minutesToWork' => $minutes));
+        $this->view->records = array('minutesToWork' => $minutes);
     }
 
     public function workBalanceByDayAction()
     {
         list($start, $end) = $this->_paramToStartEndDT();
 
-        $projects = $this->_projectsParamToArray();;
+        $projects = $this->_projectsParamToArray();
 
-        $contracts = Timecard_Models_Contract::fetchByUserAndPeriod(Phprojekt_Auth_Proxy::getEffectiveUser(), $start, $end);
+        $user = Phprojekt_Auth_Proxy::getEffectiveUser();
+        $contracts = Timecard_Models_Contract::fetchByUserAndPeriod($user, $start, $end);
         $minutesToWorkPerDay = $this->_contractsToMinutesPerDay($contracts, $start, $end);
         $minutesToWorkPerDay = $this->_applyHolidayWeights($minutesToWorkPerDay, $start, $end);
 
         $bookings = Phprojekt::getInstance()->getDb()->select()
             ->from('timecard', array('date' => 'DATE(start_datetime)', 'minutes'))
+            ->where('owner_id = ?', $user->id)
             ->where('DATE(start_datetime) >= ?', $start->format('Y-m-d'))
             ->where('DATE(start_datetime) < ?', $end->format('Y-m-d'));
 
@@ -419,7 +462,7 @@ class Timecard_IndexController extends IndexController
             );
         }
 
-        echo Zend_Json::encode(array('workBalancePerDay' => $ret));
+        $this->view->records = array('workBalancePerDay' => $ret);
     }
 
     public function projectUserMinutesAction()
@@ -436,7 +479,19 @@ class Timecard_IndexController extends IndexController
 
         $entries = Timecard_Models_Timecard::getProjectMinutesByUsers($userIds, $startDate, $endDate);
 
-        echo Zend_Json::encode(array('projectUserMinutes' => $entries));
+        $this->view->records = array('projectUserMinutes' => $entries);
+    }
+
+    public function projectMemberBookingsAction()
+    {
+        $projects = $this->_projectsParamToArray();
+        list($start, $end) = $this->_paramToStartEndDT();
+
+        if (!is_array($projects) || empty($projects)) {
+            throw new Exception('No projects specified');
+        }
+
+        $this->view->records = Timecard_Models_Timecard::getMemberBookings($projects, $start, $end);
     }
 
     private function _paramToStartEndDT()

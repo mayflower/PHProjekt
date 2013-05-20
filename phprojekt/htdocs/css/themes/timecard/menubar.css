@@ -25,7 +25,7 @@
 }
 
 .timecard .menubar td.button {
-    width: 184px;
+    width: 140px;
     vertical-align: top;
     text-align: left;
     cursor: pointer;
@@ -58,19 +58,19 @@
 .timecard .menubar .startButton .menuItem {
     background-image: url(../../../img/timecard/icon-play.png);
     background-repeat: no-repeat;
-    background-position: 14px 10px;
+    background-position: 14px 9px;
 }
 
 .timecard .menubar .bookingsButton .menuItem {
     background-image: url(../../../img/timecard/icon-time.png);
     background-repeat: no-repeat;
-    background-position: 14px 10px;
+    background-position: 14px 9px;
 }
 
 .timecard .menubar .statisticsButton .menuItem {
     background-image: url(../../../img/timecard/icon-statistic.png);
     background-repeat: no-repeat;
-    background-position: 14px 10px;
+    background-position: 14px 9px;
 }
 
 .timecard .menubar td.startButton {
@@ -86,13 +86,14 @@
 }
 
 .timecard .menubar td.teamStatisticsButton {
+    width: 200px;
     background: #7E2A2A;
 }
 
 .timecard .menubar td.teamStatisticsButton div.menuItem {
     background-image: url(../../../img/timecard/icon-statistic.png);
     background-repeat: no-repeat;
-    background-position: 14px 10px;
+    background-position: 14px 9px;
 }
 
 .timecard .menubarOuter.start {
