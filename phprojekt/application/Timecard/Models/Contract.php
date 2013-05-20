@@ -62,12 +62,17 @@ class Timecard_Models_Contract extends Phprojekt_ActiveRecord_Abstract
         }
 
         $ret = array();
-        foreach ($userContractRels as $r) {
-            $ret[] = array(
-                'contract' => $contractsById[$r['contract_id']],
-                'start'    => DateTime::createFromFormat('Y-m-d', $r['start']),
-                'end'      => DateTime::createFromFormat('Y-m-d', $r['end'])
+        foreach ($userContractRels as $rel) {
+            $r = array(
+                'contract' => $contractsById[$rel['contract_id']],
+                'start'    => DateTime::createFromFormat('Y-m-d', $rel['start']),
+                'end'      => DateTime::createFromFormat('Y-m-d', $rel['end'])
             );
+            $r['start']->setTime(0, 0, 0);
+            if ($r['end']) {
+                $r['end']->setTime(0, 0, 0);
+            }
+            $ret[] = $r;
         }
 
         return $ret;

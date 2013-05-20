@@ -412,14 +412,19 @@ class Timecard_IndexController extends IndexController
     {
         list($start, $end) = $this->_paramToStartEndDT();
 
+        $minutes = array_sum(array_values($this->_minutesToWorkPerDay($start, $end)));
+
+        $this->view->records = array('minutesToWork' => $minutes);
+    }
+
+    private function _minutesToWorkPerDay($start, $end)
+    {
         $contracts     = Timecard_Models_Contract::fetchByUserAndPeriod(Phprojekt_Auth_Proxy::getEffectiveUser(), $start, $end);
         $minutesPerDay = $this->_contractsToMinutesPerDay($contracts, $start, $end);
         $minutesPerDay = $this->_applyHolidayWeights($minutesPerDay, $start, $end);
         $minutesPerDay = $this->_applyOffsets($minutesPerDay, $start, $end);
-
-        $minutes = array_sum(array_values($minutesPerDay));
-
-        $this->view->records = array('minutesToWork' => $minutes);
+        $minutesPerDay = $this->_applyVacations($minutesPerDay, $start, $end);
+        return $minutesPerDay;
     }
 
     public function workBalanceByDayAction()
@@ -429,9 +434,6 @@ class Timecard_IndexController extends IndexController
         $projects = $this->_projectsParamToArray();
 
         $user = Phprojekt_Auth_Proxy::getEffectiveUser();
-        $contracts = Timecard_Models_Contract::fetchByUserAndPeriod($user, $start, $end);
-        $minutesToWorkPerDay = $this->_contractsToMinutesPerDay($contracts, $start, $end);
-        $minutesToWorkPerDay = $this->_applyHolidayWeights($minutesToWorkPerDay, $start, $end);
 
         $bookings = Phprojekt::getInstance()->getDb()->select()
             ->from('timecard', array('date' => 'DATE(start_datetime)', 'minutes'))
@@ -448,7 +450,7 @@ class Timecard_IndexController extends IndexController
         $bookings = $bookings->query()->fetchAll();
 
         $ret = array();
-        foreach ($minutesToWorkPerDay as $day => $minutesToWork) {
+        foreach ($this->_minutesToWorkPerDay($start, $end) as $day => $minutesToWork) {
             $minutesBooked = 0;
             while (!empty($bookings) && $bookings[0]['date'] == $day) {
                 $b = array_shift($bookings);
@@ -466,7 +468,9 @@ class Timecard_IndexController extends IndexController
     public function projectUserMinutesAction()
     {
         $startDate  = new DateTime($this->_getDateStringParam('start'));
+        $startDate->setTime(0, 0, 0);
         $endDate    = new DateTime($this->_getDateStringParam('end'));
+        $endDate->setTime(0, 0, 0);
         $userIds    = explode(',', $this->getRequest()->getParam('users', Phprojekt_Auth::getUserId()));
 
         foreach ($userIds as $id) {
@@ -501,8 +505,10 @@ class Timecard_IndexController extends IndexController
 
         $first = array_shift($contracts);
         $start = (null === $start) ? $first['start'] : new \DateTime($start);
+        $start->setTime(0, 0, 0);
 
         $end = new \DateTime($this->getRequest()->getParam('end', 'today'));
+        $end->setTime(0, 0, 0);
 
         return [$start, $end];
     }
@@ -520,11 +526,10 @@ class Timecard_IndexController extends IndexController
     {
         $minutesPerDay = array();
         foreach ($contracts as $c) {
-            $period = new DatePeriod(
-                $s = empty($c['start']) ? $start : $this->_dateMax($c['start'], $start),
-                new DateInterval('P1D'),
-                $e = empty($c['end'])   ? $end   : $this->_dateMin($c['end'], $end)
-            );
+            $s = empty($c['start']) ? $start     : $this->_dateMax($c['start'], $start);
+            $e = empty($c['end'])   ? clone $end : clone $this->_dateMin($c['end'], $end);
+            $e->add(new DateInterval('P1D'));
+            $period = new DatePeriod($s, new DateInterval('P1D'), $e);
 
             foreach ($period as $d) {
                 if ($d->format('N') >= 6) {
@@ -542,7 +547,9 @@ class Timecard_IndexController extends IndexController
     private function _applyHolidayWeights(array $minutesPerDay, DateTime $start, DateTime $end)
     {
         try {
-            $holidays = Phprojekt_Auth_Proxy::getEffectiveUser()->getHolidayCalculator()->between($start, $end);
+            $e = clone $end;
+            $e->add(new DateInterval('P1D'));
+            $holidays = Phprojekt_Auth_Proxy::getEffectiveUser()->getHolidayCalculator()->between($start, $e);
         } catch (Phprojekt_Exception_HolidayRegionNotSet $e) {
             return $minutesPerDay;
         }
@@ -564,17 +571,40 @@ class Timecard_IndexController extends IndexController
             if ($offset['date'] < $start) {
                 continue;
             }
-            $dateString = $offset['date']->format('Y-m-d');
-            if (!array_key_exists($dateString, $minutesPerDay)) {
-                $minutesPerDay[$dateString] = 0;
+            if ($offset['date'] > $start) {
+                continue;
             }
 
+            $dateString = $offset['date']->format('Y-m-d');
             $minutesPerDay[$dateString] -= $offset['minutes'];
         }
 
         return $minutesPerDay;
     }
 
+    private function _applyVacations(array $minutesPerDay, DateTime $start, DateTime $end)
+    {
+        $vacations = Timecard_Models_Vacation::getByPeriod($start, $end);
+        foreach($vacations as $vacation) {
+            if ($vacation['end'] < $start) {
+                continue;
+            }
+            if ($vacation['start'] > $end) {
+                continue;
+            }
+            $pStart = $vacation['start'] < $start ? $start : $vacation['start'];
+            $pEnd = $vacation['end'] > $end ? clone $end : clone $vacation['end'];
+            $pEnd->add(new DateInterval('P1D'));
+            $period = new DatePeriod($pStart, new DateInterval('P1D'), $pEnd);
+
+            foreach($period as $day) {
+                $dateString = $day->format('Y-m-d');
+                $minutesPerDay[$dateString] = 0;
+            }
+        }
+
+        return $minutesPerDay;
+    }
     private function _dateBefore(DateTime $a, DateTime $b)
     {
         $aY = (int) $a->format('Y');
