@@ -48,6 +48,9 @@ define([
                 }
 
                 byUserId[entry.user_id][entry.project_id] = timehelper.minutesToHMString(entry.minutes);
+                if (entry.project_id == '1') {
+                    entry.project = 'Unassigned';
+                }
                 projectNamesById[entry.project_id] = entry.project;
             });
 
