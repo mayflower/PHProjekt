@@ -34,34 +34,70 @@ define([
                 return;
             }
 
-            var byUserId = {},
-                projectNamesById = {};
+            var usersById = {};
 
             array.forEach(data.projectUserMinutes, function(entry) {
                 if (parseInt(entry.minutes, 10) === 0) {
                     return;
                 }
+                var userId = entry.user_id;
 
-                if (!byUserId.hasOwnProperty(entry.user_id)) {
-                    byUserId[entry.user_id] = {
-                        user: entry.user,
-                        id: entry.user_id
-                    };
-                }
-
-                byUserId[entry.user_id][entry.project_id] = timehelper.minutesToHMString(entry.minutes);
                 if (entry.project_id == '1') {
                     entry.project = 'Unassigned';
                 }
-                projectNamesById[entry.project_id] = entry.project;
+
+                var project = {
+                    projectId: entry.project_id,
+                    project: entry.project,
+                    time: timehelper.minutesToHMString(entry.minutes)
+                };
+
+                if (!usersById.hasOwnProperty(userId)) {
+                    var user = {
+                        user: entry.user,
+                        id: userId,
+                        projects: [project]
+                    };
+                    usersById[userId] = user;
+                } else {
+                    usersById[userId].projects.push(project);
+                }
             });
 
-            var items = [];
-            for (var id in byUserId) {
-                if (byUserId.hasOwnProperty(id)) {
-                    items.push(byUserId[id]);
-                }
+            var items = [],
+                users = [],
+                id = 0;
+
+            for (var id in usersById) {
+                users.push(usersById[id]);
             }
+
+            users = array.filter(users, function(u) {
+                return u && typeof u.user === 'string';
+            });
+
+            users.sort(function(a, b) {
+                if (!a || !b) {
+                    return 0;
+                }
+                return a.user.localeCompare(b.user);
+            });
+
+            array.forEach(users, function(u) {
+                var projects = u.projects;
+                projects.sort(function(a, b) {
+                    return a.project.localeCompare(b.project);
+                });
+
+                projects.forEach(function(p) {
+                    items.push({
+                        id: '' + id++,
+                        user: u.user,
+                        project: p.project,
+                        time: p.time
+                    });
+                });
+            });
 
             var d = {
                 identifier: 'id',
@@ -69,22 +105,16 @@ define([
             };
 
             var layout = [
-                {name: 'User', field: 'user', width: "150px"}
+                {name: 'User', field: 'user', width: "150px"},
+                {name: 'Project', field: 'project', width: "250px"},
+                {name: 'Time', field: 'time', width: "150px"}
             ];
-            for (var id in projectNamesById) {
-                if (projectNamesById.hasOwnProperty(id)) {
-                    layout.push({
-                        name: projectNamesById[id],
-                        field: id,
-                        width: "100px"
-                    });
-                }
-            }
 
             var store = new WriteStore({ data: d });
             var grid = new DataGrid({
                 store: store,
-                structure: [layout]
+                structure: [layout],
+                autoHeight: 20
             });
             this.own(grid);
             grid.placeAt(this.domNode);
