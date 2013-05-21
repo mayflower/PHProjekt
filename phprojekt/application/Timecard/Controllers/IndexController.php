@@ -568,14 +568,16 @@ class Timecard_IndexController extends IndexController
     {
         $offsets = Timecard_Models_Timecard::getOffsets($end);
         foreach($offsets as $offset) {
-            if ($offset['date'] < $start) {
+            $d = new \DateTime($offset['date']);
+            $d->setTime(0, 0, 0);
+            if ($d < $start) {
                 continue;
             }
-            if ($offset['date'] > $start) {
+            if ($d > $end) {
                 continue;
             }
 
-            $dateString = $offset['date']->format('Y-m-d');
+            $dateString = $d->format('Y-m-d');
             $minutesPerDay[$dateString] -= $offset['minutes'];
         }
 
