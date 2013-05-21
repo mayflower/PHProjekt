@@ -471,7 +471,7 @@ class Timecard_IndexController extends IndexController
         $startDate->setTime(0, 0, 0);
         $endDate    = new DateTime($this->_getDateStringParam('end'));
         $endDate->setTime(0, 0, 0);
-        $userIds    = explode(',', $this->getRequest()->getParam('users', Phprojekt_Auth::getUserId()));
+        $userIds    = explode(',', $this->getRequest()->getParam('users', Phprojekt_Auth_Proxy::getEffectiveUserId()));
 
         foreach ($userIds as $id) {
             if (preg_match('/^\d+$/', $id) !== 1) {
