@@ -13,7 +13,7 @@ define([
     'phpr/Timehelper',
     'phpr/models/Timecard',
     'dojo/text!phpr/template/statistics/WorktimeMonthGraph.html',
-    'd3/d3.v3.js'
+    'd3/d3.v3'
 ], function(
     lang,
     declare,

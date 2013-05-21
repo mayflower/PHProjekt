@@ -27,12 +27,13 @@ var profile = (function() {
             { name: "dojo", location: "../../../../dojo2/dojo" },
             { name: "dijit", location: "../../../../dojo2/dijit" },
             { name: "dojox", location: "../../../../dojo2/dojox" },
-            { name: "phpr", location: "../../../../phpr" }
+            { name: "phpr", location: "../../../../phpr" },
+            { name: "d3", location: "../../../../d3" }
         ],
 
         resourceTags: {
             amd: function(filename, mid) {
-                return (/\.js$/).test(filename);
+                return (!(/d3/).test(filename)) && (/\.js$/).test(filename);
             }
         },
 
