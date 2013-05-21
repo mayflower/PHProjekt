@@ -393,10 +393,7 @@ class Phprojekt_User_User extends Phprojekt_ActiveRecord_Abstract implements Php
 
     public function getHolidayCalculator()
     {
-        $timezone = Phprojekt_User_User::getUserDateTimeZone();
-        if (empty($timezone)) {
-            $timezone = new \DateTimeZone('UTC');
-        }
+        $timezone = new \DateTimeZone('UTC');
 
         $identifier = $this->getSetting('holidayIdentifier');
         if (empty($identifier)) {
