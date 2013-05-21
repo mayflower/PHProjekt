@@ -553,7 +553,7 @@ class Timecard_IndexController extends IndexController
         } catch (Phprojekt_Exception_HolidayRegionNotSet $e) {
             return $minutesPerDay;
         }
-        $holidaysByDate = array();
+
         foreach ($holidays as $h) {
             $dateString = $h->format('Y-m-d');
             if (array_key_exists($dateString, $minutesPerDay)) {
