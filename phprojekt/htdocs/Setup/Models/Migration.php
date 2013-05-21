@@ -419,14 +419,11 @@ class Setup_Models_Migration
             $oldUserId                      = $user['ID'];
             $this->_users[$oldUserId]       = $userId;
             $this->_userKurz[$user['kurz']] = $userId;
-            $this->_timeZone[$userId]       = "000";
-            $language                       = 'en';
+            $this->_timeZone[$userId]       = "1";
+            $language                       = 'de';
 
             @$settings = unserialize($user['settings']);
             if (is_array($settings)) {
-                if (isset($settings['timezone'])) {
-                    $this->_timeZone[$userId] = $this->_getP6TimeZone($settings['timezone']);
-                }
                 if (isset($settings['langua'])) {
                     $language = $settings['langua'];
                 }
@@ -940,11 +937,14 @@ class Setup_Models_Migration
                 ]
             )->query()->fetchAll();
 
-        $tableConfig = [
+        $contractTable = new Zend_Db_Table([
             Zend_Db_Table_Abstract::NAME => 'contract',
             Zend_Db_Table_Abstract::ADAPTER => $this->_db
-        ];
-        $contractTable = new Zend_Db_Table($tableConfig);
+        ]);
+        $settingTable = new Zend_Db_Table([
+            Zend_Db_Table_Abstract::NAME => 'setting',
+            Zend_Db_Table_Abstract::ADAPTER => $this->_db
+        ]);
 
         $contractRelFields = ['user_id', 'contract_id', 'start', 'end'];
         $contractRelValues = [];
@@ -984,11 +984,18 @@ class Setup_Models_Migration
 
             $contractRelValues[] = [$userId, $contractId, $start, $end === '' ? null : $end];
 
-            $specialdayFile = $contract['specialdays_file'];
-            if ($specialdayFile === 'specialdays_germany') {
-                $settingValues[] = [$userId, 0, 'holidayIdentifier', 'de_DE'];
-            } else if ($specialdayFile === 'specialdays_germany_by') {
-                $settingValues[] = [$userId, 0, 'holidayIdentifier', 'de_DE:by'];
+            $row =  $settingTable->fetchRow(
+                $settingTable->select()
+                    ->where('user_id = ?', $userId)
+                    ->where('key_value = ?', 'holidayIdentifier')
+            );
+            if (is_null($row)) {
+                $specialdayFile = $contract['specialdays_file'];
+                if ($specialdayFile === 'specialdays_germany') {
+                    $settingValues[] = [$userId, 0, 'holidayIdentifier', 'de_DE'];
+                } else if ($specialdayFile === 'specialdays_germany_by') {
+                    $settingValues[] = [$userId, 0, 'holidayIdentifier', 'de_DE:by'];
+                }
             }
 
             $offsetDate = $contract['ptimecontrol_offset_date'];
@@ -1315,23 +1322,6 @@ class Setup_Models_Migration
         }
 
         return array($moduleId, $itemId);
-    }
-
-    /**
-     * Fix timeZone with the P6 values.
-     *
-     * @param integer $timeZone +/- TimeZone.
-     *
-     * @return string P6 timeZone.
-     */
-    private function _getP6TimeZone($timeZone)
-    {
-        $timeZone = $timeZone + $this->_diffToUtc;
-        if ($timeZone == 0 || $timeZone > 12 || $timeZone < -12) {
-            return "000";
-        } else {
-            return $timeZone;
-        }
     }
 
     /**
