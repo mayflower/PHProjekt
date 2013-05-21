@@ -422,8 +422,8 @@ class Timecard_IndexController extends IndexController
         $contracts     = Timecard_Models_Contract::fetchByUserAndPeriod(Phprojekt_Auth_Proxy::getEffectiveUser(), $start, $end);
         $minutesPerDay = $this->_contractsToMinutesPerDay($contracts, $start, $end);
         $minutesPerDay = $this->_applyHolidayWeights($minutesPerDay, $start, $end);
-        $minutesPerDay = $this->_applyOffsets($minutesPerDay, $start, $end);
         $minutesPerDay = $this->_applyVacations($minutesPerDay, $start, $end);
+        $minutesPerDay = $this->_applyOffsets($minutesPerDay, $start, $end);
         return $minutesPerDay;
     }
 
