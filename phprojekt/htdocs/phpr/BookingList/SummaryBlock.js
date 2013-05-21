@@ -110,7 +110,7 @@ define([
                 }
 
                 this.updateScheduled = false;
-            }));
+            }), api.defaultErrorHandler);
         }
     });
 });
