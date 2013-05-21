@@ -693,7 +693,9 @@ class Calendar2_IndexController extends IndexController
         }
 
         $start = new \DateTime($start);
+        $start->setTime(0, 0, 0);
         $end   = new \DateTime($end);
+        $end->setTime(0, 0, 0);
 
         $days = array_values(Phprojekt_Auth::getRealUser()->getHolidayCalculator()->between($start, $end));
         Phprojekt_Converter_Json::echoConvert($days);
