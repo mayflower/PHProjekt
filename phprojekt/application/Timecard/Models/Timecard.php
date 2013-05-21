@@ -587,7 +587,7 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
         $table  = new self();
         $select = $table->select()
             ->from($table, array('minutes' => 'SUM(minutes)'))
-            ->where('start_datetime >= ?', $start->format('Y-m-d H:i:s'))
+            ->where('start_datetime >= ?', $start->format('Y-m-d'))
             ->where('start_datetime < ?', $endExcluded->format('Y-m-d'))
             ->where('owner_id = ?', Phprojekt_Auth_Proxy::getEffectiveUserId());
 
@@ -624,9 +624,9 @@ class Timecard_Models_Timecard extends Phprojekt_ActiveRecord_Abstract implement
                 array('u' => 'user'),
                 't.owner_id = u.id',
                 array('user' => 'CONCAT(u.firstname, " ", u.lastname)')
-            )->where('t.owner_id in (?)', $userIds)
-            ->where('DATE(t.start_datetime) >= ?', $startDate->format('Y-m-d'))
-            ->where('DATE(t.start_datetime) < ?', $endDate->format('Y-m-d'))
+            )->where('t.owner_id IN (?)', $userIds)
+            ->where('t.start_datetime >= ?', $startDate->format('Y-m-d'))
+            ->where('t.start_datetime < ?', $endDate->format('Y-m-d'))
             ->group(array('t.project_id', 't.owner_id'))
             ->order('t.project_id ASC')
             ->query()->fetchAll();
