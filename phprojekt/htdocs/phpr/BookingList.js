@@ -28,9 +28,28 @@ define([
     'dijit/form/DateTextBox',
     'dijit/form/Form',
     'phpr/DateTextBox'
-], function(array, declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, locale, html, json, when, JsonRest,
-            Memory, Observable, Cache, date, domConstruct, DayBlock, JsonRestQueryEngine, lang, timehelper,
-            bookingListTemplate) {
+], function(
+    array,
+    declare,
+    _WidgetBase,
+    _TemplatedMixin,
+    _WidgetsInTemplateMixin,
+    locale,
+    html,
+    json,
+    when,
+    JsonRest,
+    Memory,
+    Observable,
+    Cache,
+    date,
+    domConstruct,
+    DayBlock,
+    JsonRestQueryEngine,
+    lang,
+    timehelper,
+    bookingListTemplate
+) {
     return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
         store: null,
 
@@ -82,13 +101,19 @@ define([
         _updating: false,
 
         _update: function() {
-            if (this._updating || !this._started) {
+            if (!this._started || this._destoyed) {
                 return;
             }
 
-            this._updating = true;
+            var qry = this._getQueryString();
+            if (this._updating) {
+                this._updating = qry;
+            }
+
+            this._updating = qry;
 
             this.bookingCreator.set('store', this.store);
+            domConstruct.place('<span>Loading...</span>', this.content, 'only');
 
             if (this.observer) {
                 this.observer.cancel();
@@ -101,15 +126,22 @@ define([
             );
 
             when(results, lang.hitch(this, function(data) {
+                var newQry = this._updating;
+
+                this._updating = null;
+                if (newQry !== qry) {
+                    return this._update();
+                }
+
+                domConstruct.empty(this.content);
                 var bookingsByDay = this._partitionBookingsByDay(data);
 
                 this.data = lang.clone(data);
 
-                domConstruct.empty(this.content);
                 this.day2dayBlock = {};
 
                 this._addBookingsPartitionedByDay(bookingsByDay);
-                this._updating = false;
+
             }));
 
             this.observer = results.observe(lang.hitch(this, '_storeChanged'), true);
@@ -228,13 +260,13 @@ define([
 
             for (var timestamp in this.day2dayBlock) {
                 entries.push({
-                    ts: timestamp,
+                    ts: parseInt(timestamp, 10),
                     entry: this.day2dayBlock[timestamp]
                 });
             }
 
             entries.sort(function(a, b) {
-                return parseInt(b.ts, 10) > parseInt(a.ts, 10);
+                return b.ts - a.ts;
             });
 
             array.forEach(entries, function(e, index, a) {

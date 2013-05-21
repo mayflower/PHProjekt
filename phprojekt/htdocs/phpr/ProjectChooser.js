@@ -200,6 +200,7 @@ define([
                 this.dropDown = new dropDownConstructor({
                     onChange: lang.hitch(this, this._selectOption),
                     id: popupId,
+                    baseClass: 'projectChooserDropDown',
                     dir: this.dir,
                     textDir: this.textDir
                 });
