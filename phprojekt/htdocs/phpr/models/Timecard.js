@@ -16,6 +16,12 @@ define([
     timehelper
 ) {
     function convertDates(params) {
+        if (params.end) {
+            var end = new Date(params.end);
+            end.setDate(end.getDate() + 1);
+            params.end = end;
+        }
+
         if (params.start) {
             params.start = timehelper.jsDateToIsoDate(params.start);
         }
@@ -36,11 +42,6 @@ define([
 
         /* clone params to ensure that they are not reused */
         params = lang.clone(params);
-        if (params.end) {
-            var end = new Date(params.end);
-            end.setDate(end.getDate() + 1);
-            params.end = end;
-        }
 
         var ret = lang.mixin({
             start: thisMonth,
