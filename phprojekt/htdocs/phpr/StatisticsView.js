@@ -18,8 +18,8 @@ define([
     'phpr/ProjectChooser',
     'phpr/models/Project',
     'phpr/Timehelper',
-    'dijit/layout/ContentPane',
-    'phpr/Statistics/ProjectUserTimeTable'
+    'phpr/Statistics/ProjectUserTimeTable',
+    'dijit/layout/ContentPane'
 ], function(
     declare,
     lang,
@@ -39,7 +39,8 @@ define([
     monthTable,
     projectChooser,
     projects,
-    timehelper
+    timehelper,
+    ProjectTimeTable
 ) {
     var StatisticsProjectChooser = declare([projectChooser], {
         createOptions: function(queryResults) {
@@ -48,6 +49,9 @@ define([
 
             var first = null;
             var add = function(p) {
+                if (!p) {
+                    return;
+                }
                 options.push({
                     id: '' + p.id,
                     name: '' + p.id + ' ' + p.title,
@@ -149,6 +153,14 @@ define([
             this.monthState = state;
         },
 
+        _setProjectTable: function() {
+            var p = this._getMonthWidgetOptions();
+            this.projectContainer.set('content', new ProjectTimeTable({
+                startDate: p.startDate,
+                endDate: p.endDate
+            }));
+        },
+
         _getMonthWidgetOptions: function() {
             return {
                 projects: this._getSelectedProjects(),
@@ -181,6 +193,7 @@ define([
                         this._setMonthGraph();
                         break;
                 }
+                this._setProjectTable();
             }), 250);
         },
 
