@@ -1,10 +1,12 @@
 require({cache:{
-'url:phpr/template/bookingList/dayBlock.html':"<div>\n    <div data-dojo-attach-point=\"header\" class=\"bookingBlockHeader\"></div>\n    <div data-dojo-attach-point=\"body, containerNode\" class=\"bookingBlockBody\"></div>\n</div>\n"}});
+'url:phpr/template/bookingList/dayBlock.html':"<div class=\"dayBlock\">\n    <div class=\"bookingBlockHeader\" data-dojo-attach-point=\"header\"\n        ><span data-dojo-attach-point=\"headerText\" class=\"headerText\"></span\n        ><span data-dojo-attach-point=\"total\"></span\n        ><span class=\"helpTextClose\">open</span\n        ><span class=\"helpTextOpen\">closed</span\n        ></div>\n    <div data-dojo-attach-point=\"body, containerNode\" class=\"bookingBlockBody\"></div>\n</div>\n"}});
 define("phpr/BookingList/DayBlock", [
     'dojo/_base/declare',
     'dojo/_base/lang',
     'dojo/_base/array',
     'dojo/dom-class',
+    'dojo/dom-style',
+    'dojo/on',
     'dojo/date',
     'dojo/date/locale',
     'dojo/html',
@@ -13,11 +15,25 @@ define("phpr/BookingList/DayBlock", [
     'dijit/_TemplatedMixin',
     'phpr/BookingList/BookingBlockWrapper',
     'dojo/text!phpr/template/bookingList/dayBlock.html'
-], function(declare, lang, array, domClass, date, locale, html, time, _WidgetBase, _TemplatedMixin, BookingBlockWrapper,
-    templateString) {
+], function(
+    declare,
+    lang,
+    array,
+    domClass,
+    domStyle,
+    on,
+    date,
+    locale,
+    html,
+    timehelper,
+    _WidgetBase,
+    _TemplatedMixin,
+    BookingBlockWrapper, templateString
+) {
     return declare([_WidgetBase, _TemplatedMixin], {
         day: null,
         bookings: null,
+        open: false,
 
         // Used when creating new items
         store: null,
@@ -32,12 +48,15 @@ define("phpr/BookingList/DayBlock", [
         buildRendering: function() {
             this.inherited(arguments);
             this.bookings.sort(function(a, b) {
-                var ta = time.datetimeToJsDate(a.startDatetime).getTime();
-                var tb = time.datetimeToJsDate(b.startDatetime).getTime();
+                var ta = timehelper.datetimeToJsDate(a.startDatetime).getTime();
+                var tb = timehelper.datetimeToJsDate(b.startDatetime).getTime();
                 return ta > tb;
             });
 
+            var open = this.open || false;
             array.forEach(this.bookings, function(b) {
+                open = b.highlight || open;
+
                 var widget = new BookingBlockWrapper({booking: b, store: this.store});
                 widget.placeAt(this.body);
                 this.own(widget);
@@ -45,12 +64,27 @@ define("phpr/BookingList/DayBlock", [
 
             this._checkEmpty();
 
-            html.set(this.header, locale.format(this.day, {selector: 'date', formatLength: 'long'}));
+            html.set(this.headerText, locale.format(this.day, {selector: 'date', datePattern: 'd EEEE'}));
+            this._updateTotalTime();
 
             if (date.compare(new Date(), this.day, 'date') === 0) {
                 domClass.add(this.header, 'today');
+                open = true;
+            }
+
+            this.set('open', open);
+
+            on(this.header, 'click', lang.hitch(this, function() {
+                domClass.toggle(this.domNode, 'open');
+            }));
+        },
+
+        _setOpenAttr: function(o) {
+            this.open = o;
+            if (o) {
+                domClass.add(this.domNode, 'open');
             } else {
-                domClass.remove(this.header, 'today');
+                domClass.remove(this.domNode, 'open');
             }
         },
 
@@ -62,6 +96,22 @@ define("phpr/BookingList/DayBlock", [
             } else {
                 domClass.remove(this.body, 'empty');
             }
+        },
+
+        _updateTotalTime: function() {
+            var totalMinutes = 0;
+            var unfinished = false;
+            array.forEach(this.bookings, function(b) {
+                var minutes = parseInt(b.minutes, 10);
+                if (isNaN(minutes)) {
+                    unfinished = true;
+                    return;
+                }
+                totalMinutes += minutes;
+            });
+
+            html.set(this.total, 'Sum: ' + timehelper.minutesToHMString(totalMinutes));
+            domStyle.set(this.total, 'color', unfinished ? 'red' : '');
         }
     });
 });

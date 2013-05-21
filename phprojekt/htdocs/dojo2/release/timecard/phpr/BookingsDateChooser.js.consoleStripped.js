@@ -15,10 +15,6 @@ define("phpr/BookingsDateChooser", [
     return declare([widget, template, widgetsInTemplate, Evented], {
         templateString: templateString,
 
-        startup: function() {
-            this.own(this.calendarNode.on('change', lang.hitch(this, 'emit', 'dateChange')));
-        },
-
         setDate: function(date) {
             this.calendarNode.set('value', date);
         }

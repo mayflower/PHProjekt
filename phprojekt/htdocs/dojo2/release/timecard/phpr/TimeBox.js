@@ -1,0 +1,2 @@
+//>>built
+define("phpr/TimeBox",["dojo/_base/declare","dijit/form/ValidationTextBox","phpr/Timehelper"],function(d,e,b){return d([e],{allowEmpty:!1,invalidMessage:"Invalid time format",pattern:b.timeRegexpString,_setAllowEmptyAttr:function(c){this._set("allowEmpty",c);var a=b.timeRegexpString;c&&(a+="?");this.set("pattern",a)}})});

@@ -1,3 +1,64 @@
 <div class="statisticsView">
-    This is a statistics page.
+    <ul class="buttons-outer">
+        <li data-dojo-attach-point="filterBtn" class="buttons-inner">
+            <img class="button" src="../../../img/timecard/icon-filter.png">
+        </li>
+        <li data-dojo-attach-point="monthViewGraphBtn" class="buttons-inner active">
+            <img src="../../../img/timecard/icon-graphics.png">
+        </li>
+        <li data-dojo-attach-point="monthViewTableBtn" class="buttons-inner">
+            <img src="../../../img/timecard/table-icon.png">
+        </li>
+    </ul>
+    <h2>Gearbeitete Zeit</h2>
+    <p>Die Anzahl der Stunden pro Tag und die erwartete Stundenanzahl</p>
+    <div class="filters" data-dojo-attach-point="filters">
+        <div class="filters-inner">
+            <h3>Filter</h3>
+            <div class="exportForm" data-dojo-attach-point="exportForm" data-dojo-type="dijit/form/Form">
+                <table><tbody>
+                    <tr>
+                        <td>Projekt:</td>
+                        <td>
+                            <div data-dojo-attach-point="projectChooserContainer"
+                                 data-dojo-type="dijit/layout/ContentPane"></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Zeitraum:</td>
+                        <td>
+                            <input type="text"
+                                name="start"
+                                class="date"
+                                data-dojo-type="phpr/DateTextBox"
+                                data-dojo-attach-point="startDate"
+                                data-dojo-props="placeholder:'Start date', value: 'firstOfMonth'" />
+                            -
+                            <input type="text"
+                                name="end"
+                                class="date"
+                                data-dojo-type="phpr/DateTextBox"
+                                data-dojo-attach-point="endDate"
+                                data-dojo-props="placeholder:'End date', value: 'lastOfMonth'" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>
+                            <button data-dojo-type="dijit/form/Button"
+                                type="submit"
+                                data-dojo-attach-point="exportButton"
+                                data-dojo-props="baseClass:'submitButton'">Export to CSV</button>
+                        </td>
+                    </tr>
+                </tbody></table>
+            </div>
+        </div>
+    </div>
+    <div data-dojo-type="dijit/layout/ContentPane" data-dojo-attach-point="monthContainer">
+    </div>
+    <h2>Gearbeitete Zeit pro Projekt</h2>
+    <p>Die Anzahl der Stunden pro Projekt</p>
+    <div data-dojo-type="dijit/layout/ContentPane" data-dojo-attach-point="projectContainer">
+    </div>
 </div>

@@ -5,39 +5,73 @@ define("phpr/ViewManager", [
     'dojo/_base/array',
     'dojo/topic',
     'phpr/BookingView',
-    'phpr/StatisticsView'
-], function(declare, destroyable, lang, array, topic, BookingView, StatisticsView) {
+    'phpr/StatisticsView',
+    'phpr/TeamStatisticsView'
+], function(
+    declare,
+    destroyable,
+    lang,
+    array,
+    topic,
+    BookingView,
+    StatisticsView,
+    TeamStatisticsView
+) {
     return declare(destroyable, {
         baseLayout: null,
+        setterTimeout: null,
 
         constructor: function(baseLayout) {
             this.baseLayout = baseLayout;
-            var eventmap = {
-                'phpr/showLiveBooking': 'onLiveBooking',
-                'phpr/showBookings': 'onBookings',
-                'phpr/showStatistics': 'onStatistics'
-            };
-
-            for (var top in eventmap) {
-                this.own(topic.subscribe(top, lang.hitch(this, eventmap[top])));
-            }
+            this.own(topic.subscribe('phpr/changePage', lang.hitch(this, 'onPageChange')));
         },
 
         startup: function() {
             this.inherited(arguments);
-            this.baseLayout.menubar.onBookingsClick();
+            var validHashes = ['statistics', 'teamStatistics', 'bookings'];
+            if (window.location.hash) {
+                var hash = window.location.hash.substring(1);
+                if (validHashes.indexOf(hash) !== -1) {
+                    return this.onPageChange(hash);
+                }
+            }
+            this.onPageChange('bookings');
         },
 
-        onLiveBooking: function() {
-            this.baseLayout.mainContent.set('content', 'imagine a timecard here');
+        onPageChange: function(page) {
+            if (this._destroyed) {
+                return;
+            }
+
+            var changedTo = page;
+            switch (page) {
+                case 'statistics':
+                    this._setContent(new StatisticsView(), changedTo);
+                    break;
+                case 'teamStatistics':
+                    this._setContent(new TeamStatisticsView(), changedTo);
+                    break;
+                default:
+                    /* Fall through */
+                case 'bookings':
+                    changedTo = 'bookings';
+                    this._setContent(new BookingView(), changedTo);
+                    break;
+            }
+
+            topic.publish('phpr/changedPage', changedTo);
         },
 
-        onBookings: function() {
-            this.baseLayout.mainContent.set('content', new BookingView());
-        },
+        _setContent: function(obj, name) {
+            clearTimeout(this.setterTimeout);
+            this.setterTimeout = setTimeout(lang.hitch(this, function() {
+                if (this._destroyed) {
+                    return;
+                }
 
-        onStatistics: function() {
-            this.baseLayout.mainContent.set('content', new StatisticsView());
+                this.baseLayout.mainContent.set('content', obj);
+                window.location.hash = '#' + name;
+            }), 0);
         }
     });
 });

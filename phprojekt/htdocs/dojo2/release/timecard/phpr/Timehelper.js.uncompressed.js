@@ -43,6 +43,14 @@ define("phpr/Timehelper", [
         );
     };
 
+    exports.dateToJsDate = function(d) {
+        return new Date(
+            parseInt(d.substr(0, 4), 10),
+            parseInt(d.substr(5, 2), 10) - 1,
+            parseInt(d.substr(8, 2), 10)
+        );
+    };
+
     exports.jsDateToIsoDate = function(date) {
         // Summary:
         //    Convert a js date into ISO date
@@ -84,5 +92,52 @@ define("phpr/Timehelper", [
         }
 
         return exports.jsDateToIsoDate(date) + ' ' + exports.jsDateToIsoTime(date);
+    };
+
+    exports.minutesToHMString = function(minutes) {
+        var ret = '';
+
+        if (minutes < 0) {
+            ret += '-';
+            minutes = Math.abs(minutes);
+        }
+
+        if (minutes >= 60) {
+            ret += Math.floor(minutes / 60) + 'h';
+        }
+
+        if (minutes < 60 || minutes % 60 !== 0) {
+            ret += minutes % 60 + 'm';
+        }
+
+        return ret;
+    };
+
+    exports.timeRegexpString = (function() {
+        var hours = '([01]?\\d|2[0123])',
+            minutes = '([01-5]\\d)',
+            separator = '[:\\. ]?';
+
+        return '(' + hours + separator + minutes + ')';
+    })();
+
+    exports.parseTime = function(value) {
+        if (value.length === 0) {
+            return null;
+        }
+
+        var matched = value.match('^' + exports.timeRegexpString + '$');
+        if (matched[2] && matched[3]) {
+            var date = new Date();
+            date.setHours(parseInt(matched[2], 10));
+            date.setMinutes(parseInt(matched[3], 10));
+            return date;
+        }
+    };
+
+    exports.exclude = function(date) {
+        var d = new Date(date);
+        d.setDate(d.getDate() - 1);
+        return d;
     };
 });

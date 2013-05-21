@@ -1,3 +1,5 @@
+require({cache:{
+'url:phpr/template/Calendar.html':"<table cellspacing=\"0\" cellpadding=\"0\" class=\"dijitCalendarContainer\" role=\"grid\" aria-labelledby=\"${id}_mddb ${id}_year\">\n    <thead>\n        <tr class=\"dijitReset dijitCalendarYearContainer\">\n            <th class='dijitReset' valign=\"top\" colspan=\"7\" role=\"presentation\">\n                <div class=\"dijitCalendarYearLabel\">\n                    <span data-dojo-attach-point=\"previousYearLabelNode\" class=\"dijitInline dijitCalendarPreviousYear\" role=\"button\"></span>\n                    <span data-dojo-attach-point=\"currentYearLabelNode\" class=\"dijitInline dijitCalendarSelectedYear\" role=\"button\" id=\"${id}_year\"></span>\n                    <span data-dojo-attach-point=\"nextYearLabelNode\" class=\"dijitInline dijitCalendarNextYear\" role=\"button\"></span>\n                </div>\n            </th>\n        </tr>\n        <tr class=\"dijitReset dijitCalendarMonthContainer\" valign=\"top\">\n            <th class='dijitReset dijitCalendarArrow' data-dojo-attach-point=\"decrementMonth\">\n                <img src=\"${_blankGif}\" alt=\"\" class=\"dijitCalendarIncrementControl dijitCalendarDecrease\" role=\"presentation\"/>\n                <span data-dojo-attach-point=\"decreaseArrowNode\" class=\"dijitA11ySideArrow\">-</span>\n            </th>\n            <th class='dijitReset' colspan=\"5\">\n                <div data-dojo-attach-point=\"monthNode\">\n                </div>\n            </th>\n            <th class='dijitReset dijitCalendarArrow' data-dojo-attach-point=\"incrementMonth\">\n                <img src=\"${_blankGif}\" alt=\"\" class=\"dijitCalendarIncrementControl dijitCalendarIncrease\" role=\"presentation\"/>\n                <span data-dojo-attach-point=\"increaseArrowNode\" class=\"dijitA11ySideArrow\">+</span>\n            </th>\n        </tr>\n        <tr role=\"row\">\n            ${!dayCellsHtml}\n        </tr>\n    </thead>\n    <tbody data-dojo-attach-point=\"dateRowsNode\" data-dojo-attach-event=\"onclick: _onDayClick\" class=\"dijitReset dijitCalendarBodyContainer\">\n            ${!dateRowsHtml}\n    </tbody>\n</table>\n"}});
 define("phpr/Calendar", [
     'dojo/_base/declare',
     'dojo/_base/array',
@@ -8,8 +10,9 @@ define("phpr/Calendar", [
     'dojo/date/stamp',
     'dijit/Calendar',
     'phpr/Api',
-    'phpr/Timehelper'
-], function(declare, array, clazz, ddate, locale, when, stamp, Calendar, api, timehelper) {
+    'phpr/Timehelper',
+    'dojo/text!phpr/template/Calendar.html'
+], function(declare, array, clazz, ddate, locale, when, stamp, Calendar, api, timehelper, templateString) {
     var specialDayCache = {};
     var showedHolidayError = false;
 
@@ -46,6 +49,8 @@ define("phpr/Calendar", [
     }
 
     return declare([Calendar], {
+        templateString: templateString,
+
         _populateGrid: function() {
             this.inherited(arguments);
             var node;

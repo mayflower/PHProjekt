@@ -1,2 +1,2 @@
 //>>built
-define("phpr/DateTextBox",["dojo/_base/declare","phpr/Calendar","dijit/form/DateTextBox"],function(a,b,c){return a([c],{popupClass:b})});
+define("phpr/DateTextBox",["dojo/_base/declare","phpr/Calendar","dijit/form/DateTextBox"],function(c,d,e){return c([e],{popupClass:d,_setValueAttr:function(b){if("firstOfMonth"===b){var a=new Date;a.setDate(1);Array.prototype.shift.call(arguments);Array.prototype.unshift.call(arguments,a)}else"lastOfMonth"===b&&(a=new Date,a.setMonth(a.getMonth()+1),a.setDate(0),Array.prototype.shift.call(arguments),Array.prototype.unshift.call(arguments,a));this.inherited(arguments)}})});

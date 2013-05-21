@@ -1936,6 +1936,10 @@
 					 location:"../phpr",
 					 main:"run",
 					 name:"phpr"
+				},
+				{
+					 location:"../d3",
+					 name:"d3"
 				}
 		]
 });require({cache:{
@@ -5915,7 +5919,7 @@ define(["./Evented"], function(Evented){
 
 },
 'dojo/Evented':function(){
-define(["./aspect", "./on"], function(aspect, on){
+define("dojo/Evented", ["./aspect", "./on"], function(aspect, on){
 	// module:
 	//		dojo/Evented
 
@@ -5953,7 +5957,7 @@ define(["./aspect", "./on"], function(aspect, on){
 
 },
 'dojo/aspect':function(){
-define([], function(){
+define("dojo/aspect", [], function(){
 
 	// module:
 	//		dojo/aspect
@@ -8147,7 +8151,7 @@ define([
 
 },
 'dojo/Deferred':function(){
-define([
+define("dojo/Deferred", [
 	"./has",
 	"./_base/lang",
 	"./errors/CancelError",
@@ -13344,7 +13348,7 @@ define([
 
 },
 'dojo/NodeList-dom':function(){
-define(["./_base/kernel", "./query", "./_base/array", "./_base/lang", "./dom-class", "./dom-construct", "./dom-geometry", "./dom-attr", "./dom-style"], function(dojo, query, array, lang, domCls, domCtr, domGeom, domAttr, domStyle){
+define("dojo/NodeList-dom", ["./_base/kernel", "./query", "./_base/array", "./_base/lang", "./dom-class", "./dom-construct", "./dom-geometry", "./dom-attr", "./dom-style"], function(dojo, query, array, lang, domCls, domCtr, domGeom, domAttr, domStyle){
 
 	// module:
 	//		dojo/NodeList-dom.js

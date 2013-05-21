@@ -5,8 +5,18 @@ define("phpr/Api", [
     'dojo/request/xhr',
     'dojo/Deferred',
     'dojo/json',
-    'dojo/topic'
-], function(exports, lang, array, xhr, Deferred, json, topic) {
+    'dojo/topic',
+    'phpr/models/Project'
+], function(
+    exports,
+    lang,
+    array,
+    xhr,
+    Deferred,
+    json,
+    topic,
+    projects
+) {
     var config = (function() {
         var config = {};
 
@@ -35,40 +45,22 @@ define("phpr/Api", [
         return xhr.get(url, params);
     };
 
-    exports.isGlobalModule = function(module) {
-        var globals = config.get('globalModules');
-        for (var id in globals) {
-            if (globals[id].name == module) {
-                return true;
-            }
-        }
-
-        return false;
-    };
-
-    exports.projectTitleForId = (function() {
+    exports.projectTitleForId = function(id) {
         var titlesById = null;
         var def = new Deferred();
 
-        exports.getData(
-            'index.php/Project/Project',
-            {query: {projectId: 1, recursive: true}}
-        ).then(function(projects) {
+        projects.getProjects().then(function(projects) {
             titlesById = {};
-            array.forEach(projects, function(p) {
-                titlesById[p.id] = p.title;
-            });
+            for (var id in projects) {
+                titlesById[id] = projects[id].title;
+            }
 
             def.resolve(titlesById);
             def = null;
         });
 
-        return function(id) {
-            if (id == 1) {
-                var d = new Deferred();
-                d.resolve('Unassigned');
-                return d;
-            } else if (titlesById === null) {
+        exports.projectTitleForId = function(id) {
+            if (titlesById === null) {
                 return def.then(function(idMap) {
                     return idMap[id];
                 });
@@ -78,7 +70,9 @@ define("phpr/Api", [
                 return d;
             }
         };
-    })();
+
+        return exports.projectTitleForId(id);
+    };
 
     exports.getModulePermissions = function(projectId) {
         var modulePermissionsUrl = 'index.php/Default/index/jsonGetModulesPermission/nodeId/' + projectId;

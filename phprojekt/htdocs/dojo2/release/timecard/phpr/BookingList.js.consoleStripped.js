@@ -1,5 +1,5 @@
 require({cache:{
-'url:phpr/template/bookingList.html':"<div>\n    <div class=\"selectedDate\"><span data-dojo-attach-point=\"selectedDate\"></span></div>\n    <div data-dojo-attach-point=\"bookingCreator\" data-dojo-type=\"phpr/BookingList/BookingCreator\"></div>\n    <div data-dojo-attach-point=\"content, containerNode\"></div>\n    <div data-dojo-attach-point=\"summaryRow\" class=\"summaryRow\"\n        >Total: <span data-dojo-attach-point=\"hoursWorked\"></span\n        ><span data-dojo-attach-point=\"hoursToWorkText\" style=\"display: none;\"> of <span data-dojo-attach-point=\"hoursToWork\"></span\n        > this month.</div>\n</div>\n"}});
+'url:phpr/template/bookingList.html':"<div>\n    <div data-dojo-attach-point=\"bookingCreator\" data-dojo-type=\"phpr/BookingList/BookingCreator\"></div>\n    <div data-dojo-attach-point=\"content, containerNode\"></div>\n</div>\n"}});
 define("phpr/BookingList", [
     'dojo/_base/array',
     'dojo/_base/declare',
@@ -16,28 +16,42 @@ define("phpr/BookingList", [
     'dojo/store/Cache',
     'dojo/date',
     'dojo/dom-construct',
-    'dojo/dom-class',
-    'dojo/dom-style',
     'phpr/BookingList/DayBlock',
-    'phpr/Timehelper',
     'phpr/JsonRestQueryEngine',
     'dojo/_base/lang',
-    'phpr/Api',
     'phpr/Timehelper',
     //templates
     'dojo/text!phpr/template/bookingList.html',
     // only used in templates
     'phpr/BookingList/BookingCreator',
     'dijit/form/FilteringSelect',
-    'dijit/form/ValidationTextBox',
     'dijit/form/Textarea',
     'dijit/form/Button',
     'dijit/form/DateTextBox',
     'dijit/form/Form',
     'phpr/DateTextBox'
-], function(array, declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, locale, html, json, when,
-            JsonRest, Memory, Observable, Cache, date, domConstruct, domClass, domStyle, DayBlock, time,
-            JsonRestQueryEngine, lang, api, timehelper, bookingListTemplate) {
+], function(
+    array,
+    declare,
+    _WidgetBase,
+    _TemplatedMixin,
+    _WidgetsInTemplateMixin,
+    locale,
+    html,
+    json,
+    when,
+    JsonRest,
+    Memory,
+    Observable,
+    Cache,
+    date,
+    domConstruct,
+    DayBlock,
+    JsonRestQueryEngine,
+    lang,
+    timehelper,
+    bookingListTemplate
+) {
     return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
         store: null,
 
@@ -80,7 +94,6 @@ define("phpr/BookingList", [
             var monthChanged = (!this._started ||
                     (date.getFullYear() !== this.date.getFullYear() || date.getMonth() !== this.date.getMonth()));
             this.date = date;
-            html.set(this.selectedDate, locale.format(date, {selector: 'date', datePattern: 'MMMM yyy'}));
             this.bookingCreator.set('date', date);
             if (monthChanged) {
                 this._update();
@@ -90,13 +103,19 @@ define("phpr/BookingList", [
         _updating: false,
 
         _update: function() {
-            if (this._updating || !this._started) {
+            if (!this._started || this._destoyed) {
                 return;
             }
 
-            this._updating = true;
+            var qry = this._getQueryString();
+            if (this._updating) {
+                this._updating = qry;
+            }
+
+            this._updating = qry;
 
             this.bookingCreator.set('store', this.store);
+            domConstruct.place('<span>Loading...</span>', this.content, 'only');
 
             if (this.observer) {
                 this.observer.cancel();
@@ -109,69 +128,44 @@ define("phpr/BookingList", [
             );
 
             when(results, lang.hitch(this, function(data) {
+                var newQry = this._updating;
+
+                this._updating = null;
+                if (newQry !== qry) {
+                    return this._update();
+                }
+
+                domConstruct.empty(this.content);
                 var bookingsByDay = this._partitionBookingsByDay(data);
 
                 this.data = lang.clone(data);
 
-                domConstruct.empty(this.content);
                 this.day2dayBlock = {};
 
                 this._addBookingsPartitionedByDay(bookingsByDay);
-                this._updateHoursWorked();
-                this._updating = false;
+
             }));
 
             this.observer = results.observe(lang.hitch(this, '_storeChanged'), true);
         },
 
-        _updateHoursWorked: function() {
-            var minutes = 0;
-            array.forEach(this.data, function(booking) {
-                var start = timehelper.datetimeToJsDate(booking.startDatetime),
-                    end = timehelper.timeToJsDateWithReferenceDate(booking.endTime, start);
-
-                minutes += date.difference(start, end, 'minute');
-            });
-
-            this.hoursWorked.innerHTML = "" + Math.floor(minutes / 60) + "h";
-            if (minutes % 60 !== 0) {
-                this.hoursWorked.innerHTML += " " + minutes % 60 + "m";
-            }
-        },
-
-        _updateHoursToWork: function() {
-            api.getData(
-                'index.php/Timecard/Index/minutesToWork',
-                {query: {month: this.date.getMonth() + 1, year: this.date.getFullYear()}}
-            ).then(lang.hitch(this, function(data) {
-                if (data.minutesToWork !== 0) {
-                    var hours = Math.floor(data.minutesToWork / 60),
-                        minutes = data.minutesToWork % 60;
-                    this.hoursToWork.innerHTML = "" + hours + "h";
-                    if (minutes !== 0) {
-                        this.hoursToWork.innerHTML += " " + minutes + "m";
-                    }
-                    domStyle.set(this.hoursToWorkText, "display", "");
-                }
-            }));
-        },
-
         _storeChanged: function(object, removedFrom, insertedInto) {
             object = lang.clone(object);
-            var bdate = time.datetimeToJsDate(object.startDatetime);
+            var newDate = timehelper.datetimeToJsDate(object.startDatetime);
 
             if (removedFrom > -1) {
-                var odate = time.datetimeToJsDate(this.data[removedFrom].startDatetime);
+                var originalDate = timehelper.datetimeToJsDate(this.data[removedFrom].startDatetime);
                 this.data.splice(removedFrom, 1);
-                this._reloadDay(odate);
+                if (date.compare(newDate, originalDate, 'date') !== 0) {
+                    this._reloadDay(originalDate);
+                }
             }
 
             if (insertedInto > -1) {
                 this.data.splice(insertedInto, 0, object);
             }
 
-            this._updateHoursWorked();
-            this._reloadDay(bdate, bdate);
+            this._reloadDay(newDate, newDate);
         },
 
         _reloadDay: function(startDatetime, highlightDate) {
@@ -189,7 +183,7 @@ define("phpr/BookingList", [
                 if (highlightDate) {
                     array.some(partitions, function(partition) {
                         return array.some(partition.bookings, function(b) {
-                            var ret = date.compare(time.datetimeToJsDate(b.startDatetime), highlightDate) === 0;
+                            var ret = date.compare(timehelper.datetimeToJsDate(b.startDatetime), highlightDate) === 0;
                             if (ret) {
                                 b.highlight = true;
                             }
@@ -233,8 +227,8 @@ define("phpr/BookingList", [
 
             return json.stringify({
                 startDatetime: {
-                    '!ge': time.jsDateToIsoDatetime(start),
-                    '!lt': time.jsDateToIsoDatetime(end)
+                    '!ge': timehelper.jsDateToIsoDatetime(start),
+                    '!lt': timehelper.jsDateToIsoDatetime(end)
                 }
             });
         },
@@ -242,7 +236,7 @@ define("phpr/BookingList", [
         _partitionBookingsByDay: function(bookings) {
             var partitions = {};
             array.forEach(bookings, function(b) {
-                var start = time.datetimeToJsDate(b.startDatetime),
+                var start = timehelper.datetimeToJsDate(b.startDatetime),
                     day = new Date(
                     start.getFullYear(),
                     start.getMonth(),
@@ -268,13 +262,13 @@ define("phpr/BookingList", [
 
             for (var timestamp in this.day2dayBlock) {
                 entries.push({
-                    ts: timestamp,
+                    ts: parseInt(timestamp, 10),
                     entry: this.day2dayBlock[timestamp]
                 });
             }
 
             entries.sort(function(a, b) {
-                return parseInt(b.ts, 10) > parseInt(a.ts, 10);
+                return b.ts - a.ts;
             });
 
             array.forEach(entries, function(e, index, a) {
@@ -288,6 +282,9 @@ define("phpr/BookingList", [
                         w.placeAt(a[index - 1].entry.widget, 'after');
                     }
                     e.entry.placed = true;
+                    if (index < 2) {
+                        w.set('open', true);
+                    }
                 }
             }, this);
         }
