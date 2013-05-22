@@ -614,7 +614,8 @@ class Setup_Models_Setup
                     'username' => $databaseNamespace->data['dbUser'],
                     'password' => $databaseNamespace->data['dbPass'],
                     'dbname'   => $databaseNamespace->data['dbName'],
-                    'port'     => $databaseNamespace->data['dbPort']);
+                    'port'     => $databaseNamespace->data['dbPort'],
+                    'charset'  => 'utf8');
 
         return Zend_Db::factory($databaseNamespace->data['serverType'], $dbParams);
     }

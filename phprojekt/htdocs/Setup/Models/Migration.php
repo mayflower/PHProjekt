@@ -337,7 +337,7 @@ class Setup_Models_Migration
         $moduleId = $this->_getModuleId('Project');
 
         foreach ($users as $user) {
-            $loginName = $user['loginname'];
+            $loginName = $this->_fix($user['loginname'], 255);
             $firstName = $this->_fix($user['vorname'], 255);
             $lastName  = $this->_fix($user['nachname'], 255);
 
@@ -879,7 +879,7 @@ class Setup_Models_Migration
                             $endtime->format('H:i:s'),
                             $bookedMinutes,
                             $projectId,
-                            $this->_fix($projectBooking['row']['note'], 65500),
+                            $this->_fix($projectBooking['row']['note']),
                             $moduleId,
                             $itemId
                         );
