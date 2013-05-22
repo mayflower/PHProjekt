@@ -112,7 +112,7 @@ define("phpr/BookingList/SummaryBlock", [
                 }
 
                 this.updateScheduled = false;
-            }));
+            }), api.defaultErrorHandler);
         }
     });
 });
