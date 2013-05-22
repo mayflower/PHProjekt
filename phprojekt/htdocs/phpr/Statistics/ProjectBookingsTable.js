@@ -45,6 +45,9 @@ define([
             }
 
             var items = data.map(function(item, idx) {
+                if (item.projectId == '1') {
+                    item.project = 'Unassigned';
+                }
                 item.id = '' + (idx + 1);
                 return item;
             });
