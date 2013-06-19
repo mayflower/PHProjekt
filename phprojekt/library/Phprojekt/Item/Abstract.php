@@ -210,7 +210,7 @@ abstract class Phprojekt_Item_Abstract extends Phprojekt_ActiveRecord_Abstract i
     public function save()
     {
         $result = true;
-
+        //trackUploadedfiles should be inside of the if-instruction
         if ($this->id > 0) {
         	  $this->trackUploadedfiles();
             $this->_history->saveFields($this, 'edit');
