@@ -194,7 +194,8 @@ dojo.declare("phpr.Default.Grid", phpr.Default.System.Component, {
                 field:    "gridComboBox",
                 width:    "20px",
                 type:     phpr.Default.System.Grid.cells.NonSubmittingCheckbox,
-                editable: true
+                editable: true,
+                alwaysEditing: true
             });
         }
 
