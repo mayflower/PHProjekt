@@ -305,13 +305,11 @@ dojo.declare("phpr.Default.Field", phpr.Default.System.Component, {
                 textModeTxt: phpr.nls.get('To Text Mode'),
                 htmlModeTxt: phpr.nls.get('To HTML Mode'),
                 editHtmlTxt: phpr.nls.get('Edit'),
-                saveTxt:     phpr.nls.get('Save'),
                 tooltip:     this.getTooltip(itemhint)
             }
         });
 
         this.garbageCollector.addNode('dialogFor_' + labelAndId);
-        this.garbageCollector.addNode('editorFor_' + labelAndId);
 
         return widget;
     },
